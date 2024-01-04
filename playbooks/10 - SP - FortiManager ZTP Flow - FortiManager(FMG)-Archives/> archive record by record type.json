@@ -92,7 +92,7 @@
                 "module": "devices?$limit=1000",
                 "checkboxFields": true,
                 "step_variables": {
-                    "record_data": "{%- set myrecords = vars.steps.Find_Devices -%}\n{%- set table = [] -%}\n{%- for r in myrecords -%}\n  {%- set rec = {} -%}\n  {%- set _do = rec.update(r) -%}\n  {%- set _do = table.append(rec) -%}\n  {%- set _do = rec.update({\"sourceData\":r.sourceData|toDict}) -%}\n  {%- set _do = rec.update({\"name\":r.deviceName}) -%}\n{%- endfor -%}\n{{table}}"
+                    "record_data": "{%- set myrecords = vars.steps.Find_Devices -%}\n{%- set table = [] -%}\n{%- for r in myrecords -%}\n  {%- set rec = {} -%}\n  {%- set _do = rec.update(r) -%}\n  {%- set _do = table.append(rec) -%}\n  {%- if r.sourceData != None -%}\n    {%- set _do = rec.update({\"sourceData\":r.sourceData|toDict}) -%}\n  {%- endif -%}\n  {%- set _do = rec.update({\"name\":r.deviceName}) -%}\n{%- endfor -%}\n{{table}}"
                 }
             },
             "status": null,
@@ -131,7 +131,7 @@
                 "module": "managers?$limit=1000",
                 "checkboxFields": true,
                 "step_variables": {
-                    "record_data": "{%- set myrecords = vars.steps.Find_Managers -%}\n{%- set table = [] -%}\n{%- for r in myrecords -%}\n  {%- set rec = {} -%}\n  {%- set _do = rec.update(r) -%}\n  {%- set _do = rec.update({\"sourceData\":r.sourceData|toDict}) -%}\n  {%- set _do = table.append(rec) -%}\n{%- endfor -%}\n{{table}}"
+                    "record_data": "{%- set myrecords = vars.steps.Find_Managers -%}\n{%- set table = [] -%}\n{%- for r in myrecords -%}\n  {%- set rec = {} -%}\n  {%- set _do = rec.update(r) -%}\n  {%- if r.sourceData != None -%}\n    {%- set _do = rec.update({\"sourceData\":r.sourceData|toDict}) -%}\n  {%- endif -%}\n  {%- set _do = table.append(rec) -%}\n{%- endfor -%}\n{{table}}"
                 }
             },
             "status": null,
@@ -278,7 +278,7 @@
                 "module": "z_t_p_profiles?$limit=1000",
                 "checkboxFields": true,
                 "step_variables": {
-                    "record_data": "{%- set myrecords = vars.steps.Find_ZTP_Profiles -%}\n{%- set table = [] -%}\n{%- for r in myrecords -%}\n  {%- set rec = {} -%}\n  {%- set _do = rec.update(r) -%}\n  {%- set _do = table.append(rec) -%}\n  {%- set _do = rec.update({\"zTPStepMap\":r.zTPStepMap|toDict}) -%}\n{%- endfor -%}\n{{table}}"
+                    "record_data": "{%- set myrecords = vars.steps.Find_ZTP_Profiles -%}\n{%- set table = [] -%}\n{%- for r in myrecords -%}\n  {%- set rec = {} -%}\n  {%- set _do = rec.update(r) -%}\n  {%- set _do = table.append(rec) -%}\n  {%- if r.zTPStepMap != None -%}\n    {%- set _do = rec.update({\"zTPStepMap\":r.zTPStepMap|toDict}) -%}\n  {%- endif -%}\n{%- endfor -%}\n{{table}}"
                 }
             },
             "status": null,
