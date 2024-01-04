@@ -1,17 +1,22 @@
 # What's New
 
-Release of 1.0.3:
+## Release of 1.0.3:
  - Add ZTP Archives module for saving snapshots of ZTP records. 
  - Add ZTPF Teams and Roles for Users and Admins. 
+ - Add Docs to help with [Setup](./docs/setup/README.md) of your System. 
  - Renamed Roles:
    `FortiManager-Playbook-Appliance` -> `ZTPF-Playbook-Appliance` 
    `FortiManager-Admin` -> `ZTPF-Admin`
 
+## Release of 1.0.2: 
+ - Add jinja vars support to ztp profile assignments and update docs to reflect this change.
+
+## Release of 1.0.1: 
+ - fixes the playbooks that references the connector fortinet-fortimanager-json-rpc. It was incorrectly referencing fortinet_fortimanager_json_rpc.
+
 # Known Bugs
 
 ## Teams and Private Playbooks (0986751)
-
-
 
 See internal Bug ID `0986751` for the latest status of the bug. 
 
