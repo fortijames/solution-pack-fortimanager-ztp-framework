@@ -32,5 +32,5 @@ The ZTP Profiles module describes how to handle the provisioning of each device 
 
  # Next Steps
 
-| [Contents](./docs/contents.md) |
+| [Contents](./contents.md) |
 |--------------------------------|

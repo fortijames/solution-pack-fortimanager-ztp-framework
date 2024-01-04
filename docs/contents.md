@@ -46,8 +46,3 @@ The **FortiManager ZTP Flow** solution pack contains the following resources.
 | 10 - SP - FortiManager ZTP Flow - FortiManager(FMG)-CustomPlaybooks | Playbooks that can be created by users as metadata sources and used in Template files to build custom solutions within the integration. |
 
 >**Warning:** We recommend that you clone these playbooks before customizing to avoid loss of information while upgrading the solution pack.
-
- # Next Steps
-
-| [Contents](./docs/contents.md) |
-|--------------------------------|

@@ -60,5 +60,5 @@ You are now ready to start synchronizing the FortiManager Device DB and perform 
 
  # Next Steps
 
-| [Configuration](./docs/setup/README.md) | [Usage](./docs/usage.md) | [Contents](./docs/contents.md) |
-|-----------------------------------------|--------------------------|--------------------------------|
+| [Configuration](./setup/README.md) | [Usage](./usage.md) | [Contents](./contents.md) |
+|------------------------------------|---------------------|---------------------------|
