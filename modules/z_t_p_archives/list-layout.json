@@ -1,0 +1,177 @@
+{
+    "@context": "\/api\/3\/contexts\/SystemViewTemplate",
+    "@type": "SystemViewTemplate",
+    "type": "rows",
+    "config": {
+        "rows": [
+            {
+                "columns": [
+                    {
+                        "widgets": [
+                            {
+                                "type": "chart",
+                                "config": {
+                                    "wid": "fec1ef83-974f-4204-98b2-048097d885af",
+                                    "widgetAlwaysDisplay": true,
+                                    "showTabularData": false,
+                                    "query": {
+                                        "sort": [
+                                            {
+                                                "field": "archiveType.orderIndex",
+                                                "direction": "ASC"
+                                            }
+                                        ],
+                                        "limit": 2147483647,
+                                        "logic": "AND",
+                                        "filters": [],
+                                        "aggregates": [
+                                            {
+                                                "operator": "countdistinct",
+                                                "field": "*",
+                                                "alias": "total"
+                                            },
+                                            {
+                                                "operator": "groupby",
+                                                "alias": "archiveType",
+                                                "field": "archiveType.itemValue"
+                                            },
+                                            {
+                                                "operator": "groupby",
+                                                "alias": "color",
+                                                "field": "archiveType.color"
+                                            },
+                                            {
+                                                "operator": "groupby",
+                                                "alias": "orderIndex",
+                                                "field": "archiveType.orderIndex"
+                                            }
+                                        ]
+                                    },
+                                    "mapping": {
+                                        "fieldName": "archiveType"
+                                    },
+                                    "assignedToSetting": "all",
+                                    "aggregate": true,
+                                    "title": "Archive Type",
+                                    "resource": "z_t_p_archives",
+                                    "chart": "donut",
+                                    "showCount": true
+                                }
+                            }
+                        ],
+                        "style": "col-lg-6"
+                    },
+                    {
+                        "widgets": [
+                            {
+                                "type": "chart",
+                                "config": {
+                                    "wid": "f220d3e4-f3f3-4260-87e7-7f06f082bbac",
+                                    "widgetAlwaysDisplay": true,
+                                    "showTabularData": false,
+                                    "query": {
+                                        "sort": [
+                                            {
+                                                "field": "archiveType.orderIndex",
+                                                "direction": "ASC"
+                                            }
+                                        ],
+                                        "limit": 2147483647,
+                                        "logic": "AND",
+                                        "filters": [],
+                                        "aggregates": [
+                                            {
+                                                "operator": "select",
+                                                "alias": "archiveType",
+                                                "field": "archiveType.itemValue"
+                                            },
+                                            {
+                                                "operator": "select",
+                                                "alias": "color",
+                                                "field": "archiveType.color"
+                                            },
+                                            {
+                                                "operator": "select",
+                                                "alias": "orderIndex",
+                                                "field": "archiveType.orderIndex"
+                                            },
+                                            {
+                                                "operator": "select",
+                                                "alias": "createDate",
+                                                "field": "createDate"
+                                            }
+                                        ]
+                                    },
+                                    "mapping": {
+                                        "fieldName": "archiveType",
+                                        "dateFieldName": "createDate",
+                                        "timeScope": "day",
+                                        "dateFormat": "%b %e"
+                                    },
+                                    "assignedToSetting": "all",
+                                    "aggregate": true,
+                                    "chart": "line",
+                                    "resource": "z_t_p_archives",
+                                    "title": "Archive Creation"
+                                }
+                            }
+                        ],
+                        "style": "col-lg-6"
+                    }
+                ],
+                "wid": "ee9055c2-78b5-4ea8-a0b7-c29eaf20d338",
+                "collapsible": false,
+                "collapsibleIndex": 0,
+                "_collapsed": false
+            },
+            {
+                "columns": [
+                    {
+                        "widgets": [
+                            {
+                                "type": "grid",
+                                "config": {
+                                    "wid": "1bfa7b09-a24d-400f-85a8-671d306efa5d",
+                                    "module": "z_t_p_archives",
+                                    "columns": [
+                                        "id",
+                                        "archiveType",
+                                        "name",
+                                        "timestamp",
+                                        "createDate",
+                                        "recordTags"
+                                    ],
+                                    "expandableCol": [
+                                        {
+                                            "openTab": false,
+                                            "name": "recordData"
+                                        }
+                                    ],
+                                    "relationshipField": [],
+                                    "checkboxStatus": true,
+                                    "editableFields": false,
+                                    "actionButtons": [],
+                                    "query": {
+                                        "sort": [],
+                                        "limit": 30,
+                                        "logic": "AND",
+                                        "filters": []
+                                    }
+                                }
+                            }
+                        ],
+                        "style": "col-lg-12"
+                    }
+                ],
+                "wid": "d231403c-2fd0-4bce-ac61-617dc38a4999",
+                "_collapsed": false
+            }
+        ],
+        "wid": "87b1c066-b8e0-4b6b-b938-fcc33a3d16f3",
+        "metadata": {
+            "customTemplateTitle": "ZTP Archives",
+            "originalTemplateTitle": "ZTP Archives"
+        }
+    },
+    "uuid": "modules-z_t_p_archives-list"
+}
