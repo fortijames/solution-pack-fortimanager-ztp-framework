@@ -58,5 +58,5 @@ If your Manager record worked you should see the FortiManager details auto-popul
 
 You are now ready to start synchronizing the FortiManager Device DB and perform actions on those devices.
 
-| [Usage](./usage.md) | [Contents](./contents.md) |
-|---------------------|---------------------------|
+| [Usage](./usage.md) | [Contents](./contents.md) | [Setup Options](./setup/README.md) | 
+|---------------------|---------------------------| ---------------------------------- |
