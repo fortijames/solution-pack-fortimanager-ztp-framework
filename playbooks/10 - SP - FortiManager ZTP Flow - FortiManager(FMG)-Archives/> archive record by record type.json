@@ -1,0 +1,566 @@
+{
+    "@type": "Workflow",
+    "triggerLimit": null,
+    "name": "> archive record by record type",
+    "aliasName": null,
+    "tag": null,
+    "description": "Archive record(s) routine by record type.",
+    "isActive": true,
+    "debug": false,
+    "singleRecordExecution": false,
+    "remoteExecutableFlag": false,
+    "parameters": [
+        "record_type",
+        "record_id_list"
+    ],
+    "synchronous": false,
+    "collection": "\/api\/3\/workflow_collections\/f875a3f7-b3fb-4477-b89a-7cad664da967",
+    "versions": [],
+    "triggerStep": "\/api\/3\/workflow_steps\/4fcce675-bee0-4dca-8569-5879cca5ab4c",
+    "steps": [
+        {
+            "@type": "WorkflowStep",
+            "name": "Create Archive",
+            "description": null,
+            "arguments": {
+                "for_each": {
+                    "item": "{{vars.record_data}}",
+                    "__bulk": true,
+                    "parallel": false,
+                    "condition": "",
+                    "batch_size": 100
+                },
+                "resource": {
+                    "name": "{{vars.item.name}}",
+                    "__replace": "",
+                    "timestamp": "{{vars.timestamp}}",
+                    "recordData": "{{vars.item}}",
+                    "archiveType": "{{\"ZTP Archive Type\" | picklist(vars.item['@type'], \"@id\")}}"
+                },
+                "operation": "Overwrite",
+                "collection": "\/api\/3\/z_t_p_archives",
+                "__recommend": [],
+                "fieldOperation": {
+                    "recordTags": "Overwrite"
+                },
+                "step_variables": []
+            },
+            "status": null,
+            "top": "440",
+            "left": "760",
+            "stepType": "\/api\/3\/workflow_step_types\/2597053c-e718-44b4-8394-4d40fe26d357",
+            "group": null,
+            "uuid": "c3cc0714-d380-4554-b95e-e3a2c33c66b5"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Find Devices",
+            "description": null,
+            "arguments": {
+                "query": {
+                    "sort": [],
+                    "limit": 30,
+                    "logic": "AND",
+                    "filters": [
+                        {
+                            "type": "primitive",
+                            "field": "id",
+                            "value": "{{vars.record_list}}",
+                            "operator": "in",
+                            "_operator": "in"
+                        }
+                    ],
+                    "__selectFields": [
+                        "deviceName",
+                        "sourceData",
+                        "id",
+                        "description",
+                        "recordTags",
+                        "deviceMetadata",
+                        "reportMarkdown",
+                        "policyPackage",
+                        "managementMode",
+                        "connectionStatus",
+                        "configStatus",
+                        "deviceIP",
+                        "zTPStatus",
+                        "zTPProfiles",
+                        "connectorConfig",
+                        "managers"
+                    ]
+                },
+                "module": "devices?$limit=1000",
+                "checkboxFields": true,
+                "step_variables": {
+                    "record_data": "{%- set myrecords = vars.steps.Find_Devices -%}\n{%- set table = [] -%}\n{%- for r in myrecords -%}\n  {%- set rec = {} -%}\n  {%- set _do = rec.update(r) -%}\n  {%- set _do = table.append(rec) -%}\n  {%- set _do = rec.update({\"sourceData\":r.sourceData|toDict}) -%}\n  {%- set _do = rec.update({\"name\":r.deviceName}) -%}\n{%- endfor -%}\n{{table}}"
+                }
+            },
+            "status": null,
+            "top": "200",
+            "left": "400",
+            "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928770",
+            "group": null,
+            "uuid": "983e1801-35ee-4d7d-84e2-6b28613c394d"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Find Managers",
+            "description": null,
+            "arguments": {
+                "query": {
+                    "sort": [],
+                    "limit": 30,
+                    "logic": "AND",
+                    "filters": [
+                        {
+                            "type": "primitive",
+                            "field": "id",
+                            "value": "{{vars.record_list}}",
+                            "operator": "in",
+                            "_operator": "in"
+                        }
+                    ],
+                    "__selectFields": [
+                        "managerName",
+                        "sourceData",
+                        "id",
+                        "description",
+                        "recordTags"
+                    ]
+                },
+                "module": "managers?$limit=1000",
+                "checkboxFields": true,
+                "step_variables": {
+                    "record_data": "{%- set myrecords = vars.steps.Find_Managers -%}\n{%- set table = [] -%}\n{%- for r in myrecords -%}\n  {%- set rec = {} -%}\n  {%- set _do = rec.update(r) -%}\n  {%- set _do = rec.update({\"sourceData\":r.sourceData|toDict}) -%}\n  {%- set _do = table.append(rec) -%}\n{%- endfor -%}\n{{table}}"
+                }
+            },
+            "status": null,
+            "top": "120",
+            "left": "400",
+            "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928770",
+            "group": null,
+            "uuid": "085a972d-3fe4-42bd-a85d-508b609bc86d"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Find Metafield Templates",
+            "description": null,
+            "arguments": {
+                "query": {
+                    "sort": [],
+                    "limit": 30,
+                    "logic": "AND",
+                    "filters": [
+                        {
+                            "type": "primitive",
+                            "field": "id",
+                            "value": "{{vars.record_list}}",
+                            "operator": "in",
+                            "_operator": "in"
+                        }
+                    ],
+                    "__selectFields": [
+                        "name",
+                        "description",
+                        "metafieldTemplate",
+                        "metadataSources",
+                        "id",
+                        "recordTags",
+                        "orderPriority"
+                    ]
+                },
+                "module": "metafield_templates?$limit=1000",
+                "checkboxFields": true,
+                "step_variables": {
+                    "record_data": "{%- set myrecords = vars.steps.Find_Metafield_Templates -%}\n{%- set table = [] -%}\n{%- for r in myrecords -%}\n  {%- set rec = {} -%}\n  {%- set _do = rec.update(r) -%}\n  {%- set _do = table.append(rec) -%}\n{%- endfor -%}\n{{table}}"
+                }
+            },
+            "status": null,
+            "top": "280",
+            "left": "400",
+            "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928770",
+            "group": null,
+            "uuid": "3a52c8c5-2232-4e13-8cee-6d6d6060d46a"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Find Script Templates",
+            "description": null,
+            "arguments": {
+                "query": {
+                    "sort": [],
+                    "limit": 30,
+                    "logic": "AND",
+                    "filters": [
+                        {
+                            "type": "primitive",
+                            "field": "id",
+                            "value": "{{vars.record_list}}",
+                            "operator": "in",
+                            "_operator": "in"
+                        }
+                    ],
+                    "__selectFields": [
+                        "scriptName",
+                        "id",
+                        "description",
+                        "script",
+                        "scriptType",
+                        "scriptMetadataSources",
+                        "orderPriority",
+                        "recordTags"
+                    ]
+                },
+                "module": "scripts?$limit=1000",
+                "checkboxFields": true,
+                "step_variables": {
+                    "record_data": "{%- set myrecords = vars.steps.Find_Script_Templates -%}\n{%- set table = [] -%}\n{%- for r in myrecords -%}\n  {%- set rec = {} -%}\n  {%- set _do = rec.update(r) -%}\n  {%- set _do = table.append(rec) -%}\n{%- endfor -%}\n{{table}}"
+                }
+            },
+            "status": null,
+            "top": "360",
+            "left": "400",
+            "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928770",
+            "group": null,
+            "uuid": "fdc3d148-377e-456a-b745-6f1377ccbcc5"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Find ZTP Profiles",
+            "description": null,
+            "arguments": {
+                "query": {
+                    "sort": [],
+                    "limit": 30,
+                    "logic": "AND",
+                    "filters": [
+                        {
+                            "type": "primitive",
+                            "field": "id",
+                            "value": "{{vars.record_list}}",
+                            "operator": "in",
+                            "_operator": "in"
+                        }
+                    ],
+                    "__selectFields": [
+                        "name",
+                        "id",
+                        "profileMode",
+                        "description",
+                        "orderPriority",
+                        "assignmentMode",
+                        "assignmentSearchType",
+                        "assignmentSearchField",
+                        "assignmentSearchMetadataSources",
+                        "assignmentSearch",
+                        "aDOM",
+                        "deviceGroups",
+                        "provisioningTemplateGroup",
+                        "policyPackage",
+                        "zTPPhaseStart",
+                        "zTPStepMap",
+                        "zTPProfileNext",
+                        "clearLinkedMetafieldTemplates",
+                        "clearLinkedScripts",
+                        "clearDeviceMetadata",
+                        "retainProfileAssignment",
+                        "exportMetadataToFortiManager",
+                        "incompleteMetafieldEmail",
+                        "clearDeviceReports",
+                        "incompleteMetafieldDeviceMetadataField",
+                        "incompleteMetafieldEmailEnable",
+                        "skipDeleteDevice",
+                        "deviceMetadataMonitorRegex",
+                        "deviceMetadataMonitorInterval",
+                        "recordTags"
+                    ]
+                },
+                "module": "z_t_p_profiles?$limit=1000",
+                "checkboxFields": true,
+                "step_variables": {
+                    "record_data": "{%- set myrecords = vars.steps.Find_ZTP_Profiles -%}\n{%- set table = [] -%}\n{%- for r in myrecords -%}\n  {%- set rec = {} -%}\n  {%- set _do = rec.update(r) -%}\n  {%- set _do = table.append(rec) -%}\n  {%- set _do = rec.update({\"zTPStepMap\":r.zTPStepMap|toDict}) -%}\n{%- endfor -%}\n{{table}}"
+                }
+            },
+            "status": null,
+            "top": "440",
+            "left": "400",
+            "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928770",
+            "group": null,
+            "uuid": "38941b1e-e4c1-4b84-a3f5-b0553bf34c42"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Record Type Route",
+            "description": null,
+            "arguments": {
+                "conditions": [
+                    {
+                        "option": "Unknown",
+                        "default": true,
+                        "step_iri": "\/api\/3\/workflow_steps\/e12412a0-b514-427e-9724-e56d69f197ca",
+                        "step_name": "Unknown Record Type"
+                    },
+                    {
+                        "option": "",
+                        "step_iri": "\/api\/3\/workflow_steps\/085a972d-3fe4-42bd-a85d-508b609bc86d",
+                        "condition": "{{ \"Manager\" in vars.record_type }}",
+                        "step_name": "Find Managers"
+                    },
+                    {
+                        "option": "",
+                        "step_iri": "\/api\/3\/workflow_steps\/983e1801-35ee-4d7d-84e2-6b28613c394d",
+                        "condition": "{{ \"Device\" in vars.record_type }}",
+                        "step_name": "Find Devices"
+                    },
+                    {
+                        "option": "",
+                        "step_iri": "\/api\/3\/workflow_steps\/3a52c8c5-2232-4e13-8cee-6d6d6060d46a",
+                        "condition": "{{ \"MetafieldTemplate\" in vars.record_type }}",
+                        "step_name": "Find Metafield Templates"
+                    },
+                    {
+                        "option": "",
+                        "step_iri": "\/api\/3\/workflow_steps\/fdc3d148-377e-456a-b745-6f1377ccbcc5",
+                        "condition": "{{ \"Script\" in vars.record_type }}",
+                        "step_name": "Find Script Templates"
+                    },
+                    {
+                        "option": "",
+                        "step_iri": "\/api\/3\/workflow_steps\/38941b1e-e4c1-4b84-a3f5-b0553bf34c42",
+                        "condition": "{{ \"ZTPProfile\" in vars.record_type }}",
+                        "step_name": "Find ZTP Profiles"
+                    }
+                ],
+                "step_variables": []
+            },
+            "status": null,
+            "top": "120",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/12254cf5-5db7-4b1a-8cb1-3af081924b28",
+            "group": null,
+            "uuid": "76452ba1-b887-417f-a4af-81211aa63582"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "refactor record data",
+            "description": null,
+            "arguments": {
+                "record_data": "{%- set names = ['managerName','deviceName','scriptName'] -%}\n{%- set excl = ['@id'] -%}\n{%- set table = [] -%}\n{%- for r in vars.record_data -%}\n  {%- set rec = {} -%}\n  {%- for a in r -%}\n    {%- if a in names -%}\n      {%- set _do = rec.update({\"name\":r[a]}) -%}\n    {%- elif a not in excl -%}\n      {%- set _do = rec.update({a:r[a]}) -%}\n    {%- endif -%}\n  {%- endfor -%}\n  {%- set _do = table.append(rec) -%}\n{%- endfor -%}\n{{table}}"
+            },
+            "status": null,
+            "top": "280",
+            "left": "760",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "f06987a0-3007-4712-aa73-ac7c507ac1c4"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "setup",
+            "description": null,
+            "arguments": {
+                "timestamp": "{{arrow.utcnow().format(\"YYYY-MM-DD HH:mm:ss ZZ\")}}",
+                "record_list": "{{vars.input.params['record_id_list']}}",
+                "record_type": "{{vars.input.params['record_type']}}"
+            },
+            "status": null,
+            "top": "40",
+            "left": "360",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "962cfd88-1cfe-4077-8b85-789399d0664d"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Start",
+            "description": null,
+            "arguments": {
+                "__triggerLimit": true,
+                "step_variables": {
+                    "input": {
+                        "params": []
+                    }
+                },
+                "triggerOnSource": true,
+                "triggerOnReplicate": false
+            },
+            "status": null,
+            "top": "20",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/b348f017-9a94-471f-87f8-ce88b6a7ad62",
+            "group": null,
+            "uuid": "4fcce675-bee0-4dca-8569-5879cca5ab4c"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Unknown Record Type",
+            "description": null,
+            "arguments": {
+                "params": [],
+                "version": "3.2.5",
+                "connector": "cyops_utilities",
+                "operation": "no_op",
+                "operationTitle": "Utils: No Operation",
+                "step_variables": []
+            },
+            "status": null,
+            "top": "240",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/0109f35d-090b-4a2b-bd8a-94cbc3508562",
+            "group": null,
+            "uuid": "e12412a0-b514-427e-9724-e56d69f197ca"
+        }
+    ],
+    "routes": [
+        {
+            "@type": "WorkflowRoute",
+            "name": "Find Devices -> refactor record data",
+            "targetStep": "\/api\/3\/workflow_steps\/f06987a0-3007-4712-aa73-ac7c507ac1c4",
+            "sourceStep": "\/api\/3\/workflow_steps\/983e1801-35ee-4d7d-84e2-6b28613c394d",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "eb370455-0470-4200-a19b-6ab156302ba6"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Find Managers -> refactor record data",
+            "targetStep": "\/api\/3\/workflow_steps\/f06987a0-3007-4712-aa73-ac7c507ac1c4",
+            "sourceStep": "\/api\/3\/workflow_steps\/085a972d-3fe4-42bd-a85d-508b609bc86d",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "61668f30-4a08-4435-a6f4-27344d95fa2e"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Find Metafield Templates -> refactor record data",
+            "targetStep": "\/api\/3\/workflow_steps\/f06987a0-3007-4712-aa73-ac7c507ac1c4",
+            "sourceStep": "\/api\/3\/workflow_steps\/3a52c8c5-2232-4e13-8cee-6d6d6060d46a",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "063adaf9-794a-4c65-b6aa-fb756e7964d3"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Find Script Templates -> refactor record data",
+            "targetStep": "\/api\/3\/workflow_steps\/f06987a0-3007-4712-aa73-ac7c507ac1c4",
+            "sourceStep": "\/api\/3\/workflow_steps\/fdc3d148-377e-456a-b745-6f1377ccbcc5",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "cbb52d84-1ad0-4007-bf08-e197804945a1"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Find ZTP Profiles -> refactor record data",
+            "targetStep": "\/api\/3\/workflow_steps\/f06987a0-3007-4712-aa73-ac7c507ac1c4",
+            "sourceStep": "\/api\/3\/workflow_steps\/38941b1e-e4c1-4b84-a3f5-b0553bf34c42",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "1c69238d-e688-4d5d-b3ba-817b03729fae"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Record Type Route -> Find Devices",
+            "targetStep": "\/api\/3\/workflow_steps\/983e1801-35ee-4d7d-84e2-6b28613c394d",
+            "sourceStep": "\/api\/3\/workflow_steps\/76452ba1-b887-417f-a4af-81211aa63582",
+            "label": "",
+            "isExecuted": false,
+            "group": null,
+            "uuid": "76898173-73da-42ad-a71f-53f7da917216"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Record Type Route -> Find Managers",
+            "targetStep": "\/api\/3\/workflow_steps\/085a972d-3fe4-42bd-a85d-508b609bc86d",
+            "sourceStep": "\/api\/3\/workflow_steps\/76452ba1-b887-417f-a4af-81211aa63582",
+            "label": "",
+            "isExecuted": false,
+            "group": null,
+            "uuid": "b93d2366-7f48-465c-81d2-b55440088c39"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Record Type Route -> Find Metafield Templates",
+            "targetStep": "\/api\/3\/workflow_steps\/3a52c8c5-2232-4e13-8cee-6d6d6060d46a",
+            "sourceStep": "\/api\/3\/workflow_steps\/76452ba1-b887-417f-a4af-81211aa63582",
+            "label": "",
+            "isExecuted": false,
+            "group": null,
+            "uuid": "fef6152a-0fff-402e-945b-1d849c9d88dc"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Record Type Route -> Find Script Templates",
+            "targetStep": "\/api\/3\/workflow_steps\/fdc3d148-377e-456a-b745-6f1377ccbcc5",
+            "sourceStep": "\/api\/3\/workflow_steps\/76452ba1-b887-417f-a4af-81211aa63582",
+            "label": "",
+            "isExecuted": false,
+            "group": null,
+            "uuid": "d7b80988-451c-4c8a-9e0a-1b8e9cda25bf"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Record Type Route -> Find ZTP Profiles",
+            "targetStep": "\/api\/3\/workflow_steps\/38941b1e-e4c1-4b84-a3f5-b0553bf34c42",
+            "sourceStep": "\/api\/3\/workflow_steps\/76452ba1-b887-417f-a4af-81211aa63582",
+            "label": "",
+            "isExecuted": false,
+            "group": null,
+            "uuid": "282b105e-58b3-435e-9d23-7eab26acb8e9"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Record Type Route -> Unknown",
+            "targetStep": "\/api\/3\/workflow_steps\/e12412a0-b514-427e-9724-e56d69f197ca",
+            "sourceStep": "\/api\/3\/workflow_steps\/76452ba1-b887-417f-a4af-81211aa63582",
+            "label": "Unknown",
+            "isExecuted": false,
+            "group": null,
+            "uuid": "93e5bc8d-67f6-48ce-aa2a-97f597fcdbf8"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "refactor record data -> Create Archive",
+            "targetStep": "\/api\/3\/workflow_steps\/c3cc0714-d380-4554-b95e-e3a2c33c66b5",
+            "sourceStep": "\/api\/3\/workflow_steps\/f06987a0-3007-4712-aa73-ac7c507ac1c4",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "3e0d8e86-e392-4cad-97a3-c2c7abb65245"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "setup -> Record Type Route",
+            "targetStep": "\/api\/3\/workflow_steps\/76452ba1-b887-417f-a4af-81211aa63582",
+            "sourceStep": "\/api\/3\/workflow_steps\/962cfd88-1cfe-4077-8b85-789399d0664d",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "991a7e7b-1f3d-4977-b92c-8faddd6436c5"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Start -> setup",
+            "targetStep": "\/api\/3\/workflow_steps\/962cfd88-1cfe-4077-8b85-789399d0664d",
+            "sourceStep": "\/api\/3\/workflow_steps\/4fcce675-bee0-4dca-8569-5879cca5ab4c",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "3215a896-b871-4166-8b13-63e6360f0264"
+        }
+    ],
+    "groups": [],
+    "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+    "uuid": "7feb5701-5e77-4202-b767-ee2393e9afa4",
+    "owners": [],
+    "isPrivate": false,
+    "deletedAt": null,
+    "recordTags": [
+        "Subroutine",
+        "ZTPF-Archive-Admins"
+    ]
+}

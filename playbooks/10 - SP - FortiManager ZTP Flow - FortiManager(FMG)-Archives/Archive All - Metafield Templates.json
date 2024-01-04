@@ -1,0 +1,168 @@
+{
+    "@type": "Workflow",
+    "triggerLimit": null,
+    "name": "Archive All - Metafield Templates",
+    "aliasName": null,
+    "tag": null,
+    "description": "Archive All Records",
+    "isActive": true,
+    "debug": false,
+    "singleRecordExecution": false,
+    "remoteExecutableFlag": false,
+    "parameters": [],
+    "synchronous": false,
+    "collection": "\/api\/3\/workflow_collections\/f875a3f7-b3fb-4477-b89a-7cad664da967",
+    "versions": [],
+    "triggerStep": "\/api\/3\/workflow_steps\/01f24e30-9466-4e93-9390-a7633d99c016",
+    "steps": [
+        {
+            "@type": "WorkflowStep",
+            "name": "Archive Records",
+            "description": null,
+            "arguments": {
+                "arguments": {
+                    "record_type": "{{vars.record_type}}",
+                    "record_id_list": "{{vars.record_list}}"
+                },
+                "apply_async": false,
+                "step_variables": [],
+                "pass_parent_env": false,
+                "pass_input_record": false,
+                "workflowReference": "\/api\/3\/workflows\/7feb5701-5e77-4202-b767-ee2393e9afa4"
+            },
+            "status": null,
+            "top": "120",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
+            "group": null,
+            "uuid": "e724f1e5-c7eb-4c02-a599-e1ae4ac24bc7"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Find Records",
+            "description": null,
+            "arguments": {
+                "query": {
+                    "sort": [],
+                    "limit": 30,
+                    "logic": "AND",
+                    "filters": [],
+                    "__selectFields": [
+                        "id"
+                    ]
+                },
+                "module": "metafield_templates?$limit=5000",
+                "checkboxFields": true,
+                "step_variables": {
+                    "record_list": "{{vars.steps.Find_Records|json_query('[].id')}}",
+                    "record_type": "{{vars.steps.Find_Records[0]['@type']}}"
+                }
+            },
+            "status": null,
+            "top": "80",
+            "left": "360",
+            "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928770",
+            "group": null,
+            "uuid": "565d3cc2-dda1-441d-8202-5ceff969d3c0"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Start",
+            "description": null,
+            "arguments": {
+                "route": "02c236db-6624-4865-ac4e-ea8a2e20bff8",
+                "title": "Archive All Records",
+                "resources": [
+                    "metafield_templates"
+                ],
+                "__triggerLimit": true,
+                "inputVariables": [],
+                "step_variables": {
+                    "input": {
+                        "params": [],
+                        "records": "{{vars.input.records}}"
+                    }
+                },
+                "triggerOnSource": true,
+                "displayConditions": {
+                    "devices": {
+                        "sort": [],
+                        "limit": 30,
+                        "logic": "AND",
+                        "filters": []
+                    },
+                    "scripts": {
+                        "sort": [],
+                        "limit": 30,
+                        "logic": "AND",
+                        "filters": []
+                    },
+                    "managers": {
+                        "sort": [],
+                        "limit": 30,
+                        "logic": "AND",
+                        "filters": []
+                    },
+                    "z_t_p_profiles": {
+                        "sort": [],
+                        "limit": 30,
+                        "logic": "AND",
+                        "filters": []
+                    },
+                    "metafield_templates": {
+                        "sort": [],
+                        "limit": 30,
+                        "logic": "AND",
+                        "filters": []
+                    }
+                },
+                "executeButtonText": "Execute",
+                "noRecordExecution": true,
+                "showToasterMessage": {
+                    "visible": false,
+                    "messageVisible": true
+                },
+                "triggerOnReplicate": false,
+                "singleRecordExecution": false
+            },
+            "status": null,
+            "top": "40",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/f414d039-bb0d-4e59-9c39-a8f1e880b18a",
+            "group": null,
+            "uuid": "01f24e30-9466-4e93-9390-a7633d99c016"
+        }
+    ],
+    "routes": [
+        {
+            "@type": "WorkflowRoute",
+            "name": "Find Records -> Archive Records",
+            "targetStep": "\/api\/3\/workflow_steps\/e724f1e5-c7eb-4c02-a599-e1ae4ac24bc7",
+            "sourceStep": "\/api\/3\/workflow_steps\/565d3cc2-dda1-441d-8202-5ceff969d3c0",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "90fb9e46-0a17-4142-ad1e-6bc25145db06"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Start -> Find Records",
+            "targetStep": "\/api\/3\/workflow_steps\/565d3cc2-dda1-441d-8202-5ceff969d3c0",
+            "sourceStep": "\/api\/3\/workflow_steps\/01f24e30-9466-4e93-9390-a7633d99c016",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "a5d3c9fb-e944-439d-b074-90f46a77e9cb"
+        }
+    ],
+    "groups": [],
+    "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+    "uuid": "cdcb3bf0-e496-4bc5-b3fa-ea6b704f247b",
+    "owners": [],
+    "isPrivate": false,
+    "deletedAt": null,
+    "recordTags": [
+        "Button",
+        "ZTPF-Archive-Admins"
+    ]
+}

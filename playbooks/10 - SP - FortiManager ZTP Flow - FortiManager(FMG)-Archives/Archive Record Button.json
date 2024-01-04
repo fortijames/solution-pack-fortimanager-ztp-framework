@@ -1,0 +1,159 @@
+{
+    "@type": "Workflow",
+    "triggerLimit": null,
+    "name": "Archive Record Button",
+    "aliasName": null,
+    "tag": null,
+    "description": "Archive Record",
+    "isActive": true,
+    "debug": false,
+    "singleRecordExecution": false,
+    "remoteExecutableFlag": false,
+    "parameters": [],
+    "synchronous": false,
+    "collection": "\/api\/3\/workflow_collections\/f875a3f7-b3fb-4477-b89a-7cad664da967",
+    "versions": [],
+    "triggerStep": "\/api\/3\/workflow_steps\/ae31b201-7368-4026-8a52-7249a3ba4d5c",
+    "steps": [
+        {
+            "@type": "WorkflowStep",
+            "name": "Archive Records",
+            "description": null,
+            "arguments": {
+                "arguments": {
+                    "record_type": "{{vars.record_type}}",
+                    "record_id_list": "{{vars.record_list}}"
+                },
+                "apply_async": false,
+                "step_variables": [],
+                "pass_parent_env": false,
+                "pass_input_record": false,
+                "workflowReference": "\/api\/3\/workflows\/7feb5701-5e77-4202-b767-ee2393e9afa4"
+            },
+            "status": null,
+            "top": "120",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
+            "group": null,
+            "uuid": "c2979ae6-ef45-44fa-a6f3-ac35bf119dd2"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "setup",
+            "description": null,
+            "arguments": {
+                "record_list": "{{vars.input.records|json_query('[].id')}}",
+                "record_type": "{{vars.input.records[0]['@type']}}"
+            },
+            "status": null,
+            "top": "80",
+            "left": "360",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "88bcd840-a1f8-4566-9ea1-c8e420284e0d"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Start",
+            "description": null,
+            "arguments": {
+                "route": "c8c80977-e6ff-486b-a5b3-af575785a5e8",
+                "title": "Create Archive Record",
+                "resources": [
+                    "devices",
+                    "managers",
+                    "scripts",
+                    "z_t_p_profiles",
+                    "metafield_templates"
+                ],
+                "__triggerLimit": true,
+                "inputVariables": [],
+                "step_variables": {
+                    "input": {
+                        "params": [],
+                        "records": "{{vars.input.records}}"
+                    }
+                },
+                "triggerOnSource": true,
+                "displayConditions": {
+                    "devices": {
+                        "sort": [],
+                        "limit": 30,
+                        "logic": "AND",
+                        "filters": []
+                    },
+                    "scripts": {
+                        "sort": [],
+                        "limit": 30,
+                        "logic": "AND",
+                        "filters": []
+                    },
+                    "managers": {
+                        "sort": [],
+                        "limit": 30,
+                        "logic": "AND",
+                        "filters": []
+                    },
+                    "z_t_p_profiles": {
+                        "sort": [],
+                        "limit": 30,
+                        "logic": "AND",
+                        "filters": []
+                    },
+                    "metafield_templates": {
+                        "sort": [],
+                        "limit": 30,
+                        "logic": "AND",
+                        "filters": []
+                    }
+                },
+                "executeButtonText": "Execute",
+                "noRecordExecution": false,
+                "showToasterMessage": {
+                    "visible": false,
+                    "messageVisible": true
+                },
+                "triggerOnReplicate": false,
+                "singleRecordExecution": false
+            },
+            "status": null,
+            "top": "40",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/f414d039-bb0d-4e59-9c39-a8f1e880b18a",
+            "group": null,
+            "uuid": "ae31b201-7368-4026-8a52-7249a3ba4d5c"
+        }
+    ],
+    "routes": [
+        {
+            "@type": "WorkflowRoute",
+            "name": "setup -> Archive Records",
+            "targetStep": "\/api\/3\/workflow_steps\/c2979ae6-ef45-44fa-a6f3-ac35bf119dd2",
+            "sourceStep": "\/api\/3\/workflow_steps\/88bcd840-a1f8-4566-9ea1-c8e420284e0d",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "4a8cabca-88a8-4cc3-ac80-4750434b8ea3"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Start -> setup",
+            "targetStep": "\/api\/3\/workflow_steps\/88bcd840-a1f8-4566-9ea1-c8e420284e0d",
+            "sourceStep": "\/api\/3\/workflow_steps\/ae31b201-7368-4026-8a52-7249a3ba4d5c",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "d9ed8033-6d4f-4394-ad04-317c5c1ca141"
+        }
+    ],
+    "groups": [],
+    "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+    "uuid": "9b90c7ba-ecad-4159-8a05-6ce6917bb1b4",
+    "owners": [],
+    "isPrivate": false,
+    "deletedAt": null,
+    "recordTags": [
+        "Button",
+        "ZTPF-Archive-Admins"
+    ]
+}
