@@ -1,9 +1,19 @@
 # What's New
 
-Release of 1.0.2:
- - Add jinja vars support to ztp profile assignments and update docs to reflect this change.
+Release of 1.0.3:
+ - Add ZTP Archives module for saving snapshots of ZTP records. 
+ - Add ZTPF Teams and Roles for Users and Admins. 
+ - Renamed Roles:
+   `FortiManager-Playbook-Appliance` -> `ZTPF-Playbook-Appliance` 
+   `FortiManager-Admin` -> `ZTPF-Admin`
 
 # Known Bugs
+
+## Teams and Private Playbooks (0986751)
+
+
+
+See internal Bug ID `0986751` for the latest status of the bug. 
 
 ## Dashboard Dynamic Content ( 0932566 )
 

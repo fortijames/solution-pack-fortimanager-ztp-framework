@@ -2,7 +2,11 @@
 |--------------------------------------------|
 
 # Change Log
-- 20231228
+ - 20240105 (1.0.3)
+  - Add ZTP Archive Module and Playbooks to create archive records. 
+  - Rename Roles and Teams to be `ZTPF` to simplify finding objects. 
+
+- 20231228 (1.0.2)
  - Add jinja vars support to ztp profile assignments and update docs to reflect this change.
 
 - 20230822
@@ -15,7 +19,7 @@
   - Add comment when assigning ZTP Profile. 
   
 - 20230712
-  - Update device record comments with status/details from retreive device config.
+  - Update device record comments with status/details from retrieve device config.
 
 - 20230706
   - Update device record comments with status/details from install config and policy package. 
@@ -57,7 +61,7 @@
   - Add new playbooks for metafield handling and for auto assign options.
 
 - 20230511
-  - Add logic to allow for chainint ZTP Profiles together. 
+  - Add logic to allow for chaining ZTP Profiles together. 
 
 - 20230509
   - Tweak ZTP Auto Assignment and add Step Configuration. 
@@ -85,7 +89,7 @@
   - ZTP Profiles run a link and metadata merge on change. 
 
 - 20230417
-  - Metdata templates now also support rendering per device.
+  - Metadata templates now also support rendering per device.
 
 - 20230414
   - Add Metafield Templates and ZTP Profiles.
@@ -152,11 +156,11 @@
   - Change button logic to match status fields. 
 
 - 20230320
-  - Support comma seperated configs on db synch.
+  - Support comma separated configs on db synch.
   - Delete now also clears status fields. 
 
 - 20230317
   - Add synch with status in the playbook.
   - Multitenant support. 
   - Device Records with comments.
-  - Playbooks inclue synch, auth, and delete.
+  - Playbooks include synch, auth, and delete.
