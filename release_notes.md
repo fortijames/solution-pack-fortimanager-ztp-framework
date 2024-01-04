@@ -16,10 +16,6 @@
 
 # Known Bugs
 
-## Teams and Private Playbooks (0986751)
-
-See internal Bug ID `0986751` for the latest status of the bug. 
-
 ## Dashboard Dynamic Content ( 0932566 )
 
 If you are updating an existing solution pack then the included Announcement might be auto-incremented. This impacts the Dashboard Quick Links. To fix this SSH into FortiSOAR and run the following command until this is fixed. 
