@@ -10,5 +10,5 @@ Options, guidelines, and customizations for setting up your FortiManager ZTP Flo
 
  # Next Steps
 
-| [Usage](./usage.md) | [Contents](./contents.md) |
+| [Usage](../usage.md) | [Contents](../contents.md) |
 |--------------------------|--------------------------------|
