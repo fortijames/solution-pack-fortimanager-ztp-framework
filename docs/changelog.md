@@ -1,10 +1,11 @@
 | [Home](../README.md) |
-|--------------------------------------------|
+|----------------------|
 
 # Change Log
- - 20240105 (1.0.3)
+- 20240105 (1.0.3)
   - Add ZTP Archive Module and Playbooks to create archive records. 
   - Rename Roles and Teams to be `ZTPF` to simplify finding objects. 
+  - Update Docs
 
 - 20231228 (1.0.2)
  - Add jinja vars support to ztp profile assignments and update docs to reflect this change.
