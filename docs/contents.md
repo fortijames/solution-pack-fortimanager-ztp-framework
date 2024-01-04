@@ -47,5 +47,7 @@ The **FortiManager ZTP Flow** solution pack contains the following resources.
 
 >**Warning:** We recommend that you clone these playbooks before customizing to avoid loss of information while upgrading the solution pack.
 
-| [Installation](./setup.md#installation) | [Configuration](./setup.md#configuration) | [Usage](./usage.md) |
-|-----------------------------------------|-------------------------------------------|---------------------|
+ # Next Steps
+
+| [Contents](./docs/contents.md) |
+|--------------------------------|

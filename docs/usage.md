@@ -30,5 +30,7 @@ The ZTP Profiles module describes how to handle the provisioning of each device 
  * [Multiple ZTP Profile Example](./usage/example1.md): Provision of 4x Unauthorized FortiGates VMs in FortiManager starting by simply assigning a ZTP Profile.
  * [Jinja Rendering with Metafield Sources](./usage/jinja_rendering_with_metafield_sources.md): Dynamic Metafield Source options for enhancing the provisioning experience. 
 
-| [Installation](./setup.md#installation) | [Configuration](./setup.md#configuration) | [Contents](./contents.md) |
-|-----------------------------------------|-------------------------------------------|---------------------------|
+ # Next Steps
+
+| [Contents](./docs/contents.md) |
+|--------------------------------|
