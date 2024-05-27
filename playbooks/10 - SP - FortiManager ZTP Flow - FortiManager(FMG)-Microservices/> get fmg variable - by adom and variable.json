@@ -1,0 +1,116 @@
+{
+    "@type": "Workflow",
+    "triggerLimit": null,
+    "name": "> get fmg variable - by adom and variable",
+    "aliasName": null,
+    "tag": null,
+    "description": "Get variables by ADOM and return with scope members.",
+    "isActive": true,
+    "debug": false,
+    "singleRecordExecution": false,
+    "remoteExecutableFlag": false,
+    "parameters": [
+        "connector_config",
+        "adom",
+        "variable"
+    ],
+    "synchronous": false,
+    "collection": "\/api\/3\/workflow_collections\/acff9572-b869-4ceb-bbc1-1c3700ec9a4e",
+    "versions": [],
+    "triggerStep": "\/api\/3\/workflow_steps\/b4f7c028-ba8a-4968-a840-b26682af45d8",
+    "steps": [
+        {
+            "@type": "WorkflowStep",
+            "name": "extract fmg data",
+            "description": null,
+            "arguments": {
+                "output": "{{vars.steps.get_fmg_data.data.get_response}}"
+            },
+            "status": null,
+            "top": "220",
+            "left": "60",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "a453778b-3776-4979-b06f-25bbdd09ff53"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "get_fmg_data",
+            "description": null,
+            "arguments": {
+                "name": "Fortinet FortiManager JSON-RPC",
+                "config": "{{vars.input.params['connector_config']}}",
+                "params": {
+                    "url": "\/pm\/config\/adom\/{{vars.input.params['adom']}}\/obj\/fmg\/variable\/{{vars.input.params.variable}}",
+                    "data": "{\n  \"option\": [\n    \"object member\",\n    \"extra info\"\n  ]\n}"
+                },
+                "version": "1.0.0",
+                "connector": "fortinet-fortimanager-json-rpc",
+                "operation": "json_rpc_get",
+                "operationTitle": "JSON RPC Get",
+                "pickFromTenant": false,
+                "step_variables": []
+            },
+            "status": null,
+            "top": "160",
+            "left": "380",
+            "stepType": "\/api\/3\/workflow_step_types\/0bfed618-0316-11e7-93ae-92361f002671",
+            "group": null,
+            "uuid": "f9fec0d2-7f10-40b2-8d26-5f615de6a8f0"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Start",
+            "description": null,
+            "arguments": {
+                "step_variables": {
+                    "input": {
+                        "params": []
+                    }
+                }
+            },
+            "status": null,
+            "top": "100",
+            "left": "60",
+            "stepType": "\/api\/3\/workflow_step_types\/b348f017-9a94-471f-87f8-ce88b6a7ad62",
+            "group": null,
+            "uuid": "b4f7c028-ba8a-4968-a840-b26682af45d8"
+        }
+    ],
+    "routes": [
+        {
+            "@type": "WorkflowRoute",
+            "name": "Get Devices in FMG -> extract data",
+            "targetStep": "\/api\/3\/workflow_steps\/a453778b-3776-4979-b06f-25bbdd09ff53",
+            "sourceStep": "\/api\/3\/workflow_steps\/f9fec0d2-7f10-40b2-8d26-5f615de6a8f0",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "b6f613ed-71cb-47f2-867f-075fa0de9631"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Start -> Get Devices in FMG",
+            "targetStep": "\/api\/3\/workflow_steps\/f9fec0d2-7f10-40b2-8d26-5f615de6a8f0",
+            "sourceStep": "\/api\/3\/workflow_steps\/b4f7c028-ba8a-4968-a840-b26682af45d8",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "b2e43e54-6aeb-46d1-b061-6142979fe4c1"
+        }
+    ],
+    "groups": [],
+    "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+    "uuid": "cbaf92ca-a669-4ea6-9e34-5fc1b3b879bd",
+    "owners": [],
+    "isPrivate": false,
+    "deletedAt": null,
+    "recordTags": [
+        "adom",
+        "connector_config",
+        "json_rpc",
+        "output",
+        "Subroutine",
+        "variable"
+    ]
+}

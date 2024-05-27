@@ -1,0 +1,111 @@
+{
+    "@type": "Workflow",
+    "triggerLimit": null,
+    "name": "> get fmg status",
+    "aliasName": null,
+    "tag": null,
+    "description": "Get the FortiManager Status",
+    "isActive": true,
+    "debug": false,
+    "singleRecordExecution": false,
+    "remoteExecutableFlag": false,
+    "parameters": [
+        "connector_config"
+    ],
+    "synchronous": false,
+    "collection": "\/api\/3\/workflow_collections\/acff9572-b869-4ceb-bbc1-1c3700ec9a4e",
+    "versions": [],
+    "triggerStep": "\/api\/3\/workflow_steps\/82e07b15-6429-4821-a840-74cbc4b3df7a",
+    "steps": [
+        {
+            "@type": "WorkflowStep",
+            "name": "extract_results",
+            "description": null,
+            "arguments": {
+                "output": "{{vars.steps.get_fmg_status.data['get_response']}}"
+            },
+            "status": null,
+            "top": "160",
+            "left": "380",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "d039eacc-1d23-4b40-9040-1a067ff08838"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "get_fmg_status",
+            "description": null,
+            "arguments": {
+                "name": "Fortinet FortiManager JSON-RPC",
+                "config": "{{vars.input.params['connector_config']}}",
+                "params": {
+                    "url": "\/cli\/global\/system\/status",
+                    "data": "{\n  \"option\":[]\n}"
+                },
+                "version": "1.0.0",
+                "connector": "fortinet-fortimanager-json-rpc",
+                "operation": "json_rpc_get",
+                "operationTitle": "JSON RPC Get",
+                "pickFromTenant": false,
+                "step_variables": []
+            },
+            "status": null,
+            "top": "40",
+            "left": "380",
+            "stepType": "\/api\/3\/workflow_step_types\/0bfed618-0316-11e7-93ae-92361f002671",
+            "group": null,
+            "uuid": "4ca522af-681c-459b-a1c7-181100e6ff1f"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Start",
+            "description": null,
+            "arguments": {
+                "step_variables": {
+                    "input": {
+                        "params": []
+                    }
+                }
+            },
+            "status": null,
+            "top": "40",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/b348f017-9a94-471f-87f8-ce88b6a7ad62",
+            "group": null,
+            "uuid": "82e07b15-6429-4821-a840-74cbc4b3df7a"
+        }
+    ],
+    "routes": [
+        {
+            "@type": "WorkflowRoute",
+            "name": "get_fmg_status -> extract_results",
+            "targetStep": "\/api\/3\/workflow_steps\/d039eacc-1d23-4b40-9040-1a067ff08838",
+            "sourceStep": "\/api\/3\/workflow_steps\/4ca522af-681c-459b-a1c7-181100e6ff1f",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "35c615c3-3f97-4714-8c84-206cb4a1e4ba"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Start -> get_fmg_status",
+            "targetStep": "\/api\/3\/workflow_steps\/4ca522af-681c-459b-a1c7-181100e6ff1f",
+            "sourceStep": "\/api\/3\/workflow_steps\/82e07b15-6429-4821-a840-74cbc4b3df7a",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "5f5d3adc-a4b0-4d69-9347-07be8d2c2f81"
+        }
+    ],
+    "groups": [],
+    "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+    "uuid": "59c50602-c544-4ebf-b675-d3f5a203b78b",
+    "owners": [],
+    "isPrivate": false,
+    "deletedAt": null,
+    "recordTags": [
+        "connector_config",
+        "output",
+        "Subroutine"
+    ]
+}

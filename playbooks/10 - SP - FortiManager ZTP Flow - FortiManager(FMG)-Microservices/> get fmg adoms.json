@@ -1,0 +1,110 @@
+{
+    "@type": "Workflow",
+    "triggerLimit": null,
+    "name": "> get fmg adoms",
+    "aliasName": null,
+    "tag": null,
+    "description": "Use json_rpc to get FMG fos adoms returned in {{output}}.",
+    "isActive": true,
+    "debug": false,
+    "singleRecordExecution": false,
+    "remoteExecutableFlag": false,
+    "parameters": [
+        "fortimanager_config"
+    ],
+    "synchronous": false,
+    "collection": "\/api\/3\/workflow_collections\/acff9572-b869-4ceb-bbc1-1c3700ec9a4e",
+    "versions": [],
+    "triggerStep": "\/api\/3\/workflow_steps\/5ecdf5fd-2ee8-4520-821d-cbb37603b18a",
+    "steps": [
+        {
+            "@type": "WorkflowStep",
+            "name": "extract fmg device data",
+            "description": null,
+            "arguments": {
+                "output": "{{vars.steps.get_fmg_adoms.data.get_response}}"
+            },
+            "status": null,
+            "top": "120",
+            "left": "900",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "3d621df6-288c-4e9e-96c8-43c70d325d04"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "get fmg adoms",
+            "description": null,
+            "arguments": {
+                "name": "Fortinet FortiManager JSON-RPC",
+                "config": "{{vars.input.params['fortimanager_config']}}",
+                "params": {
+                    "url": "\/dvmdb\/adom",
+                    "data": "{\n  \"filter\": [\n    [\n      [\n        \"restricted_prds\",\n        \"==\",\n        \"fos\"\n      ],\n      \"||\",\n      [\n        \"restricted_prds\",\n        \"==\",\n        \"fabric\"\n      ]\n    ],\n    \"&&\",\n    [\n      \"name\",\n      \"!=\",\n      \"rootp\"\n    ],\n    \"&&\",\n    [\n      \"name\",\n      \"!=\",\n      \"Unmanaged_Devices\"\n    ]\n  ]\n}"
+                },
+                "version": "1.0.0",
+                "connector": "fortinet-fortimanager-json-rpc",
+                "operation": "json_rpc_get",
+                "operationTitle": "JSON RPC Get",
+                "pickFromTenant": false,
+                "step_variables": []
+            },
+            "status": null,
+            "top": "120",
+            "left": "520",
+            "stepType": "\/api\/3\/workflow_step_types\/0bfed618-0316-11e7-93ae-92361f002671",
+            "group": null,
+            "uuid": "ddbee252-ef8d-4a7f-8204-8bbcef3c4655"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Start",
+            "description": null,
+            "arguments": {
+                "step_variables": {
+                    "input": {
+                        "params": []
+                    }
+                }
+            },
+            "status": null,
+            "top": "120",
+            "left": "100",
+            "stepType": "\/api\/3\/workflow_step_types\/b348f017-9a94-471f-87f8-ce88b6a7ad62",
+            "group": null,
+            "uuid": "5ecdf5fd-2ee8-4520-821d-cbb37603b18a"
+        }
+    ],
+    "routes": [
+        {
+            "@type": "WorkflowRoute",
+            "name": "Get Devices in FMG -> extract data",
+            "targetStep": "\/api\/3\/workflow_steps\/3d621df6-288c-4e9e-96c8-43c70d325d04",
+            "sourceStep": "\/api\/3\/workflow_steps\/ddbee252-ef8d-4a7f-8204-8bbcef3c4655",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "c614b907-42a4-4fea-a787-88498e0a8ebb"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Start -> Get Devices in FMG",
+            "targetStep": "\/api\/3\/workflow_steps\/ddbee252-ef8d-4a7f-8204-8bbcef3c4655",
+            "sourceStep": "\/api\/3\/workflow_steps\/5ecdf5fd-2ee8-4520-821d-cbb37603b18a",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "54522c9f-f11c-409d-b462-ca0bccd855f8"
+        }
+    ],
+    "groups": [],
+    "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+    "uuid": "c7781dd3-2aed-423e-91d1-d686bee7b4b4",
+    "owners": [],
+    "isPrivate": false,
+    "deletedAt": null,
+    "recordTags": [
+        "json_rpc",
+        "Subroutine"
+    ]
+}

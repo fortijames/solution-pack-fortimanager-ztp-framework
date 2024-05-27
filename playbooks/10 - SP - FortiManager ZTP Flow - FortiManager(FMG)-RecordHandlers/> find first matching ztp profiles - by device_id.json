@@ -1,0 +1,206 @@
+{
+    "@type": "Workflow",
+    "triggerLimit": null,
+    "name": "> find first matching ztp profiles - by device_id",
+    "aliasName": null,
+    "tag": null,
+    "description": "Using a device id iterate through all profiles and assign the matching profile.",
+    "isActive": true,
+    "debug": false,
+    "singleRecordExecution": false,
+    "remoteExecutableFlag": false,
+    "parameters": [
+        "record_id"
+    ],
+    "synchronous": false,
+    "collection": "\/api\/3\/workflow_collections\/30263dc4-42e1-4184-96f5-e8e873450439",
+    "versions": [],
+    "triggerStep": "\/api\/3\/workflow_steps\/2b67733a-a07e-4eb8-bf98-7a55ae0732ef",
+    "steps": [
+        {
+            "@type": "WorkflowStep",
+            "name": "find_ztp_profiles",
+            "description": null,
+            "arguments": {
+                "query": {
+                    "sort": [
+                        {
+                            "field": "orderPriority",
+                            "direction": "ASC",
+                            "_fieldName": "orderPriority",
+                            "_fieldTitle": "Order Priority"
+                        }
+                    ],
+                    "limit": 30,
+                    "logic": "AND",
+                    "filters": [
+                        {
+                            "type": "array",
+                            "field": "assignmentMode",
+                            "value": [
+                                "23454edf-9753-4965-bb1f-76cefbea4a15"
+                            ],
+                            "module": "assignmentMode",
+                            "display": "",
+                            "operator": "in",
+                            "template": "multiselectpicklist",
+                            "enableJinja": true,
+                            "OPERATOR_KEY": "$",
+                            "useInOperator": true,
+                            "previousOperator": "in",
+                            "previousTemplate": "multiselectpicklist"
+                        },
+                        {
+                            "type": "object",
+                            "field": "profileMode",
+                            "value": "\/api\/3\/picklists\/72700027-b6a4-4897-93fc-ab1be695068a",
+                            "_value": {
+                                "@id": "\/api\/3\/picklists\/72700027-b6a4-4897-93fc-ab1be695068a",
+                                "display": "Disable",
+                                "itemValue": "Disable"
+                            },
+                            "operator": "neq"
+                        }
+                    ],
+                    "__selectFields": [
+                        "name",
+                        "orderPriority",
+                        "id"
+                    ]
+                },
+                "module": "z_t_p_profiles?$limit=5000",
+                "checkboxFields": true,
+                "step_variables": []
+            },
+            "status": null,
+            "top": "140",
+            "left": "540",
+            "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928770",
+            "group": null,
+            "uuid": "83558a37-be4b-426c-8f7a-d3760aa9e12c"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "loop through profiles",
+            "description": "ztp profile assignment search on device_id and assign if needed",
+            "arguments": {
+                "for_each": {
+                    "item": "{{vars.steps.find_ztp_profiles|json_query('[].id')}}",
+                    "__bulk": false,
+                    "parallel": false,
+                    "condition": ""
+                },
+                "arguments": {
+                    "record_id_list": "{{vars.record_id}}",
+                    "ztp_profile_id": "{{vars.item}}"
+                },
+                "apply_async": false,
+                "step_variables": [],
+                "pass_parent_env": false,
+                "pass_input_record": false,
+                "workflowReference": "\/api\/3\/workflows\/7e29ca80-7657-462c-8766-f46902907e65"
+            },
+            "status": null,
+            "top": "280",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
+            "group": null,
+            "uuid": "ef29354c-3055-403f-9f94-6afc0a7cdb35"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "setup env",
+            "description": null,
+            "arguments": {
+                "record_id": "{{vars.input.params['record_id']}}"
+            },
+            "status": null,
+            "top": "40",
+            "left": "360",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "3ed64158-93a0-4b5e-a187-d527dec86891"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Start",
+            "description": null,
+            "arguments": {
+                "__triggerLimit": true,
+                "step_variables": {
+                    "input": {
+                        "params": []
+                    }
+                },
+                "triggerOnSource": true,
+                "triggerOnReplicate": false
+            },
+            "status": null,
+            "top": "40",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/b348f017-9a94-471f-87f8-ce88b6a7ad62",
+            "group": null,
+            "uuid": "2b67733a-a07e-4eb8-bf98-7a55ae0732ef"
+        }
+    ],
+    "routes": [
+        {
+            "@type": "WorkflowRoute",
+            "name": "find_ztp_profiles -> assginment_search",
+            "targetStep": "\/api\/3\/workflow_steps\/ef29354c-3055-403f-9f94-6afc0a7cdb35",
+            "sourceStep": "\/api\/3\/workflow_steps\/83558a37-be4b-426c-8f7a-d3760aa9e12c",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "270b20ce-3215-4dbc-8c10-f4615a0c894b"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "setup env -> find_ztp_profiles",
+            "targetStep": "\/api\/3\/workflow_steps\/83558a37-be4b-426c-8f7a-d3760aa9e12c",
+            "sourceStep": "\/api\/3\/workflow_steps\/3ed64158-93a0-4b5e-a187-d527dec86891",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "7c181c1f-a11f-49f5-8f25-6a97c766847d"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Start -> setup env",
+            "targetStep": "\/api\/3\/workflow_steps\/3ed64158-93a0-4b5e-a187-d527dec86891",
+            "sourceStep": "\/api\/3\/workflow_steps\/2b67733a-a07e-4eb8-bf98-7a55ae0732ef",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "082847e1-f0e2-4118-9cb1-363451614295"
+        }
+    ],
+    "groups": [
+        {
+            "@type": "WorkflowGroup",
+            "name": "Summary",
+            "description": "Find all auto assign ZTP Profiles and loop through each to find a match to this device record.",
+            "type": "note",
+            "isCollapsed": false,
+            "hasTriggerStep": false,
+            "hideInLogs": false,
+            "metadata": [],
+            "reusable": false,
+            "top": "140",
+            "left": "40",
+            "height": "117",
+            "width": "337",
+            "uuid": "3e64a12c-dd2e-435a-9a21-494e9610c681",
+            "recordTags": []
+        }
+    ],
+    "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+    "uuid": "c077ff3b-e7cb-4ed0-98b1-0bc15331588c",
+    "owners": [],
+    "isPrivate": false,
+    "deletedAt": null,
+    "recordTags": [
+        "Subroutine",
+        "ZTP Profile"
+    ]
+}

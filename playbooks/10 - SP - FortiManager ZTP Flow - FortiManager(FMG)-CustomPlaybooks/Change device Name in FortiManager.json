@@ -1,0 +1,161 @@
+{
+    "@type": "Workflow",
+    "triggerLimit": null,
+    "name": "Change device Name in FortiManager",
+    "aliasName": null,
+    "tag": null,
+    "description": "Input should have the following: {\"fmg_config\": \"FMG\",\"name\": \"FG\",\"newname\": \"FG-NEW\"}",
+    "isActive": true,
+    "debug": false,
+    "singleRecordExecution": false,
+    "remoteExecutableFlag": false,
+    "parameters": [
+        "payload"
+    ],
+    "synchronous": false,
+    "collection": "\/api\/3\/workflow_collections\/256151d7-abbd-444a-b28f-774e9f5582de",
+    "versions": [],
+    "triggerStep": "\/api\/3\/workflow_steps\/dba40799-4d3c-47fc-b709-de02b56a9de0",
+    "steps": [
+        {
+            "@type": "WorkflowStep",
+            "name": "change device name",
+            "description": null,
+            "arguments": {
+                "name": "Fortinet FortiManager JSON RPC",
+                "config": "{{vars.fmg_config}}",
+                "params": {
+                    "url": "\/dvmdb\/device\/{{vars.hostname}}",
+                    "data": "{{vars.api_payload}}"
+                },
+                "version": "1.0.2",
+                "connector": "fortinet-fortimanager-json-rpc",
+                "operation": "json_rpc_set",
+                "operationTitle": "JSON RPC Set",
+                "pickFromTenant": false,
+                "step_variables": []
+            },
+            "status": null,
+            "top": "120",
+            "left": "360",
+            "stepType": "\/api\/3\/workflow_step_types\/0bfed618-0316-11e7-93ae-92361f002671",
+            "group": null,
+            "uuid": "4f826984-dc6b-4434-aeeb-c45abce44849"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "return_output",
+            "description": null,
+            "arguments": {
+                "output": "{{vars.steps.change_device_name}}"
+            },
+            "status": null,
+            "top": "120",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "780057dd-4bb5-4101-a1f0-48e7fbe5df84"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "setup payload",
+            "description": null,
+            "arguments": {
+                "api_payload": "{\"name\":\"{{vars.new_hostname}}\"}"
+            },
+            "status": null,
+            "top": "80",
+            "left": "720",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "e91de68c-85f3-4305-8066-667046d2429d"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "setup vars",
+            "description": null,
+            "arguments": {
+                "hostname": "{{vars.input.params.payload['name']}}",
+                "fmg_config": "{{vars.input.params.payload['fmg_config']}}",
+                "new_hostname": "{{vars.input.params.payload['newname']}}"
+            },
+            "status": null,
+            "top": "40",
+            "left": "360",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "24cc9f49-debc-4e8f-8eef-315176eea371"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Start",
+            "description": null,
+            "arguments": {
+                "step_variables": {
+                    "input": {
+                        "params": []
+                    }
+                }
+            },
+            "status": null,
+            "top": "40",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/b348f017-9a94-471f-87f8-ce88b6a7ad62",
+            "group": null,
+            "uuid": "dba40799-4d3c-47fc-b709-de02b56a9de0"
+        }
+    ],
+    "routes": [
+        {
+            "@type": "WorkflowRoute",
+            "name": "change device name -> return_output",
+            "targetStep": "\/api\/3\/workflow_steps\/780057dd-4bb5-4101-a1f0-48e7fbe5df84",
+            "sourceStep": "\/api\/3\/workflow_steps\/4f826984-dc6b-4434-aeeb-c45abce44849",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "5230a5c6-6c9b-447e-87b8-bc8ef4268c59"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "setup payload -> change device name",
+            "targetStep": "\/api\/3\/workflow_steps\/4f826984-dc6b-4434-aeeb-c45abce44849",
+            "sourceStep": "\/api\/3\/workflow_steps\/e91de68c-85f3-4305-8066-667046d2429d",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "a11aac05-a19e-4045-b494-92f275ef33fc"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "setup vars -> setup payload",
+            "targetStep": "\/api\/3\/workflow_steps\/e91de68c-85f3-4305-8066-667046d2429d",
+            "sourceStep": "\/api\/3\/workflow_steps\/24cc9f49-debc-4e8f-8eef-315176eea371",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "e697cbe5-bc55-492f-81fa-6234ddc0cc22"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Start -> setup vars",
+            "targetStep": "\/api\/3\/workflow_steps\/24cc9f49-debc-4e8f-8eef-315176eea371",
+            "sourceStep": "\/api\/3\/workflow_steps\/dba40799-4d3c-47fc-b709-de02b56a9de0",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "a566c6af-f341-4a00-931e-17fea7518606"
+        }
+    ],
+    "groups": [],
+    "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+    "uuid": "8c3be36d-6637-4d19-9724-80e2953f5e7c",
+    "owners": [],
+    "isPrivate": false,
+    "deletedAt": null,
+    "recordTags": [
+        "change_hostname",
+        "custom_scripts",
+        "fmg_custom_playbook"
+    ]
+}

@@ -1,0 +1,242 @@
+{
+    "@type": "Workflow",
+    "triggerLimit": null,
+    "name": "> synch fmg adom variables to device records - by adom",
+    "aliasName": null,
+    "tag": null,
+    "description": "Synchronize FortiManager Variables to FortiSOAR by Device.",
+    "isActive": true,
+    "debug": false,
+    "singleRecordExecution": false,
+    "remoteExecutableFlag": false,
+    "parameters": [
+        "connector_config",
+        "adom"
+    ],
+    "synchronous": false,
+    "collection": "\/api\/3\/workflow_collections\/1d97873a-13f1-4b28-834a-ca24882614e2",
+    "versions": [],
+    "triggerStep": "\/api\/3\/workflow_steps\/51760686-64ad-4704-9cd9-d157fefb1192",
+    "steps": [
+        {
+            "@type": "WorkflowStep",
+            "name": "extract_fmg_var_data",
+            "description": null,
+            "arguments": {
+                "fmg_variables": "{%- set idx_list = [] -%}\n{%- set device = {} -%}\n{%- for v in vars.steps.get_fmg_variables.output -%}\n  {% if v.dynamic_mapping != None -%}\n  {%- for d in v.dynamic_mapping -%}\n  {%- set key = \"{}:{}\".format(d._scope[0].name,d._scope[0].vdom) -%}\n  {%- set key = key|replace(\"global\",\"root\") -%}\n  {%- set vals = {} -%}\n  {%- if device != Null -%}\n    {%- if device[key] != Null -%}    \n      {%- set _do = vals.update( device[key] ) -%}      \n    {%- endif -%}   \n  {%- endif -%}\n  {%- set _do = vals.update( { v.name:d.value } ) -%}\n  {%- set _do = device.update( { key:vals } ) -%}\n  {% endfor -%}\n  {%- endif -%}\n{%- endfor -%}\n{%- for dev in device -%}\n  {%- set name,vdom = dev.split(\":\") -%}\n  {%- set rec = {} -%}\n  {%- set _do = rec.update({\n      \"name\":name,\n      \"vdom\":vdom\n    }) \n  -%}\n  {%- set _do = rec.update({\"metadata\":device[dev]}) -%}\n  {%- set _do = idx_list.append(rec) -%}\n{%- endfor -%}\n{{idx_list}}"
+            },
+            "status": null,
+            "top": "220",
+            "left": "360",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "2d881a68-d22a-4f27-b7f6-07aced02253b"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "extract_records_found",
+            "description": null,
+            "arguments": {
+                "record_index": "{%- set reclist = [] -%}\n{%- set i = namespace(x=0) -%}\n{%- for record in vars.steps.find_records_with_fmg_vars -%}\n  {%- set dev = {} -%}  \n  {%- set meta = {} -%}  \n  {%- if record[0]['deviceMetadata'] != '' -%}\n    {%- set _do = meta.update(record[0]['deviceMetadata']|toDict) -%}\n  {%- endif -%}\n  {%- set _do = meta.update(vars.fmg_variables[i.x].metadata) -%}\n  {%- set _do = dev.update({\n    \"iri\": record[0]['@id'],\n    \"name\":vars.fmg_variables[i.x].name,\n    \"vdom\":vars.fmg_variables[i.x].vdom,\n    \"metadata\":meta\n  })\n  -%}\n  {% set i.x = i.x+1 -%}\n  {%- set _do = reclist.append(dev) -%}\n{% endfor -%}\n{{reclist}}"
+            },
+            "status": null,
+            "top": "460",
+            "left": "360",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "790f033a-6968-458d-9f8f-3f0c13f596b3"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "find_records_with_fmg_vars",
+            "description": null,
+            "arguments": {
+                "query": {
+                    "sort": [],
+                    "limit": 30,
+                    "logic": "AND",
+                    "filters": [
+                        {
+                            "type": "primitive",
+                            "field": "aDOM",
+                            "value": "{{vars.input.params.adom}}",
+                            "operator": "eq",
+                            "_operator": "eq"
+                        },
+                        {
+                            "type": "primitive",
+                            "field": "connectorConfig",
+                            "value": "{{vars.input.params['connector_config']}}",
+                            "operator": "eq",
+                            "_operator": "eq"
+                        },
+                        {
+                            "type": "primitive",
+                            "field": "deviceName",
+                            "value": "{{vars.item['name']}}",
+                            "operator": "eq",
+                            "_operator": "eq"
+                        },
+                        {
+                            "type": "primitive",
+                            "field": "vDOM",
+                            "value": "{{vars.item['vdom']}}",
+                            "operator": "eq",
+                            "_operator": "eq"
+                        }
+                    ],
+                    "__selectFields": [
+                        "id",
+                        "deviceMetadata"
+                    ]
+                },
+                "module": "devices?$limit=500",
+                "for_each": {
+                    "item": "{{vars.fmg_variables}}",
+                    "parallel": false,
+                    "condition": ""
+                },
+                "checkboxFields": true,
+                "step_variables": []
+            },
+            "status": null,
+            "top": "340",
+            "left": "360",
+            "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928770",
+            "group": null,
+            "uuid": "2f0f5806-2cf6-4cac-84c3-236e0ff7e78e"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "get_fmg_variables",
+            "description": null,
+            "arguments": {
+                "arguments": {
+                    "adom": "{{vars.input.params.adom}}",
+                    "connector_config": "{{vars.input.params['connector_config']}}"
+                },
+                "apply_async": false,
+                "step_variables": [],
+                "pass_parent_env": false,
+                "pass_input_record": false,
+                "workflowReference": "\/api\/3\/workflows\/9cdcb682-ed5b-4aab-bd5b-6559495862a4"
+            },
+            "status": null,
+            "top": "100",
+            "left": "360",
+            "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
+            "group": null,
+            "uuid": "3ae08c67-7dd9-48ad-bfcd-2caf7742efc4"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Start",
+            "description": null,
+            "arguments": {
+                "step_variables": {
+                    "input": {
+                        "params": []
+                    }
+                }
+            },
+            "status": null,
+            "top": "100",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/b348f017-9a94-471f-87f8-ce88b6a7ad62",
+            "group": null,
+            "uuid": "51760686-64ad-4704-9cd9-d157fefb1192"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "update_device_records",
+            "description": null,
+            "arguments": {
+                "for_each": {
+                    "item": "{{vars.record_index}}",
+                    "__bulk": true,
+                    "parallel": false,
+                    "condition": "",
+                    "batch_size": 100
+                },
+                "resource": {
+                    "deviceMetadata": "{{vars.item.metadata|toJSON}}"
+                },
+                "operation": "Append",
+                "collection": "{{vars.item.iri}}",
+                "__recommend": [],
+                "collectionType": "\/api\/3\/devices",
+                "fieldOperation": [],
+                "step_variables": []
+            },
+            "status": null,
+            "top": "580",
+            "left": "360",
+            "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928722",
+            "group": null,
+            "uuid": "f3c50984-6dbd-44e8-b024-a45cfa35a53d"
+        }
+    ],
+    "routes": [
+        {
+            "@type": "WorkflowRoute",
+            "name": "extract_fmg_var_data -> find_records_with_fmg_vars",
+            "targetStep": "\/api\/3\/workflow_steps\/2f0f5806-2cf6-4cac-84c3-236e0ff7e78e",
+            "sourceStep": "\/api\/3\/workflow_steps\/2d881a68-d22a-4f27-b7f6-07aced02253b",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "e83ff859-c617-4b24-9666-03a07d936759"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "extract_records_found -> update_device_records",
+            "targetStep": "\/api\/3\/workflow_steps\/f3c50984-6dbd-44e8-b024-a45cfa35a53d",
+            "sourceStep": "\/api\/3\/workflow_steps\/790f033a-6968-458d-9f8f-3f0c13f596b3",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "03e40a35-feec-45ad-89de-c66c9e8f8e3f"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "find_records_with_fmg_vars -> extract_records_found",
+            "targetStep": "\/api\/3\/workflow_steps\/790f033a-6968-458d-9f8f-3f0c13f596b3",
+            "sourceStep": "\/api\/3\/workflow_steps\/2f0f5806-2cf6-4cac-84c3-236e0ff7e78e",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "3ecaf25e-a58d-4e8c-afdc-a50f9ed71bb7"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "get_fmg_variables -> extract_fmg_var_data_test",
+            "targetStep": "\/api\/3\/workflow_steps\/2d881a68-d22a-4f27-b7f6-07aced02253b",
+            "sourceStep": "\/api\/3\/workflow_steps\/3ae08c67-7dd9-48ad-bfcd-2caf7742efc4",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "5cb4e6d2-0e57-4126-b6c9-b06377acc9b7"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Start -> get_fmg_variables",
+            "targetStep": "\/api\/3\/workflow_steps\/3ae08c67-7dd9-48ad-bfcd-2caf7742efc4",
+            "sourceStep": "\/api\/3\/workflow_steps\/51760686-64ad-4704-9cd9-d157fefb1192",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "7f843c4b-bf4d-450e-a21d-8c85586baf94"
+        }
+    ],
+    "groups": [],
+    "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+    "uuid": "a27d779c-4d9e-49a0-9977-6a33360f3e0c",
+    "owners": [],
+    "isPrivate": false,
+    "deletedAt": null,
+    "recordTags": [
+        "connector_config",
+        "device_name",
+        "Subroutine"
+    ]
+}

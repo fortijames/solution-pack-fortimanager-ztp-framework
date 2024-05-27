@@ -1,0 +1,187 @@
+{
+    "@type": "Workflow",
+    "triggerLimit": null,
+    "name": "> remove device record metafield from device records",
+    "aliasName": null,
+    "tag": null,
+    "description": "Given a record list and metadata field, remove it.",
+    "isActive": true,
+    "debug": false,
+    "singleRecordExecution": false,
+    "remoteExecutableFlag": false,
+    "parameters": [
+        "record_id_list",
+        "metadata_key_list"
+    ],
+    "synchronous": false,
+    "collection": "\/api\/3\/workflow_collections\/30263dc4-42e1-4184-96f5-e8e873450439",
+    "versions": [],
+    "triggerStep": "\/api\/3\/workflow_steps\/92dc1664-2a3c-4e69-94a2-35cfd52b2871",
+    "steps": [
+        {
+            "@type": "WorkflowStep",
+            "name": "build_metadata",
+            "description": null,
+            "arguments": {
+                "records_metadata": "{%- set delkeys = vars.input.params['metadata_key_list'] -%}\n{%- set metalist = vars.record_data | json_query('[].[\"@id\",deviceMetadata]') -%}\n{%- set idx = [] -%}\n{# Loop through records and create a master metadata update list. #}\n{%- for m in metalist %}\n  {%- set md = dict() -%}\n  {%- set mdtest = m[1] | to_nice_json | from_json | toDict %}\n  {%- for delkey in delkeys -%}\n    {%- if mdtest[delkey] is defined -%}\n      {%- set _do = mdtest.pop(delkey) %}\n    {%- endif -%}\n    {%- set _do = md.update({\n      \"id\" : m[0],\n      \"metadata\": mdtest\n    }) -%}\n  {%- endfor -%}\n  {% set _do = idx.append(md) %}\n{%- endfor %}\n{{idx}}"
+            },
+            "status": null,
+            "top": "280",
+            "left": "440",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "dc6f3da8-fb8f-4662-b269-9b84a92db027"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "extract_record_data",
+            "description": null,
+            "arguments": {
+                "record_data": "{{vars.steps.get_records_by_id}}"
+            },
+            "status": null,
+            "top": "180",
+            "left": "440",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "2e79aa99-f6ef-4f9a-9f4b-7c69b54ca1ca"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "get_records_by_id",
+            "description": null,
+            "arguments": {
+                "query": {
+                    "sort": [],
+                    "limit": 30,
+                    "logic": "AND",
+                    "filters": [
+                        {
+                            "type": "primitive",
+                            "field": "id",
+                            "value": "{{vars.input.params['record_id_list']}}",
+                            "operator": "in",
+                            "_operator": "in"
+                        }
+                    ],
+                    "__selectFields": [
+                        "id",
+                        "deviceMetadata"
+                    ]
+                },
+                "module": "devices?$limit=5000",
+                "checkboxFields": true,
+                "step_variables": []
+            },
+            "status": null,
+            "top": "80",
+            "left": "440",
+            "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928770",
+            "group": null,
+            "uuid": "d1d0a68d-e7cb-4f07-b559-6fdf235a61ab"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Start",
+            "description": null,
+            "arguments": {
+                "step_variables": {
+                    "input": {
+                        "params": []
+                    }
+                }
+            },
+            "status": null,
+            "top": "80",
+            "left": "80",
+            "stepType": "\/api\/3\/workflow_step_types\/b348f017-9a94-471f-87f8-ce88b6a7ad62",
+            "group": null,
+            "uuid": "92dc1664-2a3c-4e69-94a2-35cfd52b2871"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "update_records",
+            "description": null,
+            "arguments": {
+                "for_each": {
+                    "item": "{{vars.records_metadata}}",
+                    "__bulk": true,
+                    "parallel": false,
+                    "condition": "",
+                    "batch_size": 100
+                },
+                "resource": {
+                    "deviceMetadata": "{{vars.item.metadata|toJSON|default({})}}"
+                },
+                "operation": "Append",
+                "collection": "{{vars.item.id}}",
+                "__recommend": [],
+                "collectionType": "\/api\/3\/devices",
+                "fieldOperation": {
+                    "recordTags": "Overwrite"
+                },
+                "step_variables": []
+            },
+            "status": null,
+            "top": "400",
+            "left": "440",
+            "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928722",
+            "group": null,
+            "uuid": "536af0d4-8a0f-4b90-970d-e894f667c749"
+        }
+    ],
+    "routes": [
+        {
+            "@type": "WorkflowRoute",
+            "name": "build_metadata -> update_records",
+            "targetStep": "\/api\/3\/workflow_steps\/536af0d4-8a0f-4b90-970d-e894f667c749",
+            "sourceStep": "\/api\/3\/workflow_steps\/dc6f3da8-fb8f-4662-b269-9b84a92db027",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "52977ea4-d688-40c7-9b91-11e91763519d"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "extract_record_data -> build_metadata",
+            "targetStep": "\/api\/3\/workflow_steps\/dc6f3da8-fb8f-4662-b269-9b84a92db027",
+            "sourceStep": "\/api\/3\/workflow_steps\/2e79aa99-f6ef-4f9a-9f4b-7c69b54ca1ca",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "b025d4b4-848a-47f2-b287-852677457876"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "get_records_by_id -> extract_record_data",
+            "targetStep": "\/api\/3\/workflow_steps\/2e79aa99-f6ef-4f9a-9f4b-7c69b54ca1ca",
+            "sourceStep": "\/api\/3\/workflow_steps\/d1d0a68d-e7cb-4f07-b559-6fdf235a61ab",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "5ffc6dd8-974c-4b25-8e74-59ff2338c68c"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Start -> Get Records",
+            "targetStep": "\/api\/3\/workflow_steps\/d1d0a68d-e7cb-4f07-b559-6fdf235a61ab",
+            "sourceStep": "\/api\/3\/workflow_steps\/92dc1664-2a3c-4e69-94a2-35cfd52b2871",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "751caea3-f54f-42ea-ac85-ea01223fe211"
+        }
+    ],
+    "groups": [],
+    "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+    "uuid": "ce322e33-ec01-4f80-bd94-2fe523283232",
+    "owners": [],
+    "isPrivate": false,
+    "deletedAt": null,
+    "recordTags": [
+        "metadata_key_list",
+        "output",
+        "record_id_list",
+        "Subroutine"
+    ]
+}

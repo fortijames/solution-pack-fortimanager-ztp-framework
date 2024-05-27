@@ -1,0 +1,161 @@
+{
+    "@type": "Workflow",
+    "triggerLimit": null,
+    "name": "> delete fmg cli template group",
+    "aliasName": null,
+    "tag": null,
+    "description": "Delete a fmg cli template group from adom and group name.",
+    "isActive": true,
+    "debug": false,
+    "singleRecordExecution": false,
+    "remoteExecutableFlag": false,
+    "parameters": [
+        "connector_config",
+        "adom",
+        "group_name"
+    ],
+    "synchronous": false,
+    "collection": "\/api\/3\/workflow_collections\/acff9572-b869-4ceb-bbc1-1c3700ec9a4e",
+    "versions": [],
+    "triggerStep": "\/api\/3\/workflow_steps\/d8956cdd-d0a8-48f8-99c5-4b3e8de3a6df",
+    "steps": [
+        {
+            "@type": "WorkflowStep",
+            "name": "create_script",
+            "description": null,
+            "arguments": {
+                "name": "Fortinet FortiManager JSON-RPC",
+                "config": "{{vars.input.params['connector_config']}}",
+                "params": {
+                    "url": "\/pm\/config\/adom\/{{vars.input.params.adom}}\/obj\/cli\/template-group\/{{vars.input.params['group_name']}}",
+                    "data": "{{vars.payload}}"
+                },
+                "version": "1.0.0",
+                "connector": "fortinet-fortimanager-json-rpc",
+                "operation": "json_rpc_delete",
+                "operationTitle": "JSON RPC Delete",
+                "pickFromTenant": false,
+                "step_variables": []
+            },
+            "status": null,
+            "top": "260",
+            "left": "420",
+            "stepType": "\/api\/3\/workflow_step_types\/0bfed618-0316-11e7-93ae-92361f002671",
+            "group": null,
+            "uuid": "2ab95371-4c63-48ad-a32b-4021f8c62c8a"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "extract_fmg_data",
+            "description": null,
+            "arguments": {
+                "output": "{{vars.steps.create_script}}"
+            },
+            "status": null,
+            "top": "140",
+            "left": "60",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "c6f5569d-3a46-4690-b7fa-66ee59383043"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "setup_payload",
+            "description": null,
+            "arguments": {
+                "payload": "{%- set payload = {} -%}\n{%- set _do = payload.update({\"options\": []}) %}\n{{payload}}"
+            },
+            "status": null,
+            "top": "160",
+            "left": "420",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "33fba430-4f24-4722-9c55-0597f1ac949e"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "setup_vars_data",
+            "description": null,
+            "arguments": [],
+            "status": null,
+            "top": "60",
+            "left": "420",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "bf5c8377-75f2-4c50-93b1-083bd4b0143e"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Start",
+            "description": null,
+            "arguments": {
+                "step_variables": {
+                    "input": {
+                        "params": []
+                    }
+                }
+            },
+            "status": null,
+            "top": "60",
+            "left": "60",
+            "stepType": "\/api\/3\/workflow_step_types\/b348f017-9a94-471f-87f8-ce88b6a7ad62",
+            "group": null,
+            "uuid": "d8956cdd-d0a8-48f8-99c5-4b3e8de3a6df"
+        }
+    ],
+    "routes": [
+        {
+            "@type": "WorkflowRoute",
+            "name": "Copy of setup_vars -> setup_vars",
+            "targetStep": "\/api\/3\/workflow_steps\/33fba430-4f24-4722-9c55-0597f1ac949e",
+            "sourceStep": "\/api\/3\/workflow_steps\/bf5c8377-75f2-4c50-93b1-083bd4b0143e",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "613b0c37-a452-452c-8756-9e84098faa09"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Get Devices in FMG -> extract data",
+            "targetStep": "\/api\/3\/workflow_steps\/c6f5569d-3a46-4690-b7fa-66ee59383043",
+            "sourceStep": "\/api\/3\/workflow_steps\/2ab95371-4c63-48ad-a32b-4021f8c62c8a",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "2fc0cae8-5ecc-4d57-b8f4-6a849fb258dc"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "setup_payload -> create_script",
+            "targetStep": "\/api\/3\/workflow_steps\/2ab95371-4c63-48ad-a32b-4021f8c62c8a",
+            "sourceStep": "\/api\/3\/workflow_steps\/33fba430-4f24-4722-9c55-0597f1ac949e",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "266fa098-0f70-4aa9-ba61-e1b14002ee0e"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Start -> setup_vars_data",
+            "targetStep": "\/api\/3\/workflow_steps\/bf5c8377-75f2-4c50-93b1-083bd4b0143e",
+            "sourceStep": "\/api\/3\/workflow_steps\/d8956cdd-d0a8-48f8-99c5-4b3e8de3a6df",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "c8d28661-6bfa-4972-8530-2baec2d0ea72"
+        }
+    ],
+    "groups": [],
+    "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+    "uuid": "5e609022-3ebd-4674-9849-96220a2ade8a",
+    "owners": [],
+    "isPrivate": false,
+    "deletedAt": null,
+    "recordTags": [
+        "adom",
+        "connector_config",
+        "group_name",
+        "output",
+        "Subroutine"
+    ]
+}

@@ -1,0 +1,168 @@
+{
+    "@type": "Workflow",
+    "triggerLimit": null,
+    "name": "> create or update fmg cli template script",
+    "aliasName": null,
+    "tag": null,
+    "description": "Create or update a fmg cli template script for cli or jinja types.",
+    "isActive": true,
+    "debug": false,
+    "singleRecordExecution": false,
+    "remoteExecutableFlag": false,
+    "parameters": [
+        "connector_config",
+        "adom",
+        "script_name",
+        "script_type",
+        "script_contents",
+        "script_description"
+    ],
+    "synchronous": false,
+    "collection": "\/api\/3\/workflow_collections\/acff9572-b869-4ceb-bbc1-1c3700ec9a4e",
+    "versions": [],
+    "triggerStep": "\/api\/3\/workflow_steps\/dfd3c58a-807d-4c6a-b93d-884fc5ea12a5",
+    "steps": [
+        {
+            "@type": "WorkflowStep",
+            "name": "create_script",
+            "description": null,
+            "arguments": {
+                "name": "Fortinet FortiManager JSON-RPC",
+                "config": "{{vars.input.params['connector_config']}}",
+                "params": {
+                    "url": "\/pm\/config\/adom\/{{vars.input.params.adom}}\/obj\/cli\/template",
+                    "data": "{{vars.payload}}"
+                },
+                "version": "1.0.0",
+                "connector": "fortinet-fortimanager-json-rpc",
+                "operation": "json_rpc_set",
+                "operationTitle": "JSON RPC Set",
+                "pickFromTenant": false,
+                "step_variables": []
+            },
+            "status": null,
+            "top": "260",
+            "left": "420",
+            "stepType": "\/api\/3\/workflow_step_types\/0bfed618-0316-11e7-93ae-92361f002671",
+            "group": null,
+            "uuid": "f7c91391-544a-41a3-9ca7-000e20209f20"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "extract_fmg_data",
+            "description": null,
+            "arguments": {
+                "output": "{{vars.steps.create_script}}"
+            },
+            "status": null,
+            "top": "140",
+            "left": "60",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "23c90ae1-295a-456b-a939-6ca0bdffe95e"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "setup_payload",
+            "description": null,
+            "arguments": {
+                "payload": "{%- set payload = {} -%}\n{%- set _do = payload.update({\n    \"data\": {\n      \"name\":vars.input.params['script_name'],\n      \"provision\":\"disable\",\n      \"type\":vars.script_type_ref.type,\n      \"script\": vars.input.params['script_contents'].strip('\\\"'),\n      \"description\": vars.input.params['script_description']|default('Created by FortiSOAR.')\n    }\n  }) \n%}\n{{payload}}"
+            },
+            "status": null,
+            "top": "160",
+            "left": "420",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "8bf706ca-aec0-400b-bc28-fc96116f8c23"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "setup_vars_data",
+            "description": null,
+            "arguments": {
+                "script_type_ref": "{%- set script_type_input = vars.input.params.script_type -%}\n{%- if script_type_input  == \"Provisioning CLI Template\"  -%}\n  {%- set target_type = {\"type\": \"cli\"} -%}\n{%- elif script_type_input  == \"Provisioning Jinja Template\"  -%}\n  {%- set target_type = {\"type\": \"jinja\"} -%}\n{%- else -%}\n  {%- set target_type = '' -%}\n{%- endif -%}\n{{target_type}}"
+            },
+            "status": null,
+            "top": "60",
+            "left": "420",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "bb70984b-a82b-47ae-810e-fa05a5ef8871"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Start",
+            "description": null,
+            "arguments": {
+                "step_variables": {
+                    "input": {
+                        "params": []
+                    }
+                }
+            },
+            "status": null,
+            "top": "60",
+            "left": "60",
+            "stepType": "\/api\/3\/workflow_step_types\/b348f017-9a94-471f-87f8-ce88b6a7ad62",
+            "group": null,
+            "uuid": "dfd3c58a-807d-4c6a-b93d-884fc5ea12a5"
+        }
+    ],
+    "routes": [
+        {
+            "@type": "WorkflowRoute",
+            "name": "Copy of setup_vars -> setup_vars",
+            "targetStep": "\/api\/3\/workflow_steps\/8bf706ca-aec0-400b-bc28-fc96116f8c23",
+            "sourceStep": "\/api\/3\/workflow_steps\/bb70984b-a82b-47ae-810e-fa05a5ef8871",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "6091212e-dc17-4a2c-94f9-7bad129ab66d"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Get Devices in FMG -> extract data",
+            "targetStep": "\/api\/3\/workflow_steps\/23c90ae1-295a-456b-a939-6ca0bdffe95e",
+            "sourceStep": "\/api\/3\/workflow_steps\/f7c91391-544a-41a3-9ca7-000e20209f20",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "bed6bbd4-8be7-497b-b2f6-5a449cbfc68b"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "setup_payload -> create_script",
+            "targetStep": "\/api\/3\/workflow_steps\/f7c91391-544a-41a3-9ca7-000e20209f20",
+            "sourceStep": "\/api\/3\/workflow_steps\/8bf706ca-aec0-400b-bc28-fc96116f8c23",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "4454410a-e5dc-48f6-8929-37ce2d365849"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Start -> setup_vars_data",
+            "targetStep": "\/api\/3\/workflow_steps\/bb70984b-a82b-47ae-810e-fa05a5ef8871",
+            "sourceStep": "\/api\/3\/workflow_steps\/dfd3c58a-807d-4c6a-b93d-884fc5ea12a5",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "cb14f826-73d2-46fe-8d4a-f8702c9498bb"
+        }
+    ],
+    "groups": [],
+    "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+    "uuid": "4891bf82-21f4-43cc-a55a-9bebf8079ef0",
+    "owners": [],
+    "isPrivate": false,
+    "deletedAt": null,
+    "recordTags": [
+        "adom",
+        "connector_config",
+        "output",
+        "script_contents",
+        "script_name",
+        "script_type",
+        "Subroutine"
+    ]
+}

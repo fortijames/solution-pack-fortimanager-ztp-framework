@@ -1,0 +1,287 @@
+{
+    "@type": "Workflow",
+    "triggerLimit": null,
+    "name": "> add devices to provisioning template group scope member assignments - by device and vdom",
+    "aliasName": null,
+    "tag": null,
+    "description": "Add a device device list in the form of fg1,fg2,fg3 or fg1:vdom1,fg2:vdom1,fg3:vdoma or fg1:vdom1,fg2,fg3 to a template group.",
+    "isActive": true,
+    "debug": false,
+    "singleRecordExecution": false,
+    "remoteExecutableFlag": false,
+    "parameters": [
+        "connector_config",
+        "adom",
+        "template_group",
+        "devices"
+    ],
+    "synchronous": false,
+    "collection": "\/api\/3\/workflow_collections\/acff9572-b869-4ceb-bbc1-1c3700ec9a4e",
+    "versions": [],
+    "triggerStep": "\/api\/3\/workflow_steps\/eaa505b7-55e4-4c62-9408-8c7f9b2780f3",
+    "steps": [
+        {
+            "@type": "WorkflowStep",
+            "name": "device_scope",
+            "description": null,
+            "arguments": {
+                "device_scope": "{%- for dev in vars.device_list -%}\n{%- set name = dev.split(\":\") -%}\n{\n  \"name\":\"{{name[0]}}\",\n  \"vdom\":\"{{name[1]|default('root')}}\"\n},\n{%- endfor -%}",
+                "device_scope_test": "[ {\n      \"name\": \"FG1\",\n      \"vdom\": \"root\"\n    },\n    {\n      \"name\": \"FG2\",\n      \"vdom\": \"root\"\n    },\n    {\n      \"name\": \"FG3\",\n      \"vdom\": \"root\"\n    } ]"
+            },
+            "status": null,
+            "top": "160",
+            "left": "380",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "4a4077d9-214a-4185-b615-c17f2bc810e9"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "device_unassign_list",
+            "description": null,
+            "arguments": {
+                "device_scope_unassign": "{%- set idx = {} -%}\n{%- set table = [] -%}\n{%- for dev in vars.device_scope -%}\n  {%- set key = dev.name + \":\" + dev.vdom -%}\n  {%- if vars.device_assignment_index[key] is defined -%}\n    {%- set group = vars.device_assignment_index[key] -%}\n    {%- if group in idx -%}\n      {%- set cur = idx[group] -%}\n      {%- set do_ = idx.update( { group:cur + \",\" + key }) -%}\n    {%- else -%}\n      {%- set do_ = idx.update( { group:key }) -%}\n    {%- endif -%}\n  {% endif -%}\n{%- endfor -%}\n{%- for i in idx -%}\n  {%- set row = {} -%}\n  {%- set _do = row.update({ \"group\":i,\"devices\":idx[i] }) -%}\n  {%- set _do = table.append(row) -%}\n{%- endfor -%}\n{{table}}"
+            },
+            "status": null,
+            "top": "300",
+            "left": "740",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "d5a89d8c-e7ef-4491-8224-aca28800fd24"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "extract_assignment_index",
+            "description": null,
+            "arguments": {
+                "device_assignment_index": "{{vars.steps.get_current_assignments.output}}"
+            },
+            "status": null,
+            "top": "180",
+            "left": "740",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "e2818aa4-a32b-4c8c-a41e-ef593b98b577"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "extract_fmg_results",
+            "description": null,
+            "arguments": {
+                "output": "{{vars.steps.update_fmg_variable}}"
+            },
+            "status": null,
+            "top": "160",
+            "left": "60",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "938efad4-112a-43e1-ba33-f2388ddf776b"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "get_current_assignments",
+            "description": null,
+            "arguments": {
+                "arguments": {
+                    "adom": "{{vars.input.params.adom}}",
+                    "connector_config": "{{vars.input.params['connector_config']}}"
+                },
+                "apply_async": false,
+                "step_variables": [],
+                "pass_parent_env": false,
+                "pass_input_record": false,
+                "workflowReference": "\/api\/3\/workflows\/0a1d45ff-cc78-47e4-b2b6-fa9a6a405f1e"
+            },
+            "status": null,
+            "top": "60",
+            "left": "740",
+            "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
+            "group": null,
+            "uuid": "1b0352e6-e2ed-4e6a-8e63-98b6e5301b3d"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "remove_current_assignments",
+            "description": null,
+            "arguments": {
+                "for_each": {
+                    "item": "{{vars.device_scope_unassign}}",
+                    "parallel": false,
+                    "condition": ""
+                },
+                "arguments": {
+                    "adom": "{{vars.input.params.adom}}",
+                    "devices": "{{vars.item.devices}}",
+                    "template_group": "{{vars.item.group}}",
+                    "connector_config": "{{vars.input.params['connector_config']}}"
+                },
+                "apply_async": false,
+                "step_variables": [],
+                "pass_parent_env": false,
+                "pass_input_record": false,
+                "workflowReference": "\/api\/3\/workflows\/6f7a7efd-1d03-4108-80ad-72c41382f1ae"
+            },
+            "status": null,
+            "top": "420",
+            "left": "740",
+            "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
+            "group": null,
+            "uuid": "6a7e66ff-9401-4bb8-9bfe-5b11ee4ac68b"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "setup_input",
+            "description": null,
+            "arguments": {
+                "device_list": "{{vars.input.params.devices.split(\",\")}}",
+                "assign_device_flag": "{{vars.input.params['assign_device_flag']|default(True)}}"
+            },
+            "status": null,
+            "top": "60",
+            "left": "380",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "39422d33-c309-43a0-922a-9391fff0b7d2"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Start",
+            "description": null,
+            "arguments": {
+                "step_variables": {
+                    "input": {
+                        "params": []
+                    }
+                }
+            },
+            "status": null,
+            "top": "60",
+            "left": "60",
+            "stepType": "\/api\/3\/workflow_step_types\/b348f017-9a94-471f-87f8-ce88b6a7ad62",
+            "group": null,
+            "uuid": "eaa505b7-55e4-4c62-9408-8c7f9b2780f3"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "update_fmg_variable",
+            "description": null,
+            "arguments": {
+                "name": "Fortinet FortiManager JSON-RPC",
+                "config": "{{vars.input.params['connector_config']}}",
+                "params": {
+                    "url": "\/pm\/tmplgrp\/adom\/{{vars.input.params.adom}}\/{{vars.input.params.template_group}}\/scope member",
+                    "data": "{{vars.device_scope}}"
+                },
+                "version": "1.0.0",
+                "connector": "fortinet-fortimanager-json-rpc",
+                "operation": "json_rpc_add",
+                "operationTitle": "JSON RPC Add",
+                "pickFromTenant": false,
+                "step_variables": []
+            },
+            "status": null,
+            "top": "280",
+            "left": "60",
+            "stepType": "\/api\/3\/workflow_step_types\/0bfed618-0316-11e7-93ae-92361f002671",
+            "group": null,
+            "uuid": "b5ac7e2d-901a-4c64-bb05-b79e5fa9e532"
+        }
+    ],
+    "routes": [
+        {
+            "@type": "WorkflowRoute",
+            "name": "device_scope -> get_current_assignments",
+            "targetStep": "\/api\/3\/workflow_steps\/1b0352e6-e2ed-4e6a-8e63-98b6e5301b3d",
+            "sourceStep": "\/api\/3\/workflow_steps\/4a4077d9-214a-4185-b615-c17f2bc810e9",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "9ab3c70e-3aaf-40d2-b1a9-249a8733826c"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "device_unassign_list -> remove_current_assignments",
+            "targetStep": "\/api\/3\/workflow_steps\/6a7e66ff-9401-4bb8-9bfe-5b11ee4ac68b",
+            "sourceStep": "\/api\/3\/workflow_steps\/d5a89d8c-e7ef-4491-8224-aca28800fd24",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "f287d647-80f5-4159-8f9b-2709c9fb6cef"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "extract_assignment_index -> device_unassign_list",
+            "targetStep": "\/api\/3\/workflow_steps\/d5a89d8c-e7ef-4491-8224-aca28800fd24",
+            "sourceStep": "\/api\/3\/workflow_steps\/e2818aa4-a32b-4c8c-a41e-ef593b98b577",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "aeab075e-689b-4814-ac73-9ccde4e84aa5"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "get_current_assignments -> extract_assignment_index",
+            "targetStep": "\/api\/3\/workflow_steps\/e2818aa4-a32b-4c8c-a41e-ef593b98b577",
+            "sourceStep": "\/api\/3\/workflow_steps\/1b0352e6-e2ed-4e6a-8e63-98b6e5301b3d",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "d1f4f796-3b05-4467-aaa4-68371d45526e"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "remove_current_assignments -> update_fmg_variable",
+            "targetStep": "\/api\/3\/workflow_steps\/b5ac7e2d-901a-4c64-bb05-b79e5fa9e532",
+            "sourceStep": "\/api\/3\/workflow_steps\/6a7e66ff-9401-4bb8-9bfe-5b11ee4ac68b",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "6db96a34-3002-419e-b42a-8cf3573f3a4c"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "setup_input -> device_scope",
+            "targetStep": "\/api\/3\/workflow_steps\/4a4077d9-214a-4185-b615-c17f2bc810e9",
+            "sourceStep": "\/api\/3\/workflow_steps\/39422d33-c309-43a0-922a-9391fff0b7d2",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "8128f2b5-f329-43c0-a6e3-784cc074d383"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Start -> setup_input",
+            "targetStep": "\/api\/3\/workflow_steps\/39422d33-c309-43a0-922a-9391fff0b7d2",
+            "sourceStep": "\/api\/3\/workflow_steps\/eaa505b7-55e4-4c62-9408-8c7f9b2780f3",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "5e9c4689-d05a-4265-b492-c98e413cba80"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "update_fmg_variable -> extract_fmg_results",
+            "targetStep": "\/api\/3\/workflow_steps\/938efad4-112a-43e1-ba33-f2388ddf776b",
+            "sourceStep": "\/api\/3\/workflow_steps\/b5ac7e2d-901a-4c64-bb05-b79e5fa9e532",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "a1bab672-a85f-48d0-848b-344d0fa57707"
+        }
+    ],
+    "groups": [],
+    "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+    "uuid": "a4ec1d93-dda4-4531-9752-34303638ca6d",
+    "owners": [],
+    "isPrivate": false,
+    "deletedAt": null,
+    "recordTags": [
+        "adom",
+        "connector_config",
+        "device",
+        "json_rpc",
+        "package",
+        "Subroutine",
+        "vdom"
+    ]
+}

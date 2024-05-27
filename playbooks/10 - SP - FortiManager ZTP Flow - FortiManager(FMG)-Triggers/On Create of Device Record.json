@@ -21,7 +21,7 @@
             "description": null,
             "arguments": {
                 "arguments": {
-                    "record_id_list": "{{vars.input.records|json_query('[].id')}}"
+                    "record_id": "{{vars.input.records[0].id}}"
                 },
                 "apply_async": false,
                 "step_variables": [],
@@ -31,7 +31,7 @@
             },
             "status": null,
             "top": "140",
-            "left": "340",
+            "left": "540",
             "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
             "group": null,
             "uuid": "cf2a092f-e562-4bae-bc68-00f8c8eee6b3"
@@ -52,7 +52,7 @@
             },
             "status": null,
             "top": "40",
-            "left": "340",
+            "left": "540",
             "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
             "group": null,
             "uuid": "af473290-741c-41f1-9354-8e997b211163"
@@ -65,7 +65,7 @@
                 "ztp_profile_name": "{{vars.steps.assign_first_matching_ztp_profile[0].zTPProfiles.name}}"
             },
             "status": null,
-            "top": "140",
+            "top": "280",
             "left": "40",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
@@ -143,15 +143,33 @@
             "uuid": "b1433f0f-3aea-4452-96d7-3d0ba4a4ecd5"
         }
     ],
-    "groups": [],
+    "groups": [
+        {
+            "@type": "WorkflowGroup",
+            "name": "Summary",
+            "description": "Triggered on creation of a new device. Look to see if the device matches an automatic assignment ZTP Profile in order of priority.",
+            "type": "note",
+            "isCollapsed": false,
+            "hasTriggerStep": false,
+            "hideInLogs": false,
+            "metadata": [],
+            "reusable": false,
+            "top": "120",
+            "left": "40",
+            "height": "122",
+            "width": "356",
+            "uuid": "414e3481-143c-4466-9b52-3cb17427a45e",
+            "recordTags": []
+        }
+    ],
     "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
     "uuid": "c0fc6b79-0794-40a3-9a0c-ec4e74edb7a0",
     "owners": [],
     "isPrivate": false,
     "deletedAt": null,
     "recordTags": [
+        "Devices",
         "system",
-        "Trigger",
-        "Devices"
+        "Trigger"
     ]
 }

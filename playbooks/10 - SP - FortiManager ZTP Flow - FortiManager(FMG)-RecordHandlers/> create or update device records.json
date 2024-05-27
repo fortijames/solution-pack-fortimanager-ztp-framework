@@ -1,0 +1,320 @@
+{
+    "@type": "Workflow",
+    "triggerLimit": null,
+    "name": "> create or update device records",
+    "aliasName": null,
+    "tag": null,
+    "description": "*Only* subroutine to create and primary playbook to update the device records from FMG Data.",
+    "isActive": true,
+    "debug": false,
+    "singleRecordExecution": false,
+    "remoteExecutableFlag": false,
+    "parameters": [
+        "device_data",
+        "connector_config"
+    ],
+    "synchronous": false,
+    "collection": "\/api\/3\/workflow_collections\/30263dc4-42e1-4184-96f5-e8e873450439",
+    "versions": [],
+    "triggerStep": "\/api\/3\/workflow_steps\/6470e0e3-225b-42df-a13c-acc8d382c744",
+    "steps": [
+        {
+            "@type": "WorkflowStep",
+            "name": "create_device_record",
+            "description": null,
+            "arguments": {
+                "for_each": {
+                    "item": "{{vars.input.params['device_data']}}",
+                    "__bulk": true,
+                    "parallel": false,
+                    "condition": "",
+                    "batch_size": 100
+                },
+                "resource": {
+                    "sn": "{% if vars.item.sn %}{{vars.item.sn}}{% else %}{{vars.item.psk}}{% endif %}",
+                    "aDOM": "{{vars.item['extra info'].adom}}",
+                    "vDOM": "{{vars.item.mgt_vdom}}",
+                    "firmware": "{{vars.item.os_ver|int}}.{{vars.item.mr}}.{{vars.item.patch}}-build{{vars.item.build}}",
+                    "managers": "{{vars.manager_record_id}}",
+                    "platform": "{{vars.item.platform_str}}",
+                    "__replace": "true",
+                    "deviceName": "{{vars.item.name}}",
+                    "sourceData": "{{vars.item | toJSON}}",
+                    "configStatus": "{{vars.conf_status_msg[vars.item.name][\"text\"]|trim}}",
+                    "policyPackage": "{{vars.polpkg_status_msg[vars.item.name][\"assignment\"]}}",
+                    "configDBStatus": "{{vars.db_status_msg[vars.item.name][\"text\"]|trim}}",
+                    "managementMode": "{{vars.mgmt_mode_msg[vars.item.name][\"text\"]|trim}}",
+                    "connectorConfig": "{{vars.input.params['connector_config']}}",
+                    "configStatusHTML": "<p>{{vars.conf_status_msg[vars.item.name][\"html\"]|trim}}<\/p>",
+                    "connectionStatus": "{{vars.conn_status_msg[vars.item.name][\"text\"]|trim}}",
+                    "autoInstallConfig": false,
+                    "autoInstallPolicy": false,
+                    "policyPackageHTML": "<p>{{vars.polpkg_status_msg[vars.item.name][\"html\"]|trim}}<\/p>\n<p>&nbsp;<\/p>",
+                    "configDBStatusHTML": "<p>{{vars.db_status_msg[vars.item.name][\"html\"]|trim}}<\/p>",
+                    "managementModeHTML": "<p>{{vars.mgmt_mode_msg[vars.item.name][\"html\"]|trim}}<\/p>",
+                    "policyPackageStatus": "{{vars.polpkg_status_msg[vars.item.name][\"text\"]}}",
+                    "connectionStatusHTML": "<p>{{vars.conn_status_msg[vars.item.name][\"html\"]|trim}}<\/p>",
+                    "provisioningTemplates": "{{vars.provtmp_status_msg[vars.item.name][\"assignment\"]}}",
+                    "provisioningTemplatesHTML": "{{vars.provtmp_status_msg[vars.item.name][\"html\"]|trim}}",
+                    "provisioningTemplatesStatus": "{{vars.provtmp_status_msg[vars.item.name][\"text\"]}}"
+                },
+                "operation": "Overwrite",
+                "collection": "\/api\/3\/upsert\/devices",
+                "__recommend": [],
+                "fieldOperation": {
+                    "recordTags": "Overwrite"
+                },
+                "step_variables": []
+            },
+            "status": null,
+            "top": "160",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/2597053c-e718-44b4-8394-4d40fe26d357",
+            "group": null,
+            "uuid": "78f533c0-a326-4273-b397-e7701cf07d4c"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "extract_manager_record",
+            "description": null,
+            "arguments": {
+                "manager_record_id": "{{vars.steps.get_manager_record[0]['@id']}}"
+            },
+            "status": null,
+            "top": "60",
+            "left": "680",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "6ad35d23-aaa4-4795-91c6-8ccb56bf50c0"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "get_manager_record",
+            "description": null,
+            "arguments": {
+                "query": {
+                    "sort": [],
+                    "limit": 30,
+                    "logic": "AND",
+                    "filters": [
+                        {
+                            "type": "primitive",
+                            "field": "managerName",
+                            "value": "{{vars.input.params['connector_config']}}",
+                            "operator": "eq",
+                            "_operator": "eq"
+                        }
+                    ],
+                    "__selectFields": []
+                },
+                "module": "managers?$limit=1",
+                "checkboxFields": true,
+                "step_variables": []
+            },
+            "status": null,
+            "top": "20",
+            "left": "340",
+            "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928770",
+            "group": null,
+            "uuid": "64752e5d-52d5-49e8-b886-f3d931aa3c56"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "mgtvdom_assignments",
+            "description": null,
+            "arguments": {
+                "for_each": {
+                    "item": "{{vars.input.params['device_data']}}",
+                    "parallel": false,
+                    "condition": ""
+                },
+                "assignment_info": "{%- set idx = dict() -%}\n{%- set device = vars.item.name -%}\n{%- set vname = vars.item.mgt_vdom -%}\n{%- set vdom = \n       vars.item.vdom\n       |json_query('[?name == `{}`]'.format(vname))\n-%}\n{%- set ppkg = \n       vdom[0]['assignment info']\n       |json_query('[?type == `{}`]'.format(\"policy\"))\n-%}\n{%- set prov = \n       vdom[0]['assignment info']\n       |json_query('[?type != `{}`]'.format(\"policy\"))\n       |json_query('[?type != `{}`]'.format(\"fext\"))\n       |json_query('[?type != `{}`]'.format(\"wtp\"))\n-%}\n{%- for a in vars.item['assignment info'] -%}\n  {%- set _do = prov.append(a) -%}\n{%- endfor -%}\n{%- set _do = idx.update( \n  { \n    device: { \n      \"ppkg\":ppkg,\n      \"prov\":prov\n    } \n  } \n) -%}\n{{idx}}"
+            },
+            "status": null,
+            "top": "60",
+            "left": "180",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": "\/api\/3\/workflow_groups\/22d8063f-f546-4d39-aec8-4befbba95057",
+            "uuid": "bdf3cd18-0222-409c-9f8b-e165f1d6c5ce"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "mgtvdom_assignment_states",
+            "description": null,
+            "arguments": {
+                "assignment_info_idx": "{%- set idx = dict() -%}\n{%- for a in vars.assignment_info -%}\n\n  {%- if vars.assignment_info[a].ppkg != None -%}\n\n    {%- if vars.assignment_info[a].ppkg|length > 0 -%}\n\n      {%- if \"out-of-sync\" in vars.assignment_info[a].ppkg|json_query('[].status') -%}\n        {%- set pkg_state = \"problem\" -%}\n      {%- elif \"modified\" in vars.assignment_info[a].ppkg|json_query('[].status') -%}\n        {%- set pkg_state = \"update needed\" -%}\n      {%- elif \"unknown\" in vars.assignment_info[a].ppkg|json_query('[].status') -%}\n        {%- set pkg_state = \"install needed\" -%}\n      {%- else -%}\n        {%- set pkg_state = \"ok\" -%}\n      {%- endif -%}\n\n    {%- else -%}\n      {%- set pkg_state = \"no pkg\" -%}\n    {%- endif -%}\n  {%- else -%}\n    {%- set pkg_state = \"no pkg\" -%}\n  {%- endif -%}\n\n  {%- if vars.assignment_info[a].prov != None -%}\n\n    {%- if vars.assignment_info[a].prov|length > 0 -%}\n\n      {%- if \"modified\" in vars.assignment_info[a].prov|json_query('[].status') -%}\n        {%- set prov_state = \"update needed\" -%}\n      {%- else -%}\n        {%- set prov_state = \"ok\" -%}\n      {%- endif -%}\n\n    {%- else -%}\n      {%- set prov_state = \"no templates\" -%}\n    {%- endif -%}\n  {%- else -%}\n    {%- set prov_state = \"no templates\" -%}\n  {%- endif -%}\n  {%- set _do = idx.update(\n  {\n    a : {\n      \"ppkg_state\": pkg_state,\n      \"prov_state\": prov_state,\n      \"ppkg\": vars.assignment_info[a].ppkg,\n      \"prov\": vars.assignment_info[a].prov\n    }\n  }) -%}\n{%- endfor -%}\n{{idx}}"
+            },
+            "status": null,
+            "top": "160",
+            "left": "20",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": "\/api\/3\/workflow_groups\/22d8063f-f546-4d39-aec8-4befbba95057",
+            "uuid": "ac763466-6081-4662-95a4-556952139496"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "override_status_data",
+            "description": "Leverage conditional jinja to create content for HTML status fields.",
+            "arguments": {
+                "for_each": {
+                    "item": "{{vars.input.params['device_data']}}",
+                    "parallel": false,
+                    "condition": ""
+                },
+                "db_status_msg": "{%- if vars.item.mgmt_mode == \"unreg\" -%}\n{ \"{{vars.item.name}}\" : \n   { \n     \"html\" : '<span style=\"border:2px solid ORANGE;color:ORANGE;border-radius:5px;background-color:black;font-family:verdana;font-weight:bold;padding-top:2px;padding-right:2px;padding-bottom:2px;padding-left:2px;font-size:10px;\">Pending<\/span>',\n     \"text\" : 'Pending'\n   }\n}\n{%- elif vars.item.mgmt_mode == \"faz\" -%}\n{ \"{{vars.item.name}}\" : \n   { \n     \"html\" : '<span style=\"border:2px solid GREY;color:GREY;border-radius:5px;background-color:black;font-family:verdana;font-weight:bold;padding-top:2px;padding-right:2px;padding-bottom:2px;padding-left:2px;font-size:10px;\">NoConfig<\/span>',\n     \"text\" : 'NoConfig'\n   }\n}\n{%- else -%}\n{{vars.db_status_msg[vars.item.name]}}\n{%- endif -%}",
+                "mgmt_mode_msg": "{%- if vars.item.flags != None and \"is_model\" in vars.item.flags -%}\n{ \"{{vars.item.name}}\" : \n   { \n     \"html\" : '<span style=\"border:2px solid LightGreen;color:LightGreen;border-radius:5px;background-color:black;font-family:verdana;font-weight:bold;padding-top:2px;padding-right:2px;padding-bottom:2px;padding-left:2px;font-size:10px;\">Modeled<\/span>',\n     \"text\" : 'Modeled'\n   }\n}\n{%- else -%}\n{{vars.mgmt_mode_msg[vars.item.name]}}\n{%- endif -%}",
+                "conf_status_msg": "{%- if vars.item.mgmt_mode == \"unreg\" -%}\n{ \"{{vars.item.name}}\" : \n   { \n     \"html\" : '<span style=\"border:2px solid ORANGE;color:ORANGE;border-radius:5px;background-color:black;font-family:verdana;font-weight:bold;padding-top:2px;padding-right:2px;padding-bottom:2px;padding-left:2px;font-size:10px;\">Pending<\/span>',\n     \"text\" : 'Pending'\n   }\n}\n{%- elif vars.item.mgmt_mode == \"faz\" -%}\n{ \"{{vars.item.name}}\" : \n   { \n     \"html\" : '<span style=\"border:2px solid GREY;color:GREY;border-radius:5px;background-color:black;font-family:verdana;font-weight:bold;padding-top:2px;padding-right:2px;padding-bottom:2px;padding-left:2px;font-size:10px;\">NoConfig<\/span>',\n     \"text\" : 'NoConfig'\n   }\n}\n{%- else -%}\n{{vars.conf_status_msg[vars.item.name]}}\n{%- endif -%}",
+                "conn_status_msg": "{%- if vars.item.mgmt_mode == \"unreg\" -%}\n{ \"{{vars.item.name}}\" : \n   { \n     \"html\" : '<span style=\"border:2px solid ORANGE;color:ORANGE;border-radius:5px;background-color:black;font-family:verdana;font-weight:bold;padding-top:2px;padding-right:2px;padding-bottom:2px;padding-left:2px;font-size:10px;\">Pending<\/span>',\n     \"text\" : 'Pending'\n   }\n}\n{%- elif vars.item.mgmt_mode == \"faz\" -%}\n{ \"{{vars.item.name}}\" : \n   { \n     \"html\" : '<span style=\"border:2px solid GREY;color:GREY;border-radius:5px;background-color:black;font-family:verdana;font-weight:bold;padding-top:2px;padding-right:2px;padding-bottom:2px;padding-left:2px;font-size:10px;\">NotManaged<\/span>',\n     \"text\" : 'NotManaged'\n   }\n}\n{%- else -%}\n{{vars.conf_status_msg[vars.item.name]}}\n{%- endif -%}"
+            },
+            "status": null,
+            "top": "360",
+            "left": "20",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": "\/api\/3\/workflow_groups\/22d8063f-f546-4d39-aec8-4befbba95057",
+            "uuid": "a0c746b3-d4b7-4e94-867b-1d328e333974"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "setup_status_data",
+            "description": "Leverage conditional jinja to create content for HTML status fields.",
+            "arguments": {
+                "for_each": {
+                    "item": "{{vars.input.params['device_data']}}",
+                    "parallel": false,
+                    "condition": ""
+                },
+                "db_status_msg": "{%- set state = vars.item.db_status -%} \n{%- set clr = {\n  \"nomod\":\"GREEN\",\n  \"mod\"  :\"ORANGE\"} \n-%}\n{%- set lbl = {\n  \"nomod\":\"NoChanges\",\n  \"mod\"  :\"Modified\"\n} \n-%}\n{ \"{{vars.item.name}}\" : \n   { \n     \"html\" : '<span style=\"border:2px solid {{clr[state]|default(\"GREY\")}};color:{{clr[state]|default(\"GREY\")}};border-radius:5px;background-color:black;font-family:verdana;font-weight:bold;padding-top:2px;padding-right:2px;padding-bottom:2px;padding-left:2px;font-size:10px;\">{{lbl[state]|default(\"Unknown\")}}<\/span>',\n     \"text\" : '{{lbl[state]|default(\"Unknown\")}}'\n   }\n}",
+                "mgmt_mode_msg": "{%- set state = vars.item.mgmt_mode -%} \n{%- set clr = {\n  \"unreg\":\"ORANGE\",\n  \"fmg\"  :\"GREEN\",\n  \"faz\"  :\"GREEN\",\n  \"fmgfaz\" :\"GREEN\" } \n-%} \n{%- set lbl = {\n  \"unreg\":\"Unauthorized\",\n  \"fmg\"  :\"Managed\",\n  \"faz\"  :\"Logging\",\n  \"fmgfaz\" :\"Managed\" } \n-%}\n{ \"{{vars.item.name}}\" : \n   { \n     \"html\" : '<span style=\"border:2px solid {{clr[state]|default(\"GREY\")}};color:{{clr[state]|default(\"GREY\")}};border-radius:5px;background-color:black;font-family:verdana;font-weight:bold;padding-top:2px;padding-right:2px;padding-bottom:2px;padding-left:2px;font-size:10px;\">{{lbl[state]|default(\"Unknown\")}}<\/span>',\n     \"text\" : '{{lbl[state]|default(\"Unknown\")}}'\n   }\n}",
+                "conf_status_msg": "{%- set state = vars.item.conf_status -%} \n{%- set clr = {\n  \"insync\":\"GREEN\",\n  \"outofsync\":\"RED\" } \n-%}\n{%- set lbl = {\n  \"insync\":\"InSync\",\n  \"outofsync\"  :\"OutOfSync\",\n  } \n-%}\n{ \"{{vars.item.name}}\" : \n   { \n     \"html\" : '<span style=\"border:2px solid {{clr[state]|default(\"GREY\")}};color:{{clr[state]|default(\"GREY\")}};border-radius:5px;background-color:black;font-family:verdana;font-weight:bold;padding-top:2px;padding-right:2px;padding-bottom:2px;padding-left:2px;font-size:10px;\">{{lbl[state]|default(\"Unknown\")}}<\/span>',\n     \"text\" : '{{lbl[state]|default(\"Unknown\")}}'\n   }\n}",
+                "conn_status_msg": "{%- set state = vars.item.conn_status -%} \n{%- set clr = {\n  \"up\"  :\"GREEN\",\n  \"down\":\"RED\" } \n-%}\n{%- set lbl = {\n  \"up\"   :\"UP\",\n  \"down\" :\"DOWN\",\n  } \n-%}\n{ \"{{vars.item.name}}\" : \n   { \n     \"html\" : '<span style=\"border:2px solid {{clr[state]|default(\"GREY\")}};color:{{clr[state]|default(\"GREY\")}};border-radius:5px;background-color:black;font-family:verdana;font-weight:bold;padding-top:2px;padding-right:2px;padding-bottom:2px;padding-left:2px;font-size:10px;\">{{lbl[state]|default(\"Unknown\")}}<\/span>',\n     \"text\" : '{{lbl[state]|default(\"Unknown\")}}'\n   }\n}",
+                "polpkg_status_msg": "{%- set dev = vars.item.name -%} \n{%- set state = vars.assignment_info_idx[dev].ppkg_state -%} \n{%- set clr = {\n  \"ok\"             : \"GREEN\",\n  \"problem\"        : \"RED\",\n  \"update needed\"  : \"ORANGE\",\n  \"no pkg\"         : \"Grey\"\n  } \n-%}\n{%- set lbl = {\n  \"ok\"             : \"OK\",\n  \"problem\"        : \"Problem\",\n  \"update needed\"  : \"Install Needed\",\n  \"no pkg\"         : \"No Package\"\n  }\n-%}\n{%- set lblh = {\n  \"ok\"             : vars.assignment_info_idx[dev].ppkg[0].name|default(\"missing\") + \" (\" + vars.assignment_info_idx[dev].ppkg[0].status|default(\"missing\") + \")\",\n  \"problem\"        : vars.assignment_info_idx[dev].ppkg[0].name|default(\"missing\") + \" (\" + vars.assignment_info_idx[dev].ppkg[0].status|default(\"missing\") + \")\",\n  \"update needed\"  : vars.assignment_info_idx[dev].ppkg[0].name|default(\"missing\") + \" (\" + vars.assignment_info_idx[dev].ppkg[0].status|default(\"missing\") + \")\",\n  \"no pkg\"         : \"No Package\"\n  }\n-%}\n{ \"{{dev}}\" : \n   { \n     \"html\" : '<span style=\"border:2px solid {{clr[state]|default(\"GREY\")}};color:{{clr[state]|default(\"GREY\")}};border-radius:5px;background-color:black;font-family:verdana;font-weight:bold;padding-top:2px;padding-right:2px;padding-bottom:2px;padding-left:2px;font-size:10px;\">{{lblh[state]|default(\"Unknown\")}}<\/span>',\n     \"text\" : '{{lbl[state]|default(\"Unknown\")}}',\n     \"assignment\" : '{{vars.assignment_info_idx[dev].ppkg[0].name}}'\n   }\n}",
+                "provtmp_status_msg": "{%- set dev = vars.item.name -%} \n{%- set state = vars.assignment_info_idx[dev].prov_state -%} \n{%- set clr = {\n  \"ok\"           : \"GREEN\",\n  \"update needed\" : \"ORANGE\",\n  \"problem\"  : \"RED\",\n  \"no pkg\"    : \"Grey\"\n  } \n-%}\n{%- set lbl = {\n  \"ok\"      : \"OK\",\n  \"update needed\" : \"Needs Install\",\n  \"problem\" : \"Problem\",\n  \"no pkg\"  : \"No Package\"\n  }\n-%}\n{%- set lblh = {\n  \"ok\"            : vars.assignment_info_idx[dev].prov[0].name|default(\"missing\") + \" (\" + vars.assignment_info_idx[dev].prov[0].status|default(\"missing\") + \")\",\n  \"problem\"       : vars.assignment_info_idx[dev].prov[0].name|default(\"missing\") + \" (\" + vars.assignment_info_idx[dev].prov[0].status|default(\"missing\") + \")\",\n  \"update needed\" : vars.assignment_info_idx[dev].prov[0].name|default(\"missing\") + \" (\" + vars.assignment_info_idx[dev].prov[0].status|default(\"missing\") + \")\",\n  \"no pkg\"  : \"No Template\"\n  }\n-%}\n{ \"{{dev}}\" : \n   { \n     \"html\" : '<span style=\"border:2px solid {{clr[state]|default(\"GREY\")}};color:{{clr[state]|default(\"GREY\")}};border-radius:5px;background-color:black;font-family:verdana;font-weight:bold;padding-top:2px;padding-right:2px;padding-bottom:2px;padding-left:2px;font-size:10px;\">{{lblh[state]|default(\"Unknown\")}}<\/span>',\n     \"text\" : '{{lbl[state]|default(\"Unknown\")}}',\n     \"assignment\" : '{{vars.assignment_info_idx[dev].prov[0].name}}'\n   }\n}"
+            },
+            "status": null,
+            "top": "260",
+            "left": "180",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": "\/api\/3\/workflow_groups\/22d8063f-f546-4d39-aec8-4befbba95057",
+            "uuid": "36e43ead-713a-418d-8ba8-3c7c7be120a7"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Start",
+            "description": null,
+            "arguments": {
+                "step_variables": {
+                    "input": {
+                        "params": []
+                    }
+                }
+            },
+            "status": null,
+            "top": "60",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/b348f017-9a94-471f-87f8-ce88b6a7ad62",
+            "group": null,
+            "uuid": "6470e0e3-225b-42df-a13c-acc8d382c744"
+        }
+    ],
+    "routes": [
+        {
+            "@type": "WorkflowRoute",
+            "name": "extract_manager_record -> mgtvdom_assignments",
+            "targetStep": "\/api\/3\/workflow_steps\/bdf3cd18-0222-409c-9f8b-e165f1d6c5ce",
+            "sourceStep": "\/api\/3\/workflow_steps\/6ad35d23-aaa4-4795-91c6-8ccb56bf50c0",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "e44bf858-e432-489e-874d-54530fa29e25"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "extract_mgtvdom_assignments -> process_assignment_info_states",
+            "targetStep": "\/api\/3\/workflow_steps\/ac763466-6081-4662-95a4-556952139496",
+            "sourceStep": "\/api\/3\/workflow_steps\/bdf3cd18-0222-409c-9f8b-e165f1d6c5ce",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "744e999e-071a-45b8-b478-c371b770d9b5"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "get_manager_record -> extract_manager_record",
+            "targetStep": "\/api\/3\/workflow_steps\/6ad35d23-aaa4-4795-91c6-8ccb56bf50c0",
+            "sourceStep": "\/api\/3\/workflow_steps\/64752e5d-52d5-49e8-b886-f3d931aa3c56",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "bc1daaf1-260f-4e58-b7c1-cb40d25062bc"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "mgtvdom_assignment_states -> setup_status_data",
+            "targetStep": "\/api\/3\/workflow_steps\/36e43ead-713a-418d-8ba8-3c7c7be120a7",
+            "sourceStep": "\/api\/3\/workflow_steps\/ac763466-6081-4662-95a4-556952139496",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "5c9ac3f3-38d4-47dc-bcfa-49551826c1e4"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "override_status_data -> create_device_record",
+            "targetStep": "\/api\/3\/workflow_steps\/78f533c0-a326-4273-b397-e7701cf07d4c",
+            "sourceStep": "\/api\/3\/workflow_steps\/a0c746b3-d4b7-4e94-867b-1d328e333974",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "2e584cf5-8e25-4b5e-a357-af8f9f6e366c"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "setup_status_data -> override_unreg_status_data",
+            "targetStep": "\/api\/3\/workflow_steps\/a0c746b3-d4b7-4e94-867b-1d328e333974",
+            "sourceStep": "\/api\/3\/workflow_steps\/36e43ead-713a-418d-8ba8-3c7c7be120a7",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "9e044acb-6453-42d1-b81e-55e26dc1b521"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Start -> get_manager_record",
+            "targetStep": "\/api\/3\/workflow_steps\/64752e5d-52d5-49e8-b886-f3d931aa3c56",
+            "sourceStep": "\/api\/3\/workflow_steps\/6470e0e3-225b-42df-a13c-acc8d382c744",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "6a09b414-e0a6-41c5-9775-986d81d85455"
+        }
+    ],
+    "groups": [
+        {
+            "@type": "WorkflowGroup",
+            "name": "Handle Record Status",
+            "description": "Update Status Fields: \n  (db_status, conf_status, conn_status, mgmt_mode)",
+            "type": "block",
+            "isCollapsed": false,
+            "hasTriggerStep": false,
+            "hideInLogs": false,
+            "metadata": [],
+            "reusable": false,
+            "top": "160",
+            "left": "340",
+            "height": "434",
+            "width": "442",
+            "uuid": "22d8063f-f546-4d39-aec8-4befbba95057",
+            "recordTags": []
+        }
+    ],
+    "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+    "uuid": "ebc8f7f4-231a-4826-bb06-7f91d2a1cd4f",
+    "owners": [],
+    "isPrivate": false,
+    "deletedAt": null,
+    "recordTags": [
+        "connector_config",
+        "device_data",
+        "Subroutine"
+    ]
+}

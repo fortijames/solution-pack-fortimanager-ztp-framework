@@ -1,0 +1,162 @@
+{
+    "@type": "Workflow",
+    "triggerLimit": null,
+    "name": "> render device metadata from metafield template and device record",
+    "aliasName": null,
+    "tag": null,
+    "description": "Use metadata template record id and device record id to create device metadata",
+    "isActive": true,
+    "debug": false,
+    "singleRecordExecution": false,
+    "remoteExecutableFlag": false,
+    "parameters": [
+        "device_record_id",
+        "metafield_template_record_id"
+    ],
+    "synchronous": false,
+    "collection": "\/api\/3\/workflow_collections\/30263dc4-42e1-4184-96f5-e8e873450439",
+    "versions": [],
+    "triggerStep": "\/api\/3\/workflow_steps\/1640ba68-b496-499c-acbc-fc2db04646da",
+    "steps": [
+        {
+            "@type": "WorkflowStep",
+            "name": "find_metafield_template",
+            "description": null,
+            "arguments": {
+                "query": {
+                    "sort": [],
+                    "limit": 30,
+                    "logic": "AND",
+                    "filters": [
+                        {
+                            "type": "primitive",
+                            "field": "id",
+                            "value": "{{vars.input.params['metafield_template_record_id']}}",
+                            "operator": "eq",
+                            "_operator": "eq"
+                        }
+                    ],
+                    "__selectFields": [
+                        "metadataSources",
+                        "id",
+                        "metafieldTemplate"
+                    ]
+                },
+                "module": "metafield_templates?$limit=1",
+                "checkboxFields": true,
+                "step_variables": []
+            },
+            "status": null,
+            "top": "40",
+            "left": "360",
+            "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928770",
+            "group": null,
+            "uuid": "2d860b3d-647f-4216-9cd0-c5ef946b8708"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "get_jinja_vars",
+            "description": null,
+            "arguments": {
+                "arguments": {
+                    "metadata_source": "{{vars.steps.find_metafield_template[0].metadataSources}}",
+                    "device_record_id": "{{vars.input.params['device_record_id']}}"
+                },
+                "apply_async": false,
+                "step_variables": [],
+                "pass_parent_env": false,
+                "pass_input_record": false,
+                "workflowReference": "\/api\/3\/workflows\/19d48e99-e6f3-40bf-a8a6-c7b107f3fd7f"
+            },
+            "status": null,
+            "top": "160",
+            "left": "360",
+            "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
+            "group": null,
+            "uuid": "b334a913-11b8-4f8b-85e0-68c109a93a2c"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "render_jinja_tempalte",
+            "description": null,
+            "arguments": {
+                "arguments": {
+                    "script_vars": "{{vars.steps.get_jinja_vars.output}}",
+                    "script_template": "{{vars.steps.find_metafield_template[0].metafieldTemplate}}"
+                },
+                "apply_async": false,
+                "step_variables": [],
+                "pass_parent_env": false,
+                "pass_input_record": false,
+                "workflowReference": "\/api\/3\/workflows\/8aff2bb3-7d1c-45f1-aae9-ea816aea874d"
+            },
+            "status": null,
+            "top": "280",
+            "left": "360",
+            "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
+            "group": null,
+            "uuid": "04df5a1f-b8dc-43f6-9c04-175d1dd79343"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Start",
+            "description": null,
+            "arguments": {
+                "step_variables": {
+                    "input": {
+                        "params": []
+                    }
+                }
+            },
+            "status": null,
+            "top": "40",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/b348f017-9a94-471f-87f8-ce88b6a7ad62",
+            "group": null,
+            "uuid": "1640ba68-b496-499c-acbc-fc2db04646da"
+        }
+    ],
+    "routes": [
+        {
+            "@type": "WorkflowRoute",
+            "name": "find_metafield_template -> get_jinja_vars",
+            "targetStep": "\/api\/3\/workflow_steps\/b334a913-11b8-4f8b-85e0-68c109a93a2c",
+            "sourceStep": "\/api\/3\/workflow_steps\/2d860b3d-647f-4216-9cd0-c5ef946b8708",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "36402f63-13e3-4b85-92e5-9b0dc36fd414"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "get_jinja_vars -> render_jinja_tempalte",
+            "targetStep": "\/api\/3\/workflow_steps\/04df5a1f-b8dc-43f6-9c04-175d1dd79343",
+            "sourceStep": "\/api\/3\/workflow_steps\/b334a913-11b8-4f8b-85e0-68c109a93a2c",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "d4f470ae-b29d-47df-bccf-4dc2bf8fb57b"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Start -> find_metadata_template",
+            "targetStep": "\/api\/3\/workflow_steps\/2d860b3d-647f-4216-9cd0-c5ef946b8708",
+            "sourceStep": "\/api\/3\/workflow_steps\/1640ba68-b496-499c-acbc-fc2db04646da",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "c2c7205b-312f-4eaf-9672-213150ef2c2b"
+        }
+    ],
+    "groups": [],
+    "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+    "uuid": "7018676d-e971-48bf-adcb-78204a925dc2",
+    "owners": [],
+    "isPrivate": false,
+    "deletedAt": null,
+    "recordTags": [
+        "device_record_id",
+        "metafield_template_record_id",
+        "Subroutine"
+    ]
+}

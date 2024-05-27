@@ -1,0 +1,439 @@
+{
+    "@type": "Workflow",
+    "triggerLimit": null,
+    "name": "> ztp profile assignment search on device_id and assign if needed",
+    "aliasName": null,
+    "tag": null,
+    "description": "Using a profile id and device id assign the profile if matched and not already assigned.",
+    "isActive": true,
+    "debug": false,
+    "singleRecordExecution": false,
+    "remoteExecutableFlag": false,
+    "parameters": [
+        "record_id_list",
+        "ztp_profile_id"
+    ],
+    "synchronous": false,
+    "collection": "\/api\/3\/workflow_collections\/30263dc4-42e1-4184-96f5-e8e873450439",
+    "versions": [],
+    "triggerStep": "\/api\/3\/workflow_steps\/78ead807-2e07-4676-88f1-862523d34a07",
+    "steps": [
+        {
+            "@type": "WorkflowStep",
+            "name": "Devices Found",
+            "description": null,
+            "arguments": {
+                "conditions": [
+                    {
+                        "option": "No Devices",
+                        "step_iri": "\/api\/3\/workflow_steps\/856e99f7-00b7-40a9-89b2-c5fb8b07a9d2",
+                        "condition": "{{ vars.steps.find_device_records | length == 0 }}",
+                        "step_name": "return_no_devices"
+                    },
+                    {
+                        "option": "Devices",
+                        "default": true,
+                        "step_iri": "\/api\/3\/workflow_steps\/3fc00f42-7d08-48cc-a204-90ae1de18420",
+                        "step_name": "set_device_record_data"
+                    }
+                ],
+                "step_variables": []
+            },
+            "status": null,
+            "top": "340",
+            "left": "480",
+            "stepType": "\/api\/3\/workflow_step_types\/12254cf5-5db7-4b1a-8cb1-3af081924b28",
+            "group": null,
+            "uuid": "633b2df2-d823-4871-8233-35adb9eca92c"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "find_device_records",
+            "description": null,
+            "arguments": {
+                "query": {
+                    "sort": [],
+                    "limit": 30,
+                    "logic": "AND",
+                    "filters": [
+                        {
+                            "type": "primitive",
+                            "field": "id",
+                            "value": "{{vars.input.params['record_id_list']}}",
+                            "operator": "in",
+                            "_operator": "in"
+                        },
+                        {
+                            "type": "object",
+                            "field": "zTPProfiles",
+                            "value": "true",
+                            "_value": {
+                                "@id": "true",
+                                "display": "",
+                                "itemValue": ""
+                            },
+                            "operator": "isnull"
+                        }
+                    ],
+                    "__selectFields": [
+                        "deviceName",
+                        "aDOM",
+                        "vDOM",
+                        "sn",
+                        "platform",
+                        "firmware",
+                        "connectionStatus",
+                        "managementMode",
+                        "configStatus",
+                        "deviceIP",
+                        "policyPackage",
+                        "deviceGroups",
+                        "id",
+                        "zTPProfiles"
+                    ]
+                },
+                "module": "devices?$limit=5000",
+                "checkboxFields": true,
+                "step_variables": []
+            },
+            "status": null,
+            "top": "180",
+            "left": "860",
+            "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928770",
+            "group": null,
+            "uuid": "e9cb2a59-eb13-46df-a4b0-2d8c28a013b8"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "find_ztp_profile",
+            "description": null,
+            "arguments": {
+                "query": {
+                    "sort": [
+                        {
+                            "field": "orderPriority",
+                            "direction": "ASC",
+                            "_fieldName": "orderPriority",
+                            "_fieldTitle": "Order Priority"
+                        }
+                    ],
+                    "limit": 30,
+                    "logic": "AND",
+                    "filters": [
+                        {
+                            "type": "primitive",
+                            "field": "id",
+                            "value": "{{vars.input.params['ztp_profile_id']}}",
+                            "operator": "eq",
+                            "_operator": "eq"
+                        }
+                    ]
+                },
+                "module": "z_t_p_profiles?$limit=1",
+                "checkboxFields": false,
+                "step_variables": []
+            },
+            "status": null,
+            "top": "380",
+            "left": "900",
+            "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928770",
+            "group": null,
+            "uuid": "65be9fd4-c613-4a07-b387-9ef183562e04"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "get results",
+            "description": null,
+            "arguments": {
+                "search_results": "{{vars.steps.get_search_results.output}}"
+            },
+            "status": null,
+            "top": "520",
+            "left": "480",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "a546cdae-db3d-43bb-96a2-453d800eec0d"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "get search results",
+            "description": null,
+            "arguments": {
+                "arguments": {
+                    "record_id_list": "{{vars.record_id_list}}",
+                    "ztp_profile_id": "{{vars.ztp_profile_id}}"
+                },
+                "apply_async": false,
+                "step_variables": [],
+                "pass_parent_env": false,
+                "pass_input_record": false,
+                "workflowReference": "\/api\/3\/workflows\/fee784a7-7faa-4743-b68d-c69a6e710319"
+            },
+            "status": null,
+            "top": "580",
+            "left": "900",
+            "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
+            "group": null,
+            "uuid": "ffb43201-c92a-4966-98aa-b7e4a06d16e2"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "return",
+            "description": null,
+            "arguments": {
+                "output": "{{vars.search_results}}"
+            },
+            "status": null,
+            "top": "540",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "a4b284c4-88b2-4179-9d4a-a15a17f99e95"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "return_no_devices",
+            "description": null,
+            "arguments": {
+                "output": "[]"
+            },
+            "status": null,
+            "top": "340",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "856e99f7-00b7-40a9-89b2-c5fb8b07a9d2"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "set_device_record_data",
+            "description": null,
+            "arguments": {
+                "deviceid2iri": "{%- set idx = {} -%}\n{%- for d in vars.steps.find_device_records -%}\n  {%- set _do = idx.update( { d.id:d['@id'] } ) -%}\n{% endfor -%}\n{{idx}}"
+            },
+            "status": null,
+            "top": "280",
+            "left": "900",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "3fc00f42-7d08-48cc-a204-90ae1de18420"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "set device ztp profile",
+            "description": null,
+            "arguments": {
+                "for_each": {
+                    "item": "{{vars.search_results}}",
+                    "__bulk": true,
+                    "parallel": false,
+                    "condition": "{{vars.item['matched'] is true}}",
+                    "batch_size": 100
+                },
+                "resource": {
+                    "zTPProfiles": "{{vars.ztp_profile_iri}}"
+                },
+                "operation": "Append",
+                "collection": "{{vars.deviceid2iri[vars.item['id']]}}",
+                "__recommend": [],
+                "collectionType": "\/api\/3\/devices",
+                "fieldOperation": [],
+                "step_variables": []
+            },
+            "status": null,
+            "top": "440",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928722",
+            "group": null,
+            "uuid": "2dc3c5e4-3987-4518-8955-418aa691ddcd"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "set_profile_record_data",
+            "description": null,
+            "arguments": {
+                "ztp_profile_iri": "{{vars.steps.find_ztp_profile[0]['@id']}}"
+            },
+            "status": null,
+            "top": "480",
+            "left": "900",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "d54df593-422b-4d2f-bd4d-d08d3754fd78"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "setup_variables",
+            "description": null,
+            "arguments": {
+                "record_id_list": "{{vars.input.params['record_id_list']}}",
+                "ztp_profile_id": "{{vars.input.params['ztp_profile_id']}}"
+            },
+            "status": null,
+            "top": "40",
+            "left": "480",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "4fcda216-7a10-41e1-9116-b9e47d97cac5"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Start",
+            "description": null,
+            "arguments": {
+                "step_variables": {
+                    "input": {
+                        "params": []
+                    }
+                }
+            },
+            "status": null,
+            "top": "40",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/b348f017-9a94-471f-87f8-ce88b6a7ad62",
+            "group": null,
+            "uuid": "78ead807-2e07-4676-88f1-862523d34a07"
+        }
+    ],
+    "routes": [
+        {
+            "@type": "WorkflowRoute",
+            "name": "Devices Found -> return_no_devices",
+            "targetStep": "\/api\/3\/workflow_steps\/856e99f7-00b7-40a9-89b2-c5fb8b07a9d2",
+            "sourceStep": "\/api\/3\/workflow_steps\/633b2df2-d823-4871-8233-35adb9eca92c",
+            "label": "No Devices",
+            "isExecuted": false,
+            "group": null,
+            "uuid": "5bf2f62e-e92a-416e-b970-a8ee8fa2eae8"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Devices Found -> set_device_record_data",
+            "targetStep": "\/api\/3\/workflow_steps\/3fc00f42-7d08-48cc-a204-90ae1de18420",
+            "sourceStep": "\/api\/3\/workflow_steps\/633b2df2-d823-4871-8233-35adb9eca92c",
+            "label": "Devices",
+            "isExecuted": false,
+            "group": null,
+            "uuid": "14cfc75e-3d5d-49eb-b91f-5239c053d4ea"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "find_device_records -> Devices Found",
+            "targetStep": "\/api\/3\/workflow_steps\/633b2df2-d823-4871-8233-35adb9eca92c",
+            "sourceStep": "\/api\/3\/workflow_steps\/e9cb2a59-eb13-46df-a4b0-2d8c28a013b8",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "6287c871-56df-4987-812a-7ac34ab55489"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "find_ztp_profile -> set_logic_variables",
+            "targetStep": "\/api\/3\/workflow_steps\/d54df593-422b-4d2f-bd4d-d08d3754fd78",
+            "sourceStep": "\/api\/3\/workflow_steps\/65be9fd4-c613-4a07-b387-9ef183562e04",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "dd4d6cd3-ad02-415e-9bf4-2a5cd295f3a8"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "get results -> set device ztp profile",
+            "targetStep": "\/api\/3\/workflow_steps\/2dc3c5e4-3987-4518-8955-418aa691ddcd",
+            "sourceStep": "\/api\/3\/workflow_steps\/a546cdae-db3d-43bb-96a2-453d800eec0d",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "4b9af923-dd66-4e40-bc08-01022a8f254e"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "get search results -> get results",
+            "targetStep": "\/api\/3\/workflow_steps\/a546cdae-db3d-43bb-96a2-453d800eec0d",
+            "sourceStep": "\/api\/3\/workflow_steps\/ffb43201-c92a-4966-98aa-b7e4a06d16e2",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "94c86c53-71a9-4c91-8dde-caf29bc85909"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "set_device_record_data -> find_ztp_profile",
+            "targetStep": "\/api\/3\/workflow_steps\/65be9fd4-c613-4a07-b387-9ef183562e04",
+            "sourceStep": "\/api\/3\/workflow_steps\/3fc00f42-7d08-48cc-a204-90ae1de18420",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "73f25b5b-fb61-4815-b418-208f08b5d978"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "set device ztp profile -> return",
+            "targetStep": "\/api\/3\/workflow_steps\/a4b284c4-88b2-4179-9d4a-a15a17f99e95",
+            "sourceStep": "\/api\/3\/workflow_steps\/2dc3c5e4-3987-4518-8955-418aa691ddcd",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "f23380ff-0a2f-4753-b6d0-cd6d106aaf8d"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "set_logic_variables -> get search results",
+            "targetStep": "\/api\/3\/workflow_steps\/ffb43201-c92a-4966-98aa-b7e4a06d16e2",
+            "sourceStep": "\/api\/3\/workflow_steps\/d54df593-422b-4d2f-bd4d-d08d3754fd78",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "737e631f-eed6-42ce-846f-f7d76498afa1"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "setup_variables -> find_device_records",
+            "targetStep": "\/api\/3\/workflow_steps\/e9cb2a59-eb13-46df-a4b0-2d8c28a013b8",
+            "sourceStep": "\/api\/3\/workflow_steps\/4fcda216-7a10-41e1-9116-b9e47d97cac5",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "2c42e405-ae83-4f7f-9cb9-1263f736f64b"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Start -> setup_variables",
+            "targetStep": "\/api\/3\/workflow_steps\/4fcda216-7a10-41e1-9116-b9e47d97cac5",
+            "sourceStep": "\/api\/3\/workflow_steps\/78ead807-2e07-4676-88f1-862523d34a07",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "3598b3a8-c683-46d6-96dd-9b45130b4d91"
+        }
+    ],
+    "groups": [
+        {
+            "@type": "WorkflowGroup",
+            "name": "Original Playbook",
+            "description": "Only consider devices that do not have a profile. If a device already has a profile we will skip this playbook.\n\nUse the playbook *ztp profile assignment search* ( fee784a7-7faa-4743-b68d-c69a6e710319 ) to obtain the results of a ZTP Profile auto assign search and update the device record if we have a match.",
+            "type": "note",
+            "isCollapsed": false,
+            "hasTriggerStep": false,
+            "hideInLogs": false,
+            "metadata": [],
+            "reusable": false,
+            "top": "120",
+            "left": "140",
+            "height": "205",
+            "width": "498",
+            "uuid": "e62770d0-8398-4409-a3fb-8b63e8f1a29f",
+            "recordTags": []
+        }
+    ],
+    "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+    "uuid": "7e29ca80-7657-462c-8766-f46902907e65",
+    "owners": [],
+    "isPrivate": false,
+    "deletedAt": null,
+    "recordTags": [
+        "device_id",
+        "Subroutine",
+        "ztp_profile_id"
+    ]
+}

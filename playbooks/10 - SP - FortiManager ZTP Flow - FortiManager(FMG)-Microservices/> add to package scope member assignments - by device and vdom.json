@@ -1,0 +1,168 @@
+{
+    "@type": "Workflow",
+    "triggerLimit": null,
+    "name": "> add to package scope member assignments - by device and vdom",
+    "aliasName": null,
+    "tag": null,
+    "description": "Add a device device list in the form of fg1,fg2,fg3 or fg1:vdom1,fg2:vdom1,fg3:vdoma or fg1:vdom1,fg2,fg3 to a package if needed.",
+    "isActive": true,
+    "debug": false,
+    "singleRecordExecution": false,
+    "remoteExecutableFlag": false,
+    "parameters": [
+        "connector_config",
+        "adom",
+        "package",
+        "devices"
+    ],
+    "synchronous": false,
+    "collection": "\/api\/3\/workflow_collections\/acff9572-b869-4ceb-bbc1-1c3700ec9a4e",
+    "versions": [],
+    "triggerStep": "\/api\/3\/workflow_steps\/ef6486e1-d10f-485d-baef-24031b7254cf",
+    "steps": [
+        {
+            "@type": "WorkflowStep",
+            "name": "device_scope",
+            "description": null,
+            "arguments": {
+                "device_scope": "{%- for dev in vars.device_list -%}\n{%- set name = dev.split(\":\") -%}\n{\n  \"name\":\"{{name[0]}}\",\n  \"vdom\":\"{{name[1]|default('root')}}\"\n},\n{%- endfor -%}",
+                "device_scope_test": "[ {\n      \"name\": \"FG1\",\n      \"vdom\": \"root\"\n    },\n    {\n      \"name\": \"FG2\",\n      \"vdom\": \"root\"\n    },\n    {\n      \"name\": \"FG3\",\n      \"vdom\": \"root\"\n    } ]"
+            },
+            "status": null,
+            "top": "220",
+            "left": "400",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "c643bef9-2dab-4616-a231-7e0174355f52"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "extract_fmg_results",
+            "description": null,
+            "arguments": {
+                "output": "{{vars.steps.update_fmg_variable}}"
+            },
+            "status": null,
+            "top": "200",
+            "left": "60",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "64d081dd-e28f-439b-9d8f-3cd04936c61f"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "setup_input",
+            "description": null,
+            "arguments": {
+                "device_list": "{{vars.input.params.devices.split(\",\")}}",
+                "assign_device_flag": "{{vars.input.params['assign_device_flag']|default(True)}}"
+            },
+            "status": null,
+            "top": "120",
+            "left": "400",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "852dd3a7-3748-4f63-8f1d-94fb76b50174"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Start",
+            "description": null,
+            "arguments": {
+                "step_variables": {
+                    "input": {
+                        "params": []
+                    }
+                }
+            },
+            "status": null,
+            "top": "120",
+            "left": "60",
+            "stepType": "\/api\/3\/workflow_step_types\/b348f017-9a94-471f-87f8-ce88b6a7ad62",
+            "group": null,
+            "uuid": "ef6486e1-d10f-485d-baef-24031b7254cf"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "update_fmg_variable",
+            "description": null,
+            "arguments": {
+                "name": "Fortinet FortiManager JSON-RPC",
+                "config": "{{vars.input.params['connector_config']}}",
+                "params": {
+                    "url": "\/pm\/pkg\/adom\/{{vars.input.params.adom}}\/{{vars.input.params.package}}\/scope member",
+                    "data": "{{vars.device_scope}}"
+                },
+                "version": "1.0.0",
+                "connector": "fortinet-fortimanager-json-rpc",
+                "operation": "json_rpc_add",
+                "operationTitle": "JSON RPC Add",
+                "pickFromTenant": false,
+                "step_variables": []
+            },
+            "status": null,
+            "top": "320",
+            "left": "400",
+            "stepType": "\/api\/3\/workflow_step_types\/0bfed618-0316-11e7-93ae-92361f002671",
+            "group": null,
+            "uuid": "7f3dbb4e-6dbb-448c-a7c9-097f45e3643c"
+        }
+    ],
+    "routes": [
+        {
+            "@type": "WorkflowRoute",
+            "name": "device_scope -> update_fmg_variable",
+            "targetStep": "\/api\/3\/workflow_steps\/7f3dbb4e-6dbb-448c-a7c9-097f45e3643c",
+            "sourceStep": "\/api\/3\/workflow_steps\/c643bef9-2dab-4616-a231-7e0174355f52",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "44b5b523-27f6-49e7-9d72-4fe04223e89e"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "setup_input -> device_scope",
+            "targetStep": "\/api\/3\/workflow_steps\/c643bef9-2dab-4616-a231-7e0174355f52",
+            "sourceStep": "\/api\/3\/workflow_steps\/852dd3a7-3748-4f63-8f1d-94fb76b50174",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "7a46e9c8-90e6-4dee-8eb4-a3ea6014b1c1"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Start -> setup_input",
+            "targetStep": "\/api\/3\/workflow_steps\/852dd3a7-3748-4f63-8f1d-94fb76b50174",
+            "sourceStep": "\/api\/3\/workflow_steps\/ef6486e1-d10f-485d-baef-24031b7254cf",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "1c692b98-401a-43ae-86fe-50e79d235018"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "update_fmg_variable -> extract_fmg_results",
+            "targetStep": "\/api\/3\/workflow_steps\/64d081dd-e28f-439b-9d8f-3cd04936c61f",
+            "sourceStep": "\/api\/3\/workflow_steps\/7f3dbb4e-6dbb-448c-a7c9-097f45e3643c",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "05272c22-59a2-4cb1-a144-56f2bc28770d"
+        }
+    ],
+    "groups": [],
+    "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+    "uuid": "e14c2e88-cd00-44c8-8585-dab14f76f2ff",
+    "owners": [],
+    "isPrivate": false,
+    "deletedAt": null,
+    "recordTags": [
+        "adom",
+        "connector_config",
+        "device",
+        "json_rpc",
+        "package",
+        "Subroutine",
+        "vdom"
+    ]
+}

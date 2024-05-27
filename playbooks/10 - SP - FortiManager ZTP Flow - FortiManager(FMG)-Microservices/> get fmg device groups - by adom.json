@@ -1,0 +1,114 @@
+{
+    "@type": "Workflow",
+    "triggerLimit": null,
+    "name": "> get fmg device groups - by adom",
+    "aliasName": null,
+    "tag": null,
+    "description": "Get all device groups and members by adom.",
+    "isActive": true,
+    "debug": false,
+    "singleRecordExecution": false,
+    "remoteExecutableFlag": false,
+    "parameters": [
+        "connector_config",
+        "adom"
+    ],
+    "synchronous": false,
+    "collection": "\/api\/3\/workflow_collections\/acff9572-b869-4ceb-bbc1-1c3700ec9a4e",
+    "versions": [],
+    "triggerStep": "\/api\/3\/workflow_steps\/b6153e95-a1db-4d4f-81be-d75f8518937e",
+    "steps": [
+        {
+            "@type": "WorkflowStep",
+            "name": "extract fmg data",
+            "description": null,
+            "arguments": {
+                "output": "{{vars.steps.get_fmg_data.data.get_response}}"
+            },
+            "status": null,
+            "top": "180",
+            "left": "60",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "2cbd1efc-f80f-4719-8816-1794c279ff66"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "get_fmg_data",
+            "description": null,
+            "arguments": {
+                "name": "Fortinet FortiManager JSON-RPC",
+                "config": "{{vars.input.params['connector_config']}}",
+                "params": {
+                    "url": "\/dvmdb\/adom\/{{vars.input.params['adom']}}\/group",
+                    "data": "{\n  \"option\": \"object member\",\n  \"filter\": [\n    [\n      \"os_type\",\n      \"==\",\n      \"0\"\n    ]\n  ]\n}"
+                },
+                "version": "1.0.0",
+                "connector": "fortinet-fortimanager-json-rpc",
+                "operation": "json_rpc_get",
+                "operationTitle": "JSON RPC Get",
+                "pickFromTenant": false,
+                "step_variables": []
+            },
+            "status": null,
+            "top": "120",
+            "left": "380",
+            "stepType": "\/api\/3\/workflow_step_types\/0bfed618-0316-11e7-93ae-92361f002671",
+            "group": null,
+            "uuid": "5c98f1e0-8f47-439e-8922-a9cd30d9dfe6"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Start",
+            "description": null,
+            "arguments": {
+                "step_variables": {
+                    "input": {
+                        "params": []
+                    }
+                }
+            },
+            "status": null,
+            "top": "60",
+            "left": "60",
+            "stepType": "\/api\/3\/workflow_step_types\/b348f017-9a94-471f-87f8-ce88b6a7ad62",
+            "group": null,
+            "uuid": "b6153e95-a1db-4d4f-81be-d75f8518937e"
+        }
+    ],
+    "routes": [
+        {
+            "@type": "WorkflowRoute",
+            "name": "Get Devices in FMG -> extract data",
+            "targetStep": "\/api\/3\/workflow_steps\/2cbd1efc-f80f-4719-8816-1794c279ff66",
+            "sourceStep": "\/api\/3\/workflow_steps\/5c98f1e0-8f47-439e-8922-a9cd30d9dfe6",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "42767cf5-f029-4fda-bf17-0e075281ec22"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Start -> Get Devices in FMG",
+            "targetStep": "\/api\/3\/workflow_steps\/5c98f1e0-8f47-439e-8922-a9cd30d9dfe6",
+            "sourceStep": "\/api\/3\/workflow_steps\/b6153e95-a1db-4d4f-81be-d75f8518937e",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "75b2a525-3249-4aa3-9378-6589f82ce583"
+        }
+    ],
+    "groups": [],
+    "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+    "uuid": "90b3afa6-8cf8-45e1-9714-157127b33853",
+    "owners": [],
+    "isPrivate": false,
+    "deletedAt": null,
+    "recordTags": [
+        "connector_config",
+        "device_name",
+        "json_rpc",
+        "output",
+        "Subroutine"
+    ]
+}

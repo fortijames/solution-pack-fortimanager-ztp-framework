@@ -1,0 +1,149 @@
+{
+    "@type": "Workflow",
+    "triggerLimit": null,
+    "name": "> device record status spinner - by connector",
+    "aliasName": null,
+    "tag": null,
+    "description": "Find records by connector and send the list to the update status spinner routine.",
+    "isActive": true,
+    "debug": false,
+    "singleRecordExecution": false,
+    "remoteExecutableFlag": false,
+    "parameters": [
+        "connector_config"
+    ],
+    "synchronous": false,
+    "collection": "\/api\/3\/workflow_collections\/30263dc4-42e1-4184-96f5-e8e873450439",
+    "versions": [],
+    "triggerStep": "\/api\/3\/workflow_steps\/a843b8d7-6b0f-4b36-bf64-bd13fb31d689",
+    "steps": [
+        {
+            "@type": "WorkflowStep",
+            "name": "extract_records",
+            "description": null,
+            "arguments": {
+                "record_list": "{{vars.steps.find_records}}"
+            },
+            "status": null,
+            "top": "140",
+            "left": "340",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "1234ff1c-56dd-4209-80dd-06d30535877e"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "find_records",
+            "description": null,
+            "arguments": {
+                "query": {
+                    "sort": [],
+                    "limit": 30,
+                    "logic": "AND",
+                    "filters": [
+                        {
+                            "type": "primitive",
+                            "field": "connectorConfig",
+                            "value": "{{vars.input.params['connector_config']}}",
+                            "operator": "eq",
+                            "_operator": "eq"
+                        }
+                    ],
+                    "__selectFields": [
+                        "id"
+                    ]
+                },
+                "module": "devices?$limit=5000",
+                "checkboxFields": true,
+                "step_variables": []
+            },
+            "status": null,
+            "top": "40",
+            "left": "340",
+            "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928770",
+            "group": null,
+            "uuid": "482658c1-234e-40ea-ac77-634a50589073"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Start",
+            "description": null,
+            "arguments": {
+                "step_variables": {
+                    "input": {
+                        "params": []
+                    }
+                }
+            },
+            "status": null,
+            "top": "40",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/b348f017-9a94-471f-87f8-ce88b6a7ad62",
+            "group": null,
+            "uuid": "a843b8d7-6b0f-4b36-bf64-bd13fb31d689"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "start_status_spinners",
+            "description": null,
+            "arguments": {
+                "arguments": {
+                    "record_list": "{{vars.record_list}}"
+                },
+                "apply_async": false,
+                "step_variables": [],
+                "pass_parent_env": false,
+                "pass_input_record": false,
+                "workflowReference": "\/api\/3\/workflows\/dd0cbc49-371d-459d-9871-082263a3ea1e"
+            },
+            "status": null,
+            "top": "240",
+            "left": "340",
+            "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
+            "group": null,
+            "uuid": "11fc481d-a499-465d-b552-c139cff10808"
+        }
+    ],
+    "routes": [
+        {
+            "@type": "WorkflowRoute",
+            "name": "extract_records -> update_device_records",
+            "targetStep": "\/api\/3\/workflow_steps\/11fc481d-a499-465d-b552-c139cff10808",
+            "sourceStep": "\/api\/3\/workflow_steps\/1234ff1c-56dd-4209-80dd-06d30535877e",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "c248521e-ec93-49ab-bdaf-3aab9ef2fce3"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "find_records -> extract_records",
+            "targetStep": "\/api\/3\/workflow_steps\/1234ff1c-56dd-4209-80dd-06d30535877e",
+            "sourceStep": "\/api\/3\/workflow_steps\/482658c1-234e-40ea-ac77-634a50589073",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "bc1ff11b-1599-418a-808f-1eceab41cacb"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Start -> find_records",
+            "targetStep": "\/api\/3\/workflow_steps\/482658c1-234e-40ea-ac77-634a50589073",
+            "sourceStep": "\/api\/3\/workflow_steps\/a843b8d7-6b0f-4b36-bf64-bd13fb31d689",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "d3e918c5-c1be-4ac1-a06e-a20af35d37a7"
+        }
+    ],
+    "groups": [],
+    "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+    "uuid": "d57b12b2-d69c-4ee1-becb-70808814f193",
+    "owners": [],
+    "isPrivate": false,
+    "deletedAt": null,
+    "recordTags": [
+        "connector_config",
+        "Subroutine"
+    ]
+}

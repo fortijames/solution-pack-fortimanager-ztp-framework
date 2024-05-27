@@ -1,0 +1,244 @@
+{
+    "@type": "Workflow",
+    "triggerLimit": null,
+    "name": "> fmg retrieve config - on devices",
+    "aliasName": null,
+    "tag": null,
+    "description": "Exec reload\/dev-list to retrieve config on a device list in the form of fg1,fg2,fg3.",
+    "isActive": true,
+    "debug": false,
+    "singleRecordExecution": false,
+    "remoteExecutableFlag": false,
+    "parameters": [
+        "connector_config",
+        "adom",
+        "devices",
+        "tag"
+    ],
+    "synchronous": false,
+    "collection": "\/api\/3\/workflow_collections\/acff9572-b869-4ceb-bbc1-1c3700ec9a4e",
+    "versions": [],
+    "triggerStep": "\/api\/3\/workflow_steps\/404f0bc5-eb15-4bc5-a523-5ee06e8fc022",
+    "steps": [
+        {
+            "@type": "WorkflowStep",
+            "name": "device_scope",
+            "description": null,
+            "arguments": {
+                "device_scope": "{%- set table = [] -%}\n{%- for dev in vars.device_list -%}\n{%- set _do = table.append({\"name\":dev}) -%}\n{%- endfor -%}\n{{table}}",
+                "device_scope_test": "[   \n  {\"name\": \"FG1\"}\n]"
+            },
+            "status": null,
+            "top": "140",
+            "left": "560",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "cddb0848-c145-4b96-b0ca-235aef5847a2"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "exec_payload",
+            "description": null,
+            "arguments": {
+                "payload": "{\n  \"data\": {    \n    \"adom\": \"{{vars.input.params.adom}}\", \n    \"flags\": [\"create_task\"],\n    \"reload-dev-member-list\": {{vars.device_scope}},\n    \"tag\": \"{{vars.tag}}\"\n  }\n}"
+            },
+            "status": null,
+            "top": "240",
+            "left": "560",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "dd361731-c048-40b6-a8b0-2194312bff3d"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "retrieve_config",
+            "description": null,
+            "arguments": {
+                "name": "Fortinet FortiManager JSON-RPC",
+                "config": "{{vars.input.params['connector_config']}}",
+                "params": {
+                    "url": "\/dvm\/cmd\/reload\/dev-list",
+                    "data": "{{vars.payload}}",
+                    "track_task": true
+                },
+                "version": "1.0.0",
+                "connector": "fortinet-fortimanager-json-rpc",
+                "operation": "json_rpc_execute",
+                "operationTitle": "JSON RPC Exec",
+                "pickFromTenant": false,
+                "step_variables": []
+            },
+            "status": null,
+            "top": "340",
+            "left": "560",
+            "stepType": "\/api\/3\/workflow_step_types\/0bfed618-0316-11e7-93ae-92361f002671",
+            "group": null,
+            "uuid": "c5274ad9-4217-49f1-966e-2e7968aad1ea"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "return_results",
+            "description": null,
+            "arguments": {
+                "output": "{%- set exec_results = vars.steps.retrieve_config -%}\n{%- set results = {} -%}\n{%- set _do = results.update( {\"script_data\":exec_results} ) -%}\n{%- set _do = results.update( {\"error\":False} ) -%}\n\n{%- if exec_results.data.status != 0 -%}\n    {%- set _do = results.update( {\"error\":true} ) -%}\n  {%- set _do = results.update( {\n            \"msg\": exec_results.data.task_response.status.message \n                       + \" -- \" \n                       + exec_results.data.execute_response.status.message\n  }) -%}\n{% else -%}\n  {%- set line_cnt = exec_results.data.task_response.line|length -%}\n  {%- set _do = results.update( {\n            \"msg\": exec_results.data.task_response.line[line_cnt-1].detail|default(\"\")\n  }) -%}\n  {%- if \"error\" in exec_results.data.task_response.state -%}\n    {%- set _do = results.update( {\"error\":true} ) -%}\n  {%- endif -%}\n{%- endif -%}\n{{results}}",
+                "params": "{{vars.input.params}}"
+            },
+            "status": null,
+            "top": "220",
+            "left": "100",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "396bdc87-13a7-4e11-b896-f2ed4ac49e64"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "setup_initial",
+            "description": null,
+            "arguments": {
+                "tag": "{{vars.input.params.tag if vars.input.params.tag else \"Retreived by fmg\"}}",
+                "device_list": "{{vars.input.params.devices.split(\",\")}}"
+            },
+            "status": null,
+            "top": "40",
+            "left": "560",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "3ee79246-28eb-439f-b47f-fc7f5766d44c"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Start",
+            "description": null,
+            "arguments": {
+                "step_variables": {
+                    "input": {
+                        "params": []
+                    }
+                }
+            },
+            "status": null,
+            "top": "120",
+            "left": "100",
+            "stepType": "\/api\/3\/workflow_step_types\/b348f017-9a94-471f-87f8-ce88b6a7ad62",
+            "group": null,
+            "uuid": "404f0bc5-eb15-4bc5-a523-5ee06e8fc022"
+        }
+    ],
+    "routes": [
+        {
+            "@type": "WorkflowRoute",
+            "name": "device_scope -> exec_payload",
+            "targetStep": "\/api\/3\/workflow_steps\/dd361731-c048-40b6-a8b0-2194312bff3d",
+            "sourceStep": "\/api\/3\/workflow_steps\/cddb0848-c145-4b96-b0ca-235aef5847a2",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "21c0e9d7-96e9-456d-aa72-bb664beac80d"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "exec_payload -> retrieve_config",
+            "targetStep": "\/api\/3\/workflow_steps\/c5274ad9-4217-49f1-966e-2e7968aad1ea",
+            "sourceStep": "\/api\/3\/workflow_steps\/dd361731-c048-40b6-a8b0-2194312bff3d",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "8e1a2402-4e79-48cd-99ad-a215ddf08b9f"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "install_config -> extract fmg device data",
+            "targetStep": "\/api\/3\/workflow_steps\/396bdc87-13a7-4e11-b896-f2ed4ac49e64",
+            "sourceStep": "\/api\/3\/workflow_steps\/c5274ad9-4217-49f1-966e-2e7968aad1ea",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "97b2757b-1d0d-4e60-a3a8-a8164bc15544"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "prase_input_devices -> device_scope",
+            "targetStep": "\/api\/3\/workflow_steps\/cddb0848-c145-4b96-b0ca-235aef5847a2",
+            "sourceStep": "\/api\/3\/workflow_steps\/3ee79246-28eb-439f-b47f-fc7f5766d44c",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "c6f0a0bd-4454-4654-89f4-9c09afe41c7e"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Start -> parse_input_devices",
+            "targetStep": "\/api\/3\/workflow_steps\/3ee79246-28eb-439f-b47f-fc7f5766d44c",
+            "sourceStep": "\/api\/3\/workflow_steps\/404f0bc5-eb15-4bc5-a523-5ee06e8fc022",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "ad288046-3fbd-4bd7-b0e1-9fab80b78074"
+        }
+    ],
+    "groups": [
+        {
+            "@type": "WorkflowGroup",
+            "name": "FMG API",
+            "description": "URL: \n  \/dvm\/cmd\/reload\/dev-list\n\nDetails:\n  Creates task to retrieve config and monitors the result.",
+            "type": "note",
+            "isCollapsed": false,
+            "hasTriggerStep": false,
+            "hideInLogs": true,
+            "metadata": [],
+            "reusable": false,
+            "top": "340",
+            "left": "840",
+            "height": "172",
+            "width": "450",
+            "uuid": "22088074-6e08-47fb-9665-6b54308f921e",
+            "recordTags": []
+        },
+        {
+            "@type": "WorkflowGroup",
+            "name": "Input",
+            "description": "connector_config: \n  The FMG Connector Config Name\n\nadom: \n  The ADOM the device resides. \n\ndevices: \n  List of Device Names. \n\ntag: \n  The name of the config when retrieved.",
+            "type": "note",
+            "isCollapsed": false,
+            "hasTriggerStep": false,
+            "hideInLogs": true,
+            "metadata": [],
+            "reusable": false,
+            "top": "40",
+            "left": "840",
+            "height": "281",
+            "width": "457",
+            "uuid": "57699dc7-7996-4d3b-b6d1-7b20304cfc26",
+            "recordTags": []
+        },
+        {
+            "@type": "WorkflowGroup",
+            "name": "Output",
+            "description": "msg:\n  A simple message regarding the task. \n\nerror:\n  true|false\n\nscript_data:\n  details of the task from the API call.",
+            "type": "note",
+            "isCollapsed": false,
+            "hasTriggerStep": false,
+            "hideInLogs": true,
+            "metadata": [],
+            "reusable": false,
+            "top": "300",
+            "left": "20",
+            "height": "221",
+            "width": "405",
+            "uuid": "4fa94e00-64a3-47c9-9f61-5c0fc759c0f2",
+            "recordTags": []
+        }
+    ],
+    "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+    "uuid": "fcf7033d-7cb6-444d-8c4d-c5111fc97f05",
+    "owners": [],
+    "isPrivate": false,
+    "deletedAt": null,
+    "recordTags": [
+        "adom",
+        "connector_config",
+        "devices",
+        "json_rpc",
+        "Subroutine"
+    ]
+}

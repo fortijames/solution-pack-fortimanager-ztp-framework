@@ -1,0 +1,173 @@
+{
+    "@type": "Workflow",
+    "triggerLimit": null,
+    "name": "> merge metadata content with device record metadata",
+    "aliasName": null,
+    "tag": null,
+    "description": "Given metadata and a device record merge metadata into the record. Overwrite Keys is True\/False and defaults to True.",
+    "isActive": true,
+    "debug": false,
+    "singleRecordExecution": false,
+    "remoteExecutableFlag": false,
+    "parameters": [
+        "device_record_id",
+        "metadata",
+        "overwrite_existing_keys"
+    ],
+    "synchronous": false,
+    "collection": "\/api\/3\/workflow_collections\/30263dc4-42e1-4184-96f5-e8e873450439",
+    "versions": [],
+    "triggerStep": "\/api\/3\/workflow_steps\/327aa07a-3d08-42bc-b61e-a0a9da1e9d8c",
+    "steps": [
+        {
+            "@type": "WorkflowStep",
+            "name": "create_new_metadata",
+            "description": null,
+            "arguments": {
+                "output": "{# \n  Never overwrite populated metadata. \n  If the device metadata is populated and the template is not keep the device. \n#}\n{%- set metadata = vars.metadata -%}\n{%- for m in vars.device_metadata -%}\n  {%- if m in metadata -%}\n    {%- if metadata[m] == '' -%}\n      {%- set _do = metadata.update({m:vars.device_metadata[m]}) -%}\n    {%- endif -%}\n  {%- endif -%}\n{%- endfor -%}\n{#\n  Merge metadata with overwriting flag option. \n#}\n{%- set mydata = {} -%}\n{%- if vars.device_metadata != None -%}\n  {%- if vars.overwrite_existing_keys != True -%}\n    {%- set _do = mydata.update(metadata) -%}\n    {%- set _do = mydata.update(vars.device_metadata|toDict) -%}\n  {%- else -%}\n    {%- set _do = mydata.update(vars.device_metadata|toDict) -%}\n    {%- set _do = mydata.update(metadata) -%}\n  {% endif -%}\n{%- else -%}\n  {%- set _do = mydata.update(metadata) -%}\n{% endif -%}\n{{mydata}}",
+                "params": "{{vars.input.params}}"
+            },
+            "status": null,
+            "top": "340",
+            "left": "340",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "d16fd4a6-c187-4e42-83c1-ea29156095b3"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "extract_device_data",
+            "description": null,
+            "arguments": {
+                "device_metadata": "{{vars.steps.find_device_metadata[0].deviceMetadata|default({})}}"
+            },
+            "status": null,
+            "top": "240",
+            "left": "340",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "93cec325-5f18-4984-9f15-e62753167655"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "find_device_metadata",
+            "description": null,
+            "arguments": {
+                "query": {
+                    "sort": [],
+                    "limit": 30,
+                    "logic": "AND",
+                    "filters": [
+                        {
+                            "type": "primitive",
+                            "field": "id",
+                            "value": "{{vars.input.params['device_record_id']}}",
+                            "operator": "eq",
+                            "_operator": "eq"
+                        }
+                    ],
+                    "__selectFields": [
+                        "id",
+                        "deviceMetadata"
+                    ]
+                },
+                "module": "devices?$limit=1",
+                "checkboxFields": true,
+                "step_variables": []
+            },
+            "status": null,
+            "top": "140",
+            "left": "340",
+            "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928770",
+            "group": null,
+            "uuid": "b106df4e-5e31-4c37-b86e-293aa67199d3"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "setup_vars",
+            "description": null,
+            "arguments": {
+                "overwrite_existing_keys": "{%- if vars.input.params['overwrite_existing_keys'] == False -%}\nFalse\n{%- else -%}\nTrue\n{%- endif -%}"
+            },
+            "status": null,
+            "top": "40",
+            "left": "340",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "4bfd055b-47d2-4bfc-a12b-d3f70a580817"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Start",
+            "description": null,
+            "arguments": {
+                "step_variables": {
+                    "input": {
+                        "params": []
+                    }
+                }
+            },
+            "status": null,
+            "top": "40",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/b348f017-9a94-471f-87f8-ce88b6a7ad62",
+            "group": null,
+            "uuid": "327aa07a-3d08-42bc-b61e-a0a9da1e9d8c"
+        }
+    ],
+    "routes": [
+        {
+            "@type": "WorkflowRoute",
+            "name": "extract_device_data -> create_new_metadata",
+            "targetStep": "\/api\/3\/workflow_steps\/d16fd4a6-c187-4e42-83c1-ea29156095b3",
+            "sourceStep": "\/api\/3\/workflow_steps\/93cec325-5f18-4984-9f15-e62753167655",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "5fe24502-bbec-454d-91a4-f09d40fb56eb"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "find_device_metadata -> extract_find_device",
+            "targetStep": "\/api\/3\/workflow_steps\/93cec325-5f18-4984-9f15-e62753167655",
+            "sourceStep": "\/api\/3\/workflow_steps\/b106df4e-5e31-4c37-b86e-293aa67199d3",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "5267c503-2ba0-4a6f-b138-c5c3c28b5d69"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "setup_vars -> find_device_metadata",
+            "targetStep": "\/api\/3\/workflow_steps\/b106df4e-5e31-4c37-b86e-293aa67199d3",
+            "sourceStep": "\/api\/3\/workflow_steps\/4bfd055b-47d2-4bfc-a12b-d3f70a580817",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "bcd663aa-45c3-4133-9c08-f3e84e1d02e2"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Start -> setup_vars",
+            "targetStep": "\/api\/3\/workflow_steps\/4bfd055b-47d2-4bfc-a12b-d3f70a580817",
+            "sourceStep": "\/api\/3\/workflow_steps\/327aa07a-3d08-42bc-b61e-a0a9da1e9d8c",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "ab3f247a-e550-471e-90cc-a40f0ee7797d"
+        }
+    ],
+    "groups": [],
+    "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+    "uuid": "6ec4990d-074e-431c-a051-1edd7adec805",
+    "owners": [],
+    "isPrivate": false,
+    "deletedAt": null,
+    "recordTags": [
+        "device_record_id",
+        "metadata",
+        "output",
+        "overwrite_existing_keys",
+        "Subroutine"
+    ]
+}

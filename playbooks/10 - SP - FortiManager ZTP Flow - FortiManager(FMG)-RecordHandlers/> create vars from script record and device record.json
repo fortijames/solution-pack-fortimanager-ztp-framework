@@ -1,0 +1,412 @@
+{
+    "@type": "Workflow",
+    "triggerLimit": null,
+    "name": "> create vars from script record and device record",
+    "aliasName": null,
+    "tag": null,
+    "description": "Using a script record and a device record build a complete vars object for jinja templates to be rendered from content.",
+    "isActive": true,
+    "debug": false,
+    "singleRecordExecution": false,
+    "remoteExecutableFlag": false,
+    "parameters": [
+        "script_record_id",
+        "device_record_id"
+    ],
+    "synchronous": false,
+    "collection": "\/api\/3\/workflow_collections\/30263dc4-42e1-4184-96f5-e8e873450439",
+    "versions": [],
+    "triggerStep": "\/api\/3\/workflow_steps\/dc2a938b-5a6c-4eb2-9fe5-6eb600a5c554",
+    "steps": [
+        {
+            "@type": "WorkflowStep",
+            "name": "build_vars",
+            "description": null,
+            "arguments": {
+                "script_vars": "{%- set svars = dict() -%}\n{%- set _do=svars.update( { \n  \"record\":  {\n    \"id\": vars.device_data[0].id,\n    \"connector_config\": vars.device_data[0].connectorConfig,\n    \"devname\": vars.device_data[0].deviceName,\n    \"sn\": vars.device_data[0].sn,\n    \"adom\": vars.device_data[0].aDOM,\n    \"vdom\": vars.device_data[0].vDOM,\n    \"firmware\": vars.device_data[0].firmware,\n    \"platform\": vars.device_data[0].platform\n  }\n} ) -%}\n{%- if vars.device_data[0].deviceMetadata != None -%}\n{%- set _do=svars.update( { \"devmeta\": vars.device_data[0].deviceMetadata | toDict } ) -%}\n{%- endif -%}\n{{ svars }}"
+            },
+            "status": null,
+            "top": "380",
+            "left": "320",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "1187d7f7-23a4-45cb-a8e7-db4c2f060f90"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "build_vars_meta",
+            "description": null,
+            "arguments": {
+                "output": "{%- set mvars = dict() -%}\n{%- set _do=mvars.update(  vars.script_vars | toDict ) -%}\n{%- for m in vars.metasource_results -%}\n{%- set _do=mvars.update(  { m.returnkey: m.output | toDict } ) -%}\n{%- endfor -%}\n{{mvars}}"
+            },
+            "status": null,
+            "top": "380",
+            "left": "620",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "8a4c21ea-f95a-4351-a63f-feadc0d1a2de"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "extract_metasources",
+            "description": null,
+            "arguments": {
+                "metasources": "{{vars.script_data[0].scriptMetadataSources}}"
+            },
+            "status": null,
+            "top": "60",
+            "left": "200",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": "\/api\/3\/workflow_groups\/383950e7-efa3-4a11-bcb4-7c8461c19f8a",
+            "uuid": "30a53452-ab91-47bd-af32-c5518e164eb6"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "extract_record_data",
+            "description": null,
+            "arguments": {
+                "device_data": "{{vars.steps.find_device}}",
+                "script_data": "{{vars.steps.find_script}}"
+            },
+            "status": null,
+            "top": "280",
+            "left": "320",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "c7b57e8e-b7af-4edf-bd20-6e2b062a57a5"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "extract_rendered_metasources",
+            "description": null,
+            "arguments": {
+                "metasources_rendered": "{{vars.steps.render_metasources.output}}"
+            },
+            "status": null,
+            "top": "260",
+            "left": "200",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": "\/api\/3\/workflow_groups\/383950e7-efa3-4a11-bcb4-7c8461c19f8a",
+            "uuid": "3a5186a8-8eb2-459e-9e04-e9a066a7363b"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "find_device",
+            "description": null,
+            "arguments": {
+                "query": {
+                    "sort": [],
+                    "limit": 30,
+                    "logic": "AND",
+                    "filters": [
+                        {
+                            "type": "primitive",
+                            "field": "id",
+                            "value": "{{vars.input.params['device_record_id']|int}}",
+                            "operator": "eq",
+                            "_operator": "eq"
+                        }
+                    ],
+                    "__selectFields": [
+                        "connectorConfig",
+                        "deviceName",
+                        "vDOM",
+                        "aDOM",
+                        "sn",
+                        "platform",
+                        "firmware",
+                        "connectionStatus",
+                        "managementMode",
+                        "configStatus",
+                        "configDBStatus",
+                        "deviceIP",
+                        "deviceMetadata"
+                    ]
+                },
+                "module": "devices?$limit=1",
+                "checkboxFields": true,
+                "step_variables": []
+            },
+            "status": null,
+            "top": "80",
+            "left": "320",
+            "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928770",
+            "group": "\/api\/3\/workflow_groups\/2f2c515d-6bc7-4cd0-b254-ecde8735bdc5",
+            "uuid": "a30a1d5e-b28d-4609-be22-ed593b22163b"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "find_script",
+            "description": null,
+            "arguments": {
+                "query": {
+                    "sort": [],
+                    "limit": 30,
+                    "logic": "AND",
+                    "filters": [
+                        {
+                            "type": "primitive",
+                            "field": "id",
+                            "value": "{{vars.input.params['script_record_id']|int}}",
+                            "operator": "eq",
+                            "_operator": "eq"
+                        }
+                    ],
+                    "__selectFields": [
+                        "scriptName",
+                        "scriptType",
+                        "script",
+                        "scriptMetadataSources"
+                    ]
+                },
+                "module": "scripts?$limit=1",
+                "checkboxFields": true,
+                "step_variables": []
+            },
+            "status": null,
+            "top": "180",
+            "left": "320",
+            "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928770",
+            "group": "\/api\/3\/workflow_groups\/2f2c515d-6bc7-4cd0-b254-ecde8735bdc5",
+            "uuid": "5a2f5c29-3998-4918-81e9-7334017a7a76"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "get_metadata_fmg",
+            "description": null,
+            "arguments": {
+                "for_each": {
+                    "item": "{{vars.metasources_rendered}}",
+                    "parallel": false,
+                    "condition": ""
+                },
+                "arguments": {
+                    "url": "{{vars.item.location}}",
+                    "returnkey": "{{vars.item.keyname}}",
+                    "connector_config": "{{vars.item.source}}"
+                },
+                "apply_async": false,
+                "step_variables": {
+                    "metasource_results": "{{vars.steps.get_metadata_fmg}}"
+                },
+                "pass_parent_env": false,
+                "pass_input_record": false,
+                "workflowReference": "\/api\/3\/workflows\/58970167-ffb2-45a8-a96d-7dd311ccffad"
+            },
+            "status": null,
+            "top": "360",
+            "left": "200",
+            "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
+            "group": "\/api\/3\/workflow_groups\/383950e7-efa3-4a11-bcb4-7c8461c19f8a",
+            "uuid": "28ddf7af-da6e-4da8-9e6d-4a4f30aee116"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "metasources_exist",
+            "description": null,
+            "arguments": {
+                "conditions": [
+                    {
+                        "option": "Yes",
+                        "step_iri": "\/api\/3\/workflow_steps\/30a53452-ab91-47bd-af32-c5518e164eb6",
+                        "condition": "{{ vars.script_data[0].scriptMetadataSources != None }}",
+                        "step_name": "extract_metasources"
+                    },
+                    {
+                        "option": "No",
+                        "default": true,
+                        "step_iri": "\/api\/3\/workflow_steps\/8a4c21ea-f95a-4351-a63f-feadc0d1a2de",
+                        "step_name": "build_vars_meta"
+                    }
+                ]
+            },
+            "status": null,
+            "top": "80",
+            "left": "620",
+            "stepType": "\/api\/3\/workflow_step_types\/12254cf5-5db7-4b1a-8cb1-3af081924b28",
+            "group": null,
+            "uuid": "d75e2bd3-2929-456c-a37d-941473d6c634"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "render_metasources",
+            "description": null,
+            "arguments": {
+                "arguments": {
+                    "script_vars": "{{vars.script_vars}}",
+                    "script_template": "{{vars.metasources}}"
+                },
+                "apply_async": false,
+                "step_variables": [],
+                "pass_parent_env": false,
+                "pass_input_record": false,
+                "workflowReference": "\/api\/3\/workflows\/8aff2bb3-7d1c-45f1-aae9-ea816aea874d"
+            },
+            "status": null,
+            "top": "160",
+            "left": "200",
+            "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
+            "group": "\/api\/3\/workflow_groups\/383950e7-efa3-4a11-bcb4-7c8461c19f8a",
+            "uuid": "dd4c65be-1fcb-46c3-a04f-d6959625ad20"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Start",
+            "description": null,
+            "arguments": {
+                "step_variables": {
+                    "input": {
+                        "params": []
+                    }
+                }
+            },
+            "status": null,
+            "top": "40",
+            "left": "20",
+            "stepType": "\/api\/3\/workflow_step_types\/b348f017-9a94-471f-87f8-ce88b6a7ad62",
+            "group": null,
+            "uuid": "dc2a938b-5a6c-4eb2-9fe5-6eb600a5c554"
+        }
+    ],
+    "routes": [
+        {
+            "@type": "WorkflowRoute",
+            "name": "build_vars -> metasources_exist",
+            "targetStep": "\/api\/3\/workflow_steps\/d75e2bd3-2929-456c-a37d-941473d6c634",
+            "sourceStep": "\/api\/3\/workflow_steps\/1187d7f7-23a4-45cb-a8e7-db4c2f060f90",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "4366e0a9-159f-426a-9d15-71e7c6ff6a22"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "extract_record_data -> build_vars",
+            "targetStep": "\/api\/3\/workflow_steps\/1187d7f7-23a4-45cb-a8e7-db4c2f060f90",
+            "sourceStep": "\/api\/3\/workflow_steps\/c7b57e8e-b7af-4edf-bd20-6e2b062a57a5",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "f4cbb4c4-aa46-44ac-8326-99e4d96c68ae"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "extract_rendered_metasources -> get_metadata_fmg",
+            "targetStep": "\/api\/3\/workflow_steps\/28ddf7af-da6e-4da8-9e6d-4a4f30aee116",
+            "sourceStep": "\/api\/3\/workflow_steps\/3a5186a8-8eb2-459e-9e04-e9a066a7363b",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "98e252a4-6c09-44d7-a011-256ff0073250"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "exttract_metasources -> render_metasources",
+            "targetStep": "\/api\/3\/workflow_steps\/dd4c65be-1fcb-46c3-a04f-d6959625ad20",
+            "sourceStep": "\/api\/3\/workflow_steps\/30a53452-ab91-47bd-af32-c5518e164eb6",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "a71e18f7-2eb9-4a0a-8bbf-fdba0b5dad16"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "find_device -> find_script",
+            "targetStep": "\/api\/3\/workflow_steps\/5a2f5c29-3998-4918-81e9-7334017a7a76",
+            "sourceStep": "\/api\/3\/workflow_steps\/a30a1d5e-b28d-4609-be22-ed593b22163b",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "e1a2e3b5-ed0b-4630-aad2-e7e8aafd4fb1"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "find_script -> build_vars",
+            "targetStep": "\/api\/3\/workflow_steps\/c7b57e8e-b7af-4edf-bd20-6e2b062a57a5",
+            "sourceStep": "\/api\/3\/workflow_steps\/5a2f5c29-3998-4918-81e9-7334017a7a76",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "38113ac9-680b-4d0b-9b56-9ae01f0a7be1"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "get_metadata_fmg -> build_vars_meta",
+            "targetStep": "\/api\/3\/workflow_steps\/8a4c21ea-f95a-4351-a63f-feadc0d1a2de",
+            "sourceStep": "\/api\/3\/workflow_steps\/28ddf7af-da6e-4da8-9e6d-4a4f30aee116",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "6ea5457a-1ff3-4d46-9c3a-20229420dd4b"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "metasources_exist -> build_vars_meta",
+            "targetStep": "\/api\/3\/workflow_steps\/8a4c21ea-f95a-4351-a63f-feadc0d1a2de",
+            "sourceStep": "\/api\/3\/workflow_steps\/d75e2bd3-2929-456c-a37d-941473d6c634",
+            "label": "No",
+            "isExecuted": false,
+            "group": null,
+            "uuid": "0a8f52e3-32e8-4328-8175-f4cfe28390ad"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "metasources_exist -> extract_metasources",
+            "targetStep": "\/api\/3\/workflow_steps\/30a53452-ab91-47bd-af32-c5518e164eb6",
+            "sourceStep": "\/api\/3\/workflow_steps\/d75e2bd3-2929-456c-a37d-941473d6c634",
+            "label": "Yes",
+            "isExecuted": false,
+            "group": null,
+            "uuid": "9189f128-8bf3-49b4-a803-71d8c5f7d3ec"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "render_metasources -> extract_rendered_metasources",
+            "targetStep": "\/api\/3\/workflow_steps\/3a5186a8-8eb2-459e-9e04-e9a066a7363b",
+            "sourceStep": "\/api\/3\/workflow_steps\/dd4c65be-1fcb-46c3-a04f-d6959625ad20",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "9a672256-a2d6-470e-bfb4-01eae6cdeda9"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Start -> find_devices",
+            "targetStep": "\/api\/3\/workflow_steps\/a30a1d5e-b28d-4609-be22-ed593b22163b",
+            "sourceStep": "\/api\/3\/workflow_steps\/dc2a938b-5a6c-4eb2-9fe5-6eb600a5c554",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "608e59c8-106d-495f-a824-d8e315e0322d"
+        }
+    ],
+    "groups": [
+        {
+            "@type": "WorkflowGroup",
+            "name": "Pull Metadata from Sources Defined in the Script",
+            "description": "",
+            "type": "block",
+            "isCollapsed": false,
+            "hasTriggerStep": false,
+            "hideInLogs": false,
+            "metadata": [],
+            "reusable": false,
+            "top": "20",
+            "left": "940",
+            "height": "445",
+            "width": "559",
+            "uuid": "383950e7-efa3-4a11-bcb4-7c8461c19f8a",
+            "recordTags": []
+        }
+    ],
+    "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+    "uuid": "c09d6dfa-ef34-4528-8aaa-ea6bea851363",
+    "owners": [],
+    "isPrivate": false,
+    "deletedAt": null,
+    "recordTags": [
+        "device_record_id",
+        "script_record_id",
+        "Subroutine"
+    ]
+}

@@ -1,0 +1,143 @@
+{
+    "@type": "Workflow",
+    "triggerLimit": null,
+    "name": "> create or update fmg variable - by adom",
+    "aliasName": null,
+    "tag": null,
+    "description": "Create or update a variable in an ADOM.",
+    "isActive": true,
+    "debug": false,
+    "singleRecordExecution": false,
+    "remoteExecutableFlag": false,
+    "parameters": [
+        "connector_config",
+        "adom",
+        "variable",
+        "value",
+        "description"
+    ],
+    "synchronous": false,
+    "collection": "\/api\/3\/workflow_collections\/acff9572-b869-4ceb-bbc1-1c3700ec9a4e",
+    "versions": [],
+    "triggerStep": "\/api\/3\/workflow_steps\/1c20f075-e6fa-4efc-a5f8-51946123414b",
+    "steps": [
+        {
+            "@type": "WorkflowStep",
+            "name": "create_payload",
+            "description": null,
+            "arguments": {
+                "payload": "{%- set input = vars.input.params -%}\n{%- set payload = {} -%}\n{%- set _do = \n  payload.update({\n  \"name\":input.variable,\n  \"description\":input.description|default('Created by FortiSOAR'),\n  \"value\":input.value|string|default('')\n  })\n-%}\n{{payload}}"
+            },
+            "status": null,
+            "top": "120",
+            "left": "360",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "12954bd1-1d33-4c84-87bd-8234057a651e"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "extract_fmg_results",
+            "description": null,
+            "arguments": {
+                "output": "{{vars.steps.update_fmg_variable}}"
+            },
+            "status": null,
+            "top": "220",
+            "left": "60",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "5a121865-1ec3-4d37-8015-b7a0fe8a07f9"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Start",
+            "description": null,
+            "arguments": {
+                "step_variables": {
+                    "input": {
+                        "params": []
+                    }
+                }
+            },
+            "status": null,
+            "top": "120",
+            "left": "60",
+            "stepType": "\/api\/3\/workflow_step_types\/b348f017-9a94-471f-87f8-ce88b6a7ad62",
+            "group": null,
+            "uuid": "1c20f075-e6fa-4efc-a5f8-51946123414b"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "update_fmg_variable",
+            "description": null,
+            "arguments": {
+                "name": "Fortinet FortiManager JSON-RPC",
+                "config": "{{vars.input.params['connector_config']}}",
+                "params": {
+                    "url": "\/pm\/config\/adom\/{{vars.input.params['adom']}}\/obj\/fmg\/variable\/",
+                    "data": "{{vars.payload}}"
+                },
+                "version": "1.0.0",
+                "connector": "fortinet-fortimanager-json-rpc",
+                "operation": "json_rpc_set",
+                "operationTitle": "JSON RPC Set",
+                "pickFromTenant": false,
+                "step_variables": []
+            },
+            "status": null,
+            "top": "220",
+            "left": "360",
+            "stepType": "\/api\/3\/workflow_step_types\/0bfed618-0316-11e7-93ae-92361f002671",
+            "group": null,
+            "uuid": "cdcd4e0b-63be-462d-a08f-00ffed6081a1"
+        }
+    ],
+    "routes": [
+        {
+            "@type": "WorkflowRoute",
+            "name": "create_payload -> get_fmg_data",
+            "targetStep": "\/api\/3\/workflow_steps\/cdcd4e0b-63be-462d-a08f-00ffed6081a1",
+            "sourceStep": "\/api\/3\/workflow_steps\/12954bd1-1d33-4c84-87bd-8234057a651e",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "42c7f792-7abd-4d59-894a-fd6383aa3a4e"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Start -> create_payload",
+            "targetStep": "\/api\/3\/workflow_steps\/12954bd1-1d33-4c84-87bd-8234057a651e",
+            "sourceStep": "\/api\/3\/workflow_steps\/1c20f075-e6fa-4efc-a5f8-51946123414b",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "7d1bf540-3142-4b30-8782-9db271ca5287"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "update_fmg_variable -> extract_fmg_results",
+            "targetStep": "\/api\/3\/workflow_steps\/5a121865-1ec3-4d37-8015-b7a0fe8a07f9",
+            "sourceStep": "\/api\/3\/workflow_steps\/cdcd4e0b-63be-462d-a08f-00ffed6081a1",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "f88a98d3-ea39-4b88-ac68-5133e617b695"
+        }
+    ],
+    "groups": [],
+    "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+    "uuid": "4afb7b1a-f01f-4df2-97c9-01331d662739",
+    "owners": [],
+    "isPrivate": false,
+    "deletedAt": null,
+    "recordTags": [
+        "adom",
+        "connector_config",
+        "description",
+        "json_rpc",
+        "Subroutine",
+        "value",
+        "variable"
+    ]
+}

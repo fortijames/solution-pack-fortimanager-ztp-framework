@@ -1,0 +1,273 @@
+{
+    "@type": "Workflow",
+    "triggerLimit": null,
+    "name": "> synch fmg device db - by connector",
+    "aliasName": null,
+    "tag": null,
+    "description": "Synchronize of FMG Device DB to FortiSOAR",
+    "isActive": true,
+    "debug": false,
+    "singleRecordExecution": false,
+    "remoteExecutableFlag": false,
+    "parameters": [
+        "connector_config"
+    ],
+    "synchronous": false,
+    "collection": "\/api\/3\/workflow_collections\/1d97873a-13f1-4b28-834a-ca24882614e2",
+    "versions": [],
+    "triggerStep": "\/api\/3\/workflow_steps\/d2224553-1004-4cbb-b035-4313e190d450",
+    "steps": [
+        {
+            "@type": "WorkflowStep",
+            "name": "create_update_records",
+            "description": null,
+            "arguments": {
+                "arguments": {
+                    "device_data": "{{vars.steps.get_fmg_devices.output}}",
+                    "connector_config": "{{vars.input.params['connector_config']}}"
+                },
+                "apply_async": false,
+                "step_variables": [],
+                "pass_parent_env": false,
+                "pass_input_record": false,
+                "workflowReference": "\/api\/3\/workflows\/ebc8f7f4-231a-4826-bb06-7f91d2a1cd4f"
+            },
+            "status": null,
+            "top": "180",
+            "left": "60",
+            "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
+            "group": "\/api\/3\/workflow_groups\/1de03229-4adf-4d54-aec8-5c3c20778e3b",
+            "uuid": "e56129c1-6bd9-4b03-908e-9d3531b03eeb"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "get_adom_list",
+            "description": null,
+            "arguments": {
+                "adom_list": "{{ vars.steps.get_fmg_devices.output | json_query('[][\"extra info\"][0].adom') | unique }}"
+            },
+            "status": null,
+            "top": "480",
+            "left": "80",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "9eb1cedf-f926-4a82-97b4-5ad4b01035dd"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "get_fmg_devices",
+            "description": null,
+            "arguments": {
+                "arguments": {
+                    "connector_config": "{{vars.input.params['connector_config']}}"
+                },
+                "apply_async": false,
+                "step_variables": [],
+                "pass_parent_env": false,
+                "pass_input_record": false,
+                "workflowReference": "\/api\/3\/workflows\/e2da78d5-9c2d-41a6-bd90-c3607bfde1a9"
+            },
+            "status": null,
+            "top": "80",
+            "left": "60",
+            "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
+            "group": "\/api\/3\/workflow_groups\/1de03229-4adf-4d54-aec8-5c3c20778e3b",
+            "uuid": "61480fff-7797-43f5-bc20-07b5151c5578"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Start",
+            "description": null,
+            "arguments": {
+                "step_variables": {
+                    "input": {
+                        "params": []
+                    }
+                }
+            },
+            "status": null,
+            "top": "40",
+            "left": "80",
+            "stepType": "\/api\/3\/workflow_step_types\/b348f017-9a94-471f-87f8-ce88b6a7ad62",
+            "group": null,
+            "uuid": "d2224553-1004-4cbb-b035-4313e190d450"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "update_device_spinner_by_connector",
+            "description": null,
+            "arguments": {
+                "arguments": {
+                    "connector_config": "{{vars.input.params['connector_config']}}"
+                },
+                "apply_async": false,
+                "step_variables": [],
+                "pass_parent_env": false,
+                "pass_input_record": false,
+                "workflowReference": "\/api\/3\/workflows\/d57b12b2-d69c-4ee1-becb-70808814f193"
+            },
+            "status": null,
+            "top": "80",
+            "left": "140",
+            "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
+            "group": "\/api\/3\/workflow_groups\/b9940cb5-dcae-4fbe-a35e-b82aecbd27dd",
+            "uuid": "e09426cf-d930-46e8-98c8-bd688e5450e3"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "update_device_spinner_to_delete",
+            "description": null,
+            "arguments": {
+                "arguments": {
+                    "connector_config": "{{vars.input.params['connector_config']}}"
+                },
+                "apply_async": false,
+                "step_variables": [],
+                "pass_parent_env": false,
+                "pass_input_record": false,
+                "workflowReference": "\/api\/3\/workflows\/e75c187b-4623-403c-b58c-1f43a04e33ec"
+            },
+            "status": null,
+            "top": "180",
+            "left": "140",
+            "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
+            "group": "\/api\/3\/workflow_groups\/b9940cb5-dcae-4fbe-a35e-b82aecbd27dd",
+            "uuid": "9709e1dc-8845-4485-93bd-84e797036927"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "update_groups_per_adom",
+            "description": null,
+            "arguments": {
+                "for_each": {
+                    "item": "{{vars.adom_list}}",
+                    "__bulk": false,
+                    "parallel": true,
+                    "condition": ""
+                },
+                "arguments": {
+                    "adom": "{{vars.item}}",
+                    "connector_config": "{{vars.input.params['connector_config']}}"
+                },
+                "apply_async": false,
+                "step_variables": [],
+                "pass_parent_env": false,
+                "pass_input_record": false,
+                "workflowReference": "\/api\/3\/workflows\/2d4f8db1-3d21-4bd2-9fc6-bdab196c8d65"
+            },
+            "status": null,
+            "top": "580",
+            "left": "80",
+            "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
+            "group": null,
+            "uuid": "309b839f-3f5c-4e37-b206-8f6f95897917"
+        }
+    ],
+    "routes": [
+        {
+            "@type": "WorkflowRoute",
+            "name": "create_update_records -> get_adom_list",
+            "targetStep": "\/api\/3\/workflow_steps\/9eb1cedf-f926-4a82-97b4-5ad4b01035dd",
+            "sourceStep": "\/api\/3\/workflow_steps\/e56129c1-6bd9-4b03-908e-9d3531b03eeb",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "0046190a-f8e2-4db1-9191-bba6e6f0c846"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "create_update_records -> update_device_spinner_to_delete",
+            "targetStep": "\/api\/3\/workflow_steps\/9709e1dc-8845-4485-93bd-84e797036927",
+            "sourceStep": "\/api\/3\/workflow_steps\/e56129c1-6bd9-4b03-908e-9d3531b03eeb",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "8870279f-c83b-4834-9619-625f61775a40"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "get_adom_list -> update_groups_per_adom",
+            "targetStep": "\/api\/3\/workflow_steps\/309b839f-3f5c-4e37-b206-8f6f95897917",
+            "sourceStep": "\/api\/3\/workflow_steps\/9eb1cedf-f926-4a82-97b4-5ad4b01035dd",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "9adb6968-6857-413f-87a1-2d842cd1cf9a"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "get_device_db -> create_update_records",
+            "targetStep": "\/api\/3\/workflow_steps\/e56129c1-6bd9-4b03-908e-9d3531b03eeb",
+            "sourceStep": "\/api\/3\/workflow_steps\/61480fff-7797-43f5-bc20-07b5151c5578",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "0f3b615a-7b80-40d2-af38-ad8c893d6efd"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Start -> update_pre_run_status",
+            "targetStep": "\/api\/3\/workflow_steps\/e09426cf-d930-46e8-98c8-bd688e5450e3",
+            "sourceStep": "\/api\/3\/workflow_steps\/d2224553-1004-4cbb-b035-4313e190d450",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "05b62af1-2642-46a9-a373-7ab2c15e431d"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "update_device_spinner -> get_fmg_devices",
+            "targetStep": "\/api\/3\/workflow_steps\/61480fff-7797-43f5-bc20-07b5151c5578",
+            "sourceStep": "\/api\/3\/workflow_steps\/e09426cf-d930-46e8-98c8-bd688e5450e3",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "45bb1d40-d7b2-4b64-8bcc-dbc91fe87886"
+        }
+    ],
+    "groups": [
+        {
+            "@type": "WorkflowGroup",
+            "name": "Handle Record Data Updates",
+            "description": "",
+            "type": "block",
+            "isCollapsed": false,
+            "hasTriggerStep": false,
+            "hideInLogs": false,
+            "metadata": [],
+            "reusable": false,
+            "top": "120",
+            "left": "20",
+            "height": "315",
+            "width": "396",
+            "uuid": "1de03229-4adf-4d54-aec8-5c3c20778e3b",
+            "recordTags": []
+        },
+        {
+            "@type": "WorkflowGroup",
+            "name": "Handle Record Pending Status by Connector",
+            "description": "",
+            "type": "block",
+            "isCollapsed": false,
+            "hasTriggerStep": false,
+            "hideInLogs": false,
+            "metadata": [],
+            "reusable": false,
+            "top": "40",
+            "left": "540",
+            "height": "295",
+            "width": "514",
+            "uuid": "b9940cb5-dcae-4fbe-a35e-b82aecbd27dd",
+            "recordTags": []
+        }
+    ],
+    "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+    "uuid": "7aa66310-639d-417a-9762-bc361df824ad",
+    "owners": [],
+    "isPrivate": false,
+    "deletedAt": null,
+    "recordTags": [
+        "connector_config",
+        "Subroutine"
+    ]
+}

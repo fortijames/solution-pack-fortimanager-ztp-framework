@@ -1,0 +1,132 @@
+{
+    "@type": "Workflow",
+    "triggerLimit": null,
+    "name": "> get fmg devices - by name",
+    "aliasName": null,
+    "tag": null,
+    "description": "Use json_rpc to get FMG fos devices that are unauthorized.",
+    "isActive": true,
+    "debug": false,
+    "singleRecordExecution": false,
+    "remoteExecutableFlag": false,
+    "parameters": [
+        "connector_config",
+        "device_name"
+    ],
+    "synchronous": false,
+    "collection": "\/api\/3\/workflow_collections\/acff9572-b869-4ceb-bbc1-1c3700ec9a4e",
+    "versions": [],
+    "triggerStep": "\/api\/3\/workflow_steps\/9219b244-b657-4b03-8864-94f5052bfabd",
+    "steps": [
+        {
+            "@type": "WorkflowStep",
+            "name": "extract fmg device data",
+            "description": null,
+            "arguments": {
+                "output": "{{vars.steps.get_fmg_device_by_name.data.get_response}}"
+            },
+            "status": null,
+            "top": "280",
+            "left": "460",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "2720b83e-75f1-406c-9362-b6453f9351a1"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "get_fmg_device_by_name",
+            "description": null,
+            "arguments": {
+                "name": "Fortinet FortiManager JSON-RPC",
+                "config": "{{vars.input.params['connector_config']}}",
+                "params": {
+                    "url": "\/dvmdb\/device",
+                    "data": "{  \"option\": [    \"extra info\",    \"assignment info\", \"get meta\"  ],  \"filter\": [    \"name\",    \"==\",    \"{{vars.input.params['device_name']}}\"  ]}"
+                },
+                "version": "1.0.0",
+                "connector": "fortinet-fortimanager-json-rpc",
+                "operation": "json_rpc_get",
+                "operationTitle": "JSON RPC Get",
+                "pickFromTenant": false,
+                "step_variables": []
+            },
+            "status": null,
+            "top": "120",
+            "left": "460",
+            "stepType": "\/api\/3\/workflow_step_types\/0bfed618-0316-11e7-93ae-92361f002671",
+            "group": null,
+            "uuid": "ee2c8912-3c7d-4ed2-86df-912a09f43ebb"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Start",
+            "description": null,
+            "arguments": {
+                "step_variables": {
+                    "input": {
+                        "params": []
+                    }
+                }
+            },
+            "status": null,
+            "top": "120",
+            "left": "100",
+            "stepType": "\/api\/3\/workflow_step_types\/b348f017-9a94-471f-87f8-ce88b6a7ad62",
+            "group": null,
+            "uuid": "9219b244-b657-4b03-8864-94f5052bfabd"
+        }
+    ],
+    "routes": [
+        {
+            "@type": "WorkflowRoute",
+            "name": "Get Devices in FMG -> extract data",
+            "targetStep": "\/api\/3\/workflow_steps\/2720b83e-75f1-406c-9362-b6453f9351a1",
+            "sourceStep": "\/api\/3\/workflow_steps\/ee2c8912-3c7d-4ed2-86df-912a09f43ebb",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "dd744db3-e47f-42f5-9f5e-f6d18c4a58c7"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Start -> Get Devices in FMG",
+            "targetStep": "\/api\/3\/workflow_steps\/ee2c8912-3c7d-4ed2-86df-912a09f43ebb",
+            "sourceStep": "\/api\/3\/workflow_steps\/9219b244-b657-4b03-8864-94f5052bfabd",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "2f701489-7f9d-428f-a282-8bfde0a5c7ae"
+        }
+    ],
+    "groups": [
+        {
+            "@type": "WorkflowGroup",
+            "name": "Change Log",
+            "description": "5\/16\/23- Intitial\n5\/17\/23- Added `get meta` to the get_fmg_device call",
+            "type": "note",
+            "isCollapsed": false,
+            "hasTriggerStep": false,
+            "hideInLogs": false,
+            "metadata": [],
+            "reusable": false,
+            "top": "60",
+            "left": "740",
+            "height": "145",
+            "width": "399",
+            "uuid": "beba143a-6938-44c0-80a3-6a1a4a6bb47f",
+            "recordTags": []
+        }
+    ],
+    "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+    "uuid": "8605d3e3-3442-41f0-802b-31e786eb3b8d",
+    "owners": [],
+    "isPrivate": false,
+    "deletedAt": null,
+    "recordTags": [
+        "connector_config",
+        "device_name",
+        "json_rpc",
+        "output",
+        "Subroutine"
+    ]
+}

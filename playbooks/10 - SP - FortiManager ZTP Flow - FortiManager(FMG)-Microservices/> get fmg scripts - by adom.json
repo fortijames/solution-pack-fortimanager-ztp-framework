@@ -1,0 +1,116 @@
+{
+    "@type": "Workflow",
+    "triggerLimit": null,
+    "name": "> get fmg scripts - by adom",
+    "aliasName": null,
+    "tag": null,
+    "description": "Exec an existing script on a device list in the form of fg1,fg2,fg3 or fg1:vdom1,fg2:vdom1,fg3:vdoma or fg1:vdom1,fg2,fg3",
+    "isActive": true,
+    "debug": false,
+    "singleRecordExecution": false,
+    "remoteExecutableFlag": false,
+    "parameters": [
+        "connector_config",
+        "adom"
+    ],
+    "synchronous": false,
+    "collection": "\/api\/3\/workflow_collections\/acff9572-b869-4ceb-bbc1-1c3700ec9a4e",
+    "versions": [],
+    "triggerStep": "\/api\/3\/workflow_steps\/24d0590b-bd39-45fd-bb32-55c66de57fec",
+    "steps": [
+        {
+            "@type": "WorkflowStep",
+            "name": "extract_fmg_data",
+            "description": null,
+            "arguments": {
+                "output": "{{vars.steps.get_scripts}}"
+            },
+            "status": null,
+            "top": "160",
+            "left": "400",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "ff5a9e79-e0b9-40a7-858d-3eab7f2447f1"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "get_scripts",
+            "description": null,
+            "arguments": {
+                "name": "Fortinet FortiManager JSON-RPC",
+                "config": "{{vars.input.params['connector_config']}}",
+                "params": {
+                    "url": "\/dvmdb\/adom\/{{vars.input.params.adom}}\/script\/",
+                    "data": "{\"data\":{}}"
+                },
+                "version": "1.0.0",
+                "connector": "fortinet-fortimanager-json-rpc",
+                "operation": "json_rpc_get",
+                "operationTitle": "JSON RPC Get",
+                "pickFromTenant": false,
+                "step_variables": []
+            },
+            "status": null,
+            "top": "60",
+            "left": "400",
+            "stepType": "\/api\/3\/workflow_step_types\/0bfed618-0316-11e7-93ae-92361f002671",
+            "group": null,
+            "uuid": "7c206afa-f565-4a38-9ddb-307be47c0247"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Start",
+            "description": null,
+            "arguments": {
+                "step_variables": {
+                    "input": {
+                        "params": []
+                    }
+                }
+            },
+            "status": null,
+            "top": "60",
+            "left": "60",
+            "stepType": "\/api\/3\/workflow_step_types\/b348f017-9a94-471f-87f8-ce88b6a7ad62",
+            "group": null,
+            "uuid": "24d0590b-bd39-45fd-bb32-55c66de57fec"
+        }
+    ],
+    "routes": [
+        {
+            "@type": "WorkflowRoute",
+            "name": "Get Devices in FMG -> extract data",
+            "targetStep": "\/api\/3\/workflow_steps\/ff5a9e79-e0b9-40a7-858d-3eab7f2447f1",
+            "sourceStep": "\/api\/3\/workflow_steps\/7c206afa-f565-4a38-9ddb-307be47c0247",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "2ab666a7-ba70-4f85-83f6-56d2059fca28"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Start -> get_scripts",
+            "targetStep": "\/api\/3\/workflow_steps\/7c206afa-f565-4a38-9ddb-307be47c0247",
+            "sourceStep": "\/api\/3\/workflow_steps\/24d0590b-bd39-45fd-bb32-55c66de57fec",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "140a47da-f772-4ea8-af4c-a6fe51d111dc"
+        }
+    ],
+    "groups": [],
+    "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+    "uuid": "8b7226bd-43b5-48d9-a673-0ee1f9016428",
+    "owners": [],
+    "isPrivate": false,
+    "deletedAt": null,
+    "recordTags": [
+        "adom",
+        "connector_config",
+        "devices",
+        "json_rpc",
+        "output",
+        "Subroutine",
+        "vdom"
+    ]
+}

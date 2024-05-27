@@ -1,0 +1,191 @@
+{
+    "@type": "Workflow",
+    "triggerLimit": null,
+    "name": "> fmg reinstall policy package - on devices",
+    "aliasName": null,
+    "tag": null,
+    "description": "Exec install pkg on a device list in the form of fg1,fg2,fg3 or fg1:vdom1,fg2:vdom1,fg3:vdoma or fg1:vdom1,fg2,fg3.",
+    "isActive": true,
+    "debug": false,
+    "singleRecordExecution": false,
+    "remoteExecutableFlag": false,
+    "parameters": [
+        "connector_config",
+        "adom",
+        "devices",
+        "package"
+    ],
+    "synchronous": false,
+    "collection": "\/api\/3\/workflow_collections\/acff9572-b869-4ceb-bbc1-1c3700ec9a4e",
+    "versions": [],
+    "triggerStep": "\/api\/3\/workflow_steps\/ddbdd7ad-bb18-455c-b0d4-839ea7ef2da7",
+    "steps": [
+        {
+            "@type": "WorkflowStep",
+            "name": "create_payload",
+            "description": null,
+            "arguments": {
+                "payload": "{\n  \"data\": {    \n    \"adom\": \"{{vars.input.params.adom}}\",\n    \"pkg\": \"{{vars.input.params.package}}\",\n    \"flags\": [\"auto_lock_ws\"],\n    \"scope\": {{vars.device_scope}}\n  }\n}"
+            },
+            "status": null,
+            "top": "300",
+            "left": "420",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "06a6f0f2-71bf-47bf-9556-a5d22d2416ba"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "device_scope",
+            "description": null,
+            "arguments": {
+                "device_scope": "{%- for dev in vars.device_list -%}\n{%- set name = dev.split(\":\") -%}\n{\n  \"name\":\"{{name[0]}}\",\n  \"vdom\":\"{{name[1]|default('root')}}\"\n},\n{%- endfor -%}",
+                "device_scope_test": "{\n      \"name\": \"FG1\",\n      \"vdom\": \"root\"\n    },\n    {\n      \"name\": \"FG2\",\n      \"vdom\": \"root\"\n    },\n    {\n      \"name\": \"FG3\",\n      \"vdom\": \"root\"\n    }"
+            },
+            "status": null,
+            "top": "200",
+            "left": "420",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "e6e56653-decd-4395-ac18-a61058d98c6a"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "extract fmg device data",
+            "description": null,
+            "arguments": {
+                "output": "{{vars.steps.install_fmg_device}}"
+            },
+            "status": null,
+            "top": "200",
+            "left": "80",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "55194fee-97b5-4b3e-a7f2-b61e86c457cd"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "install_pkg",
+            "description": null,
+            "arguments": {
+                "name": "Fortinet FortiManager JSON-RPC",
+                "config": "{{vars.input.params['connector_config']}}",
+                "params": {
+                    "url": "\/securityconsole\/install\/package",
+                    "data": "{{vars.payload}}",
+                    "track_task": true
+                },
+                "version": "1.0.0",
+                "connector": "fortinet-fortimanager-json-rpc",
+                "operation": "json_rpc_execute",
+                "operationTitle": "JSON RPC Exec",
+                "pickFromTenant": false,
+                "step_variables": []
+            },
+            "status": null,
+            "top": "400",
+            "left": "420",
+            "stepType": "\/api\/3\/workflow_step_types\/0bfed618-0316-11e7-93ae-92361f002671",
+            "group": null,
+            "uuid": "6eac3bf2-9d28-4fe9-9a09-f5dea8d3bfa3"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "setup_input",
+            "description": null,
+            "arguments": {
+                "device_list": "{{vars.input.params.devices.split(\",\")}}",
+                "assign_device_flag": "{{vars.input.params['assign_device_flag']|default(True)}}"
+            },
+            "status": null,
+            "top": "100",
+            "left": "420",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "8ab07f35-697f-4059-a282-a26aacfab7c7"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Start",
+            "description": null,
+            "arguments": {
+                "step_variables": {
+                    "input": {
+                        "params": []
+                    }
+                }
+            },
+            "status": null,
+            "top": "100",
+            "left": "80",
+            "stepType": "\/api\/3\/workflow_step_types\/b348f017-9a94-471f-87f8-ce88b6a7ad62",
+            "group": null,
+            "uuid": "ddbdd7ad-bb18-455c-b0d4-839ea7ef2da7"
+        }
+    ],
+    "routes": [
+        {
+            "@type": "WorkflowRoute",
+            "name": "create_payload -> install_pkg",
+            "targetStep": "\/api\/3\/workflow_steps\/6eac3bf2-9d28-4fe9-9a09-f5dea8d3bfa3",
+            "sourceStep": "\/api\/3\/workflow_steps\/06a6f0f2-71bf-47bf-9556-a5d22d2416ba",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "6b1669f7-459d-426c-94d3-0b276fdc2b67"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "device_scope -> exec_payload",
+            "targetStep": "\/api\/3\/workflow_steps\/06a6f0f2-71bf-47bf-9556-a5d22d2416ba",
+            "sourceStep": "\/api\/3\/workflow_steps\/e6e56653-decd-4395-ac18-a61058d98c6a",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "5e6e98a5-6fe1-45a2-bb72-580ef686ae33"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "install_config -> extract fmg device data",
+            "targetStep": "\/api\/3\/workflow_steps\/55194fee-97b5-4b3e-a7f2-b61e86c457cd",
+            "sourceStep": "\/api\/3\/workflow_steps\/6eac3bf2-9d28-4fe9-9a09-f5dea8d3bfa3",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "5c1d22e0-bf2d-468d-8f92-5242c7019591"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "setup_input -> device_scope",
+            "targetStep": "\/api\/3\/workflow_steps\/e6e56653-decd-4395-ac18-a61058d98c6a",
+            "sourceStep": "\/api\/3\/workflow_steps\/8ab07f35-697f-4059-a282-a26aacfab7c7",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "493c179b-27ff-4d40-aa19-85fe27c2fe2b"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Start -> prase_input_devices",
+            "targetStep": "\/api\/3\/workflow_steps\/8ab07f35-697f-4059-a282-a26aacfab7c7",
+            "sourceStep": "\/api\/3\/workflow_steps\/ddbdd7ad-bb18-455c-b0d4-839ea7ef2da7",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "79d30a95-7cf5-48a3-9565-b84def91f56b"
+        }
+    ],
+    "groups": [],
+    "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+    "uuid": "096bb931-b385-490d-b1cc-4f448bebf864",
+    "owners": [],
+    "isPrivate": false,
+    "deletedAt": null,
+    "recordTags": [
+        "adom",
+        "connector_config",
+        "devices",
+        "json_rpc",
+        "Subroutine"
+    ]
+}

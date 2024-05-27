@@ -1,0 +1,141 @@
+{
+    "@type": "Workflow",
+    "triggerLimit": null,
+    "name": "> authorize fmg device",
+    "aliasName": null,
+    "tag": null,
+    "description": "Use json_rpc to authorize a FMG Device to an ADOM.",
+    "isActive": true,
+    "debug": false,
+    "singleRecordExecution": false,
+    "remoteExecutableFlag": false,
+    "parameters": [
+        "device_name",
+        "adom",
+        "connector_config"
+    ],
+    "synchronous": false,
+    "collection": "\/api\/3\/workflow_collections\/acff9572-b869-4ceb-bbc1-1c3700ec9a4e",
+    "versions": [],
+    "triggerStep": "\/api\/3\/workflow_steps\/39e85ae5-32bc-45bb-ba0c-3fd1f8e40d1d",
+    "steps": [
+        {
+            "@type": "WorkflowStep",
+            "name": "authorize fmg device",
+            "description": null,
+            "arguments": {
+                "name": "Fortinet FortiManager JSON-RPC",
+                "config": "{{vars.input.params['connector_config']}}",
+                "params": {
+                    "url": "\/dvm\/cmd\/add\/device",
+                    "data": "{{vars.payload}}",
+                    "track_task": true
+                },
+                "version": "1.0.0",
+                "connector": "fortinet-fortimanager-json-rpc",
+                "operation": "json_rpc_execute",
+                "operationTitle": "JSON RPC Exec",
+                "pickFromTenant": false,
+                "step_variables": []
+            },
+            "status": null,
+            "top": "180",
+            "left": "340",
+            "stepType": "\/api\/3\/workflow_step_types\/0bfed618-0316-11e7-93ae-92361f002671",
+            "group": null,
+            "uuid": "6c770207-9147-4b4b-ae4e-d88a1d38c817"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "create_payload",
+            "description": null,
+            "arguments": {
+                "payload": "{\n  \"data\":{\n    \"flags\":[\"create_task\",\"nonblocking\"],\n    \"device\":{\n      \"mgmt_mode\":\"fmg\",\n      \"device action\":\"promote_unreg\",\n      \"name\":\"{{vars.input.params['device_name']}}\"},\n      \"adom\":\"{{vars.input.params['adom']}}\"\n  }\n}"
+            },
+            "status": null,
+            "top": "80",
+            "left": "340",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "22914754-bb5d-4e1c-bc1e-81558eff645c"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "return_results",
+            "description": null,
+            "arguments": {
+                "output": "{%- set exec_results = vars.steps.authorize_fmg_device -%}\n\n{%- set results = {} -%}\n{%- set _do = results.update( {\"script_data\":exec_results} ) -%}\n{%- set _do = results.update( {\"error\":False} ) -%}\n\n{%- if exec_results.data.status != 0 -%}\n    {%- set _do = results.update( {\"error\":true} ) -%}\n  {%- set _do = results.update( {\n            \"msg\": exec_results.data.task_response.status.message \n                       + \" -- \" \n                       + exec_results.data.execute_response.status.message\n  }) -%}\n{% else -%}\n  {%- set _do = results.update( {\n            \"msg\": exec_results.data.task_response.line[0].detail|default(\"\")\n  }) -%}\n  {%- if \"error\" in exec_results.data.task_response.state -%}\n    {%- set _do = results.update( {\"error\":true} ) -%}\n  {%- endif -%}\n{%- endif -%}\n{{results}}",
+                "params": "{{vars.input.params}}"
+            },
+            "status": null,
+            "top": "180",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "5b39b91c-15d6-4aa8-9414-5f0f56f4e87d"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Start",
+            "description": null,
+            "arguments": {
+                "step_variables": {
+                    "input": {
+                        "params": []
+                    }
+                }
+            },
+            "status": null,
+            "top": "80",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/b348f017-9a94-471f-87f8-ce88b6a7ad62",
+            "group": null,
+            "uuid": "39e85ae5-32bc-45bb-ba0c-3fd1f8e40d1d"
+        }
+    ],
+    "routes": [
+        {
+            "@type": "WorkflowRoute",
+            "name": "create_payload -> authorize fmg device",
+            "targetStep": "\/api\/3\/workflow_steps\/6c770207-9147-4b4b-ae4e-d88a1d38c817",
+            "sourceStep": "\/api\/3\/workflow_steps\/22914754-bb5d-4e1c-bc1e-81558eff645c",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "d69cbcd1-f9b6-49bf-ab0c-3c82c6f3d445"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "delete fmg device -> extract data",
+            "targetStep": "\/api\/3\/workflow_steps\/5b39b91c-15d6-4aa8-9414-5f0f56f4e87d",
+            "sourceStep": "\/api\/3\/workflow_steps\/6c770207-9147-4b4b-ae4e-d88a1d38c817",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "b16fd82f-34a0-4b95-adf4-3aae80c88433"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Start -> create_payload",
+            "targetStep": "\/api\/3\/workflow_steps\/22914754-bb5d-4e1c-bc1e-81558eff645c",
+            "sourceStep": "\/api\/3\/workflow_steps\/39e85ae5-32bc-45bb-ba0c-3fd1f8e40d1d",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "7ca1cd3d-8c2b-4aeb-98db-1ceb36a17338"
+        }
+    ],
+    "groups": [],
+    "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+    "uuid": "fd89a790-ec77-4737-846b-e7a627606068",
+    "owners": [],
+    "isPrivate": false,
+    "deletedAt": null,
+    "recordTags": [
+        "adom",
+        "connector_config",
+        "device_name",
+        "json_rpc",
+        "Subroutine"
+    ]
+}

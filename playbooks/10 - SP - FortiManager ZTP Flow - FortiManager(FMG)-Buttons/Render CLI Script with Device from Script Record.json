@@ -340,7 +340,7 @@
                 "input": {
                     "schema": {
                         "title": "Rendered Script ( {{vars.input.records[0].scriptName}} ):",
-                        "description": "### {{vars.steps.Pick_Manager.input['manager_selected']}} - {{vars.steps.Pick_Device.input['device_selected']}}\n\n```\n{{vars.steps.render_jinja_template.output.strip('\"')}}\n```\n",
+                        "description": "### {{vars.steps.Pick_Manager.input['manager_selected']}} - {{vars.steps.Pick_Device.input['device_selected']}}\n\n{% if \"custom\" in vars.input.records[0].scriptType.itemValue|lower -%}\n```\n{{vars.steps.render_jinja_template.output|to_nice_json(indent=2)}}\n```\n{% else -%}\n```\n{{vars.steps.render_jinja_template.output.strip('\"')}}\n```\n{% endif -%}\n",
                         "inputVariables": [
                             {
                                 "name": "skipDeleteScript",
@@ -378,8 +378,10 @@
                 },
                 "agent_id": null,
                 "resources": "scripts",
+                "is_approval": false,
                 "owner_detail": {
-                    "isAssigned": false
+                    "isAssigned": false,
+                    "emailRecipients": ""
                 },
                 "isRecordLinked": false,
                 "step_variables": [],
@@ -395,15 +397,21 @@
                             "step_iri": "\/api\/3\/workflow_steps\/70e46921-3620-4b14-b2f0-294b33319ffe"
                         }
                     ],
-                    "duplicateOption": false
+                    "duplicateOption": false,
+                    "customSuccessMessage": "Awaiting Playbook resumed successfully."
                 },
                 "email_notification": {
                     "enabled": false,
                     "smtpParameters": []
                 },
+                "customEmailExternal": false,
                 "inline_channel_list": [],
                 "external_channel_list": [],
-                "unauthenticated_input": false
+                "unauthenticated_input": false,
+                "external_email_subject": null,
+                "internal_email_subject": "A FortiSOAR playbook is requesting your input",
+                "custom_email_body_external": null,
+                "external_email_attachments": null
             },
             "status": null,
             "top": "500",
@@ -470,6 +478,7 @@
                 "resources": [
                     "scripts"
                 ],
+                "__triggerLimit": true,
                 "inputVariables": [],
                 "step_variables": {
                     "input": {
@@ -478,6 +487,7 @@
                     }
                 },
                 "_promptexpanded": true,
+                "triggerOnSource": true,
                 "displayConditions": {
                     "scripts": {
                         "sort": [],
@@ -492,7 +502,8 @@
                                     "\/api\/3\/picklists\/08bfc16f-8ddd-4da3-a1a2-0c95fc0d568f",
                                     "\/api\/3\/picklists\/aedd2055-fa3a-4b9e-ac58-818e022d1fae",
                                     "\/api\/3\/picklists\/5fe30ac0-7777-4d72-8f01-f35aee88f1bb",
-                                    "\/api\/3\/picklists\/9a16d4e5-fa62-42ee-9adb-74239923890e"
+                                    "\/api\/3\/picklists\/9a16d4e5-fa62-42ee-9adb-74239923890e",
+                                    "\/api\/3\/picklists\/9b010b2b-91a5-4c83-aa0b-450008806da8"
                                 ],
                                 "module": "scriptType",
                                 "display": "",
@@ -508,6 +519,11 @@
                 },
                 "executeButtonText": "Execute",
                 "noRecordExecution": false,
+                "showToasterMessage": {
+                    "visible": false,
+                    "messageVisible": true
+                },
+                "triggerOnReplicate": false,
                 "singleRecordExecution": true
             },
             "status": null,

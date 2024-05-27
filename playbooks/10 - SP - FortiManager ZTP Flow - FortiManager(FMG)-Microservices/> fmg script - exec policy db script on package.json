@@ -1,0 +1,169 @@
+{
+    "@type": "Workflow",
+    "triggerLimit": null,
+    "name": "> fmg script - exec policy db script on package",
+    "aliasName": null,
+    "tag": null,
+    "description": "Exec an existing script on a policy pkg, or default if not set.",
+    "isActive": true,
+    "debug": false,
+    "singleRecordExecution": false,
+    "remoteExecutableFlag": false,
+    "parameters": [
+        "connector_config",
+        "adom",
+        "script_name",
+        "package"
+    ],
+    "synchronous": false,
+    "collection": "\/api\/3\/workflow_collections\/acff9572-b869-4ceb-bbc1-1c3700ec9a4e",
+    "versions": [],
+    "triggerStep": "\/api\/3\/workflow_steps\/e96b53a3-39ed-4c5c-b491-69ce805994d7",
+    "steps": [
+        {
+            "@type": "WorkflowStep",
+            "name": "exec_payload",
+            "description": null,
+            "arguments": {
+                "fmg_data_payload": "{\n  \"data\": {    \n    \"adom\": \"{{vars.input.params.adom}}\", \n    \"script\": \"{{vars.input.params['script_name']}}\", \n    \"package\": \"{{vars.pkg_target}}\"\n  }\n}"
+            },
+            "status": null,
+            "top": "160",
+            "left": "420",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "aebc0d85-59f7-478b-9453-16ddd16ab5ee"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "exec_script",
+            "description": null,
+            "arguments": {
+                "name": "Fortinet FortiManager JSON-RPC",
+                "config": "{{vars.input.params['connector_config']}}",
+                "params": {
+                    "url": "\/dvmdb\/adom\/root\/script\/execute",
+                    "data": "{{vars.fmg_data_payload}}",
+                    "track_task": true
+                },
+                "version": "1.0.0",
+                "connector": "fortinet-fortimanager-json-rpc",
+                "operation": "json_rpc_execute",
+                "operationTitle": "JSON RPC Exec",
+                "pickFromTenant": false,
+                "step_variables": []
+            },
+            "status": null,
+            "top": "260",
+            "left": "420",
+            "stepType": "\/api\/3\/workflow_step_types\/0bfed618-0316-11e7-93ae-92361f002671",
+            "group": null,
+            "uuid": "12fe89a9-9941-40a1-98e6-91f3b9fd12a2"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "prase_input_pkg",
+            "description": null,
+            "arguments": {
+                "pkg_target": "{{vars.input.params.package | default('default')}}"
+            },
+            "status": null,
+            "top": "60",
+            "left": "420",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "e257530b-847e-44da-b296-05bdb0a89e1f"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "return_results",
+            "description": null,
+            "arguments": {
+                "output": "{%- set exec_results = vars.steps.exec_script -%}\n{%- set results = {} -%}\n{%- set _do = results.update( {\"script_data\":exec_results} ) -%}\n{%- set _do = results.update( {\"error\":False} ) -%}\n\n{%- if exec_results.data.status != 0 -%}\n    {%- set _do = results.update( {\"error\":true} ) -%}\n  {%- set _do = results.update( {\n            \"msg\": exec_results.data.task_response.status.message \n                       + \" -- \" \n                       + exec_results.data.execute_response.status.message\n  }) -%}\n{% else -%}\n  {%- set _do = results.update( {\n            \"msg\": exec_results.data.task_response.line[0].detail|default(\"\")\n  }) -%}\n  {%- if \"error\" in exec_results.data.task_response.state -%}\n    {%- set _do = results.update( {\"error\":true} ) -%}\n  {%- endif -%}\n{%- endif -%}\n{{results}}",
+                "params": "{{vars.input.params}}"
+            },
+            "status": null,
+            "top": "140",
+            "left": "60",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "3f6c7002-0c9f-4285-b9ed-9a65aa5fc163"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Start",
+            "description": null,
+            "arguments": {
+                "step_variables": {
+                    "input": {
+                        "params": []
+                    }
+                }
+            },
+            "status": null,
+            "top": "60",
+            "left": "60",
+            "stepType": "\/api\/3\/workflow_step_types\/b348f017-9a94-471f-87f8-ce88b6a7ad62",
+            "group": null,
+            "uuid": "e96b53a3-39ed-4c5c-b491-69ce805994d7"
+        }
+    ],
+    "routes": [
+        {
+            "@type": "WorkflowRoute",
+            "name": "exec_payload -> exec_script",
+            "targetStep": "\/api\/3\/workflow_steps\/12fe89a9-9941-40a1-98e6-91f3b9fd12a2",
+            "sourceStep": "\/api\/3\/workflow_steps\/aebc0d85-59f7-478b-9453-16ddd16ab5ee",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "82f4832a-b445-4bcc-9f73-54e5d2f9e385"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Get Devices in FMG -> extract data",
+            "targetStep": "\/api\/3\/workflow_steps\/3f6c7002-0c9f-4285-b9ed-9a65aa5fc163",
+            "sourceStep": "\/api\/3\/workflow_steps\/12fe89a9-9941-40a1-98e6-91f3b9fd12a2",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "d5fc16e3-5780-4667-bdd8-24ebf4b14d11"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "prase_input_pkg -> exec_payload",
+            "targetStep": "\/api\/3\/workflow_steps\/aebc0d85-59f7-478b-9453-16ddd16ab5ee",
+            "sourceStep": "\/api\/3\/workflow_steps\/e257530b-847e-44da-b296-05bdb0a89e1f",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "4dca6753-b021-4191-ada3-7567c479d10c"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Start -> prase_input",
+            "targetStep": "\/api\/3\/workflow_steps\/e257530b-847e-44da-b296-05bdb0a89e1f",
+            "sourceStep": "\/api\/3\/workflow_steps\/e96b53a3-39ed-4c5c-b491-69ce805994d7",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "95f931d4-9306-4b12-a204-cc8b95692643"
+        }
+    ],
+    "groups": [],
+    "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+    "uuid": "52275ce4-1f7a-4eb0-a868-c665dd97b1c5",
+    "owners": [],
+    "isPrivate": false,
+    "deletedAt": null,
+    "recordTags": [
+        "adom",
+        "connector_config",
+        "devices",
+        "json_rpc",
+        "output",
+        "script_type",
+        "Subroutine",
+        "vdom"
+    ]
+}
