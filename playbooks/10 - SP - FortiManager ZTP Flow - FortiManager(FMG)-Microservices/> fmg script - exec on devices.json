@@ -62,7 +62,12 @@
                     "data": "{{vars.fmg_data_payload}}",
                     "track_task": true
                 },
-                "version": "1.0.0",
+                "version": "1.0.3",
+                "do_until": {
+                    "delay": 1,
+                    "retries": 3,
+                    "condition": "{{vars.steps.exec_script.data.status == 0}}"
+                },
                 "connector": "fortinet-fortimanager-json-rpc",
                 "operation": "json_rpc_execute",
                 "operationTitle": "JSON RPC Exec",
