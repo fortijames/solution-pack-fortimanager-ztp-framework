@@ -1,0 +1,203 @@
+{
+    "@type": "Workflow",
+    "triggerLimit": null,
+    "name": "> monitor task complete",
+    "aliasName": null,
+    "tag": null,
+    "description": "Get the task status based on a task id",
+    "isActive": true,
+    "debug": false,
+    "singleRecordExecution": false,
+    "remoteExecutableFlag": false,
+    "parameters": [
+        "connector_config",
+        "task_id"
+    ],
+    "synchronous": false,
+    "collection": "\/api\/3\/workflow_collections\/acff9572-b869-4ceb-bbc1-1c3700ec9a4e",
+    "versions": [],
+    "triggerStep": "\/api\/3\/workflow_steps\/bca73f89-8808-4174-abc4-7b05e9b22814",
+    "steps": [
+        {
+            "@type": "WorkflowStep",
+            "name": "monitor task",
+            "description": null,
+            "arguments": {
+                "when": "{{vars.task_id != ''}}",
+                "do_until": {
+                    "delay": 10,
+                    "retries": 2880,
+                    "condition": "{{vars.steps.monitor_task.output.percent == 100 or vars.steps.monitor_task.output.error == 1}}"
+                },
+                "arguments": {
+                    "task_id": "{{vars.task_id}}",
+                    "connector_config": "{{vars.connector_config}}"
+                },
+                "apply_async": false,
+                "step_variables": [],
+                "pass_parent_env": false,
+                "pass_input_record": false,
+                "workflowReference": "\/api\/3\/workflows\/dc29977e-b2ca-44c1-94ea-8228a88a26e6"
+            },
+            "status": null,
+            "top": "160",
+            "left": "380",
+            "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
+            "group": null,
+            "uuid": "4555953a-8ed0-479b-a9da-8ac23f308fdf"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "setup env",
+            "description": null,
+            "arguments": {
+                "task_id": "{{vars.input.params['task_id']}}",
+                "connector_config": "{{vars.input.params['connector_config']}}"
+            },
+            "status": null,
+            "top": "40",
+            "left": "380",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "93e33852-97c4-4a86-88cb-4b7e1c8bbaa3"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Start",
+            "description": null,
+            "arguments": {
+                "__triggerLimit": true,
+                "step_variables": {
+                    "input": {
+                        "params": []
+                    }
+                },
+                "triggerOnSource": true,
+                "triggerOnReplicate": false
+            },
+            "status": null,
+            "top": "40",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/b348f017-9a94-471f-87f8-ce88b6a7ad62",
+            "group": null,
+            "uuid": "bca73f89-8808-4174-abc4-7b05e9b22814"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "task_complete",
+            "description": null,
+            "arguments": {
+                "output": "{%- macro format_seconds(seconds) -%}\n    {%- set hours = seconds \/\/ 3600 -%}\n    {%- set minutes = (seconds % 3600) \/\/ 60 -%}\n    {%- set remaining_seconds = seconds % 60 -%}\n    {{ hours }}h {{ minutes }}m {{ remaining_seconds }}s\n{%- endmacro -%}\n\n{%- set data = vars.steps.monitor_task.output.task_data.data -%}\n{%- set end_time = data.get_response.end_tm -%}\n{%- set start_time = data.get_response.start_tm -%}\n{%- set total_seconds = end_time-start_time -%}\n{%- set total_time = format_seconds(total_seconds) -%}\n\n{%- set ret = {} -%}\n{%- set _do = ret.update( {\"error\":false} ) -%}\n{%- set _do = ret.update( {\"script_data\":data} ) -%}\n{%- set _do = ret.update( {\"script_time\": {\"total_seconds\":total_seconds,\"total_time\":total_time} } ) -%}\n{{ret}}"
+            },
+            "status": null,
+            "top": "400",
+            "left": "580",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "8ae728fc-cbcd-4ea1-8740-7f67b56b42e0"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "task_error",
+            "description": null,
+            "arguments": {
+                "output": "{\"error\":true}"
+            },
+            "status": null,
+            "top": "400",
+            "left": "180",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "6e9fe723-9d68-4481-ae2a-dfa180258193"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "task status",
+            "description": null,
+            "arguments": {
+                "conditions": [
+                    {
+                        "option": "",
+                        "default": true,
+                        "step_iri": "\/api\/3\/workflow_steps\/6e9fe723-9d68-4481-ae2a-dfa180258193",
+                        "step_name": "task_error"
+                    },
+                    {
+                        "step_iri": "\/api\/3\/workflow_steps\/8ae728fc-cbcd-4ea1-8740-7f67b56b42e0",
+                        "condition": "{{ vars.steps.monitor_task.output.error == 0 }}",
+                        "step_name": "task_complete"
+                    }
+                ],
+                "step_variables": []
+            },
+            "status": null,
+            "top": "280",
+            "left": "380",
+            "stepType": "\/api\/3\/workflow_step_types\/12254cf5-5db7-4b1a-8cb1-3af081924b28",
+            "group": null,
+            "uuid": "ba20171b-dd0e-4d00-9786-ea87b8ecd215"
+        }
+    ],
+    "routes": [
+        {
+            "@type": "WorkflowRoute",
+            "name": "monitor task -> task status",
+            "targetStep": "\/api\/3\/workflow_steps\/ba20171b-dd0e-4d00-9786-ea87b8ecd215",
+            "sourceStep": "\/api\/3\/workflow_steps\/4555953a-8ed0-479b-a9da-8ac23f308fdf",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "a6a02225-5e26-41c0-834b-0fc7c7d0ea56"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "setup env -> monitor task",
+            "targetStep": "\/api\/3\/workflow_steps\/4555953a-8ed0-479b-a9da-8ac23f308fdf",
+            "sourceStep": "\/api\/3\/workflow_steps\/93e33852-97c4-4a86-88cb-4b7e1c8bbaa3",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "5e71a2fc-7518-40fd-b460-f051c7e77279"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Start -> setup env",
+            "targetStep": "\/api\/3\/workflow_steps\/93e33852-97c4-4a86-88cb-4b7e1c8bbaa3",
+            "sourceStep": "\/api\/3\/workflow_steps\/bca73f89-8808-4174-abc4-7b05e9b22814",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "d9003879-db66-4168-8709-6b65adb09d8a"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "task status -> task_complete",
+            "targetStep": "\/api\/3\/workflow_steps\/8ae728fc-cbcd-4ea1-8740-7f67b56b42e0",
+            "sourceStep": "\/api\/3\/workflow_steps\/ba20171b-dd0e-4d00-9786-ea87b8ecd215",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "ccea9993-2ed3-4475-bd93-919041f8bb60"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "task status -> task_failed",
+            "targetStep": "\/api\/3\/workflow_steps\/6e9fe723-9d68-4481-ae2a-dfa180258193",
+            "sourceStep": "\/api\/3\/workflow_steps\/ba20171b-dd0e-4d00-9786-ea87b8ecd215",
+            "label": "",
+            "isExecuted": false,
+            "group": null,
+            "uuid": "53ca68f5-e067-434d-9e53-0985d3f3ad49"
+        }
+    ],
+    "groups": [],
+    "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+    "uuid": "70892d77-03fe-4353-81da-c2225be54dd3",
+    "owners": [],
+    "isPrivate": false,
+    "deletedAt": null,
+    "recordTags": [
+        "connector_config",
+        "task_id"
+    ]
+}

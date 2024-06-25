@@ -28,7 +28,7 @@
                 "fmg_data_payload": "{\n  \"data\": {    \n    \"adom\": \"{{vars.input.params.adom}}\", \n    \"script\": \"{{vars.input.params['script_name']}}\", \n    \"package\": \"{{vars.pkg_target}}\"\n  }\n}"
             },
             "status": null,
-            "top": "160",
+            "top": "200",
             "left": "420",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
@@ -44,9 +44,9 @@
                 "params": {
                     "url": "\/dvmdb\/adom\/root\/script\/execute",
                     "data": "{{vars.fmg_data_payload}}",
-                    "track_task": true
+                    "track_task": false
                 },
-                "version": "1.0.0",
+                "version": "1.0.3",
                 "connector": "fortinet-fortimanager-json-rpc",
                 "operation": "json_rpc_execute",
                 "operationTitle": "JSON RPC Exec",
@@ -54,11 +54,34 @@
                 "step_variables": []
             },
             "status": null,
-            "top": "260",
-            "left": "420",
+            "top": "280",
+            "left": "820",
             "stepType": "\/api\/3\/workflow_step_types\/0bfed618-0316-11e7-93ae-92361f002671",
             "group": null,
             "uuid": "12fe89a9-9941-40a1-98e6-91f3b9fd12a2"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "get_or_create_package",
+            "description": null,
+            "arguments": {
+                "arguments": {
+                    "adom": "{{vars.input.params.adom}}",
+                    "policy_package": "{{vars.input.params.package}}",
+                    "connector_config": "{{vars.input.params['connector_config']}}"
+                },
+                "apply_async": false,
+                "step_variables": [],
+                "pass_parent_env": false,
+                "pass_input_record": false,
+                "workflowReference": "\/api\/3\/workflows\/466ac365-4522-4dfd-8a0d-cb7068fe9565"
+            },
+            "status": null,
+            "top": "120",
+            "left": "820",
+            "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
+            "group": null,
+            "uuid": "cdf41283-e88d-4da9-9cc2-22b20cea1317"
         },
         {
             "@type": "WorkflowStep",
@@ -79,11 +102,12 @@
             "name": "return_results",
             "description": null,
             "arguments": {
-                "output": "{%- set exec_results = vars.steps.exec_script -%}\n{%- set results = {} -%}\n{%- set _do = results.update( {\"script_data\":exec_results} ) -%}\n{%- set _do = results.update( {\"error\":False} ) -%}\n\n{%- if exec_results.data.status != 0 -%}\n    {%- set _do = results.update( {\"error\":true} ) -%}\n  {%- set _do = results.update( {\n            \"msg\": exec_results.data.task_response.status.message \n                       + \" -- \" \n                       + exec_results.data.execute_response.status.message\n  }) -%}\n{% else -%}\n  {%- set _do = results.update( {\n            \"msg\": exec_results.data.task_response.line[0].detail|default(\"\")\n  }) -%}\n  {%- if \"error\" in exec_results.data.task_response.state -%}\n    {%- set _do = results.update( {\"error\":true} ) -%}\n  {%- endif -%}\n{%- endif -%}\n{{results}}",
-                "params": "{{vars.input.params}}"
+                "output": "{%- set exec_results = vars.steps.wait_for_task.output['script_data'] -%}\n{%- set results = {} -%}\n{%- set _do = results.update( {\"script_data\":exec_results} ) -%}\n{%- set _do = results.update( {\"error\":False} ) -%}\n\n{%- if exec_results.status != 0 -%}\n    {%- set _do = results.update( {\"error\":true} ) -%}{{vars.steps.wait_for_task.output['script_data']}}\n  {%- set _do = results.update( {\n            \"msg\": exec_results.data.task_response.status.message \n                       + \" -- \" \n                       + exec_results.data.execute_response.status.message\n  }) -%}\n{% else -%}\n  {%- set _do = results.update( {\n            \"msg\": exec_results.data.task_response.line[0].detail|default(\"\")\n  }) -%}\n  {%- if \"error\" in exec_results.data.task_response.state -%}\n    {%- set _do = results.update( {\"error\":true} ) -%}\n  {%- endif -%}\n{%- endif -%}\n{{results}}",
+                "params": "{{vars.input.params}}",
+                "outtest": "{{vars.steps.wait_for_task}}"
             },
             "status": null,
-            "top": "140",
+            "top": "180",
             "left": "60",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
@@ -106,9 +130,41 @@
             "stepType": "\/api\/3\/workflow_step_types\/b348f017-9a94-471f-87f8-ce88b6a7ad62",
             "group": null,
             "uuid": "e96b53a3-39ed-4c5c-b491-69ce805994d7"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "wait_for_task",
+            "description": null,
+            "arguments": {
+                "arguments": {
+                    "task_id": "{{vars.steps.exec_script.data['execute_response'].task}}",
+                    "connector_config": "{{vars.input.params['connector_config']}}"
+                },
+                "apply_async": false,
+                "step_variables": [],
+                "pass_parent_env": false,
+                "pass_input_record": false,
+                "workflowReference": "\/api\/3\/workflows\/70892d77-03fe-4353-81da-c2225be54dd3"
+            },
+            "status": null,
+            "top": "340",
+            "left": "420",
+            "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
+            "group": null,
+            "uuid": "428990d7-d9a3-4b18-a826-9fe0f5c3889e"
         }
     ],
     "routes": [
+        {
+            "@type": "WorkflowRoute",
+            "name": "create policy package -> exec_payload",
+            "targetStep": "\/api\/3\/workflow_steps\/aebc0d85-59f7-478b-9453-16ddd16ab5ee",
+            "sourceStep": "\/api\/3\/workflow_steps\/cdf41283-e88d-4da9-9cc2-22b20cea1317",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "8006e639-cdf5-4ef7-b854-857c8e8cc4ad"
+        },
         {
             "@type": "WorkflowRoute",
             "name": "exec_payload -> exec_script",
@@ -121,23 +177,23 @@
         },
         {
             "@type": "WorkflowRoute",
-            "name": "Get Devices in FMG -> extract data",
-            "targetStep": "\/api\/3\/workflow_steps\/3f6c7002-0c9f-4285-b9ed-9a65aa5fc163",
+            "name": "exec_script -> wait_for_task",
+            "targetStep": "\/api\/3\/workflow_steps\/428990d7-d9a3-4b18-a826-9fe0f5c3889e",
             "sourceStep": "\/api\/3\/workflow_steps\/12fe89a9-9941-40a1-98e6-91f3b9fd12a2",
             "label": null,
             "isExecuted": false,
             "group": null,
-            "uuid": "d5fc16e3-5780-4667-bdd8-24ebf4b14d11"
+            "uuid": "16dc5e8b-3d3e-4e44-a1f7-de458e21c99e"
         },
         {
             "@type": "WorkflowRoute",
-            "name": "prase_input_pkg -> exec_payload",
-            "targetStep": "\/api\/3\/workflow_steps\/aebc0d85-59f7-478b-9453-16ddd16ab5ee",
+            "name": "prase_input_pkg -> create policy package",
+            "targetStep": "\/api\/3\/workflow_steps\/cdf41283-e88d-4da9-9cc2-22b20cea1317",
             "sourceStep": "\/api\/3\/workflow_steps\/e257530b-847e-44da-b296-05bdb0a89e1f",
             "label": null,
             "isExecuted": false,
             "group": null,
-            "uuid": "4dca6753-b021-4191-ada3-7567c479d10c"
+            "uuid": "592c8400-edbf-473f-9a6c-890b0845edc3"
         },
         {
             "@type": "WorkflowRoute",
@@ -148,6 +204,16 @@
             "isExecuted": false,
             "group": null,
             "uuid": "95f931d4-9306-4b12-a204-cc8b95692643"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "wait_for_task -> return_results",
+            "targetStep": "\/api\/3\/workflow_steps\/3f6c7002-0c9f-4285-b9ed-9a65aa5fc163",
+            "sourceStep": "\/api\/3\/workflow_steps\/428990d7-d9a3-4b18-a826-9fe0f5c3889e",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "0e10e381-61ac-42d2-91a2-006850c694a7"
         }
     ],
     "groups": [],

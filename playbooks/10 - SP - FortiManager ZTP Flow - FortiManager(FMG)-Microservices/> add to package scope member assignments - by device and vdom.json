@@ -25,7 +25,8 @@
             "name": "device_scope",
             "description": null,
             "arguments": {
-                "device_scope": "{%- for dev in vars.device_list -%}\n{%- set name = dev.split(\":\") -%}\n{\n  \"name\":\"{{name[0]}}\",\n  \"vdom\":\"{{name[1]|default('root')}}\"\n},\n{%- endfor -%}",
+                "device_scope": "{%- for dev in vars.device_list -%}\n{%- if dev | regex_search(\"^group\\\/\") -%}\n{%- set name = dev.split(\"\/\") -%}\n{\n  \"name\":\"{{name[1]}}\"\n},\n{%- else -%}\n{%- set name = dev.split(\":\") -%}\n{\n  \"name\":\"{{name[0]}}\",\n  \"vdom\":\"{{name[1]|default('root')}}\"\n},\n{%- endif -%}\n{%- endfor -%}",
+                "device_scope_orig": "{%- for dev in vars.device_list -%}\n{%- set name = dev.split(\":\") -%}\n{\n  \"name\":\"{{name[0]}}\",\n  \"vdom\":\"{{name[1]|default('root')}}\"\n},\n{%- endfor -%}",
                 "device_scope_test": "[ {\n      \"name\": \"FG1\",\n      \"vdom\": \"root\"\n    },\n    {\n      \"name\": \"FG2\",\n      \"vdom\": \"root\"\n    },\n    {\n      \"name\": \"FG3\",\n      \"vdom\": \"root\"\n    } ]"
             },
             "status": null,

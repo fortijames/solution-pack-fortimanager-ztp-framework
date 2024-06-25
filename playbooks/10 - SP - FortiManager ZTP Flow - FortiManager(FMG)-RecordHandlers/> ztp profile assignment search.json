@@ -37,7 +37,7 @@
             "name": "extract_jinja_results",
             "description": null,
             "arguments": {
-                "search_results": "{%- set i = namespace(x=0) -%}\n{%- set table = [] -%}\n{%- for dev in vars.device_record_data -%}\n  {%- set idx = {} -%}\n  {%- if vars.steps.render_jinja[i.x].output not in [\"\", false] -%}\n    {%- set ret = true -%}    \n  {%- endif -%}\n  {%- set _do = idx.update( {\n      \"ztp_profile_id\":vars.ztp_profile_id,\n      \"id\":dev.id,\n      \"matched\": ret|default(false),\n      \"jinja_vars\":vars.steps.get_jinja_vars[i.x].output,\n      \"jinja_search\":vars.zprof_search\n    } ) -%}\n  {%- set _do = table.append(idx)  -%}\n  {%- set i.x = i.x+1 -%}\n{%- endfor -%}\n{{table}}"
+                "search_results": "{%- set i = namespace(x=0) -%}\n{%- set table = [] -%}\n{%- for dev in vars.device_record_data -%}\n  {%- set idx = {} -%}\n  {%- if vars.steps.render_jinja[i.x].output != \"\" -%}\n    {%- set ret = true -%}    \n  {%- endif -%}\n  {%- set _do = idx.update( {\n      \"ztp_profile_id\":vars.ztp_profile_id,\n      \"id\":dev.id,\n      \"matched\": ret|default(false),\n      \"jinja_vars\":vars.steps.get_jinja_vars[i.x].output,\n      \"jinja_search\":vars.zprof_search\n    } ) -%}\n  {%- set _do = table.append(idx)  -%}\n  {%- set i.x = i.x+1 -%}\n{%- endfor -%}\n{{table}}"
             },
             "status": null,
             "top": "680",
