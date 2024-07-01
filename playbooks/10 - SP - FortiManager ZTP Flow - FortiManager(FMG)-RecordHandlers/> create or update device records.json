@@ -20,7 +20,7 @@
     "steps": [
         {
             "@type": "WorkflowStep",
-            "name": "create_device_record",
+            "name": "create_update_device_record",
             "description": null,
             "arguments": {
                 "for_each": {
@@ -33,7 +33,7 @@
                 "resource": {
                     "sn": "{% if vars.item.sn %}{{vars.item.sn}}{% else %}{{vars.item.psk}}{% endif %}",
                     "aDOM": "{{vars.item['extra info'].adom}}",
-                    "vDOM": "{{vars.item.mgt_vdom}}",
+                    "vDOM": "{{vars.vdom_idx[vars.item.name].mgt_vdom}}",
                     "firmware": "{{vars.item.os_ver|int}}.{{vars.item.mr}}.{{vars.item.patch}}-build{{vars.item.build}}",
                     "managers": "{{vars.manager_record_id}}",
                     "platform": "{{vars.item.platform_str}}",
@@ -47,8 +47,6 @@
                     "connectorConfig": "{{vars.input.params['connector_config']}}",
                     "configStatusHTML": "<p>{{vars.conf_status_msg[vars.item.name][\"html\"]|trim}}<\/p>",
                     "connectionStatus": "{{vars.conn_status_msg[vars.item.name][\"text\"]|trim}}",
-                    "autoInstallConfig": false,
-                    "autoInstallPolicy": false,
                     "policyPackageHTML": "<p>{{vars.polpkg_status_msg[vars.item.name][\"html\"]|trim}}<\/p>\n<p>&nbsp;<\/p>",
                     "configDBStatusHTML": "<p>{{vars.db_status_msg[vars.item.name][\"html\"]|trim}}<\/p>",
                     "managementModeHTML": "<p>{{vars.mgmt_mode_msg[vars.item.name][\"html\"]|trim}}<\/p>",
@@ -120,18 +118,27 @@
         },
         {
             "@type": "WorkflowStep",
+            "name": "mgmtvdom_index",
+            "description": "Sometimes we do not get the mgt_vdom properly and want to make an index.",
+            "arguments": {
+                "vdom_idx": "{%- set empty = [\"\",None,Null] -%}\n{%- set idx = dict() -%}\n{%- for item in vars.input.params['device_data'] %}\n  {%- set device = item.name -%}\n  {%- if item.mgt_vdom in empty -%}\n    {%- set vname = 'root' -%}\n  {%- else -%}\n    {%- set vname =  item.mgt_vdom -%}\n  {%- endif -%}\n  {%- do idx.update( \n    { \n      device: { \n        \"mgt_vdom\":vname \n      } \n    } \n  ) -%}\n{%- endfor -%}\n{{idx}}"
+            },
+            "status": null,
+            "top": "80",
+            "left": "20",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": "\/api\/3\/workflow_groups\/22d8063f-f546-4d39-aec8-4befbba95057",
+            "uuid": "14838724-6069-49da-8dc7-cfdcf658f451"
+        },
+        {
+            "@type": "WorkflowStep",
             "name": "mgtvdom_assignments",
             "description": null,
             "arguments": {
-                "for_each": {
-                    "item": "{{vars.input.params['device_data']}}",
-                    "parallel": false,
-                    "condition": ""
-                },
-                "assignment_info": "{%- set idx = dict() -%}\n{%- set device = vars.item.name -%}\n{%- set vname = vars.item.mgt_vdom -%}\n{%- set vdom = \n       vars.item.vdom\n       |json_query('[?name == `{}`]'.format(vname))\n-%}\n{%- set ppkg = \n       vdom[0]['assignment info']\n       |json_query('[?type == `{}`]'.format(\"policy\"))\n-%}\n{%- set prov = \n       vdom[0]['assignment info']\n       |json_query('[?type != `{}`]'.format(\"policy\"))\n       |json_query('[?type != `{}`]'.format(\"fext\"))\n       |json_query('[?type != `{}`]'.format(\"wtp\"))\n-%}\n{%- for a in vars.item['assignment info'] -%}\n  {%- set _do = prov.append(a) -%}\n{%- endfor -%}\n{%- set _do = idx.update( \n  { \n    device: { \n      \"ppkg\":ppkg,\n      \"prov\":prov\n    } \n  } \n) -%}\n{{idx}}"
+                "assignment_info": "{%- set idx = dict() -%}\n{%- for item in vars.input.params['device_data'] %}\n  {%- set device = item.name -%}\n  {%- set vname = item.mgt_vdom|default('root') -%}\n  {%- set vdom = \n         item.vdom\n         |json_query('[?name == `{}`]'.format(vname))\n  -%}\n  {%- set ppkg = \n         vdom[0]['assignment info']\n         |json_query('[?type == `policy`]')\n  -%}\n  {%- set prov = \n         vdom[0]['assignment info']\n         |json_query('[?type != `policy` && type != `fext` && type != `wtp`]')\n  -%}\n  {%- for a in item['assignment info'] -%}\n    {%- do prov.append(a) -%}\n  {%- endfor -%}\n  {%- do idx.update( \n    { \n      device: { \n        \"ppkg\":ppkg,\n        \"prov\":prov\n      } \n    } \n  ) -%}\n{%- endfor -%}\n{{idx}}"
             },
             "status": null,
-            "top": "60",
+            "top": "180",
             "left": "180",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": "\/api\/3\/workflow_groups\/22d8063f-f546-4d39-aec8-4befbba95057",
@@ -145,7 +152,7 @@
                 "assignment_info_idx": "{%- set idx = dict() -%}\n{%- for a in vars.assignment_info -%}\n\n  {%- if vars.assignment_info[a].ppkg != None -%}\n\n    {%- if vars.assignment_info[a].ppkg|length > 0 -%}\n\n      {%- if \"out-of-sync\" in vars.assignment_info[a].ppkg|json_query('[].status') -%}\n        {%- set pkg_state = \"problem\" -%}\n      {%- elif \"modified\" in vars.assignment_info[a].ppkg|json_query('[].status') -%}\n        {%- set pkg_state = \"update needed\" -%}\n      {%- elif \"unknown\" in vars.assignment_info[a].ppkg|json_query('[].status') -%}\n        {%- set pkg_state = \"install needed\" -%}\n      {%- else -%}\n        {%- set pkg_state = \"ok\" -%}\n      {%- endif -%}\n\n    {%- else -%}\n      {%- set pkg_state = \"no pkg\" -%}\n    {%- endif -%}\n  {%- else -%}\n    {%- set pkg_state = \"no pkg\" -%}\n  {%- endif -%}\n\n  {%- if vars.assignment_info[a].prov != None -%}\n\n    {%- if vars.assignment_info[a].prov|length > 0 -%}\n\n      {%- if \"modified\" in vars.assignment_info[a].prov|json_query('[].status') -%}\n        {%- set prov_state = \"update needed\" -%}\n      {%- else -%}\n        {%- set prov_state = \"ok\" -%}\n      {%- endif -%}\n\n    {%- else -%}\n      {%- set prov_state = \"no templates\" -%}\n    {%- endif -%}\n  {%- else -%}\n    {%- set prov_state = \"no templates\" -%}\n  {%- endif -%}\n  {%- set _do = idx.update(\n  {\n    a : {\n      \"ppkg_state\": pkg_state,\n      \"prov_state\": prov_state,\n      \"ppkg\": vars.assignment_info[a].ppkg,\n      \"prov\": vars.assignment_info[a].prov\n    }\n  }) -%}\n{%- endfor -%}\n{{idx}}"
             },
             "status": null,
-            "top": "160",
+            "top": "300",
             "left": "20",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": "\/api\/3\/workflow_groups\/22d8063f-f546-4d39-aec8-4befbba95057",
@@ -156,42 +163,32 @@
             "name": "override_status_data",
             "description": "Leverage conditional jinja to create content for HTML status fields.",
             "arguments": {
-                "for_each": {
-                    "item": "{{vars.input.params['device_data']}}",
-                    "parallel": false,
-                    "condition": ""
-                },
-                "db_status_msg": "{%- if vars.item.mgmt_mode == \"unreg\" -%}\n{ \"{{vars.item.name}}\" : \n   { \n     \"html\" : '<span style=\"border:2px solid ORANGE;color:ORANGE;border-radius:5px;background-color:black;font-family:verdana;font-weight:bold;padding-top:2px;padding-right:2px;padding-bottom:2px;padding-left:2px;font-size:10px;\">Pending<\/span>',\n     \"text\" : 'Pending'\n   }\n}\n{%- elif vars.item.mgmt_mode == \"faz\" -%}\n{ \"{{vars.item.name}}\" : \n   { \n     \"html\" : '<span style=\"border:2px solid GREY;color:GREY;border-radius:5px;background-color:black;font-family:verdana;font-weight:bold;padding-top:2px;padding-right:2px;padding-bottom:2px;padding-left:2px;font-size:10px;\">NoConfig<\/span>',\n     \"text\" : 'NoConfig'\n   }\n}\n{%- else -%}\n{{vars.db_status_msg[vars.item.name]}}\n{%- endif -%}",
-                "mgmt_mode_msg": "{%- if vars.item.flags != None and \"is_model\" in vars.item.flags -%}\n{ \"{{vars.item.name}}\" : \n   { \n     \"html\" : '<span style=\"border:2px solid LightGreen;color:LightGreen;border-radius:5px;background-color:black;font-family:verdana;font-weight:bold;padding-top:2px;padding-right:2px;padding-bottom:2px;padding-left:2px;font-size:10px;\">Modeled<\/span>',\n     \"text\" : 'Modeled'\n   }\n}\n{%- else -%}\n{{vars.mgmt_mode_msg[vars.item.name]}}\n{%- endif -%}",
-                "conf_status_msg": "{%- if vars.item.mgmt_mode == \"unreg\" -%}\n{ \"{{vars.item.name}}\" : \n   { \n     \"html\" : '<span style=\"border:2px solid ORANGE;color:ORANGE;border-radius:5px;background-color:black;font-family:verdana;font-weight:bold;padding-top:2px;padding-right:2px;padding-bottom:2px;padding-left:2px;font-size:10px;\">Pending<\/span>',\n     \"text\" : 'Pending'\n   }\n}\n{%- elif vars.item.mgmt_mode == \"faz\" -%}\n{ \"{{vars.item.name}}\" : \n   { \n     \"html\" : '<span style=\"border:2px solid GREY;color:GREY;border-radius:5px;background-color:black;font-family:verdana;font-weight:bold;padding-top:2px;padding-right:2px;padding-bottom:2px;padding-left:2px;font-size:10px;\">NoConfig<\/span>',\n     \"text\" : 'NoConfig'\n   }\n}\n{%- else -%}\n{{vars.conf_status_msg[vars.item.name]}}\n{%- endif -%}",
-                "conn_status_msg": "{%- if vars.item.mgmt_mode == \"unreg\" -%}\n{ \"{{vars.item.name}}\" : \n   { \n     \"html\" : '<span style=\"border:2px solid ORANGE;color:ORANGE;border-radius:5px;background-color:black;font-family:verdana;font-weight:bold;padding-top:2px;padding-right:2px;padding-bottom:2px;padding-left:2px;font-size:10px;\">Pending<\/span>',\n     \"text\" : 'Pending'\n   }\n}\n{%- elif vars.item.mgmt_mode == \"faz\" -%}\n{ \"{{vars.item.name}}\" : \n   { \n     \"html\" : '<span style=\"border:2px solid GREY;color:GREY;border-radius:5px;background-color:black;font-family:verdana;font-weight:bold;padding-top:2px;padding-right:2px;padding-bottom:2px;padding-left:2px;font-size:10px;\">NotManaged<\/span>',\n     \"text\" : 'NotManaged'\n   }\n}\n{%- else -%}\n{{vars.conf_status_msg[vars.item.name]}}\n{%- endif -%}"
+                "db_status_msg": "{% set idx = dict() %}\n{% for item in vars.input.params['device_data'] %}\n    {%- if item.mgmt_mode == \"unreg\" -%}\n    {% do idx.update({ item.name : \n       { \n         \"html\" : '<span style=\"border:2px solid ORANGE;color:ORANGE;border-radius:5px;background-color:black;font-family:verdana;font-weight:bold;padding-top:2px;padding-right:2px;padding-bottom:2px;padding-left:2px;font-size:10px;\">Pending<\/span>',\n         \"text\" : 'Pending'\n       }\n    }) %}\n    {%- elif item.mgmt_mode == \"faz\" -%}\n    {% do idx.update({ item.name : \n       { \n         \"html\" : '<span style=\"border:2px solid GREY;color:GREY;border-radius:5px;background-color:black;font-family:verdana;font-weight:bold;padding-top:2px;padding-right:2px;padding-bottom:2px;padding-left:2px;font-size:10px;\">NoConfig<\/span>',\n         \"text\" : 'NoConfig'\n       }\n    }) %}\n    {%- else -%}\n    {% do idx.update({ item.name : vars.db_status_msg[item.name]}) %}\n    {%- endif -%}\n{% endfor %}\n{{idx}}",
+                "mgmt_mode_msg": "{% set idx = dict() %}\n{% for item in vars.input.params['device_data'] %}\n    {%- if item.flags != None and \"is_model\" in item.flags -%}\n    {% do idx.update({ item.name : \n       { \n         \"html\" : '<span style=\"border:2px solid LightGreen;color:LightGreen;border-radius:5px;background-color:black;font-family:verdana;font-weight:bold;padding-top:2px;padding-right:2px;padding-bottom:2px;padding-left:2px;font-size:10px;\">Modeled<\/span>',\n         \"text\" : 'Modeled'\n       }\n    }) %}\n    {%- else -%}\n    {% do idx.update({ item.name : vars.mgmt_mode_msg[item.name]}) %}\n    {%- endif -%}\n{% endfor %}\n{{idx}}",
+                "conf_status_msg": "{% set idx = dict() %}\n{% for item in vars.input.params['device_data'] %}\n    {%- if item.mgmt_mode == \"unreg\" -%}\n    {% do idx.update({ item.name : \n       { \n         \"html\" : '<span style=\"border:2px solid ORANGE;color:ORANGE;border-radius:5px;background-color:black;font-family:verdana;font-weight:bold;padding-top:2px;padding-right:2px;padding-bottom:2px;padding-left:2px;font-size:10px;\">Pending<\/span>',\n         \"text\" : 'Pending'\n       }\n    }) %}\n    {%- elif item.mgmt_mode == \"faz\" -%}\n    {% do idx.update({ item.name : \n       { \n         \"html\" : '<span style=\"border:2px solid GREY;color:GREY;border-radius:5px;background-color:black;font-family:verdana;font-weight:bold;padding-top:2px;padding-right:2px;padding-bottom:2px;padding-left:2px;font-size:10px;\">NoConfig<\/span>',\n         \"text\" : 'NoConfig'\n       }\n    }) %}\n    {%- else -%}\n    {% do idx.update({ item.name : vars.conf_status_msg[item.name]}) %}\n    {%- endif -%}\n{% endfor %}\n{{idx}}",
+                "conn_status_msg": "{% set idx = dict() %}\n{% for item in vars.input.params['device_data'] %}\n    {%- if vars.item.mgmt_mode == \"unreg\" -%}\n    {% do idx.update({ item.name : \n       { \n         \"html\" : '<span style=\"border:2px solid ORANGE;color:ORANGE;border-radius:5px;background-color:black;font-family:verdana;font-weight:bold;padding-top:2px;padding-right:2px;padding-bottom:2px;padding-left:2px;font-size:10px;\">Pending<\/span>',\n         \"text\" : 'Pending'\n       }\n    }) %}\n    {%- elif vars.item.mgmt_mode == \"faz\" -%}\n    {% do idx.update({ item.name : \n       { \n         \"html\" : '<span style=\"border:2px solid GREY;color:GREY;border-radius:5px;background-color:black;font-family:verdana;font-weight:bold;padding-top:2px;padding-right:2px;padding-bottom:2px;padding-left:2px;font-size:10px;\">NotManaged<\/span>',\n         \"text\" : 'NotManaged'\n       }\n    }) %}\n    {%- else -%}\n    {% do idx.update({ item.name : vars.conn_status_msg[item.name]}) %}\n    {%- endif -%}\n{% endfor%}\n{{idx}}"
             },
             "status": null,
-            "top": "360",
+            "top": "520",
             "left": "20",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": "\/api\/3\/workflow_groups\/22d8063f-f546-4d39-aec8-4befbba95057",
-            "uuid": "a0c746b3-d4b7-4e94-867b-1d328e333974"
+            "uuid": "7dc39768-2ecc-44a7-b57d-55fdf7d5f93d"
         },
         {
             "@type": "WorkflowStep",
             "name": "setup_status_data",
             "description": "Leverage conditional jinja to create content for HTML status fields.",
             "arguments": {
-                "for_each": {
-                    "item": "{{vars.input.params['device_data']}}",
-                    "parallel": false,
-                    "condition": ""
-                },
-                "db_status_msg": "{%- set state = vars.item.db_status -%} \n{%- set clr = {\n  \"nomod\":\"GREEN\",\n  \"mod\"  :\"ORANGE\"} \n-%}\n{%- set lbl = {\n  \"nomod\":\"NoChanges\",\n  \"mod\"  :\"Modified\"\n} \n-%}\n{ \"{{vars.item.name}}\" : \n   { \n     \"html\" : '<span style=\"border:2px solid {{clr[state]|default(\"GREY\")}};color:{{clr[state]|default(\"GREY\")}};border-radius:5px;background-color:black;font-family:verdana;font-weight:bold;padding-top:2px;padding-right:2px;padding-bottom:2px;padding-left:2px;font-size:10px;\">{{lbl[state]|default(\"Unknown\")}}<\/span>',\n     \"text\" : '{{lbl[state]|default(\"Unknown\")}}'\n   }\n}",
-                "mgmt_mode_msg": "{%- set state = vars.item.mgmt_mode -%} \n{%- set clr = {\n  \"unreg\":\"ORANGE\",\n  \"fmg\"  :\"GREEN\",\n  \"faz\"  :\"GREEN\",\n  \"fmgfaz\" :\"GREEN\" } \n-%} \n{%- set lbl = {\n  \"unreg\":\"Unauthorized\",\n  \"fmg\"  :\"Managed\",\n  \"faz\"  :\"Logging\",\n  \"fmgfaz\" :\"Managed\" } \n-%}\n{ \"{{vars.item.name}}\" : \n   { \n     \"html\" : '<span style=\"border:2px solid {{clr[state]|default(\"GREY\")}};color:{{clr[state]|default(\"GREY\")}};border-radius:5px;background-color:black;font-family:verdana;font-weight:bold;padding-top:2px;padding-right:2px;padding-bottom:2px;padding-left:2px;font-size:10px;\">{{lbl[state]|default(\"Unknown\")}}<\/span>',\n     \"text\" : '{{lbl[state]|default(\"Unknown\")}}'\n   }\n}",
-                "conf_status_msg": "{%- set state = vars.item.conf_status -%} \n{%- set clr = {\n  \"insync\":\"GREEN\",\n  \"outofsync\":\"RED\" } \n-%}\n{%- set lbl = {\n  \"insync\":\"InSync\",\n  \"outofsync\"  :\"OutOfSync\",\n  } \n-%}\n{ \"{{vars.item.name}}\" : \n   { \n     \"html\" : '<span style=\"border:2px solid {{clr[state]|default(\"GREY\")}};color:{{clr[state]|default(\"GREY\")}};border-radius:5px;background-color:black;font-family:verdana;font-weight:bold;padding-top:2px;padding-right:2px;padding-bottom:2px;padding-left:2px;font-size:10px;\">{{lbl[state]|default(\"Unknown\")}}<\/span>',\n     \"text\" : '{{lbl[state]|default(\"Unknown\")}}'\n   }\n}",
-                "conn_status_msg": "{%- set state = vars.item.conn_status -%} \n{%- set clr = {\n  \"up\"  :\"GREEN\",\n  \"down\":\"RED\" } \n-%}\n{%- set lbl = {\n  \"up\"   :\"UP\",\n  \"down\" :\"DOWN\",\n  } \n-%}\n{ \"{{vars.item.name}}\" : \n   { \n     \"html\" : '<span style=\"border:2px solid {{clr[state]|default(\"GREY\")}};color:{{clr[state]|default(\"GREY\")}};border-radius:5px;background-color:black;font-family:verdana;font-weight:bold;padding-top:2px;padding-right:2px;padding-bottom:2px;padding-left:2px;font-size:10px;\">{{lbl[state]|default(\"Unknown\")}}<\/span>',\n     \"text\" : '{{lbl[state]|default(\"Unknown\")}}'\n   }\n}",
-                "polpkg_status_msg": "{%- set dev = vars.item.name -%} \n{%- set state = vars.assignment_info_idx[dev].ppkg_state -%} \n{%- set clr = {\n  \"ok\"             : \"GREEN\",\n  \"problem\"        : \"RED\",\n  \"update needed\"  : \"ORANGE\",\n  \"no pkg\"         : \"Grey\"\n  } \n-%}\n{%- set lbl = {\n  \"ok\"             : \"OK\",\n  \"problem\"        : \"Problem\",\n  \"update needed\"  : \"Install Needed\",\n  \"no pkg\"         : \"No Package\"\n  }\n-%}\n{%- set lblh = {\n  \"ok\"             : vars.assignment_info_idx[dev].ppkg[0].name|default(\"missing\") + \" (\" + vars.assignment_info_idx[dev].ppkg[0].status|default(\"missing\") + \")\",\n  \"problem\"        : vars.assignment_info_idx[dev].ppkg[0].name|default(\"missing\") + \" (\" + vars.assignment_info_idx[dev].ppkg[0].status|default(\"missing\") + \")\",\n  \"update needed\"  : vars.assignment_info_idx[dev].ppkg[0].name|default(\"missing\") + \" (\" + vars.assignment_info_idx[dev].ppkg[0].status|default(\"missing\") + \")\",\n  \"no pkg\"         : \"No Package\"\n  }\n-%}\n{ \"{{dev}}\" : \n   { \n     \"html\" : '<span style=\"border:2px solid {{clr[state]|default(\"GREY\")}};color:{{clr[state]|default(\"GREY\")}};border-radius:5px;background-color:black;font-family:verdana;font-weight:bold;padding-top:2px;padding-right:2px;padding-bottom:2px;padding-left:2px;font-size:10px;\">{{lblh[state]|default(\"Unknown\")}}<\/span>',\n     \"text\" : '{{lbl[state]|default(\"Unknown\")}}',\n     \"assignment\" : '{{vars.assignment_info_idx[dev].ppkg[0].name}}'\n   }\n}",
-                "provtmp_status_msg": "{%- set dev = vars.item.name -%} \n{%- set state = vars.assignment_info_idx[dev].prov_state -%} \n{%- set clr = {\n  \"ok\"           : \"GREEN\",\n  \"update needed\" : \"ORANGE\",\n  \"problem\"  : \"RED\",\n  \"no pkg\"    : \"Grey\"\n  } \n-%}\n{%- set lbl = {\n  \"ok\"      : \"OK\",\n  \"update needed\" : \"Needs Install\",\n  \"problem\" : \"Problem\",\n  \"no pkg\"  : \"No Package\"\n  }\n-%}\n{%- set lblh = {\n  \"ok\"            : vars.assignment_info_idx[dev].prov[0].name|default(\"missing\") + \" (\" + vars.assignment_info_idx[dev].prov[0].status|default(\"missing\") + \")\",\n  \"problem\"       : vars.assignment_info_idx[dev].prov[0].name|default(\"missing\") + \" (\" + vars.assignment_info_idx[dev].prov[0].status|default(\"missing\") + \")\",\n  \"update needed\" : vars.assignment_info_idx[dev].prov[0].name|default(\"missing\") + \" (\" + vars.assignment_info_idx[dev].prov[0].status|default(\"missing\") + \")\",\n  \"no pkg\"  : \"No Template\"\n  }\n-%}\n{ \"{{dev}}\" : \n   { \n     \"html\" : '<span style=\"border:2px solid {{clr[state]|default(\"GREY\")}};color:{{clr[state]|default(\"GREY\")}};border-radius:5px;background-color:black;font-family:verdana;font-weight:bold;padding-top:2px;padding-right:2px;padding-bottom:2px;padding-left:2px;font-size:10px;\">{{lblh[state]|default(\"Unknown\")}}<\/span>',\n     \"text\" : '{{lbl[state]|default(\"Unknown\")}}',\n     \"assignment\" : '{{vars.assignment_info_idx[dev].prov[0].name}}'\n   }\n}"
+                "db_status_msg": "{% set idx = dict() %}\n{% for item in vars.input.params['device_data'] %}\n    {%- set state = item.db_status -%} \n    {%- set clr = {\n      \"nomod\":\"GREEN\",\n      \"mod\"  :\"ORANGE\"} \n    -%}\n    {%- set lbl = {\n      \"nomod\":\"NoChanges\",\n      \"mod\"  :\"Modified\"\n    } \n    -%}\n    {% do idx.update({ item.name : { \n         \"html\" : '<span style=\"border:2px solid ' + clr[state]|default(\"GREY\") + ';color:' + clr[state]|default(\"GREY\") + ';border-radius:5px;background-color:black;font-family:verdana;font-weight:bold;padding-top:2px;padding-right:2px;padding-bottom:2px;padding-left:2px;font-size:10px;\">' + lbl[state]|default(\"Unknown\") + '<\/span>',\n         \"text\" : lbl[state]|default(\"Unknown\")\n       }\n    }) %}\n{% endfor %}\n{{idx}}",
+                "mgmt_mode_msg": "{% set idx = dict() %}\n{% for item in vars.input.params['device_data'] %}\n    {%- set state = item.mgmt_mode -%} \n    {%- set clr = {\n      \"unreg\":\"ORANGE\",\n      \"fmg\"  :\"GREEN\",\n      \"faz\"  :\"GREEN\",\n      \"fmgfaz\" :\"GREEN\" } \n    -%} \n    {%- set lbl = {\n      \"unreg\":\"Unauthorized\",\n      \"fmg\"  :\"Managed\",\n      \"faz\"  :\"Logging\",\n      \"fmgfaz\" :\"Managed\" } \n    -%}\n    {% do idx.update({ item.name : { \n         \"html\" : '<span style=\"border:2px solid ' + clr[state]|default(\"GREY\") + ';color:' + clr[state]|default(\"GREY\") + ';border-radius:5px;background-color:black;font-family:verdana;font-weight:bold;padding-top:2px;padding-right:2px;padding-bottom:2px;padding-left:2px;font-size:10px;\">' + lbl[state]|default(\"Unknown\") + '<\/span>',\n         \"text\" : lbl[state]|default(\"Unknown\")\n       }\n    }) %}\n{% endfor %}\n{{idx}}",
+                "conf_status_msg": "{% set idx = dict() %}\n{% for item in vars.input.params['device_data'] %}\n    {%- set state = item.conf_status -%} \n    {%- set clr = {\n      \"insync\":\"GREEN\",\n      \"outofsync\":\"RED\" } \n    -%}\n    {%- set lbl = {\n      \"insync\":\"InSync\",\n      \"outofsync\"  :\"OutOfSync\",\n      } \n    -%}\n    {% do idx.update({ item.name : { \n         \"html\" : '<span style=\"border:2px solid ' + clr[state]|default(\"GREY\") + ';color:' + clr[state]|default(\"GREY\") + ';border-radius:5px;background-color:black;font-family:verdana;font-weight:bold;padding-top:2px;padding-right:2px;padding-bottom:2px;padding-left:2px;font-size:10px;\">' + lbl[state]|default(\"Unknown\") + '<\/span>',\n         \"text\" : lbl[state]|default(\"Unknown\")\n       }\n    }) %}\n{% endfor %}\n{{idx}}",
+                "conn_status_msg": "{% set idx = dict() %}\n{% for item in vars.input.params['device_data'] %}\n    {%- set state = item.conn_status -%} \n    {%- set clr = {\n      \"up\"  :\"GREEN\",\n      \"down\":\"RED\" } \n    -%}\n    {%- set lbl = {\n      \"up\"   :\"UP\",\n      \"down\" :\"DOWN\",\n      } \n    -%}\n    {% do idx.update({ item.name : { \n         \"html\" : '<span style=\"border:2px solid ' + clr[state]|default(\"GREY\") + ';color:' + clr[state]|default(\"GREY\") + ';border-radius:5px;background-color:black;font-family:verdana;font-weight:bold;padding-top:2px;padding-right:2px;padding-bottom:2px;padding-left:2px;font-size:10px;\">' + lbl[state]|default(\"Unknown\") + '<\/span>',\n         \"text\" : lbl[state]|default(\"Unknown\")\n       }\n    }) %}\n{% endfor %}\n{{idx}}",
+                "polpkg_status_msg": "{% set idx = dict() %}\n{% for item in vars.input.params['device_data'] %}\n    {%- set dev = item.name -%} \n    {%- set state = vars.assignment_info_idx[dev].ppkg_state -%} \n    {%- set clr = {\n      \"ok\"             : \"GREEN\",\n      \"problem\"        : \"RED\",\n      \"update needed\"  : \"ORANGE\",\n      \"no pkg\"         : \"Grey\"\n      } \n    -%}\n    {%- set lbl = {\n      \"ok\"             : \"OK\",\n      \"problem\"        : \"Problem\",\n      \"update needed\"  : \"Install Needed\",\n      \"no pkg\"         : \"No Package\"\n      }\n    -%}\n    {%- set lblh = {\n      \"ok\"             : vars.assignment_info_idx[dev].ppkg[0].name|default(\"missing\") + \" (\" + vars.assignment_info_idx[dev].ppkg[0].status|default(\"missing\") + \")\",\n      \"problem\"        : vars.assignment_info_idx[dev].ppkg[0].name|default(\"missing\") + \" (\" + vars.assignment_info_idx[dev].ppkg[0].status|default(\"missing\") + \")\",\n      \"update needed\"  : vars.assignment_info_idx[dev].ppkg[0].name|default(\"missing\") + \" (\" + vars.assignment_info_idx[dev].ppkg[0].status|default(\"missing\") + \")\",\n      \"no pkg\"         : \"No Package\"\n      }\n    -%}\n    {% do idx.update( { dev : \n       { \n         \"html\" : '<span style=\"border:2px solid ' + clr[state]|default(\"GREY\") + ';color:' + clr[state]|default(\"GREY\") + ';border-radius:5px;background-color:black;font-family:verdana;font-weight:bold;padding-top:2px;padding-right:2px;padding-bottom:2px;padding-left:2px;font-size:10px;\">' + lblh[state]|default(\"Unknown\") + '<\/span>',\n         \"text\" : lbl[state]|default(\"Unknown\"),\n         \"assignment\" : vars.assignment_info_idx[dev].ppkg[0].name | default(\"\", True)\n       }\n    }) %}\n{% endfor %}\n{{idx}}",
+                "provtmp_status_msg": "{% set idx = dict() %}\n{% for item in vars.input.params['device_data'] %}\n    {%- set dev = item.name -%} \n    {%- set state = vars.assignment_info_idx[dev].prov_state -%} \n    {%- set clr = {\n      \"ok\"           : \"GREEN\",\n      \"update needed\" : \"ORANGE\",\n      \"problem\"  : \"RED\",\n      \"no pkg\"    : \"Grey\"\n      } \n    -%}\n    {%- set lbl = {\n      \"ok\"      : \"OK\",\n      \"update needed\" : \"Needs Install\",\n      \"problem\" : \"Problem\",\n      \"no templates\"  : \"No Template\"\n      }\n    -%}\n    {%- set lblh = {\n      \"ok\"            : vars.assignment_info_idx[dev].prov[0].name|default(\"missing\") + \" (\" + vars.assignment_info_idx[dev].prov[0].status|default(\"missing\") + \")\",\n      \"problem\"       : vars.assignment_info_idx[dev].prov[0].name|default(\"missing\") + \" (\" + vars.assignment_info_idx[dev].prov[0].status|default(\"missing\") + \")\",\n      \"update needed\" : vars.assignment_info_idx[dev].prov[0].name|default(\"missing\") + \" (\" + vars.assignment_info_idx[dev].prov[0].status|default(\"missing\") + \")\",\n      \"no templates\"  : \"No Template\"\n      }\n    -%}\n    {% do idx.update( { dev : \n       { \n         \"html\" : '<span style=\"border:2px solid ' + clr[state]|default(\"GREY\") + ';color:' + clr[state]|default(\"GREY\") + ';border-radius:5px;background-color:black;font-family:verdana;font-weight:bold;padding-top:2px;padding-right:2px;padding-bottom:2px;padding-left:2px;font-size:10px;\">' + lblh[state]|default(\"Unknown\") + '<\/span>',\n         \"text\" : lbl[state]|default(\"Unknown\"),\n         \"assignment\" : vars.assignment_info_idx[dev].prov[0].name | default(\"\", True)\n       }\n    }) %}\n{% endfor %}\n{{idx}}"
             },
             "status": null,
-            "top": "260",
+            "top": "400",
             "left": "180",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": "\/api\/3\/workflow_groups\/22d8063f-f546-4d39-aec8-4befbba95057",
@@ -219,13 +216,33 @@
     "routes": [
         {
             "@type": "WorkflowRoute",
-            "name": "extract_manager_record -> mgtvdom_assignments",
+            "name": "Copy 2 of override_db_status_msg -> create_device_record",
+            "targetStep": "\/api\/3\/workflow_steps\/78f533c0-a326-4273-b397-e7701cf07d4c",
+            "sourceStep": "\/api\/3\/workflow_steps\/7dc39768-2ecc-44a7-b57d-55fdf7d5f93d",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "4a51ab3a-6daf-4931-a031-adb571f58ccc"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Copy of mgtvdom_assignments -> mgtvdom_assignments",
             "targetStep": "\/api\/3\/workflow_steps\/bdf3cd18-0222-409c-9f8b-e165f1d6c5ce",
+            "sourceStep": "\/api\/3\/workflow_steps\/14838724-6069-49da-8dc7-cfdcf658f451",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "85a93de1-0a89-460a-8761-fdf5c5c79760"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "extract_manager_record -> Copy of mgtvdom_assignments",
+            "targetStep": "\/api\/3\/workflow_steps\/14838724-6069-49da-8dc7-cfdcf658f451",
             "sourceStep": "\/api\/3\/workflow_steps\/6ad35d23-aaa4-4795-91c6-8ccb56bf50c0",
             "label": null,
             "isExecuted": false,
             "group": null,
-            "uuid": "e44bf858-e432-489e-874d-54530fa29e25"
+            "uuid": "c24c5d90-bfaf-463d-bf8f-3b4b78ddff2d"
         },
         {
             "@type": "WorkflowRoute",
@@ -259,23 +276,13 @@
         },
         {
             "@type": "WorkflowRoute",
-            "name": "override_status_data -> create_device_record",
-            "targetStep": "\/api\/3\/workflow_steps\/78f533c0-a326-4273-b397-e7701cf07d4c",
-            "sourceStep": "\/api\/3\/workflow_steps\/a0c746b3-d4b7-4e94-867b-1d328e333974",
-            "label": null,
-            "isExecuted": false,
-            "group": null,
-            "uuid": "2e584cf5-8e25-4b5e-a357-af8f9f6e366c"
-        },
-        {
-            "@type": "WorkflowRoute",
-            "name": "setup_status_data -> override_unreg_status_data",
-            "targetStep": "\/api\/3\/workflow_steps\/a0c746b3-d4b7-4e94-867b-1d328e333974",
+            "name": "setup_status_data -> Copy 2 of override_db_status_msg",
+            "targetStep": "\/api\/3\/workflow_steps\/7dc39768-2ecc-44a7-b57d-55fdf7d5f93d",
             "sourceStep": "\/api\/3\/workflow_steps\/36e43ead-713a-418d-8ba8-3c7c7be120a7",
             "label": null,
             "isExecuted": false,
             "group": null,
-            "uuid": "9e044acb-6453-42d1-b81e-55e26dc1b521"
+            "uuid": "a3b4f099-a83e-4d8b-8eb8-53a3255788cb"
         },
         {
             "@type": "WorkflowRoute",
@@ -300,9 +307,9 @@
             "metadata": [],
             "reusable": false,
             "top": "160",
-            "left": "340",
-            "height": "434",
-            "width": "442",
+            "left": "320",
+            "height": "630",
+            "width": "461",
             "uuid": "22d8063f-f546-4d39-aec8-4befbba95057",
             "recordTags": []
         }

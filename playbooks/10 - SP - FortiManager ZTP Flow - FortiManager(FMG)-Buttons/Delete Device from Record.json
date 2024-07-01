@@ -82,6 +82,7 @@
                     "condition": ""
                 },
                 "arguments": {
+                    "adom": "{{vars.item[2]}}",
                     "device_name": "{{vars.item[1]}}",
                     "connector_config": "{{vars.item[0]}}"
                 },
@@ -139,7 +140,7 @@
             },
             "status": null,
             "top": "220",
-            "left": "740",
+            "left": "820",
             "stepType": "\/api\/3\/workflow_step_types\/0109f35d-090b-4a2b-bd8a-94cbc3508562",
             "group": null,
             "uuid": "25183d15-b667-42b6-9d23-2fad19e4095a"
@@ -149,7 +150,7 @@
             "name": "setup_variables",
             "description": null,
             "arguments": {
-                "fmg_devices": "{{vars.input.records | json_query('[].[connectorConfig,deviceName]')}}",
+                "fmg_devices": "{{vars.input.records | json_query('[].[connectorConfig,deviceName,aDOM]')}}",
                 "record_list": "[{%- for d in vars.input.records | json_query ('[].[\"@id\"]') -%}\n  { \n    \"@id\":\"{{d[0]}}\"\n  },\n{%- endfor -%}]"
             },
             "status": null,

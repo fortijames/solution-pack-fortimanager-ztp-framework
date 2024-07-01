@@ -1,0 +1,175 @@
+{
+    "@type": "Workflow",
+    "triggerLimit": null,
+    "name": "> get task history - remote script",
+    "aliasName": null,
+    "tag": null,
+    "description": "Get the remote script task history based on a task id and a device list in the form of fg1,fg2,fg3.",
+    "isActive": true,
+    "debug": false,
+    "singleRecordExecution": false,
+    "remoteExecutableFlag": false,
+    "parameters": [
+        "connector_config",
+        "task_id",
+        "adom",
+        "devices"
+    ],
+    "synchronous": false,
+    "collection": "\/api\/3\/workflow_collections\/acff9572-b869-4ceb-bbc1-1c3700ec9a4e",
+    "versions": [],
+    "triggerStep": "\/api\/3\/workflow_steps\/666b30a0-f93b-4433-9b85-15489edd692a",
+    "steps": [
+        {
+            "@type": "WorkflowStep",
+            "name": "create payload",
+            "description": null,
+            "arguments": {
+                "url": "\/dvmdb\/adom\/{}\/script\/log\/output\/device\/{}\/logid\/{{vars.log_id}}",
+                "payload": "{\"options\":\"\"}"
+            },
+            "status": null,
+            "top": "100",
+            "left": "740",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "7752c1aa-fd83-4289-9a04-af9bf0608112"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "get_logid_record",
+            "description": null,
+            "arguments": {
+                "name": "Fortinet FortiManager JSON-RPC",
+                "config": "{{vars.connector_config}}",
+                "params": {
+                    "url": "{{vars.url.format(vars.adom,vars.item)}}",
+                    "data": "{{vars.payload}}"
+                },
+                "version": "1.0.4",
+                "for_each": {
+                    "item": "{{vars.devices}}",
+                    "parallel": false,
+                    "condition": ""
+                },
+                "connector": "fortinet-fortimanager-json-rpc",
+                "operation": "json_rpc_get",
+                "operationTitle": "JSON RPC Get",
+                "pickFromTenant": false,
+                "step_variables": []
+            },
+            "status": null,
+            "top": "160",
+            "left": "380",
+            "stepType": "\/api\/3\/workflow_step_types\/0bfed618-0316-11e7-93ae-92361f002671",
+            "group": null,
+            "uuid": "2efad722-1ad4-40a0-af7e-4869f0f918ce"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "return",
+            "description": null,
+            "arguments": {
+                "output": "{%- set logout = vars.steps.get_logid_record -%}\n{%- set table = [] -%}\n{%- set i = namespace(x=0) -%}\n{%- for log in logout -%}\n  {%- set rec = {} -%}\n  {%- set _do = rec.update( { \"name\": vars.devices[i.x], \"content\":log.data.get_response.content } ) -%}\n  {%- set _do = table.append(rec) -%}\n  {% set i.x = i.x+1 -%}\n{%- endfor -%}\n{{table}}",
+                "params": "{{vars.input.params}}"
+            },
+            "status": null,
+            "top": "160",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "df6e6e92-73db-4640-9339-663e92a3b5c8"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "setup env",
+            "description": null,
+            "arguments": {
+                "adom": "{{vars.input.params.adom}}",
+                "log_id": "{{vars.input.params['task_id']|string + \"0\"}}",
+                "devices": "{{vars.input.params.devices|split(\",\")}}",
+                "task_id": "{{vars.input.params['task_id']}}",
+                "connector_config": "{{vars.input.params['connector_config']}}"
+            },
+            "status": null,
+            "top": "40",
+            "left": "380",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "38b07630-a03a-481c-9f49-0511cb8b7983"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Start",
+            "description": null,
+            "arguments": {
+                "__triggerLimit": true,
+                "step_variables": {
+                    "input": {
+                        "params": []
+                    }
+                },
+                "triggerOnSource": true,
+                "triggerOnReplicate": false
+            },
+            "status": null,
+            "top": "40",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/b348f017-9a94-471f-87f8-ce88b6a7ad62",
+            "group": null,
+            "uuid": "666b30a0-f93b-4433-9b85-15489edd692a"
+        }
+    ],
+    "routes": [
+        {
+            "@type": "WorkflowRoute",
+            "name": "create payload -> get_logid_record",
+            "targetStep": "\/api\/3\/workflow_steps\/2efad722-1ad4-40a0-af7e-4869f0f918ce",
+            "sourceStep": "\/api\/3\/workflow_steps\/7752c1aa-fd83-4289-9a04-af9bf0608112",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "39a8ffd1-7f10-4ddc-a852-b62bc3d58f8e"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "get_logid_record -> return",
+            "targetStep": "\/api\/3\/workflow_steps\/df6e6e92-73db-4640-9339-663e92a3b5c8",
+            "sourceStep": "\/api\/3\/workflow_steps\/2efad722-1ad4-40a0-af7e-4869f0f918ce",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "6a6bf827-49b3-4a71-8d91-4d72cda38e59"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "setup env -> create payload",
+            "targetStep": "\/api\/3\/workflow_steps\/7752c1aa-fd83-4289-9a04-af9bf0608112",
+            "sourceStep": "\/api\/3\/workflow_steps\/38b07630-a03a-481c-9f49-0511cb8b7983",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "6956451a-3846-4a10-a36e-6da8f31852f3"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Start -> setup env",
+            "targetStep": "\/api\/3\/workflow_steps\/38b07630-a03a-481c-9f49-0511cb8b7983",
+            "sourceStep": "\/api\/3\/workflow_steps\/666b30a0-f93b-4433-9b85-15489edd692a",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "f2c4e4da-e9e1-495e-99f9-4d0b3eda27b4"
+        }
+    ],
+    "groups": [],
+    "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+    "uuid": "5ebbbebe-9e71-4726-92e2-9e4d7dc0f1e0",
+    "owners": [],
+    "isPrivate": false,
+    "deletedAt": null,
+    "recordTags": [
+        "connector_config",
+        "task_id"
+    ]
+}

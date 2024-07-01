@@ -11,7 +11,8 @@
     "remoteExecutableFlag": false,
     "parameters": [
         "device_name",
-        "connector_config"
+        "connector_config",
+        "adom"
     ],
     "synchronous": false,
     "collection": "\/api\/3\/workflow_collections\/acff9572-b869-4ceb-bbc1-1c3700ec9a4e",
@@ -20,17 +21,33 @@
     "steps": [
         {
             "@type": "WorkflowStep",
+            "name": "api data",
+            "description": null,
+            "arguments": {
+                "api_url": "\/dvm\/cmd\/del\/device",
+                "api_payload": "{  \n  \"data\": {\n    \"device\": \"{{vars.input.params['device_name']}}\",\n    \"adom\": \"{{vars.adom}}\",\n    \"flags\": [\n      \"create_task\",\"nonblocking\"\n    ]  \n  }\n}"
+            },
+            "status": null,
+            "top": "60",
+            "left": "660",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "ffeba9cb-e57e-4678-8fb9-e1acd4b940a4"
+        },
+        {
+            "@type": "WorkflowStep",
             "name": "delete fmg device",
             "description": null,
             "arguments": {
                 "name": "Fortinet FortiManager JSON-RPC",
                 "config": "{{vars.input.params['connector_config']}}",
                 "params": {
-                    "url": "\/dvm\/cmd\/del\/device",
-                    "data": "{\n  \"data\": {\n    \"device\": \"{{vars.input.params['device_name']}}\",\n    \"adom\": \"root\",\n    \"flags\": [\n      \"create_task\",\n      \"nonblocking\"\n    ]\n  }\n}",
-                    "track_task": true
+                    "url": "{{vars.api_url}}",
+                    "data": "{{vars.api_payload}}",
+                    "track_task": true,
+                    "task_timeout": 120
                 },
-                "version": "1.0.0",
+                "version": "1.0.4",
                 "connector": "fortinet-fortimanager-json-rpc",
                 "operation": "json_rpc_execute",
                 "operationTitle": "JSON RPC Exec",
@@ -38,8 +55,8 @@
                 "step_variables": []
             },
             "status": null,
-            "top": "80",
-            "left": "380",
+            "top": "60",
+            "left": "960",
             "stepType": "\/api\/3\/workflow_step_types\/0bfed618-0316-11e7-93ae-92361f002671",
             "group": null,
             "uuid": "b838d34c-5ed2-4ac1-8f3e-809af53753eb"
@@ -52,8 +69,8 @@
                 "output": "{{vars.steps.delete_fmg_device.data}}"
             },
             "status": null,
-            "top": "80",
-            "left": "700",
+            "top": "160",
+            "left": "960",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
             "uuid": "890526b0-b19c-4a6c-a2a2-d1979bd5b7ce"
@@ -66,8 +83,8 @@
                 "record_list": "{{vars.steps.find_device_record}}"
             },
             "status": null,
-            "top": "320",
-            "left": "700",
+            "top": "360",
+            "left": "960",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
             "uuid": "ba3acf9a-22e7-40dc-9c72-29a5025c335c"
@@ -107,11 +124,27 @@
                 "step_variables": []
             },
             "status": null,
-            "top": "200",
-            "left": "700",
+            "top": "260",
+            "left": "960",
             "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928770",
             "group": null,
             "uuid": "d38246b8-cc08-4999-9f1b-22363bed4db4"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "setup env",
+            "description": null,
+            "arguments": {
+                "adom": "{%- set empty = [\"\",None,Null] -%}\n{%- if vars.input.params.adom not in empty -%}\n{{vars.input.params.adom}}\n{%- else -%}\nroot\n{%- endif -%}",
+                "device_name": "{{vars.input.params['device_name']}}",
+                "connector_config": "{{vars.input.params['connector_config']}}"
+            },
+            "status": null,
+            "top": "60",
+            "left": "360",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "886b03b5-e4e9-47f5-8260-6e68971c235e"
         },
         {
             "@type": "WorkflowStep",
@@ -125,7 +158,7 @@
                 }
             },
             "status": null,
-            "top": "80",
+            "top": "20",
             "left": "60",
             "stepType": "\/api\/3\/workflow_step_types\/b348f017-9a94-471f-87f8-ce88b6a7ad62",
             "group": null,
@@ -146,14 +179,24 @@
                 "workflowReference": "\/api\/3\/workflows\/2bc174b5-a6d1-44d4-89c6-dd615b5d9df8"
             },
             "status": null,
-            "top": "320",
-            "left": "380",
+            "top": "180",
+            "left": "60",
             "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
             "group": null,
             "uuid": "e62ae79f-423e-4d91-8305-aa76f1a0490f"
         }
     ],
     "routes": [
+        {
+            "@type": "WorkflowRoute",
+            "name": "api data -> delete fmg device",
+            "targetStep": "\/api\/3\/workflow_steps\/b838d34c-5ed2-4ac1-8f3e-809af53753eb",
+            "sourceStep": "\/api\/3\/workflow_steps\/ffeba9cb-e57e-4678-8fb9-e1acd4b940a4",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "3298f6ca-650a-4bc3-a084-ce935310df03"
+        },
         {
             "@type": "WorkflowRoute",
             "name": "delete fmg device -> extract data",
@@ -196,13 +239,23 @@
         },
         {
             "@type": "WorkflowRoute",
-            "name": "Start -> Get Devices in FMG",
-            "targetStep": "\/api\/3\/workflow_steps\/b838d34c-5ed2-4ac1-8f3e-809af53753eb",
+            "name": "setup env -> api data",
+            "targetStep": "\/api\/3\/workflow_steps\/ffeba9cb-e57e-4678-8fb9-e1acd4b940a4",
+            "sourceStep": "\/api\/3\/workflow_steps\/886b03b5-e4e9-47f5-8260-6e68971c235e",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "813625dc-7264-4e5d-9f26-2e420bb8f72a"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Start -> setup env",
+            "targetStep": "\/api\/3\/workflow_steps\/886b03b5-e4e9-47f5-8260-6e68971c235e",
             "sourceStep": "\/api\/3\/workflow_steps\/c28ab6ff-68d4-4b4e-81fc-c4e94cde08d4",
             "label": null,
             "isExecuted": false,
             "group": null,
-            "uuid": "71f0e03a-cae7-4f56-8693-6b5abbae93ad"
+            "uuid": "e0f2c3d5-5315-4f8c-bb95-8727305b6b1f"
         }
     ],
     "groups": [],
