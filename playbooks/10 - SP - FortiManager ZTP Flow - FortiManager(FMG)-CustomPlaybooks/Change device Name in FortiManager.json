@@ -25,10 +25,10 @@
                 "name": "Fortinet FortiManager JSON RPC",
                 "config": "{{vars.fmg_config}}",
                 "params": {
-                    "url": "\/dvmdb\/device\/{{vars.hostname}}",
+                    "url": "{{vars.api_url}}",
                     "data": "{{vars.api_payload}}"
                 },
-                "version": "1.0.2",
+                "version": "1.0.4",
                 "connector": "fortinet-fortimanager-json-rpc",
                 "operation": "json_rpc_set",
                 "operationTitle": "JSON RPC Set",
@@ -61,6 +61,7 @@
             "name": "setup payload",
             "description": null,
             "arguments": {
+                "api_url": "\/dvmdb\/adom\/{{vars.adom}}\/device\/{{vars.hostname}}",
                 "api_payload": "{\"name\":\"{{vars.new_hostname}}\"}"
             },
             "status": null,
@@ -75,6 +76,7 @@
             "name": "setup vars",
             "description": null,
             "arguments": {
+                "adom": "{{vars.input.params.payload['adom']|default(\"root\")}}",
                 "hostname": "{{vars.input.params.payload['name']}}",
                 "fmg_config": "{{vars.input.params.payload['fmg_config']}}",
                 "new_hostname": "{{vars.input.params.payload['newname']}}"

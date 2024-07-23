@@ -1,0 +1,163 @@
+{
+    "@type": "Workflow",
+    "triggerLimit": null,
+    "name": "> get task status",
+    "aliasName": null,
+    "tag": null,
+    "description": "Get the task status based on a task id",
+    "isActive": true,
+    "debug": false,
+    "singleRecordExecution": false,
+    "remoteExecutableFlag": false,
+    "parameters": [
+        "connector_config",
+        "task_id"
+    ],
+    "synchronous": false,
+    "collection": "\/api\/3\/workflow_collections\/acff9572-b869-4ceb-bbc1-1c3700ec9a4e",
+    "versions": [],
+    "triggerStep": "\/api\/3\/workflow_steps\/8c0c8ba5-2677-4963-a318-12f77ef75224",
+    "steps": [
+        {
+            "@type": "WorkflowStep",
+            "name": "create payload",
+            "description": null,
+            "arguments": {
+                "payload": "{\"options\":\"\"}"
+            },
+            "status": null,
+            "top": "100",
+            "left": "780",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "b9911974-18ac-45e2-b2d7-4ec6eb825be5"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "get_task",
+            "description": null,
+            "arguments": {
+                "name": "Fortinet FortiManager JSON-RPC",
+                "config": "{{vars.connector_config}}",
+                "params": {
+                    "url": "\/task\/task\/{{vars.task_id}}",
+                    "data": "{{vars.payload}}"
+                },
+                "version": "1.0.3",
+                "connector": "fortinet-fortimanager-json-rpc",
+                "operation": "json_rpc_get",
+                "operationTitle": "JSON RPC Get",
+                "pickFromTenant": false,
+                "step_variables": []
+            },
+            "status": null,
+            "top": "160",
+            "left": "380",
+            "stepType": "\/api\/3\/workflow_step_types\/0bfed618-0316-11e7-93ae-92361f002671",
+            "group": null,
+            "uuid": "88ca6869-1b73-4bf7-9843-104a3b2b64d6"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "return",
+            "description": null,
+            "arguments": {
+                "output": "{%- set ret = {} -%}\n{%- set _do = ret.update({\"task_data\":vars.steps.get_task}) -%}\n{%- if vars.steps.get_task.data.status == 0 -%}\n  {%- set _do = ret.update({\"percent\":vars.steps.get_task.data['get_response'].percent}) -%}\n  {%- set _do = ret.update({\"error\":vars.steps.get_task.data['get_response'].num_err}) -%}\n{%- else -%}\n  {%- set _do = ret.update({\"percent\":0}) -%}\n  {%- set _do = ret.update({\"error\":1}) -%}\n{%- endif -%}\n{{ret}}"
+            },
+            "status": null,
+            "top": "160",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "5217c05b-2cca-4f1c-b938-4959d1d1ae47"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "setup env",
+            "description": null,
+            "arguments": {
+                "task_id": "{{vars.input.params['task_id']}}",
+                "connector_config": "{{vars.input.params['connector_config']}}"
+            },
+            "status": null,
+            "top": "40",
+            "left": "380",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "3c0eb0ee-3448-469d-9fc3-c1d2daad8d10"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Start",
+            "description": null,
+            "arguments": {
+                "__triggerLimit": true,
+                "step_variables": {
+                    "input": {
+                        "params": []
+                    }
+                },
+                "triggerOnSource": true,
+                "triggerOnReplicate": false
+            },
+            "status": null,
+            "top": "40",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/b348f017-9a94-471f-87f8-ce88b6a7ad62",
+            "group": null,
+            "uuid": "8c0c8ba5-2677-4963-a318-12f77ef75224"
+        }
+    ],
+    "routes": [
+        {
+            "@type": "WorkflowRoute",
+            "name": "create payload -> get_task",
+            "targetStep": "\/api\/3\/workflow_steps\/88ca6869-1b73-4bf7-9843-104a3b2b64d6",
+            "sourceStep": "\/api\/3\/workflow_steps\/b9911974-18ac-45e2-b2d7-4ec6eb825be5",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "a7b0706d-97f1-4b86-9eaa-d76d950f53f4"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "get_task -> return",
+            "targetStep": "\/api\/3\/workflow_steps\/5217c05b-2cca-4f1c-b938-4959d1d1ae47",
+            "sourceStep": "\/api\/3\/workflow_steps\/88ca6869-1b73-4bf7-9843-104a3b2b64d6",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "682bab60-1ba1-4ba0-be1b-0f8c58411767"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "setup env -> create payload",
+            "targetStep": "\/api\/3\/workflow_steps\/b9911974-18ac-45e2-b2d7-4ec6eb825be5",
+            "sourceStep": "\/api\/3\/workflow_steps\/3c0eb0ee-3448-469d-9fc3-c1d2daad8d10",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "9a407867-7570-4659-b834-67371fedd91a"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Start -> setup env",
+            "targetStep": "\/api\/3\/workflow_steps\/3c0eb0ee-3448-469d-9fc3-c1d2daad8d10",
+            "sourceStep": "\/api\/3\/workflow_steps\/8c0c8ba5-2677-4963-a318-12f77ef75224",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "487bce7e-2837-43ca-bc3e-d90fd44afdaf"
+        }
+    ],
+    "groups": [],
+    "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+    "uuid": "dc29977e-b2ca-44c1-94ea-8228a88a26e6",
+    "owners": [],
+    "isPrivate": false,
+    "deletedAt": null,
+    "recordTags": [
+        "connector_config",
+        "task_id"
+    ]
+}

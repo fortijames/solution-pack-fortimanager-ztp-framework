@@ -244,8 +244,9 @@
             "name": "extract_device_record",
             "description": null,
             "arguments": {
-                "policy_package": "{%- if \"policyPackage\" in vars.steps.find_devices[0]\n       and vars.steps.find_devices[0].policyPackage != None \n       and vars.steps.find_devices[0].policyPackage != ''\n-%}\n{{vars.steps.find_devices[0].policyPackage}}\n{%- else -%}\ndefault\n{%- endif -%}",
-                "device_record_list": "{{vars.steps.find_devices|json_query('[].\"@id\"')}}"
+                "policy_package": "{%- set md = vars.steps.find_devices[0].deviceMetadata | toDict -%}\n\n{%- if \"policy_package\" in md -%}\n{{md.policy_package}}\n{%- elif \"policyPackage\" in vars.steps.find_devices[0]\n       and vars.steps.find_devices[0].policyPackage != None \n       and vars.steps.find_devices[0].policyPackage != ''\n-%}\n{{vars.steps.find_devices[0].policyPackage}}\n{%- else -%}\ndefault\n{%- endif -%}",
+                "device_record_list": "{{vars.steps.find_devices|json_query('[].\"@id\"')}}",
+                "policy_package_test": "{%- set md = vars.steps.find_devices[0].deviceMetadata | toDict -%}\n{{md}}"
             },
             "status": null,
             "top": "140",
@@ -327,10 +328,11 @@
                         "deviceName",
                         "vDOM",
                         "policyPackage",
+                        "description",
                         "zTPProfiles",
                         "reportMarkdown",
                         "id",
-                        "description"
+                        "deviceMetadata"
                     ]
                 },
                 "module": "devices?$limit=5000&$relationships=true&$fsr_max_relation_count=100",

@@ -2,6 +2,13 @@
 |--------------------------------------------|
 
 # Change Log
+- 20240701 (1.0.4)
+  - Update json-rpc onnector to 1.0.4. 
+  - Modify ZTP Profile Views. 
+  - Modify URLs to use ADOM on API calls to beter support locking ADOMs. 
+  - Add support for installing Policy Packages to a group within the playbook. 
+  - Add get task and wait for task playbooks. 
+
 - 20240308 (1.0.3)
  - Aggregate changelog into monthly changes instead of daily changes. 
  - Add support for Custom Script Types. 

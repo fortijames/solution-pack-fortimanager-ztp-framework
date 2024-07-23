@@ -37,7 +37,7 @@
             "name": "extract_records_found",
             "description": null,
             "arguments": {
-                "record_index": "{%- set reclist = [] -%}\n{%- set i = namespace(x=0) -%}\n{%- for record in vars.steps.find_records -%}\n  {%- set dev = {} -%}  \n  {%- set groups = vars.fmg_data[i.x].groups -%}\n  {%- if groups|length == 0 -%}\n    {%- set group_string = \"\" -%}\n  {%- else -%}\n    {%- set group_string = groups|join(\",\") -%}\n  {%- endif -%}\n  {%- set _do = dev.update({\n    \"iri\": record[0]['@id'],\n    \"name\":vars.fmg_data[i.x].name,\n    \"vdom\":vars.fmg_data[i.x].vdom,\n    \"groups\":vars.fmg_data[i.x].groups,\n    \"group_string\":group_string\n  })\n  -%}\n  {% set i.x = i.x+1 -%}\n  {%- set _do = reclist.append(dev) -%}\n{% endfor -%}\n{{reclist}}"
+                "record_index": "{%- set reclist = [] -%}\n{%- set i = namespace(x=0) -%}\n{%- for record in vars.steps.find_records -%}\n  {%- if record|length > 0 -%}\n    {%- set dev = {} -%}  \n    {%- set groups = vars.fmg_data[i.x].groups -%}\n    {%- if groups|length == 0 -%}\n      {%- set group_string = \"\" -%}\n    {%- else -%}\n      {%- set group_string = groups|join(\",\") -%}\n    {%- endif -%}\n    {%- set _do = dev.update({\n      \"iri\": record[0]['@id'],\n      \"name\":vars.fmg_data[i.x].name,\n      \"vdom\":vars.fmg_data[i.x].vdom,\n      \"groups\":vars.fmg_data[i.x].groups,\n      \"group_string\":group_string\n    })\n    -%}\n    {% set i.x = i.x+1 -%}\n    {%- set _do = reclist.append(dev) -%}\n  {%- endif -%}\n{% endfor -%}\n{{reclist}}"
             },
             "status": null,
             "top": "460",

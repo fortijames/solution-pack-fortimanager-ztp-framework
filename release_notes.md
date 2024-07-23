@@ -1,5 +1,12 @@
 # What's New
 
+Release of 1.0.4:
+ - Fix problems with running in FSR 7.5.x. 
+ - Add support for FMG Workspace mode. 
+ - Add a task monitor playbook for tasks that take a long time. 
+ - Modify the ZTP Profile Record View to ease editing settings. 
+ - Fix multiple issues outlined in the repo>issues.
+
 Release of 1.0.3:
  - Add support for an exciting new Script Type: `Custom`
  - Modify ZTP Profile auto-assign to be more efficient and stop rendering device searches once the profile is found. 

@@ -27,11 +27,11 @@
                 "name": "Fortinet FortiManager JSON-RPC",
                 "config": "{{vars.input.params['connector_config']}}",
                 "params": {
-                    "url": "\/dvm\/cmd\/add\/device",
+                    "url": "{{vars.url}}",
                     "data": "{{vars.payload}}",
                     "track_task": true
                 },
-                "version": "1.0.0",
+                "version": "1.0.3",
                 "connector": "fortinet-fortimanager-json-rpc",
                 "operation": "json_rpc_execute",
                 "operationTitle": "JSON RPC Exec",
@@ -47,20 +47,6 @@
         },
         {
             "@type": "WorkflowStep",
-            "name": "create_payload",
-            "description": null,
-            "arguments": {
-                "payload": "{\n  \"data\":{\n    \"flags\":[\"create_task\",\"nonblocking\"],\n    \"device\":{\n      \"mgmt_mode\":\"fmg\",\n      \"device action\":\"promote_unreg\",\n      \"name\":\"{{vars.input.params['device_name']}}\"},\n      \"adom\":\"{{vars.input.params['adom']}}\"\n  }\n}"
-            },
-            "status": null,
-            "top": "80",
-            "left": "340",
-            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
-            "group": null,
-            "uuid": "22914754-bb5d-4e1c-bc1e-81558eff645c"
-        },
-        {
-            "@type": "WorkflowStep",
             "name": "return_results",
             "description": null,
             "arguments": {
@@ -73,6 +59,21 @@
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
             "uuid": "5b39b91c-15d6-4aa8-9414-5f0f56f4e87d"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "setup env",
+            "description": null,
+            "arguments": {
+                "url": "\/dvm\/cmd\/add\/device",
+                "payload": "{\n  \"data\":{\n    \"flags\":[\"create_task\",\"nonblocking\"],\n    \"device\":{\n      \"mgmt_mode\":\"fmg\",\n      \"device action\":\"promote_unreg\",\n      \"name\":\"{{vars.input.params['device_name']}}\"},\n      \"adom\":\"{{vars.input.params['adom']}}\",\n      \"adm_user\":\"admin\",\n      \"adm_pass\":\"\"\n  }\n}"
+            },
+            "status": null,
+            "top": "80",
+            "left": "340",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "22914754-bb5d-4e1c-bc1e-81558eff645c"
         },
         {
             "@type": "WorkflowStep",
@@ -125,7 +126,25 @@
             "uuid": "7ca1cd3d-8c2b-4aeb-98db-1ceb36a17338"
         }
     ],
-    "groups": [],
+    "groups": [
+        {
+            "@type": "WorkflowGroup",
+            "name": "API Resource",
+            "description": "\/dvm\/cmd\/add\/device",
+            "type": "note",
+            "isCollapsed": false,
+            "hasTriggerStep": false,
+            "hideInLogs": false,
+            "metadata": [],
+            "reusable": false,
+            "top": "240",
+            "left": "340",
+            "height": "82",
+            "width": "264",
+            "uuid": "7fa379ba-3dff-4714-b427-a999eb141fe5",
+            "recordTags": []
+        }
+    ],
     "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
     "uuid": "fd89a790-ec77-4737-846b-e7a627606068",
     "owners": [],
