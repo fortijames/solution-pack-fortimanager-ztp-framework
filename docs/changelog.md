@@ -2,6 +2,12 @@
 |--------------------------------------------|
 
 # Change Log
+ - 20240913-20240917 (1.0.5)
+   - Update device synch to include hostname. 
+   - Update special fields in the ZTP step to include ADOM. 
+   - Update `> monitor task complete` to continue if it errors out but return an `error:True`. 
+   
+
 - 20240701 (1.0.4)
   - Update json-rpc onnector to 1.0.4. 
   - Modify ZTP Profile Views. 

@@ -89,5 +89,6 @@ The ZTP Phases are controlled from the `ZTP Step Map` field in the ZTP Profiles.
 # Device Metafield Overrides
 | Field  | Order | Description | 
 | -------- | ------- | ---------------- |
+| adom | ZTP Profile -> Device Metadata | authorize device to the adom if it exists during the auth phase. |
 | device_groups | ZTP Profile -> Device Metadata | Append device groups to list without duplicating. |
 | policy_package | Device Metadata -> ZTP Profile -> Device Record -> Device Name | Chooses the name of the policy package to use in the ZTP Phases based on this order of being said.  |
