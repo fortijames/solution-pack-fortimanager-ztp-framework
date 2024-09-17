@@ -46,7 +46,7 @@
             "name": "authorize_vars",
             "description": null,
             "arguments": {
-                "authadom": "{%- if \"aDOM\" in vars.input.records[0].zTPProfiles \n      and vars.input.records[0].zTPProfiles.aDOM != '' \n      and vars.input.records[0].zTPProfiles.aDOM != None \n-%}\n{{vars.input.records[0].zTPProfiles.aDOM}}\n{%- else -%}\nroot\n{%- endif -%}"
+                "authadom": "{# ADOM Name Logic (order)\n   - Device Metadata \"adom\" set.\n   - ZTP Profile\n#}\n{%- set md = vars.input.records[0].deviceMetadata | toDict -%}\n{%- if \"adom\" in md \n      and md['adom'] != ''\n      and md['adom'] != None\n-%}\n{{md['adom']}}\n{%- elif \"aDOM\" in vars.input.records[0].zTPProfiles \n      and vars.input.records[0].zTPProfiles.aDOM != '' \n      and vars.input.records[0].zTPProfiles.aDOM != None \n-%}\n{{vars.input.records[0].zTPProfiles.aDOM}}\n{%- else -%}\nroot\n{%- endif -%}"
             },
             "status": null,
             "top": "40",

@@ -5,7 +5,7 @@
  - 20240913-20240917 (1.0.5)
    - Update device synch to include hostname. 
    - Update special fields in the ZTP step to include ADOM. 
-   - Update `> monitor task complete` to continue if it errors out but return an `error:True`. 
+   - Update `> monitor task complete` to continue if it errors out but return an `error:True` so that a stuck task can show `Failed`. 
    
 
 - 20240701 (1.0.4)
