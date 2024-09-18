@@ -19,8 +19,7 @@
 - 20240308 (1.0.3)
  - Aggregate changelog into monthly changes instead of daily changes. 
  - Add support for Custom Script Types. 
- - Modified Device field `deviceName` to be writeable by playbooks for Custom Scr
- ipts to change. 
+ - Modified Device field `deviceName` to be writeable by playbooks for Custom Scripts to change. 
  - Update Docs to show Custom Script information. 
  - Alow system export rename of playbook files that had a `-` instead of `>`. 
  - Update playbooks associated with the **Create New Device** trigger and automatic assignment of ZTP Profiles for better performance. 
