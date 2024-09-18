@@ -60,7 +60,7 @@
             },
             "status": null,
             "top": "300",
-            "left": "360",
+            "left": "680",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
             "uuid": "807ef480-858e-4018-a990-3ad7596c10fd"
@@ -92,19 +92,22 @@
                     ],
                     "__selectFields": [
                         "connectorConfig",
+                        "deviceName",
                         "aDOM",
                         "vDOM",
                         "deviceMetadata",
-                        "deviceName"
+                        "sourceData"
                     ]
                 },
                 "module": "devices?$limit=1",
                 "checkboxFields": true,
-                "step_variables": []
+                "step_variables": {
+                    "device_source_data": "{{vars.steps.find_device[0].sourceData}}"
+                }
             },
             "status": null,
             "top": "100",
-            "left": "360",
+            "left": "680",
             "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928770",
             "group": null,
             "uuid": "d235ad16-da0e-4da4-95c0-e7b908176ea4"
@@ -118,7 +121,7 @@
             },
             "status": null,
             "top": "400",
-            "left": "360",
+            "left": "680",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
             "uuid": "c748e704-531c-46fd-b9de-978c49995239"
@@ -140,7 +143,7 @@
             },
             "status": null,
             "top": "200",
-            "left": "360",
+            "left": "680",
             "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
             "group": null,
             "uuid": "41e2c165-842b-4318-b726-2cd4aac1d68f"
@@ -167,7 +170,7 @@
             },
             "status": null,
             "top": "500",
-            "left": "360",
+            "left": "680",
             "stepType": "\/api\/3\/workflow_step_types\/12254cf5-5db7-4b1a-8cb1-3af081924b28",
             "group": null,
             "uuid": "34ea61d4-8993-491e-b7a5-866e8cfbb62a"
@@ -202,7 +205,7 @@
                 },
                 "arguments": {
                     "adom": "{{vars.steps.find_device[0].aDOM}}",
-                    "vdom": "{{vars.steps.find_device[0].vDOM}}",
+                    "vdom": "{%- if vars.device_source_data.vdom|length == 1 -%}\nglobal\n{%- else -%}\n{{vars.steps.find_device[0].vDOM}}\n{%- endif -%}",
                     "value": "{{vars.fsr_metadata[vars.item]}}",
                     "device": "{{vars.steps.find_device[0].deviceName}}",
                     "variable": "{{vars.item}}",
@@ -304,7 +307,25 @@
             "uuid": "dccb8492-6bbc-4227-932f-24a448a4e050"
         }
     ],
-    "groups": [],
+    "groups": [
+        {
+            "@type": "WorkflowGroup",
+            "name": "VDOM Handling",
+            "description": "Currently checking vars.device_source_data.vdom for a VDOM count. If there is more than 1 VDOM we defer to the record VDOM which will be the management VDOM. \n\nOtherwise we set *global* as the context.",
+            "type": "note",
+            "isCollapsed": false,
+            "hasTriggerStep": false,
+            "hideInLogs": false,
+            "metadata": [],
+            "reusable": false,
+            "top": "260",
+            "left": "180",
+            "height": "265",
+            "width": "283",
+            "uuid": "fd93b8d6-d3cc-4bf5-a0f2-2b200ac4e27e",
+            "recordTags": []
+        }
+    ],
     "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
     "uuid": "35ad5541-0cc1-492e-912d-b6d41f9a5739",
     "owners": [],

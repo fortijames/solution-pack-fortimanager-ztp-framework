@@ -2,10 +2,11 @@
 |--------------------------------------------|
 
 # Change Log
- - 20240913-20240917 (1.0.5)
+ - 20240913-20240918 (1.0.5)
    - Update device synch to include hostname. 
    - Update special fields in the ZTP step to include ADOM. 
    - Update `> monitor task complete` to continue if it errors out but return an `error:True` so that a stuck task can show `Failed`. 
+   - Modified `> synch record metadata to fmg adom variables - by device` to default to the Global context if not running in vdom mode. 
    
 
 - 20240701 (1.0.4)
@@ -18,7 +19,8 @@
 - 20240308 (1.0.3)
  - Aggregate changelog into monthly changes instead of daily changes. 
  - Add support for Custom Script Types. 
- - Modified Device field `deviceName` to be writeable by playbooks for Custom Scripts to change. 
+ - Modified Device field `deviceName` to be writeable by playbooks for Custom Scr
+ ipts to change. 
  - Update Docs to show Custom Script information. 
  - Alow system export rename of playbook files that had a `-` instead of `>`. 
  - Update playbooks associated with the **Create New Device** trigger and automatic assignment of ZTP Profiles for better performance. 
