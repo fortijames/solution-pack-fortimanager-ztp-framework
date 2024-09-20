@@ -6,7 +6,10 @@
    - Update device synch to include hostname. 
    - Update special fields in the ZTP step to include ADOM. 
    - Update `> monitor task complete` to continue if it errors out but return an `error:True` so that a stuck task can show `Failed`. 
-   - Modified `> synch record metadata to fmg adom variables - by device` to default to the Global context if not running in vdom mode. 
+   - Modify `> synch record metadata to fmg adom variables - by device` to default to the Global context if not running in vdom mode. 
+   - Modify `> fmg install config - on devices` to use `> monitor task complete`. 
+   - Modify `> change ztp phase on device records` to transition actions to toggle to the phase pending and then set to properly re-trigger records. 
+   - Modify all buttons that deal with transitions to use the subroutine. 
    
 
 - 20240701 (1.0.4)

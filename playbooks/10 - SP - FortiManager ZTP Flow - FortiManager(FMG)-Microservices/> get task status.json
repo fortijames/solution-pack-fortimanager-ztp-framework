@@ -26,11 +26,65 @@
                 "payload": "{\"options\":\"\"}"
             },
             "status": null,
-            "top": "100",
-            "left": "780",
+            "top": "140",
+            "left": "340",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
             "uuid": "b9911974-18ac-45e2-b2d7-4ec6eb825be5"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "create task stale vars",
+            "description": null,
+            "arguments": {
+                "task1_percent": "{{vars.steps.get_task1.data['get_response'].percent}}",
+                "task2_percent": "{{vars.steps.get_task2.data['get_response'].percent}}"
+            },
+            "status": null,
+            "top": "280",
+            "left": "1300",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "9b6b5c66-a163-49be-944a-e30bebfa9e1a"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "delete_task_api",
+            "description": null,
+            "arguments": {
+                "name": "Fortinet FortiManager JSON-RPC",
+                "config": "{{vars.connector_config}}",
+                "params": {
+                    "url": "\/task\/task\/{{vars.task_id}}",
+                    "data": "{{vars.payload}}"
+                },
+                "version": "1.0.5",
+                "connector": "fortinet-fortimanager-json-rpc",
+                "operation": "json_rpc_delete",
+                "operationTitle": "JSON RPC Delete",
+                "pickFromTenant": false,
+                "step_variables": []
+            },
+            "status": null,
+            "top": "500",
+            "left": "480",
+            "stepType": "\/api\/3\/workflow_step_types\/0bfed618-0316-11e7-93ae-92361f002671",
+            "group": null,
+            "uuid": "5c94f9fc-826d-4cd4-9c9f-0ce6f17e0f4f"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "delete task vars",
+            "description": null,
+            "arguments": {
+                "task_deleted": "true"
+            },
+            "status": null,
+            "top": "360",
+            "left": "880",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "1b414710-8f13-4cb0-8306-2170709933da"
         },
         {
             "@type": "WorkflowStep",
@@ -43,7 +97,57 @@
                     "url": "\/task\/task\/{{vars.task_id}}",
                     "data": "{{vars.payload}}"
                 },
-                "version": "1.0.3",
+                "version": "1.0.5",
+                "connector": "fortinet-fortimanager-json-rpc",
+                "operation": "json_rpc_get",
+                "operationTitle": "JSON RPC Get",
+                "pickFromTenant": false,
+                "step_variables": []
+            },
+            "status": null,
+            "top": "120",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/0bfed618-0316-11e7-93ae-92361f002671",
+            "group": null,
+            "uuid": "88ca6869-1b73-4bf7-9843-104a3b2b64d6"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "get_task_1",
+            "description": null,
+            "arguments": {
+                "name": "Fortinet FortiManager JSON-RPC",
+                "config": "{{vars.connector_config}}",
+                "params": {
+                    "url": "\/task\/task\/{{vars.task_id}}",
+                    "data": "{{vars.payload}}"
+                },
+                "version": "1.0.5",
+                "connector": "fortinet-fortimanager-json-rpc",
+                "operation": "json_rpc_get",
+                "operationTitle": "JSON RPC Get",
+                "pickFromTenant": false,
+                "step_variables": []
+            },
+            "status": null,
+            "top": "40",
+            "left": "980",
+            "stepType": "\/api\/3\/workflow_step_types\/0bfed618-0316-11e7-93ae-92361f002671",
+            "group": null,
+            "uuid": "b2dd1705-1bc0-442c-92b9-1dff3c28bec8"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "get_task_2",
+            "description": null,
+            "arguments": {
+                "name": "Fortinet FortiManager JSON-RPC",
+                "config": "{{vars.connector_config}}",
+                "params": {
+                    "url": "\/task\/task\/{{vars.task_id}}",
+                    "data": "{{vars.payload}}"
+                },
+                "version": "1.0.5",
                 "connector": "fortinet-fortimanager-json-rpc",
                 "operation": "json_rpc_get",
                 "operationTitle": "JSON RPC Get",
@@ -52,24 +156,36 @@
             },
             "status": null,
             "top": "160",
-            "left": "380",
+            "left": "1300",
             "stepType": "\/api\/3\/workflow_step_types\/0bfed618-0316-11e7-93ae-92361f002671",
             "group": null,
-            "uuid": "88ca6869-1b73-4bf7-9843-104a3b2b64d6"
+            "uuid": "8e12b86c-894c-4823-9425-96fc2b284d96"
         },
         {
             "@type": "WorkflowStep",
             "name": "return",
             "description": null,
             "arguments": {
-                "output": "{%- set ret = {} -%}\n{%- set _do = ret.update({\"task_data\":vars.steps.get_task}) -%}\n{%- if vars.steps.get_task.data.status == 0 -%}\n  {%- set _do = ret.update({\"percent\":vars.steps.get_task.data['get_response'].percent}) -%}\n  {%- set _do = ret.update({\"error\":vars.steps.get_task.data['get_response'].num_err}) -%}\n{%- else -%}\n  {%- set _do = ret.update({\"percent\":0}) -%}\n  {%- set _do = ret.update({\"error\":1}) -%}\n{%- endif -%}\n{{ret}}"
+                "output": "{%- set ret = {} -%}\n{%- set _do = ret.update({\"task_data\":vars.steps.get_task}) -%}\n{%- set _do = ret.update({\"task_deleted\":vars.task_deleted}) -%}\n{%- if vars.steps.get_task.data.status == 0 -%}\n  {%- set _do = ret.update({\"percent\":vars.steps.get_task.data['get_response'].percent}) -%}\n  {%- set _do = ret.update({\"error\":vars.steps.get_task.data['get_response'].num_err}) -%}\n  {%- if vars.task_deleted -%}\n    {%- set _do = ret.update({\"error\":1}) -%}\n  {%- endif -%}\n{%- else -%}\n  {%- set _do = ret.update({\"percent\":0}) -%}\n  {%- set _do = ret.update({\"error\":1}) -%}\n{%- endif -%}\n{{ret}}"
             },
             "status": null,
-            "top": "160",
-            "left": "40",
+            "top": "500",
+            "left": "60",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
             "uuid": "5217c05b-2cca-4f1c-b938-4959d1d1ae47"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "return task stale",
+            "description": null,
+            "arguments": [],
+            "status": null,
+            "top": "580",
+            "left": "480",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "e7a84bf9-1ffa-435d-b7b3-6bf9e10d8e8c"
         },
         {
             "@type": "WorkflowStep",
@@ -77,11 +193,17 @@
             "description": null,
             "arguments": {
                 "task_id": "{{vars.input.params['task_id']}}",
-                "connector_config": "{{vars.input.params['connector_config']}}"
+                "task_deleted": "false",
+                "task_percent": "{{vars.steps.get_task.data['get_response'].percent}}",
+                "delete_if_dead": "true",
+                "connector_config": "{{vars.input.params['connector_config']}}",
+                "stale_check_time": "900",
+                "noprogress_timeout": "120",
+                "task_stale_interval": "30"
             },
             "status": null,
             "top": "40",
-            "left": "380",
+            "left": "340",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
             "uuid": "3c0eb0ee-3448-469d-9fc3-c1d2daad8d10"
@@ -106,6 +228,118 @@
             "stepType": "\/api\/3\/workflow_step_types\/b348f017-9a94-471f-87f8-ce88b6a7ad62",
             "group": null,
             "uuid": "8c0c8ba5-2677-4963-a318-12f77ef75224"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "task_details",
+            "description": null,
+            "arguments": {
+                "task_data": "{{vars.steps.get_task}}",
+                "current_time": "{{arrow.utcnow().int_timestamp}}",
+                "task_percent": "{{vars.steps.get_task.data['get_response'].percent}}",
+                "task_start_time": "{{vars.steps.get_task.data['get_response']['start_tm']}}",
+                "task_duration_seconds": "{{ arrow.utcnow().int_timestamp - vars.steps.get_task.data['get_response']['start_tm'] }}"
+            },
+            "status": null,
+            "top": "220",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "4388b373-2a05-4da1-9d52-334c6f7cd43f"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "task progress check",
+            "description": null,
+            "arguments": {
+                "conditions": [
+                    {
+                        "option": "Return Task Data",
+                        "default": true,
+                        "step_iri": "\/api\/3\/workflow_steps\/5217c05b-2cca-4f1c-b938-4959d1d1ae47",
+                        "step_name": "return"
+                    },
+                    {
+                        "option": "No Progress",
+                        "step_iri": "\/api\/3\/workflow_steps\/1b414710-8f13-4cb0-8306-2170709933da",
+                        "condition": "{{ vars.delete_if_dead and vars.task_percent == 0 and vars.task_duration_seconds > vars.noprogress_timeout }}",
+                        "step_name": "delete task vars"
+                    },
+                    {
+                        "option": "Stale Check",
+                        "step_iri": "\/api\/3\/workflow_steps\/b2dd1705-1bc0-442c-92b9-1dff3c28bec8",
+                        "condition": "{{ vars.delete_if_dead and vars.task_percent != 100 and vars.task_duration_seconds > vars.stale_check_time }}",
+                        "step_name": "get_task_1"
+                    }
+                ],
+                "step_variables": []
+            },
+            "status": null,
+            "top": "240",
+            "left": "380",
+            "stepType": "\/api\/3\/workflow_step_types\/12254cf5-5db7-4b1a-8cb1-3af081924b28",
+            "group": null,
+            "uuid": "6368f4c2-86af-495a-9f69-c467a16c90d8"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "task stale check",
+            "description": null,
+            "arguments": {
+                "conditions": [
+                    {
+                        "option": "Return",
+                        "default": true,
+                        "step_iri": "\/api\/3\/workflow_steps\/e7a84bf9-1ffa-435d-b7b3-6bf9e10d8e8c",
+                        "step_name": "return task stale"
+                    },
+                    {
+                        "option": "Task is stale",
+                        "step_iri": "\/api\/3\/workflow_steps\/1b414710-8f13-4cb0-8306-2170709933da",
+                        "condition": "{{ vars.task1_percent ==vars.task2_percent }}",
+                        "step_name": "delete task"
+                    }
+                ],
+                "step_variables": []
+            },
+            "status": null,
+            "top": "580",
+            "left": "880",
+            "stepType": "\/api\/3\/workflow_step_types\/12254cf5-5db7-4b1a-8cb1-3af081924b28",
+            "group": null,
+            "uuid": "bd8351e9-4258-4490-ae03-26c590443412"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "wait",
+            "description": null,
+            "arguments": {
+                "rule": {
+                    "actions": [
+                        {
+                            "type": "resume_playbook",
+                            "enabled": true,
+                            "channel_uuid": "e2ce87c2-c55a-11ec-9d64-0242ac120002"
+                        }
+                    ],
+                    "is_active": true,
+                    "event_source": "crudhub"
+                },
+                "type": "TimeBased",
+                "delay": {
+                    "days": 0,
+                    "hours": 0,
+                    "weeks": 0,
+                    "minutes": 0,
+                    "seconds": "{{vars.task_stale_interval}}"
+                }
+            },
+            "status": null,
+            "top": "40",
+            "left": "1300",
+            "stepType": "\/api\/3\/workflow_step_types\/6832e556-b9c7-497a-babe-feda3bd27dbf",
+            "group": null,
+            "uuid": "5858d572-1be2-4e24-bd1b-8adfab58d1b0"
         }
     ],
     "routes": [
@@ -121,13 +355,93 @@
         },
         {
             "@type": "WorkflowRoute",
-            "name": "get_task -> return",
+            "name": "delete_task_api -> return",
             "targetStep": "\/api\/3\/workflow_steps\/5217c05b-2cca-4f1c-b938-4959d1d1ae47",
+            "sourceStep": "\/api\/3\/workflow_steps\/5c94f9fc-826d-4cd4-9c9f-0ce6f17e0f4f",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "423a0845-3a7b-41b7-b4dd-0b952d7f3b3e"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "delete task -> delete_task_api",
+            "targetStep": "\/api\/3\/workflow_steps\/5c94f9fc-826d-4cd4-9c9f-0ce6f17e0f4f",
+            "sourceStep": "\/api\/3\/workflow_steps\/1b414710-8f13-4cb0-8306-2170709933da",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "f33c4fbb-e1af-4a17-9d7a-71d61e1037ab"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "get_task1 -> task_details",
+            "targetStep": "\/api\/3\/workflow_steps\/4388b373-2a05-4da1-9d52-334c6f7cd43f",
             "sourceStep": "\/api\/3\/workflow_steps\/88ca6869-1b73-4bf7-9843-104a3b2b64d6",
             "label": null,
             "isExecuted": false,
             "group": null,
-            "uuid": "682bab60-1ba1-4ba0-be1b-0f8c58411767"
+            "uuid": "a0a1dbc0-383e-44c4-b7ff-0eb44dfec7fb"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "get_task_1 -> wait",
+            "targetStep": "\/api\/3\/workflow_steps\/5858d572-1be2-4e24-bd1b-8adfab58d1b0",
+            "sourceStep": "\/api\/3\/workflow_steps\/b2dd1705-1bc0-442c-92b9-1dff3c28bec8",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "1ca45d25-bace-476c-9a27-aed78c7b55cb"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "get_task_2 -> task stale check",
+            "targetStep": "\/api\/3\/workflow_steps\/9b6b5c66-a163-49be-944a-e30bebfa9e1a",
+            "sourceStep": "\/api\/3\/workflow_steps\/8e12b86c-894c-4823-9425-96fc2b284d96",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "d289a55e-5500-4c18-8e7d-f997e7d69ba2"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "progress check -> delete task",
+            "targetStep": "\/api\/3\/workflow_steps\/1b414710-8f13-4cb0-8306-2170709933da",
+            "sourceStep": "\/api\/3\/workflow_steps\/6368f4c2-86af-495a-9f69-c467a16c90d8",
+            "label": "No Progress",
+            "isExecuted": false,
+            "group": null,
+            "uuid": "48082982-6f7e-4010-8111-39a80348c4cf"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "progress check -> get_task_1",
+            "targetStep": "\/api\/3\/workflow_steps\/b2dd1705-1bc0-442c-92b9-1dff3c28bec8",
+            "sourceStep": "\/api\/3\/workflow_steps\/6368f4c2-86af-495a-9f69-c467a16c90d8",
+            "label": "Stale Check",
+            "isExecuted": false,
+            "group": null,
+            "uuid": "e2ba1911-f5e9-4159-ac82-e2b5ea41ab5d"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "progress check -> return",
+            "targetStep": "\/api\/3\/workflow_steps\/5217c05b-2cca-4f1c-b938-4959d1d1ae47",
+            "sourceStep": "\/api\/3\/workflow_steps\/6368f4c2-86af-495a-9f69-c467a16c90d8",
+            "label": "Return Task Data",
+            "isExecuted": false,
+            "group": null,
+            "uuid": "be1e6d1f-cd6f-40a2-a0a4-6da4a948dae7"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "return from task stale check -> return",
+            "targetStep": "\/api\/3\/workflow_steps\/5217c05b-2cca-4f1c-b938-4959d1d1ae47",
+            "sourceStep": "\/api\/3\/workflow_steps\/e7a84bf9-1ffa-435d-b7b3-6bf9e10d8e8c",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "0eee8979-fe4c-4391-af98-102d70a8041a"
         },
         {
             "@type": "WorkflowRoute",
@@ -148,9 +462,111 @@
             "isExecuted": false,
             "group": null,
             "uuid": "487bce7e-2837-43ca-bc3e-d90fd44afdaf"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "task_details -> progress check",
+            "targetStep": "\/api\/3\/workflow_steps\/6368f4c2-86af-495a-9f69-c467a16c90d8",
+            "sourceStep": "\/api\/3\/workflow_steps\/4388b373-2a05-4da1-9d52-334c6f7cd43f",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "f63002a2-dfab-4825-a1c0-b9feabb4c9ec"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "task stale check -> delete task",
+            "targetStep": "\/api\/3\/workflow_steps\/1b414710-8f13-4cb0-8306-2170709933da",
+            "sourceStep": "\/api\/3\/workflow_steps\/bd8351e9-4258-4490-ae03-26c590443412",
+            "label": "Task is stale",
+            "isExecuted": false,
+            "group": null,
+            "uuid": "d681609a-2009-4de5-a694-340f7f7ee1b8"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "task stale check -> return from task stale check",
+            "targetStep": "\/api\/3\/workflow_steps\/e7a84bf9-1ffa-435d-b7b3-6bf9e10d8e8c",
+            "sourceStep": "\/api\/3\/workflow_steps\/bd8351e9-4258-4490-ae03-26c590443412",
+            "label": "Return",
+            "isExecuted": false,
+            "group": null,
+            "uuid": "9ff615cd-e4ff-4853-95a2-71b5881b7a6d"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "task stale check -> task stale",
+            "targetStep": "\/api\/3\/workflow_steps\/bd8351e9-4258-4490-ae03-26c590443412",
+            "sourceStep": "\/api\/3\/workflow_steps\/9b6b5c66-a163-49be-944a-e30bebfa9e1a",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "8ba67a53-581f-49e1-8aa1-f0c7c646528a"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "wait -> get_task_2",
+            "targetStep": "\/api\/3\/workflow_steps\/8e12b86c-894c-4823-9425-96fc2b284d96",
+            "sourceStep": "\/api\/3\/workflow_steps\/5858d572-1be2-4e24-bd1b-8adfab58d1b0",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "a7f6ece5-41c1-4f2f-a720-1198e5b2daca"
         }
     ],
-    "groups": [],
+    "groups": [
+        {
+            "@type": "WorkflowGroup",
+            "name": "No Progress",
+            "description": "If a task is still at zero percent and has exceeded vars.noprogress_timeout it can be deleted.",
+            "type": "note",
+            "isCollapsed": false,
+            "hasTriggerStep": false,
+            "hideInLogs": false,
+            "metadata": [],
+            "reusable": false,
+            "top": "340",
+            "left": "480",
+            "height": "125",
+            "width": "251",
+            "uuid": "3fb3ff16-5882-4b21-92ed-cfa98740d0b1",
+            "recordTags": []
+        },
+        {
+            "@type": "WorkflowGroup",
+            "name": "Return",
+            "description": "If vars.delete_if_dead is false or timers have not been exceeded we just return the task status.",
+            "type": "note",
+            "isCollapsed": false,
+            "hasTriggerStep": false,
+            "hideInLogs": false,
+            "metadata": [],
+            "reusable": false,
+            "top": "360",
+            "left": "40",
+            "height": "126",
+            "width": "277",
+            "uuid": "91a4cba5-ea3c-4130-bf43-6bc2f613cc1c",
+            "recordTags": []
+        },
+        {
+            "@type": "WorkflowGroup",
+            "name": "Stale Check",
+            "description": "If a task exceeds the vars.stale_check_time we'll see if it's progressing at all. We will check the task 2 times with a delay of vars.task_stale_interval and if determined stale can be deleted.",
+            "type": "note",
+            "isCollapsed": false,
+            "hasTriggerStep": false,
+            "hideInLogs": false,
+            "metadata": [],
+            "reusable": false,
+            "top": "120",
+            "left": "880",
+            "height": "136",
+            "width": "404",
+            "uuid": "c0b55849-ea61-476f-bb41-0b46ad02a4d1",
+            "recordTags": []
+        }
+    ],
     "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
     "uuid": "dc29977e-b2ca-44c1-94ea-8228a88a26e6",
     "owners": [],

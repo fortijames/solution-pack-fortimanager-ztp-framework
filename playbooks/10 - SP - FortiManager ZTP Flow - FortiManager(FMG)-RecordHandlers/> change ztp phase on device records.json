@@ -20,6 +20,35 @@
     "steps": [
         {
             "@type": "WorkflowStep",
+            "name": "set_phase_pending",
+            "description": null,
+            "arguments": {
+                "for_each": {
+                    "item": "{{vars.device_record_iri_list}}",
+                    "__bulk": true,
+                    "parallel": false,
+                    "condition": "",
+                    "batch_size": 100
+                },
+                "resource": {
+                    "zTPPhase": "\/api\/3\/picklists\/13f004dd-e1e9-4dbc-8ed2-967ced8f8d99"
+                },
+                "operation": "Append",
+                "collection": "{{vars.item}}",
+                "__recommend": [],
+                "collectionType": "\/api\/3\/devices",
+                "fieldOperation": [],
+                "step_variables": []
+            },
+            "status": null,
+            "top": "40",
+            "left": "340",
+            "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928722",
+            "group": null,
+            "uuid": "999a8db1-2377-454d-88fe-adf5f36f7c39"
+        },
+        {
+            "@type": "WorkflowStep",
             "name": "Start",
             "description": null,
             "arguments": {
@@ -59,14 +88,24 @@
                 "step_variables": []
             },
             "status": null,
-            "top": "40",
-            "left": "480",
+            "top": "260",
+            "left": "340",
             "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928722",
             "group": null,
-            "uuid": "999a8db1-2377-454d-88fe-adf5f36f7c39"
+            "uuid": "02031528-eb90-4af9-a5c4-9a5581a68433"
         }
     ],
     "routes": [
+        {
+            "@type": "WorkflowRoute",
+            "name": "set_phase_pending -> update_phase",
+            "targetStep": "\/api\/3\/workflow_steps\/02031528-eb90-4af9-a5c4-9a5581a68433",
+            "sourceStep": "\/api\/3\/workflow_steps\/999a8db1-2377-454d-88fe-adf5f36f7c39",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "c3c982c4-01cd-4d90-a485-c0aa4fcef393"
+        },
         {
             "@type": "WorkflowRoute",
             "name": "Start -> update_phase",
@@ -78,7 +117,25 @@
             "uuid": "5ad71b5a-4712-4844-b6f7-9cb7792660e1"
         }
     ],
-    "groups": [],
+    "groups": [
+        {
+            "@type": "WorkflowGroup",
+            "name": "Toggle Phase",
+            "description": "We toggle the record to Pending and then the vars.input.params.ztp_phase to trigger the playbook.",
+            "type": "note",
+            "isCollapsed": false,
+            "hasTriggerStep": false,
+            "hideInLogs": false,
+            "metadata": [],
+            "reusable": false,
+            "top": "120",
+            "left": "480",
+            "height": "117",
+            "width": "281",
+            "uuid": "ae72390f-dd7d-472e-9e52-5ee5122a4aa6",
+            "recordTags": []
+        }
+    ],
     "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
     "uuid": "631185b1-46c7-4881-9995-2774f1b9d831",
     "owners": [],

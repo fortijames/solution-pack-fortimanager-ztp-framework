@@ -93,7 +93,7 @@
             "name": "return_results",
             "description": null,
             "arguments": {
-                "output": "{%- set exec_results = vars.steps.install_config -%}\n{%- set results = {} -%}\n{%- set _do = results.update( {\"script_data\":exec_results} ) -%}\n{%- set _do = results.update( {\"error\":False} ) -%}\n\n{%- if exec_results.data.status != 0 -%}\n    {%- set _do = results.update( {\"error\":true} ) -%}\n  {%- set _do = results.update( {\n            \"msg\": exec_results.data.task_response.status.message \n                       + \" -- \" \n                       + exec_results.data.execute_response.status.message\n  }) -%}\n{% else -%}\n  {%- set line_cnt = exec_results.data.task_response.line|length -%}\n  {%- set _do = results.update( {\n            \"msg\": exec_results.data.task_response.line[line_cnt-1].detail|default(\"\")\n  }) -%}\n  {%- if \"error\" in exec_results.data.task_response.state -%}\n    {%- set _do = results.update( {\"error\":true} ) -%}\n  {%- endif -%}\n{%- endif -%}\n{{results}}",
+                "output": "{%- set exec_results = vars.steps.wait_for_task.output['script_data'] -%}\n{%- set results = {} -%}\n{%- set _do = results.update( {\"script_data\":exec_results} ) -%}\n{%- set _do = results.update( {\"script_time\":vars.steps.wait_for_task.output['script_time']} ) -%}\n{%- set _do = results.update( {\"error\":False} ) -%}\n{%- set line_cnt = exec_results.get_response.line|length -%}\n\n{%- if exec_results.status != 0 -%}\n  {%- set _do = results.update( {\"error\":true} ) -%}\n  {%- set _do = results.update( {\n            \"msg\": exec_results.get_response.state\n                       + \" -- \" \n                       + exec_results.get_response.line[line_cnt-1].detail|default(\"\")\n  }) -%}\n{% else -%}\n  {%- set _do = results.update( {\n            \"msg\": exec_results.get_response.state\n                       + \" -- \" \n                       + exec_results.get_response.line[line_cnt-1].detail|default(\"\")\n  }) -%}\n  {%- if \"error\" in exec_results.data.get_response.state -%}\n    {%- set _do = results.update( {\"error\":true} ) -%}\n  {%- endif -%}\n{%- endif -%}\n{{results}}",
                 "params": "{{vars.input.params}}"
             },
             "status": null,
@@ -120,6 +120,28 @@
             "stepType": "\/api\/3\/workflow_step_types\/b348f017-9a94-471f-87f8-ce88b6a7ad62",
             "group": null,
             "uuid": "8f1e4582-a025-4187-9ead-8ccd514ad414"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "wait_for_task",
+            "description": null,
+            "arguments": {
+                "arguments": {
+                    "task_id": "{{vars.steps.install_config.data['execute_response'].task}}",
+                    "connector_config": "{{vars.input.params['connector_config']}}"
+                },
+                "apply_async": false,
+                "step_variables": [],
+                "pass_parent_env": false,
+                "pass_input_record": false,
+                "workflowReference": "\/api\/3\/workflows\/70892d77-03fe-4353-81da-c2225be54dd3"
+            },
+            "status": null,
+            "top": "420",
+            "left": "100",
+            "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
+            "group": null,
+            "uuid": "ca535db6-5915-4d20-9ee9-624519ca3ef2"
         }
     ],
     "routes": [
@@ -145,13 +167,13 @@
         },
         {
             "@type": "WorkflowRoute",
-            "name": "install_config -> extract fmg device data",
-            "targetStep": "\/api\/3\/workflow_steps\/b197028b-5bf5-448d-b013-4149b03c0ba2",
+            "name": "install_config -> wait_for_task",
+            "targetStep": "\/api\/3\/workflow_steps\/ca535db6-5915-4d20-9ee9-624519ca3ef2",
             "sourceStep": "\/api\/3\/workflow_steps\/91fcc597-be08-4ff5-8b5d-1727c7e85390",
             "label": null,
             "isExecuted": false,
             "group": null,
-            "uuid": "4519b76d-d379-4e18-8b19-d1183f42ed36"
+            "uuid": "0138b2c1-434f-48fa-b71c-f338a9d31a9a"
         },
         {
             "@type": "WorkflowRoute",
@@ -172,6 +194,16 @@
             "isExecuted": false,
             "group": null,
             "uuid": "05e0c1de-f0eb-4e4f-b052-5a6fd212a605"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "wait_for_task -> return_results",
+            "targetStep": "\/api\/3\/workflow_steps\/b197028b-5bf5-448d-b013-4149b03c0ba2",
+            "sourceStep": "\/api\/3\/workflow_steps\/ca535db6-5915-4d20-9ee9-624519ca3ef2",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "9ea32a77-222a-4b71-ad9c-ca472e9ba1c7"
         }
     ],
     "groups": [],

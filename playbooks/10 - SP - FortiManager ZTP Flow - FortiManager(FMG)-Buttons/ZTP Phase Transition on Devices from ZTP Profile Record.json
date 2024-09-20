@@ -51,6 +51,33 @@
         },
         {
             "@type": "WorkflowStep",
+            "name": "set ztp pahse",
+            "description": null,
+            "arguments": {
+                "for_each": {
+                    "item": "{{vars.steps.find_linked_devices[0].devices}}",
+                    "parallel": false,
+                    "condition": ""
+                },
+                "arguments": {
+                    "ztp_phase": "{{vars.input.params.zTPPhase.itemValue}}",
+                    "device_record_iri_list": "[\"{{vars.item['@id']}}\"]"
+                },
+                "apply_async": false,
+                "step_variables": [],
+                "pass_parent_env": false,
+                "pass_input_record": false,
+                "workflowReference": "\/api\/3\/workflows\/631185b1-46c7-4881-9995-2774f1b9d831"
+            },
+            "status": null,
+            "top": "160",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
+            "group": null,
+            "uuid": "a5a113f6-31ab-423a-bbf5-d4f6e7d33735"
+        },
+        {
+            "@type": "WorkflowStep",
             "name": "Start",
             "description": null,
             "arguments": {
@@ -186,47 +213,18 @@
             "stepType": "\/api\/3\/workflow_step_types\/f414d039-bb0d-4e59-9c39-a8f1e880b18a",
             "group": null,
             "uuid": "72f14cac-82d3-4512-bb3a-03412df387eb"
-        },
-        {
-            "@type": "WorkflowStep",
-            "name": "Update ZTP Phases",
-            "description": null,
-            "arguments": {
-                "for_each": {
-                    "item": "{{vars.steps.find_linked_devices[0].devices}}",
-                    "__bulk": true,
-                    "parallel": false,
-                    "condition": "",
-                    "batch_size": 100
-                },
-                "resource": {
-                    "zTPPhase": "{{\"ZTP Phase\"|picklist(vars.input.params.zTPPhase.itemValue)}}"
-                },
-                "operation": "Append",
-                "collection": "{{vars.item['@id']}}",
-                "__recommend": [],
-                "collectionType": "\/api\/3\/devices",
-                "fieldOperation": [],
-                "step_variables": []
-            },
-            "status": null,
-            "top": "160",
-            "left": "40",
-            "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928722",
-            "group": null,
-            "uuid": "77448475-b6fb-4eaa-b108-b273d5e00ecf"
         }
     ],
     "routes": [
         {
             "@type": "WorkflowRoute",
-            "name": "find_linked_devices -> Update ZTP Phases",
-            "targetStep": "\/api\/3\/workflow_steps\/77448475-b6fb-4eaa-b108-b273d5e00ecf",
+            "name": "find_linked_devices -> set ztp pahse",
+            "targetStep": "\/api\/3\/workflow_steps\/a5a113f6-31ab-423a-bbf5-d4f6e7d33735",
             "sourceStep": "\/api\/3\/workflow_steps\/d2b38dcd-f465-4565-90b1-6aa1d9057c44",
             "label": null,
             "isExecuted": false,
             "group": null,
-            "uuid": "5dc1844e-d7d9-41ce-9f2b-8a30320e3056"
+            "uuid": "fe74a2be-4891-4d8c-8ccf-5f4cf23c6e9b"
         },
         {
             "@type": "WorkflowRoute",
