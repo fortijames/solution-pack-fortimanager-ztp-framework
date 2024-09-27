@@ -354,12 +354,13 @@
                     "type": "\/api\/3\/picklists\/ff599189-3eeb-4c86-acb0-a7915e85ac3b",
                     "tenant": "",
                     "thread": false,
-                    "content": "<p><strong>Install Device Config<\/strong><\/p>\n<p>&nbsp;<\/p>\n<p>Message: {{vars.steps.run_install_device_config.output.msg}}<\/p>\n<p>Error: {{vars.steps.run_install_device_config.output.error}}<\/p>\n<p>&nbsp;<\/p>\n<p>TaskID:&nbsp;<\/p>\n<p>{{vars.steps.run_install_device_config.output.script_data.data.task_response.id}}<\/p>\n<p>&nbsp;<\/p>\n<p>Line:&nbsp;<\/p>\n<p>{{vars.steps.run_install_device_config.output.script_data.data.task_response.line|json_query('[].[name,state]')}}<\/p>\n<p>&nbsp;<\/p>\n<p>History:<br \/>{{vars.steps.run_install_device_config.output.script_data.data.task_response.line[0].history|json_query('[].[detail,percent]')}}<\/p>",
+                    "content": "<p><strong>Install Device Config<\/strong><\/p>\n<p>&nbsp;<\/p>\n<p>Message: {{vars.steps.run_install_device_config.output.msg}}<\/p>\n<p>Error: {{vars.steps.run_install_device_config.output.error}}<\/p>\n<p>&nbsp;<\/p>\n<p>TaskID:&nbsp;<\/p>\n<p>{{vars.steps.run_install_device_config.output.script_data.data.task_response.id}}<\/p>\n<p>&nbsp;<\/p>\n<p>Line:&nbsp;<\/p>\n<p>{{vars.steps.run_install_device_config.output.script_data.data.task_response.line|json_query('[].[name,state]')}}<\/p>\n<p>&nbsp;<\/p>\n<p>History:<br>{{vars.steps.run_install_device_config.output.script_data.data.task_response.line[0].history|json_query('[].[detail,percent]')}}<\/p>",
                     "records": ""
                 },
                 "arguments": {
                     "adom": "{{vars.input.records[0].aDOM}}",
                     "devices": "{{vars.input.records[0].deviceName}}",
+                    "track_task_flag": "False",
                     "connector_config": "{{vars.input.records[0].connectorConfig}}"
                 },
                 "apply_async": false,
@@ -388,13 +389,14 @@
                     "type": "\/api\/3\/picklists\/ff599189-3eeb-4c86-acb0-a7915e85ac3b",
                     "tenant": "",
                     "thread": false,
-                    "content": "<p><strong>Install Policy Package ( {{vars.policy_package}} )<\/strong><\/p>\n<p>&nbsp;<\/p>\n<p>Message: {{vars.steps.run_install_policy_pkg.output.msg}}<\/p>\n<p>Error: {{vars.steps.run_install_policy_pkg.output.error}}<\/p>\n<p>&nbsp;<\/p>\n<p>TaskID:&nbsp;<\/p>\n<p>{{vars.steps.run_install_policy_pkg.output.script_data.data.task_response.id}}<\/p>\n<p>&nbsp;<\/p>\n<p>Line:&nbsp;<\/p>\n<p>{{vars.steps.run_install_policy_pkg.output.script_data.data.task_response.line|json_query('[].[name,state]')}}<\/p>\n<p>&nbsp;<\/p>\n<p>History:<br \/>{{vars.steps.run_install_policy_pkg.output.script_data.data.task_response.line[0].history|json_query('[].[detail,percent]')}}<\/p>",
+                    "content": "<p><strong>Install Policy Package ( {{vars.policy_package}} )<\/strong><\/p>\n<p>&nbsp;<\/p>\n<p>Message: {{vars.steps.run_install_policy_pkg.output.msg}}<\/p>\n<p>Error: {{vars.steps.run_install_policy_pkg.output.error}}<\/p>\n<p>&nbsp;<\/p>\n<p>TaskID:&nbsp;<\/p>\n<p>{{vars.steps.run_install_policy_pkg.output.script_data.data.task_response.id}}<\/p>\n<p>&nbsp;<\/p>\n<p>Line:&nbsp;<\/p>\n<p>{{vars.steps.run_install_policy_pkg.output.script_data.data.task_response.line|json_query('[].[name,state]')}}<\/p>\n<p>&nbsp;<\/p>\n<p>History:<br>{{vars.steps.run_install_policy_pkg.output.script_data.data.task_response.line[0].history|json_query('[].[detail,percent]')}}<\/p>",
                     "records": ""
                 },
                 "arguments": {
                     "adom": "{{vars.input.records[0].aDOM}}",
                     "devices": "{{vars.input.records[0].deviceName}}",
                     "package": "{{vars.policy_package}}",
+                    "track_task_flag": "False",
                     "connector_config": "{{vars.input.records[0].connectorConfig}}",
                     "assign_device_flag": "True"
                 },

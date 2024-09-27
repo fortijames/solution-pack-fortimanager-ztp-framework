@@ -105,18 +105,40 @@
         },
         {
             "@type": "WorkflowStep",
-            "name": "extract fmg device data",
+            "name": "exec task",
             "description": null,
             "arguments": {
-                "output": "{%- set exec_results = vars.steps.wait_for_task.output['script_data'] -%}\n{%- set results = {} -%}\n{%- set _do = results.update( {\"script_data\":exec_results} ) -%}\n{%- set _do = results.update( {\"script_time\":vars.steps.wait_for_task.output['script_time']} ) -%}\n{%- set _do = results.update( {\"error\":False} ) -%}\n\n{%- if exec_results.status != 0 -%}\n    {%- set _do = results.update( {\"error\":true} ) -%}\n  {%- set _do = results.update( {\n            \"msg\": exec_results.data.task_response.status.message \n                       + \" -- \" \n                       + exec_results.data.execute_response.status.message\n  }) -%}\n{% else -%}\n  {%- set line_cnt = exec_results.data.task_response.line|length -%}\n  {%- set _do = results.update( {\n            \"msg\": exec_results.data.task_response.line[line_cnt-1].detail|default(\"\")\n  }) -%}\n  {%- if \"error\" in exec_results.data.task_response.state -%}\n    {%- set _do = results.update( {\"error\":true} ) -%}\n  {%- endif -%}\n{%- endif -%}\n{{results}}",
-                "params": "{{vars.input.params}}"
+                "arguments": {
+                    "exec_url": "{{vars.exec_url}}",
+                    "exec_payload": "{{vars.fmg_data_payload}}",
+                    "connector_config": "{{vars.input.params['connector_config']}}"
+                },
+                "apply_async": false,
+                "step_variables": [],
+                "pass_parent_env": false,
+                "pass_input_record": false,
+                "workflowReference": "\/api\/3\/workflows\/68950ca9-cb82-442b-a8fd-6941308d9cee"
             },
             "status": null,
-            "top": "180",
+            "top": "520",
+            "left": "460",
+            "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
+            "group": null,
+            "uuid": "48bf6d39-0345-4875-bac1-df9ff7a945aa"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "extract task data",
+            "description": null,
+            "arguments": {
+                "exec_results": "{{vars.steps.exec_task.output}}"
+            },
+            "status": null,
+            "top": "300",
             "left": "80",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
-            "uuid": "2913ae72-dbcf-49ed-98df-08086bb2ff26"
+            "uuid": "40014b24-ab88-4db5-9a59-4732f2795c4a"
         },
         {
             "@type": "WorkflowStep",
@@ -143,35 +165,25 @@
         },
         {
             "@type": "WorkflowStep",
-            "name": "install_pkg",
+            "name": "return",
             "description": null,
             "arguments": {
-                "name": "Fortinet FortiManager JSON-RPC",
-                "config": "{{vars.input.params['connector_config']}}",
-                "params": {
-                    "url": "\/securityconsole\/install\/package",
-                    "data": "{{vars.fmg_data_payload}}",
-                    "track_task": "{{vars.track_task_flag}}"
-                },
-                "version": "1.0.3",
-                "connector": "fortinet-fortimanager-json-rpc",
-                "operation": "json_rpc_execute",
-                "operationTitle": "JSON RPC Exec",
-                "pickFromTenant": false,
-                "step_variables": []
+                "output": "{{vars.exec_results}}",
+                "params": "{{vars.input.params}}"
             },
             "status": null,
-            "top": "540",
-            "left": "620",
-            "stepType": "\/api\/3\/workflow_step_types\/0bfed618-0316-11e7-93ae-92361f002671",
+            "top": "200",
+            "left": "80",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
-            "uuid": "9b699d12-587c-4fb0-a197-faf101195273"
+            "uuid": "e78b5076-be9d-40f0-a59c-786782d79a57"
         },
         {
             "@type": "WorkflowStep",
             "name": "setup_input",
             "description": null,
             "arguments": {
+                "exec_url": "\/securityconsole\/install\/package",
                 "device_list": "{{vars.input.params.devices.split(\",\")}}",
                 "track_task_flag": "{%- set false_list = [0,False,\"no\"] -%}\n{%- if vars.input.params['track_task_flag'] in false_list -%}\nFalse\n{%- else -%}\nTrue\n{%- endif -%}",
                 "assign_device_flag": "{{vars.input.params['assign_device_flag']|default(True)}}"
@@ -200,28 +212,6 @@
             "stepType": "\/api\/3\/workflow_step_types\/b348f017-9a94-471f-87f8-ce88b6a7ad62",
             "group": null,
             "uuid": "1e09ed56-e253-44ce-ae3d-74e6bbdace69"
-        },
-        {
-            "@type": "WorkflowStep",
-            "name": "wait_for_task",
-            "description": null,
-            "arguments": {
-                "arguments": {
-                    "task_id": "{{vars.steps.install_pkg.data['execute_response'].task}}",
-                    "connector_config": "{{vars.input.params['connector_config']}}"
-                },
-                "apply_async": false,
-                "step_variables": [],
-                "pass_parent_env": false,
-                "pass_input_record": false,
-                "workflowReference": "\/api\/3\/workflows\/70892d77-03fe-4353-81da-c2225be54dd3"
-            },
-            "status": null,
-            "top": "540",
-            "left": "80",
-            "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
-            "group": null,
-            "uuid": "b1009630-57de-4b0c-ab00-5241b3ba5b84"
         }
     ],
     "routes": [
@@ -263,17 +253,37 @@
             "label": null,
             "isExecuted": false,
             "group": null,
-            "uuid": "39d1101b-936e-4111-b429-83568ea52887"
+            "uuid": "96827743-ade6-4a12-9987-96950ebe8d4c"
         },
         {
             "@type": "WorkflowRoute",
-            "name": "exec_payload -> install_pkg",
-            "targetStep": "\/api\/3\/workflow_steps\/9b699d12-587c-4fb0-a197-faf101195273",
+            "name": "exec_payload -> exec task",
+            "targetStep": "\/api\/3\/workflow_steps\/48bf6d39-0345-4875-bac1-df9ff7a945aa",
             "sourceStep": "\/api\/3\/workflow_steps\/bb5f52f6-d681-4504-b7e4-3f3039599c01",
             "label": null,
             "isExecuted": false,
             "group": null,
-            "uuid": "3e65681d-d561-42e8-987e-78688a08be93"
+            "uuid": "a5394e5e-d483-4707-a566-68d764e98775"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "exec task -> extract task data",
+            "targetStep": "\/api\/3\/workflow_steps\/40014b24-ab88-4db5-9a59-4732f2795c4a",
+            "sourceStep": "\/api\/3\/workflow_steps\/48bf6d39-0345-4875-bac1-df9ff7a945aa",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "65da74b9-ad8e-4224-bb83-75fa69de6079"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "extract task data -> return",
+            "targetStep": "\/api\/3\/workflow_steps\/e78b5076-be9d-40f0-a59c-786782d79a57",
+            "sourceStep": "\/api\/3\/workflow_steps\/40014b24-ab88-4db5-9a59-4732f2795c4a",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "fa667513-4c07-489a-bf25-10042951fd0a"
         },
         {
             "@type": "WorkflowRoute",
@@ -284,16 +294,6 @@
             "isExecuted": false,
             "group": null,
             "uuid": "164f2b84-e266-43ac-a2fc-d294eb783ddd"
-        },
-        {
-            "@type": "WorkflowRoute",
-            "name": "install_pkg -> wait_for_task",
-            "targetStep": "\/api\/3\/workflow_steps\/b1009630-57de-4b0c-ab00-5241b3ba5b84",
-            "sourceStep": "\/api\/3\/workflow_steps\/9b699d12-587c-4fb0-a197-faf101195273",
-            "label": null,
-            "isExecuted": false,
-            "group": null,
-            "uuid": "c080ef8d-2c7c-4554-841f-2e26b45ac2bb"
         },
         {
             "@type": "WorkflowRoute",
@@ -314,16 +314,6 @@
             "isExecuted": false,
             "group": null,
             "uuid": "9010bd87-2276-4eca-a814-9278d629ce9e"
-        },
-        {
-            "@type": "WorkflowRoute",
-            "name": "wait_for_task -> extract fmg device data",
-            "targetStep": "\/api\/3\/workflow_steps\/2913ae72-dbcf-49ed-98df-08086bb2ff26",
-            "sourceStep": "\/api\/3\/workflow_steps\/b1009630-57de-4b0c-ab00-5241b3ba5b84",
-            "label": null,
-            "isExecuted": false,
-            "group": null,
-            "uuid": "cdafdad5-14e5-4f9e-a5a8-2323912120f9"
         }
     ],
     "groups": [],

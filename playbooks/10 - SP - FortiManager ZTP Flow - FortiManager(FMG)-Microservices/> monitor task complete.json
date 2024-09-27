@@ -25,8 +25,8 @@
             "arguments": {
                 "when": "{{vars.task_id != ''}}",
                 "do_until": {
-                    "delay": 10,
-                    "retries": 2880,
+                    "delay": 5,
+                    "retries": 8640,
                     "condition": "{{vars.steps.monitor_task.output.percent == 100 or vars.steps.monitor_task.output.error == 1}}"
                 },
                 "arguments": {
@@ -34,7 +34,7 @@
                     "connector_config": "{{vars.connector_config}}"
                 },
                 "apply_async": false,
-                "ignore_errors": true,
+                "ignore_errors": false,
                 "step_variables": [],
                 "pass_parent_env": false,
                 "pass_input_record": false,

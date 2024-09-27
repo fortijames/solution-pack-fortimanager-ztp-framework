@@ -39,7 +39,8 @@
             "name": "set_initial_vars",
             "description": null,
             "arguments": {
-                "failed_status": "''"
+                "ztp_status": "Failed",
+                "ztp_status_html": "<span style=\"border: 2px solid RED; color: red; border-radius: 5px; background-color: black; font-family: verdana; font-weight: bold; font-size: 10px; padding: 2px;\"> Failed <\/span>"
             },
             "status": null,
             "top": "100",
@@ -118,7 +119,7 @@
             "arguments": {
                 "resource": {
                     "zTPStatus": "{{vars.failed_status}}",
-                    "zTPStatusHTML": "<p>{{vars.failed_status}}<\/p>"
+                    "zTPStatusHTML": "<p>{{vars.ztp_status_html}}<\/p>"
                 },
                 "operation": "Append",
                 "collection": "{{vars.input.records[0]['@id']}}",
