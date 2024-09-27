@@ -2,7 +2,7 @@
 |--------------------------------------------|
 
 # Change Log
- - 20240913-20240918 (1.0.5)
+ - 20240913-20240927 (1.0.5)
    - Update device synch to include hostname. 
    - Update special fields in the ZTP step to include ADOM. 
    - Update `> monitor task complete` to continue if it errors out but return an `error:True` so that a stuck task can show `Failed`. 
@@ -10,6 +10,8 @@
    - Modify `> fmg install config - on devices` to use `> monitor task complete`. 
    - Modify `> change ztp phase on device records` to transition actions to toggle to the phase pending and then set to properly re-trigger records. 
    - Modify all buttons that deal with transitions to use the subroutine. 
+   - Create `> fmg exec task - return standard output of results.json` to consolidate exec handling. 
+   - Modify `> fmg install config - on devices.json` and `> fmg install policy package - on devices.json` playbooks to leverage the new playbook. Remove use of task monitor as the enhanced track_task functions are being added to pyFMG. 
    
 
 - 20240701 (1.0.4)
