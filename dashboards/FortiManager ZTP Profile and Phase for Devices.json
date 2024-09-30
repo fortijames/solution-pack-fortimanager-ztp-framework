@@ -32,21 +32,303 @@
                                 }
                             }
                         ],
-                        "style": "col-lg-3"
+                        "style": "col-lg-3",
+                        "collapsedText": "Quick Links"
                     },
                     {
                         "widgets": [
                             {
-                                "type": "sectionHeader",
+                                "type": "rows",
                                 "config": {
-                                    "wid": "17e1798b-283c-4b9c-a11d-679e1c3bc918",
-                                    "query": {
-                                        "filters": [],
-                                        "sort": [],
-                                        "limit": 10
-                                    },
-                                    "editorType": "markdown",
-                                    "sectionText": "# ZTP Profile and Phase for Devices\n\n* If there is a `ZTP Phase Started` time the device is currently executing a ZTP Phase as identified by the `ZTP Phase` field. \n* If there is a `ZTP Phase Completed` time then the device has recently completed a ZTP Phase \n* **ZTP Profiles** are removed, or set to `None`, by default unless the ZTP Profile has `Retain Profile Assignment` enabled. If the system has a backlog of executions then removing a completed ZTP Profile, which comes from a record trigger, might take some time as the system catches up.  \n\nUse the Dashboard link to `ZTP Profile and Phase Summary`, on the left, to see a Summary of all devices and their respective ZTP Profiles and Phases."
+                                    "wid": "9af65116-a97d-4b64-be01-287b869f0f31",
+                                    "rows": [
+                                        {
+                                            "columns": [
+                                                {
+                                                    "widgets": [
+                                                        {
+                                                            "type": "sectionHeader",
+                                                            "config": {
+                                                                "wid": "17e1798b-283c-4b9c-a11d-679e1c3bc918",
+                                                                "query": {
+                                                                    "filters": [],
+                                                                    "sort": [],
+                                                                    "limit": 10
+                                                                },
+                                                                "editorType": "markdown",
+                                                                "sectionText": "# ZTP Profile and Phase for Devices\n\nActive ZTP Profiles on Devices OR were active in the active in the last 15 minutes. "
+                                                            }
+                                                        }
+                                                    ],
+                                                    "style": "col-lg-12"
+                                                }
+                                            ],
+                                            "wid": "3eb89ab8-c074-4c44-89df-64ecddb39107",
+                                            "_collapsed": false
+                                        },
+                                        {
+                                            "columns": [
+                                                {
+                                                    "widgets": [
+                                                        {
+                                                            "type": "chart",
+                                                            "config": {
+                                                                "wid": "429444bc-c0ab-4edc-8be1-85433e950c07",
+                                                                "widgetAlwaysDisplay": true,
+                                                                "showTabularData": false,
+                                                                "query": {
+                                                                    "sort": [],
+                                                                    "limit": 2147483647,
+                                                                    "logic": "OR",
+                                                                    "filters": [
+                                                                        {
+                                                                            "logic": "AND",
+                                                                            "filters": [
+                                                                                {
+                                                                                    "field": "zTPPhaseCompleted",
+                                                                                    "operator": "gt",
+                                                                                    "value": "{{getRelativeDate(0,0,0,0,-15,\"end\")}}",
+                                                                                    "type": "datetime"
+                                                                                }
+                                                                            ],
+                                                                            "_field": "zTPPhaseCompleted",
+                                                                            "_value": {
+                                                                                "differenceType": "mins",
+                                                                                "differenceValue": -15
+                                                                            },
+                                                                            "_operator": "gt",
+                                                                            "type": "datetime"
+                                                                        },
+                                                                        {
+                                                                            "field": "zTPPhaseStarted",
+                                                                            "value": "false",
+                                                                            "operator": "isnull",
+                                                                            "type": "datetime"
+                                                                        },
+                                                                        {
+                                                                            "field": "zTPProfiles",
+                                                                            "operator": "isnull",
+                                                                            "value": "false",
+                                                                            "_value": {
+                                                                                "display": "",
+                                                                                "itemValue": "",
+                                                                                "@id": "false"
+                                                                            },
+                                                                            "type": "object"
+                                                                        }
+                                                                    ],
+                                                                    "aggregates": [
+                                                                        {
+                                                                            "operator": "countdistinct",
+                                                                            "field": "*",
+                                                                            "alias": "total"
+                                                                        },
+                                                                        {
+                                                                            "operator": "groupby",
+                                                                            "alias": "uuid",
+                                                                            "field": "zTPProfiles.uuid"
+                                                                        },
+                                                                        {
+                                                                            "operator": "groupby",
+                                                                            "alias": "name",
+                                                                            "field": "zTPProfiles.name"
+                                                                        }
+                                                                    ]
+                                                                },
+                                                                "mapping": {
+                                                                    "fieldName": "zTPProfiles",
+                                                                    "displayValues": [
+                                                                        "name"
+                                                                    ]
+                                                                },
+                                                                "assignedToSetting": "all",
+                                                                "aggregate": true,
+                                                                "title": "ZTP Profile",
+                                                                "resource": "devices",
+                                                                "chart": "donut",
+                                                                "showCount": true
+                                                            }
+                                                        }
+                                                    ],
+                                                    "style": "col-lg-4"
+                                                },
+                                                {
+                                                    "widgets": [
+                                                        {
+                                                            "type": "chart",
+                                                            "config": {
+                                                                "wid": "caaed244-3179-471e-a967-b473a8777cfb",
+                                                                "widgetAlwaysDisplay": true,
+                                                                "showTabularData": false,
+                                                                "query": {
+                                                                    "sort": [
+                                                                        {
+                                                                            "field": "zTPPhase.orderIndex",
+                                                                            "direction": "ASC"
+                                                                        }
+                                                                    ],
+                                                                    "limit": 2147483647,
+                                                                    "logic": "OR",
+                                                                    "filters": [
+                                                                        {
+                                                                            "logic": "AND",
+                                                                            "filters": [
+                                                                                {
+                                                                                    "field": "zTPPhaseCompleted",
+                                                                                    "operator": "gt",
+                                                                                    "value": "{{getRelativeDate(0,0,0,0,-15,\"end\")}}",
+                                                                                    "type": "datetime"
+                                                                                }
+                                                                            ],
+                                                                            "_field": "zTPPhaseCompleted",
+                                                                            "_value": {
+                                                                                "differenceType": "mins",
+                                                                                "differenceValue": -15
+                                                                            },
+                                                                            "_operator": "gt",
+                                                                            "type": "datetime"
+                                                                        },
+                                                                        {
+                                                                            "field": "zTPPhaseStarted",
+                                                                            "value": "false",
+                                                                            "operator": "isnull",
+                                                                            "type": "datetime"
+                                                                        },
+                                                                        {
+                                                                            "field": "zTPProfiles",
+                                                                            "operator": "isnull",
+                                                                            "value": "false",
+                                                                            "_value": {
+                                                                                "display": "",
+                                                                                "itemValue": "",
+                                                                                "@id": "false"
+                                                                            },
+                                                                            "type": "object"
+                                                                        }
+                                                                    ],
+                                                                    "aggregates": [
+                                                                        {
+                                                                            "operator": "countdistinct",
+                                                                            "field": "*",
+                                                                            "alias": "total"
+                                                                        },
+                                                                        {
+                                                                            "operator": "groupby",
+                                                                            "alias": "zTPPhase",
+                                                                            "field": "zTPPhase.itemValue"
+                                                                        },
+                                                                        {
+                                                                            "operator": "groupby",
+                                                                            "alias": "color",
+                                                                            "field": "zTPPhase.color"
+                                                                        },
+                                                                        {
+                                                                            "operator": "groupby",
+                                                                            "alias": "orderIndex",
+                                                                            "field": "zTPPhase.orderIndex"
+                                                                        }
+                                                                    ]
+                                                                },
+                                                                "mapping": {
+                                                                    "fieldName": "zTPPhase",
+                                                                    "displayValues": [
+                                                                        "name"
+                                                                    ]
+                                                                },
+                                                                "assignedToSetting": "all",
+                                                                "aggregate": true,
+                                                                "title": "ZTP Phase",
+                                                                "resource": "devices",
+                                                                "chart": "donut",
+                                                                "showCount": true
+                                                            }
+                                                        }
+                                                    ],
+                                                    "style": "col-lg-4"
+                                                },
+                                                {
+                                                    "widgets": [
+                                                        {
+                                                            "type": "chart",
+                                                            "config": {
+                                                                "wid": "7d088ed9-3bb4-42a7-8733-940e0c53e98a",
+                                                                "widgetAlwaysDisplay": true,
+                                                                "showTabularData": false,
+                                                                "query": {
+                                                                    "sort": [],
+                                                                    "limit": 2147483647,
+                                                                    "logic": "OR",
+                                                                    "filters": [
+                                                                        {
+                                                                            "logic": "AND",
+                                                                            "filters": [
+                                                                                {
+                                                                                    "field": "zTPPhaseCompleted",
+                                                                                    "operator": "gt",
+                                                                                    "value": "{{getRelativeDate(0,0,0,0,-15,\"end\")}}",
+                                                                                    "type": "datetime"
+                                                                                }
+                                                                            ],
+                                                                            "_field": "zTPPhaseCompleted",
+                                                                            "_value": {
+                                                                                "differenceType": "mins",
+                                                                                "differenceValue": -15
+                                                                            },
+                                                                            "_operator": "gt",
+                                                                            "type": "datetime"
+                                                                        },
+                                                                        {
+                                                                            "field": "zTPPhaseStarted",
+                                                                            "value": "false",
+                                                                            "operator": "isnull",
+                                                                            "type": "datetime"
+                                                                        },
+                                                                        {
+                                                                            "field": "zTPProfiles",
+                                                                            "operator": "isnull",
+                                                                            "value": "false",
+                                                                            "_value": {
+                                                                                "display": "",
+                                                                                "itemValue": "",
+                                                                                "@id": "false"
+                                                                            },
+                                                                            "type": "object"
+                                                                        }
+                                                                    ],
+                                                                    "aggregates": [
+                                                                        {
+                                                                            "operator": "countdistinct",
+                                                                            "field": "*",
+                                                                            "alias": "total"
+                                                                        },
+                                                                        {
+                                                                            "operator": "groupby",
+                                                                            "alias": "zTPStatus",
+                                                                            "field": "zTPStatus"
+                                                                        }
+                                                                    ]
+                                                                },
+                                                                "mapping": {
+                                                                    "fieldName": "zTPStatus"
+                                                                },
+                                                                "assignedToSetting": "all",
+                                                                "aggregate": true,
+                                                                "title": "ZTP Status",
+                                                                "resource": "devices",
+                                                                "chart": "donut",
+                                                                "showCount": true
+                                                            }
+                                                        }
+                                                    ],
+                                                    "style": "col-lg-4"
+                                                }
+                                            ],
+                                            "wid": "a5f97c55-838b-46be-9c6b-e21371d0b192",
+                                            "collapsible": false,
+                                            "collapsibleIndex": 0,
+                                            "_collapsed": false
+                                        }
+                                    ]
                                 }
                             }
                         ],
@@ -54,7 +336,7 @@
                     }
                 ],
                 "wid": "8b6203f5-fea3-4592-a7f7-8f663e7fd2d0",
-                "collapsible": false,
+                "collapsible": true,
                 "collapsibleIndex": 0,
                 "_collapsed": false
             },

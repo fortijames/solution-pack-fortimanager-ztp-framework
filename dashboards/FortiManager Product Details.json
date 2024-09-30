@@ -16,6 +16,157 @@
                     {
                         "widgets": [
                             {
+                                "type": "sectionHeader",
+                                "config": {
+                                    "wid": "ab572577-687f-4af2-a73e-7db0c04e0367",
+                                    "query": {
+                                        "filters": [],
+                                        "sort": [],
+                                        "limit": 10
+                                    },
+                                    "editorType": "html",
+                                    "sectionText": "<p><span class=\"cs-richtext-field\" title=\" Announcements ID 1 - Description\">{{description}}<\/span><\/p>",
+                                    "fieldType": "record fields",
+                                    "resource": "announcements",
+                                    "resourceId": 1
+                                }
+                            }
+                        ],
+                        "style": "col-lg-3"
+                    },
+                    {
+                        "widgets": [
+                            {
+                                "type": "rows",
+                                "config": {
+                                    "wid": "86874656-861b-46ad-908b-44938f00de29",
+                                    "rows": [
+                                        {
+                                            "columns": [
+                                                {
+                                                    "widgets": [
+                                                        {
+                                                            "type": "chart",
+                                                            "config": {
+                                                                "wid": "ce900c28-57b9-4262-b602-d591f89196e5",
+                                                                "widgetAlwaysDisplay": true,
+                                                                "showTabularData": false,
+                                                                "query": {
+                                                                    "sort": [],
+                                                                    "limit": 2147483647,
+                                                                    "logic": "AND",
+                                                                    "filters": [],
+                                                                    "aggregates": [
+                                                                        {
+                                                                            "operator": "select",
+                                                                            "alias": "platform",
+                                                                            "field": "platform"
+                                                                        },
+                                                                        {
+                                                                            "operator": "select",
+                                                                            "alias": "createDate",
+                                                                            "field": "createDate"
+                                                                        }
+                                                                    ]
+                                                                },
+                                                                "mapping": {
+                                                                    "fieldName": "platform",
+                                                                    "dateFieldName": "createDate",
+                                                                    "timeScope": "day",
+                                                                    "dateFormat": "%Y-%b-%e"
+                                                                },
+                                                                "assignedToSetting": "all",
+                                                                "aggregate": true,
+                                                                "title": "Devices Added by Platform",
+                                                                "resource": "devices",
+                                                                "chart": "timeseries"
+                                                            }
+                                                        }
+                                                    ],
+                                                    "style": "col-lg-6"
+                                                },
+                                                {
+                                                    "widgets": [
+                                                        {
+                                                            "type": "chart",
+                                                            "config": {
+                                                                "wid": "097b81f4-eea7-4bf0-aadc-4998e845ada0",
+                                                                "widgetAlwaysDisplay": true,
+                                                                "showTabularData": false,
+                                                                "query": {
+                                                                    "sort": [
+                                                                        {
+                                                                            "field": "managers.managerName",
+                                                                            "direction": "ASC"
+                                                                        },
+                                                                        {
+                                                                            "field": "aDOM",
+                                                                            "direction": "ASC"
+                                                                        }
+                                                                    ],
+                                                                    "limit": 2147483647,
+                                                                    "logic": "AND",
+                                                                    "filters": [],
+                                                                    "aggregates": [
+                                                                        {
+                                                                            "operator": "countdistinct",
+                                                                            "field": "*",
+                                                                            "alias": "total"
+                                                                        },
+                                                                        {
+                                                                            "operator": "select",
+                                                                            "alias": "managers__managerName",
+                                                                            "field": "managers.managerName"
+                                                                        },
+                                                                        {
+                                                                            "operator": "groupby",
+                                                                            "alias": "managers__uuid",
+                                                                            "field": "managers.uuid"
+                                                                        },
+                                                                        {
+                                                                            "operator": "groupby",
+                                                                            "alias": "aDOM",
+                                                                            "field": "aDOM"
+                                                                        }
+                                                                    ]
+                                                                },
+                                                                "mapping": {
+                                                                    "firstGrouping": "managers",
+                                                                    "secondGrouping": "aDOM"
+                                                                },
+                                                                "assignedToSetting": "onlyMe",
+                                                                "aggregate": true,
+                                                                "title": "Device Per ADOM",
+                                                                "resource": "devices",
+                                                                "chart": "bar"
+                                                            }
+                                                        }
+                                                    ],
+                                                    "style": "col-lg-6"
+                                                }
+                                            ],
+                                            "wid": "f5f99e1d-3d8e-473e-bd9a-5b1fd54fd382",
+                                            "collapsible": false,
+                                            "collapsibleIndex": 0,
+                                            "_collapsed": false
+                                        }
+                                    ]
+                                }
+                            }
+                        ],
+                        "style": "col-lg-9"
+                    }
+                ],
+                "wid": "3301bbaf-88a3-4b09-af1d-cc6d26faffa9",
+                "collapsible": false,
+                "collapsibleIndex": 0,
+                "_collapsed": false
+            },
+            {
+                "columns": [
+                    {
+                        "widgets": [
+                            {
                                 "type": "chart",
                                 "config": {
                                     "wid": "d9702d71-06aa-4f02-bff1-72257d4cea24",
