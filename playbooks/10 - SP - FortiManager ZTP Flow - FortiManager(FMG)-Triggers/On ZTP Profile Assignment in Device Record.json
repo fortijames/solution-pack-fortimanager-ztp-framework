@@ -131,34 +131,6 @@
         },
         {
             "@type": "WorkflowStep",
-            "name": "comment_device",
-            "description": null,
-            "arguments": {
-                "message": {
-                    "tags": [],
-                    "type": "\/api\/3\/picklists\/ff599189-3eeb-4c86-acb0-a7915e85ac3b",
-                    "tenant": "",
-                    "thread": false,
-                    "content": "<p>ZTP Profile ( {{vars.ztp_profile}} ) assigned and starting ZTP Phase ( {{vars.ztp_start_phase}} ) on device now.<\/p>",
-                    "records": ""
-                },
-                "resource": [],
-                "operation": "Append",
-                "collection": "{{vars.input.records[0]['@id']}}",
-                "__recommend": [],
-                "collectionType": "\/api\/3\/devices",
-                "fieldOperation": [],
-                "step_variables": []
-            },
-            "status": null,
-            "top": "40",
-            "left": "680",
-            "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928722",
-            "group": null,
-            "uuid": "7b753090-3efe-4f50-bd0b-54049b326390"
-        },
-        {
-            "@type": "WorkflowStep",
             "name": "Device Deleted",
             "description": null,
             "arguments": {
@@ -216,6 +188,7 @@
             "name": "setup_vars",
             "description": null,
             "arguments": {
+                "empty_value": "''",
                 "record_data": "{{vars.input.records}}",
                 "ztp_profile": "{{vars.input.records[0].zTPProfiles.name}}",
                 "ztp_clear_mft": "{{ vars.input.records[0].zTPProfiles.clearLinkedMetafieldTemplates }}",
@@ -286,6 +259,41 @@
             "stepType": "\/api\/3\/workflow_step_types\/9300bf69-5063-486d-b3a6-47eb9da24872",
             "group": null,
             "uuid": "19498332-fcb9-4816-943a-487359b29659"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "start_device",
+            "description": null,
+            "arguments": {
+                "message": {
+                    "tags": [],
+                    "type": "\/api\/3\/picklists\/ff599189-3eeb-4c86-acb0-a7915e85ac3b",
+                    "tenant": "",
+                    "thread": false,
+                    "content": "<p>ZTP Profile ( {{vars.ztp_profile}} ) assigned and starting ZTP Phase ( {{vars.ztp_start_phase}} ) on device now.<\/p>",
+                    "records": ""
+                },
+                "resource": {
+                    "zTPPhase": "{{vars.empty_value}}",
+                    "zTPStatus": "{{vars.empty_value}}",
+                    "zTPPhaseLast": "{{vars.empty_value}}",
+                    "zTPStatusHTML": "<p>{{vars.empty_value}}<\/p>",
+                    "zTPPhaseStarted": "{{vars.empty_value}}",
+                    "zTPPhaseCompleted": "{{vars.empty_value}}"
+                },
+                "operation": "Append",
+                "collection": "{{vars.input.records[0]['@id']}}",
+                "__recommend": [],
+                "collectionType": "\/api\/3\/devices",
+                "fieldOperation": [],
+                "step_variables": []
+            },
+            "status": null,
+            "top": "40",
+            "left": "680",
+            "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928722",
+            "group": null,
+            "uuid": "7b753090-3efe-4f50-bd0b-54049b326390"
         },
         {
             "@type": "WorkflowStep",
