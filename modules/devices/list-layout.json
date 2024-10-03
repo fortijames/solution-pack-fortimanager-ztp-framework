@@ -58,6 +58,93 @@
                                                                         },
                                                                         {
                                                                             "operator": "groupby",
+                                                                            "alias": "uuid",
+                                                                            "field": "managers.uuid"
+                                                                        },
+                                                                        {
+                                                                            "operator": "groupby",
+                                                                            "alias": "managerName",
+                                                                            "field": "managers.managerName"
+                                                                        }
+                                                                    ]
+                                                                },
+                                                                "mapping": {
+                                                                    "fieldName": "managers",
+                                                                    "displayValues": [
+                                                                        "managerName"
+                                                                    ]
+                                                                },
+                                                                "assignedToSetting": "all",
+                                                                "aggregate": true,
+                                                                "title": "Managers",
+                                                                "resource": "devices",
+                                                                "chart": "pie"
+                                                            }
+                                                        }
+                                                    ],
+                                                    "style": "col-lg-3"
+                                                },
+                                                {
+                                                    "widgets": [
+                                                        {
+                                                            "type": "chart",
+                                                            "config": {
+                                                                "wid": "f006a7ff-cb8f-4e78-ba41-64f0f2a80273",
+                                                                "widgetAlwaysDisplay": true,
+                                                                "showTabularData": false,
+                                                                "query": {
+                                                                    "sort": [],
+                                                                    "limit": 2147483647,
+                                                                    "logic": "AND",
+                                                                    "filters": [],
+                                                                    "aggregates": [
+                                                                        {
+                                                                            "operator": "countdistinct",
+                                                                            "field": "*",
+                                                                            "alias": "total"
+                                                                        },
+                                                                        {
+                                                                            "operator": "groupby",
+                                                                            "alias": "aDOM",
+                                                                            "field": "aDOM"
+                                                                        }
+                                                                    ]
+                                                                },
+                                                                "mapping": {
+                                                                    "fieldName": "aDOM"
+                                                                },
+                                                                "assignedToSetting": "all",
+                                                                "aggregate": true,
+                                                                "title": "ADOMs",
+                                                                "resource": "devices",
+                                                                "chart": "pie"
+                                                            }
+                                                        }
+                                                    ],
+                                                    "style": "col-lg-3",
+                                                    "collapsedText": "Device Management"
+                                                },
+                                                {
+                                                    "widgets": [
+                                                        {
+                                                            "type": "chart",
+                                                            "config": {
+                                                                "wid": "9f5cb2f5-25b8-46bc-9a41-9076bd5f85a8",
+                                                                "widgetAlwaysDisplay": true,
+                                                                "showTabularData": false,
+                                                                "query": {
+                                                                    "sort": [],
+                                                                    "limit": 2147483647,
+                                                                    "logic": "AND",
+                                                                    "filters": [],
+                                                                    "aggregates": [
+                                                                        {
+                                                                            "operator": "countdistinct",
+                                                                            "field": "*",
+                                                                            "alias": "total"
+                                                                        },
+                                                                        {
+                                                                            "operator": "groupby",
                                                                             "alias": "platform",
                                                                             "field": "platform"
                                                                         }
@@ -68,13 +155,13 @@
                                                                 },
                                                                 "assignedToSetting": "all",
                                                                 "aggregate": true,
-                                                                "title": "Device Platform",
+                                                                "title": "Device Platforms",
                                                                 "resource": "devices",
                                                                 "chart": "pie"
                                                             }
                                                         }
                                                     ],
-                                                    "style": "col-lg-4"
+                                                    "style": "col-lg-3"
                                                 },
                                                 {
                                                     "widgets": [
@@ -107,14 +194,23 @@
                                                                 },
                                                                 "assignedToSetting": "all",
                                                                 "aggregate": true,
-                                                                "title": "Device Firmware",
+                                                                "title": "Device Firmware Versions",
                                                                 "resource": "devices",
                                                                 "chart": "pie"
                                                             }
                                                         }
                                                     ],
-                                                    "style": "col-lg-4"
-                                                },
+                                                    "style": "col-lg-3"
+                                                }
+                                            ],
+                                            "wid": "a6646ee7-cd00-4042-afd1-c2050628396b",
+                                            "collapsible": false,
+                                            "collapsibleIndex": 0,
+                                            "_collapsed": false,
+                                            "container": true
+                                        },
+                                        {
+                                            "columns": [
                                                 {
                                                     "widgets": [
                                                         {
@@ -146,60 +242,13 @@
                                                                 },
                                                                 "assignedToSetting": "all",
                                                                 "aggregate": true,
-                                                                "title": "Management Tunnel",
+                                                                "title": "Management Tunnels",
                                                                 "resource": "devices",
                                                                 "chart": "pie"
                                                             }
                                                         }
                                                     ],
-                                                    "style": "col-lg-4"
-                                                }
-                                            ],
-                                            "wid": "a6646ee7-cd00-4042-afd1-c2050628396b",
-                                            "collapsible": false,
-                                            "collapsibleIndex": 0,
-                                            "_collapsed": false
-                                        },
-                                        {
-                                            "columns": [
-                                                {
-                                                    "widgets": [
-                                                        {
-                                                            "type": "chart",
-                                                            "config": {
-                                                                "wid": "f5f37896-36b3-4af5-9bab-ff5d2d9bcd06",
-                                                                "widgetAlwaysDisplay": true,
-                                                                "showTabularData": false,
-                                                                "query": {
-                                                                    "sort": [],
-                                                                    "limit": 2147483647,
-                                                                    "logic": "AND",
-                                                                    "filters": [],
-                                                                    "aggregates": [
-                                                                        {
-                                                                            "operator": "countdistinct",
-                                                                            "field": "*",
-                                                                            "alias": "total"
-                                                                        },
-                                                                        {
-                                                                            "operator": "groupby",
-                                                                            "alias": "configStatus",
-                                                                            "field": "configStatus"
-                                                                        }
-                                                                    ]
-                                                                },
-                                                                "mapping": {
-                                                                    "fieldName": "configStatus"
-                                                                },
-                                                                "assignedToSetting": "all",
-                                                                "aggregate": true,
-                                                                "title": "Config Status",
-                                                                "resource": "devices",
-                                                                "chart": "pie"
-                                                            }
-                                                        }
-                                                    ],
-                                                    "style": "col-lg-4"
+                                                    "style": "col-lg-3"
                                                 },
                                                 {
                                                     "widgets": [
@@ -232,13 +281,53 @@
                                                                 },
                                                                 "assignedToSetting": "all",
                                                                 "aggregate": true,
-                                                                "title": "ConfigDB Status",
+                                                                "title": "ConfigDB States",
                                                                 "resource": "devices",
                                                                 "chart": "pie"
                                                             }
                                                         }
                                                     ],
-                                                    "style": "col-lg-4"
+                                                    "style": "col-lg-3",
+                                                    "collapsedText": "Device State"
+                                                },
+                                                {
+                                                    "widgets": [
+                                                        {
+                                                            "type": "chart",
+                                                            "config": {
+                                                                "wid": "f5f37896-36b3-4af5-9bab-ff5d2d9bcd06",
+                                                                "widgetAlwaysDisplay": true,
+                                                                "showTabularData": false,
+                                                                "query": {
+                                                                    "sort": [],
+                                                                    "limit": 2147483647,
+                                                                    "logic": "AND",
+                                                                    "filters": [],
+                                                                    "aggregates": [
+                                                                        {
+                                                                            "operator": "countdistinct",
+                                                                            "field": "*",
+                                                                            "alias": "total"
+                                                                        },
+                                                                        {
+                                                                            "operator": "groupby",
+                                                                            "alias": "configStatus",
+                                                                            "field": "configStatus"
+                                                                        }
+                                                                    ]
+                                                                },
+                                                                "mapping": {
+                                                                    "fieldName": "configStatus"
+                                                                },
+                                                                "assignedToSetting": "all",
+                                                                "aggregate": true,
+                                                                "title": "Config States",
+                                                                "resource": "devices",
+                                                                "chart": "pie"
+                                                            }
+                                                        }
+                                                    ],
+                                                    "style": "col-lg-3"
                                                 },
                                                 {
                                                     "widgets": [
@@ -271,19 +360,20 @@
                                                                 },
                                                                 "assignedToSetting": "all",
                                                                 "aggregate": true,
-                                                                "title": "Policy Package Status",
+                                                                "title": "Policy Package States",
                                                                 "resource": "devices",
                                                                 "chart": "pie"
                                                             }
                                                         }
                                                     ],
-                                                    "style": "col-lg-4"
+                                                    "style": "col-lg-3"
                                                 }
                                             ],
                                             "wid": "d0bb5115-9221-4688-bb27-b57deb6b9a2b",
                                             "collapsible": false,
                                             "collapsibleIndex": 0,
-                                            "_collapsed": false
+                                            "_collapsed": false,
+                                            "container": true
                                         }
                                     ]
                                 }
@@ -295,7 +385,8 @@
                 "wid": "9277e93a-cbc9-4e9e-9974-5f5900d2969e",
                 "collapsible": true,
                 "collapsibleIndex": 0,
-                "_collapsed": false
+                "_collapsed": false,
+                "container": true
             },
             {
                 "columns": [

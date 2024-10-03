@@ -4,7 +4,7 @@
     "name": "ZTP Phase Transition on Device from Device Record",
     "aliasName": null,
     "tag": null,
-    "description": "Find all devices linked to this ztp profile and change the phase.",
+    "description": "Set ZTP Phase on device.",
     "isActive": true,
     "debug": false,
     "singleRecordExecution": false,
@@ -43,10 +43,11 @@
             "description": null,
             "arguments": {
                 "route": "91074a4b-4e8c-4176-ae0a-5881105a21e2",
-                "title": "Start ZTP Phase on Device",
+                "title": "Start ZTP Phase",
                 "resources": [
                     "devices"
                 ],
+                "__triggerLimit": true,
                 "inputVariables": [
                     {
                         "name": "zTPPhase",
@@ -120,6 +121,10 @@
                                     "conditions": null,
                                     "visibility": "visible"
                                 },
+                                "c3795e1c-33a5-46c2-89fa-d1eef6d548a5": {
+                                    "conditions": null,
+                                    "visibility": "visible"
+                                },
                                 "e5b72509-059f-4101-8576-4ae63a25d2d9": {
                                     "conditions": null,
                                     "visibility": "visible"
@@ -148,6 +153,7 @@
                     }
                 },
                 "_promptexpanded": true,
+                "triggerOnSource": true,
                 "displayConditions": {
                     "devices": {
                         "sort": [],
@@ -182,6 +188,11 @@
                 },
                 "executeButtonText": "Execute",
                 "noRecordExecution": false,
+                "showToasterMessage": {
+                    "visible": false,
+                    "messageVisible": true
+                },
+                "triggerOnReplicate": false,
                 "singleRecordExecution": true
             },
             "status": null,

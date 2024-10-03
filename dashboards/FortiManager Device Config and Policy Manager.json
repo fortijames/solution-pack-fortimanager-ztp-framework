@@ -48,6 +48,41 @@
                                                         {
                                                             "type": "chart",
                                                             "config": {
+                                                                "wid": "a2d156fb-80e7-41f5-951e-a24ac12fa317",
+                                                                "widgetAlwaysDisplay": true,
+                                                                "showTabularData": false,
+                                                                "query": {
+                                                                    "sort": [],
+                                                                    "limit": 2147483647,
+                                                                    "logic": "AND",
+                                                                    "filters": [],
+                                                                    "aggregates": [
+                                                                        {
+                                                                            "operator": "countdistinct",
+                                                                            "field": "*",
+                                                                            "alias": "total"
+                                                                        },
+                                                                        {
+                                                                            "operator": "groupby",
+                                                                            "alias": "configDBStatus",
+                                                                            "field": "configDBStatus"
+                                                                        }
+                                                                    ]
+                                                                },
+                                                                "mapping": {
+                                                                    "fieldName": "configDBStatus"
+                                                                },
+                                                                "assignedToSetting": "onlyMe",
+                                                                "aggregate": true,
+                                                                "title": "ConfigDB Status",
+                                                                "resource": "devices",
+                                                                "chart": "donut",
+                                                                "showCount": true
+                                                            }
+                                                        },
+                                                        {
+                                                            "type": "chart",
+                                                            "config": {
                                                                 "wid": "af2537f5-63c7-4a51-838f-ed33136c0110",
                                                                 "widgetAlwaysDisplay": true,
                                                                 "showTabularData": false,
@@ -81,54 +116,14 @@
                                                             }
                                                         }
                                                     ],
-                                                    "style": "col-lg-3"
+                                                    "style": "col-lg-4"
                                                 },
                                                 {
                                                     "widgets": [
                                                         {
                                                             "type": "chart",
                                                             "config": {
-                                                                "wid": "a2d156fb-80e7-41f5-951e-a24ac12fa317",
-                                                                "widgetAlwaysDisplay": true,
-                                                                "showTabularData": false,
-                                                                "query": {
-                                                                    "sort": [],
-                                                                    "limit": 2147483647,
-                                                                    "logic": "AND",
-                                                                    "filters": [],
-                                                                    "aggregates": [
-                                                                        {
-                                                                            "operator": "countdistinct",
-                                                                            "field": "*",
-                                                                            "alias": "total"
-                                                                        },
-                                                                        {
-                                                                            "operator": "groupby",
-                                                                            "alias": "configDBStatus",
-                                                                            "field": "configDBStatus"
-                                                                        }
-                                                                    ]
-                                                                },
-                                                                "mapping": {
-                                                                    "fieldName": "configDBStatus"
-                                                                },
-                                                                "assignedToSetting": "onlyMe",
-                                                                "aggregate": true,
-                                                                "title": "ConfigDB Status",
-                                                                "resource": "devices",
-                                                                "chart": "donut",
-                                                                "showCount": true
-                                                            }
-                                                        }
-                                                    ],
-                                                    "style": "col-lg-3"
-                                                },
-                                                {
-                                                    "widgets": [
-                                                        {
-                                                            "type": "chart",
-                                                            "config": {
-                                                                "wid": "19638adb-566b-41e0-a532-0cb6767059ac",
+                                                                "wid": "be18c6fb-44fa-4c01-8c92-6ba695a16885",
                                                                 "widgetAlwaysDisplay": true,
                                                                 "showTabularData": false,
                                                                 "query": {
@@ -159,9 +154,44 @@
                                                                 "chart": "donut",
                                                                 "showCount": true
                                                             }
+                                                        },
+                                                        {
+                                                            "type": "chart",
+                                                            "config": {
+                                                                "wid": "19638adb-566b-41e0-a532-0cb6767059ac",
+                                                                "widgetAlwaysDisplay": true,
+                                                                "showTabularData": false,
+                                                                "query": {
+                                                                    "sort": [],
+                                                                    "limit": 2147483647,
+                                                                    "logic": "AND",
+                                                                    "filters": [],
+                                                                    "aggregates": [
+                                                                        {
+                                                                            "operator": "countdistinct",
+                                                                            "field": "*",
+                                                                            "alias": "total"
+                                                                        },
+                                                                        {
+                                                                            "operator": "groupby",
+                                                                            "alias": "provisioningTemplates",
+                                                                            "field": "provisioningTemplates"
+                                                                        }
+                                                                    ]
+                                                                },
+                                                                "mapping": {
+                                                                    "fieldName": "provisioningTemplates"
+                                                                },
+                                                                "assignedToSetting": "onlyMe",
+                                                                "aggregate": true,
+                                                                "title": "Provisioning Template",
+                                                                "resource": "devices",
+                                                                "chart": "donut",
+                                                                "showCount": true
+                                                            }
                                                         }
                                                     ],
-                                                    "style": "col-lg-3"
+                                                    "style": "col-lg-4"
                                                 },
                                                 {
                                                     "widgets": [
@@ -199,14 +229,51 @@
                                                                 "chart": "donut",
                                                                 "showCount": true
                                                             }
+                                                        },
+                                                        {
+                                                            "type": "chart",
+                                                            "config": {
+                                                                "wid": "0808c300-c358-4fb1-a6e7-f9a471bb31de",
+                                                                "widgetAlwaysDisplay": true,
+                                                                "showTabularData": false,
+                                                                "query": {
+                                                                    "sort": [],
+                                                                    "limit": 2147483647,
+                                                                    "logic": "AND",
+                                                                    "filters": [],
+                                                                    "aggregates": [
+                                                                        {
+                                                                            "operator": "countdistinct",
+                                                                            "field": "*",
+                                                                            "alias": "total"
+                                                                        },
+                                                                        {
+                                                                            "operator": "groupby",
+                                                                            "alias": "policyPackage",
+                                                                            "field": "policyPackage"
+                                                                        }
+                                                                    ]
+                                                                },
+                                                                "mapping": {
+                                                                    "fieldName": "policyPackage"
+                                                                },
+                                                                "assignedToSetting": "onlyMe",
+                                                                "aggregate": true,
+                                                                "title": "Policy Package",
+                                                                "resource": "devices",
+                                                                "chart": "donut",
+                                                                "showCount": true
+                                                            }
                                                         }
                                                     ],
-                                                    "style": "col-lg-3"
+                                                    "style": "col-lg-4"
                                                 }
                                             ],
                                             "wid": "5bbfa682-eed4-43cf-9f0e-6cfdf1cdafc5",
                                             "collapsible": false,
-                                            "collapsibleIndex": 0
+                                            "collapsibleIndex": 0,
+                                            "_collapsed": false,
+                                            "container": true
                                         }
                                     ]
                                 }
@@ -218,7 +285,8 @@
                 "wid": "8b6203f5-fea3-4592-a7f7-8f663e7fd2d0",
                 "collapsible": false,
                 "collapsibleIndex": 0,
-                "_collapsed": false
+                "_collapsed": false,
+                "container": true
             },
             {
                 "columns": [
