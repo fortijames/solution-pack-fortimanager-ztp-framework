@@ -2,7 +2,7 @@
 |--------------------------------------------|
 
 # Change Log
- - 20240913-20241003 (1.0.5)
+ - 20240913-20241008 (1.0.5)
    - Update device synch to include hostname. 
    - Update special fields in the ZTP step to include ADOM. 
    - Update `> monitor task complete` to continue if it errors out but return an `error:True` so that a stuck task can show `Failed`. 
@@ -16,6 +16,9 @@
    - Modify playbook `On ZTP Profile Assignment in Device Record` to clear all ZTP fields when a new profile is assigned.
    - Modify playbook `> fmg exec task - return standard output of results.json` to handle latest `task_track()` return from `pyfmg`. 
    - Create playbook button `ZTP Phase Retry Failed on Device from Device Record.json` for devices that have failed a phase. 
+   - Add new fields for storing ZTP Start/Stop times per device and update playbooks to update these in the ZTP Flow. 
+   - Enhance ZTP Phase comments on a device. 
+   - Modify `On ZTP Phase (Action Step) in Device Record.json` to better handle error conditions and set the device to fail instead of failing the playbook on problems. 
    
 
 - 20240701 (1.0.4)
