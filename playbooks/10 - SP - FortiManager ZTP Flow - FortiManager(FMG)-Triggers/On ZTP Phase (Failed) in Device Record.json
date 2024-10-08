@@ -40,6 +40,8 @@
             "description": null,
             "arguments": {
                 "ztp_status": "Failed",
+                "ztp_profile": "{{vars.input.records[0].zTPProfiles.name}}",
+                "ztp_phase_last": "{{vars.input.records[0].zTPPhaseLast.itemValue}}",
                 "ztp_status_html": "<span style=\"border: 2px solid RED; color: red; border-radius: 5px; background-color: black; font-family: verdana; font-weight: bold; font-size: 10px; padding: 2px;\"> Failed <\/span>"
             },
             "status": null,
@@ -117,6 +119,14 @@
             "name": "update_profile_assignment",
             "description": null,
             "arguments": {
+                "message": {
+                    "tags": [],
+                    "type": "\/api\/3\/picklists\/ff599189-3eeb-4c86-acb0-a7915e85ac3b",
+                    "tenant": "",
+                    "thread": false,
+                    "content": "<p>ZTP Profile ( {{vars.ztp_profile}} ) <span style=\"color: rgb(224, 62, 45);\">failed<\/span> phase ( {{vars.ztp_phase_last}} ).<\/p>\n<p><br><span style=\"border: 2px solid GREY; color: grey; border-radius: 5px; background-color: black; font-family: verdana; font-weight: bold; font-size: 10px; padding: 2px;\">{{arrow.utcnow().format(\"HH:mm:ss ZZ\")}}<\/span><\/p>",
+                    "records": ""
+                },
                 "resource": {
                     "zTPStatus": "{{vars.ztp_status}}",
                     "zTPStatusHTML": "<p>{{vars.ztp_status_html}}<\/p>"
@@ -169,7 +179,7 @@
         }
     ],
     "groups": [],
-    "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+    "priority": "\/api\/3\/picklists\/df314249-88c8-4778-ab55-8aeafbe932cb",
     "uuid": "11238936-7f87-43cd-b93a-022c5b22931f",
     "owners": [],
     "isPrivate": false,

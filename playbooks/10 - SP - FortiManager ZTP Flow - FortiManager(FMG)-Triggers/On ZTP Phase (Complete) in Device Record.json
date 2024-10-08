@@ -89,9 +89,11 @@
             "name": "set_initial_vars",
             "description": null,
             "arguments": {
+                "ztp_profile": "{{vars.input.records[0].zTPProfiles.name}}",
                 "skip_delete_flag": "{{vars.input.records[0].zTPProfiles.skipDeleteDevice|default(false)}}",
                 "ztp_profile_mode": "{{vars.input.records[0].zTPProfiles.profileMode\n  | fromIRI \n  | json_query('itemValue')\n}}",
                 "ztp_profile_retain": "{%- set ret = false -%}\n{%- if \"retainProfileAssignment\" in vars.input.records[0].zTPProfiles -%}\n  {%- if vars.input.records[0].zTPProfiles.retainProfileAssignment == True -%}\n    {%- set ret = True -%}\n  {%- endif -%}\n{%- endif -%}\n{{ret}}",
+                "ztp_profile_duration": "{%- macro format_seconds(seconds) -%}\n    {%- set hours = seconds \/\/ 3600 -%}\n    {%- set minutes = (seconds % 3600) \/\/ 60 -%}\n    {%- set remaining_seconds = seconds % 60 -%}\n    {{ hours }}h {{ minutes }}m {{ remaining_seconds }}s\n{%- endmacro -%}\n{%- set seconds = arrow.utcnow().int_timestamp - arrow.get(vars.input.records[0].zTPProfileStarted).int_timestamp -%}\n{{format_seconds(seconds)}}",
                 "ztp_profile_next_iri": "{{vars.input.records[0].zTPProfiles.zTPProfileNext\n  | fromIRI\n  | json_query('\"@id\"')\n}}",
                 "change_profile_assignment_modes": "[\n\"Manual\",\n\"Onboard\",\n\"Decomission\"\n]"
             },
@@ -168,8 +170,17 @@
             "description": null,
             "arguments": {
                 "when": "{{vars.ztp_profile_next_iri != None or vars.ztp_profile_retain == False}}",
+                "message": {
+                    "tags": [],
+                    "type": "\/api\/3\/picklists\/ff599189-3eeb-4c86-acb0-a7915e85ac3b",
+                    "tenant": "",
+                    "thread": false,
+                    "content": "<p>ZTP Profile ( {{vars.ztp_profile}} ) <span style=\"color: rgb(45, 194, 107);\">complete<\/span> in&nbsp; <span style=\"border: 2px solid BLUE; color: white; border-radius: 5px; background-color: black; font-family: verdana; font-weight: bold; font-size: 10px; padding: 2px;\">{{vars.ztp_profile_duration}}<\/span>.<\/p>\n<p><br><span style=\"border: 2px solid GREY; color: grey; border-radius: 5px; background-color: black; font-family: verdana; font-weight: bold; font-size: 10px; padding: 2px;\">{{arrow.utcnow().format(\"YYYY-MM-DD HH:mm:ss ZZ\")}}<\/span><\/p>",
+                    "records": ""
+                },
                 "resource": {
-                    "zTPProfiles": "{{vars.ztp_profile_next_iri}}"
+                    "zTPProfiles": "{{vars.ztp_profile_next_iri}}",
+                    "zTPProfileCompleted": "{{arrow.utcnow().int_timestamp}}"
                 },
                 "operation": "Append",
                 "collection": "{{vars.input.records[0]['@id']}}",
@@ -249,7 +260,7 @@
         }
     ],
     "groups": [],
-    "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+    "priority": "\/api\/3\/picklists\/df314249-88c8-4778-ab55-8aeafbe932cb",
     "uuid": "bfe7d517-1eaa-43ca-a9f2-c85490f8f558",
     "owners": [],
     "isPrivate": false,

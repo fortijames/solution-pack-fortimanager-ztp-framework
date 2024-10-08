@@ -27,6 +27,7 @@
                     "connector_config": "{{vars.input.records[0].connectorConfig}}"
                 },
                 "apply_async": false,
+                "ignore_errors": true,
                 "step_variables": {
                     "phase_results": "{{vars.steps.authorize}}"
                 },
@@ -46,7 +47,8 @@
             "name": "authorize_vars",
             "description": null,
             "arguments": {
-                "authadom": "{# ADOM Name Logic (order)\n   - Device Metadata \"adom\" set.\n   - ZTP Profile\n#}\n{%- set md = vars.input.records[0].deviceMetadata | toDict -%}\n{%- if \"adom\" in md \n      and md['adom'] != ''\n      and md['adom'] != None\n-%}\n{{md['adom']}}\n{%- elif \"aDOM\" in vars.input.records[0].zTPProfiles \n      and vars.input.records[0].zTPProfiles.aDOM != '' \n      and vars.input.records[0].zTPProfiles.aDOM != None \n-%}\n{{vars.input.records[0].zTPProfiles.aDOM}}\n{%- else -%}\nroot\n{%- endif -%}"
+                "authadom": "{# ADOM Name Logic (order)\n   - Device Metadata \"adom\" set.\n   - ZTP Profile\n#}\n{%- set md = vars.input.records[0].deviceMetadata | toDict -%}\n{%- if \"adom\" in md \n      and md['adom'] != ''\n      and md['adom'] != None\n-%}\n{{md['adom']}}\n{%- elif \"aDOM\" in vars.input.records[0].zTPProfiles \n      and vars.input.records[0].zTPProfiles.aDOM != '' \n      and vars.input.records[0].zTPProfiles.aDOM != None \n-%}\n{{vars.input.records[0].zTPProfiles.aDOM}}\n{%- else -%}\nroot\n{%- endif -%}",
+                "phase_results": "{%- if vars.input.records[0].managementMode == \"Managed\" -%}\n{\"output\":{\"error\":false}}\n{%- endif -%}"
             },
             "status": null,
             "top": "40",
@@ -71,6 +73,20 @@
         },
         {
             "@type": "WorkflowStep",
+            "name": "device_group_results",
+            "description": null,
+            "arguments": {
+                "phase_results": "{%- if true in vars.steps.run_device_group | json_query('[].output.error') -%}\n{\"output\":{\"error\":true}}\n{%- else -%}\n{\"output\":{\"error\":false}}\n{%- endif -%}"
+            },
+            "status": null,
+            "top": "360",
+            "left": "1280",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "dfed0d4c-02ea-4bab-886a-862e135fb784"
+        },
+        {
+            "@type": "WorkflowStep",
             "name": "device_groups_vars",
             "description": null,
             "arguments": {
@@ -78,7 +94,7 @@
             },
             "status": null,
             "top": "260",
-            "left": "1000",
+            "left": "980",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
             "uuid": "d3f1570c-ce44-4cc7-b7ad-f63fc7d42290"
@@ -88,6 +104,7 @@
             "name": "device_metadata_vars",
             "description": null,
             "arguments": {
+                "phase_results": "{\"output\":{\"error\":false}}",
                 "device_metadata": "{{vars.input.records[0].deviceMetadata}}",
                 "device_metadata_total": "{{vars.input.records[0].deviceMetafieldTotal}}",
                 "device_metadata_completed": "{{vars.input.records[0].deviceMetafieldCompleted}}",
@@ -288,7 +305,7 @@
                     "type": "\/api\/3\/picklists\/ff599189-3eeb-4c86-acb0-a7915e85ac3b",
                     "tenant": "",
                     "thread": false,
-                    "content": "<p><strong>Retrieve Device Config<\/strong><\/p>\n<p>&nbsp;<\/p>\n<p>Message: {{vars.steps.retrieve_device_config.output.msg}}<\/p>\n<p>Error: {{vars.steps.retrieve_device_config.output.error}}<\/p>\n<p>&nbsp;<\/p>\n<p>{%- if \"id\" in vars.steps.retrieve_device_config.output.script_data.data.task_response -%}<\/p>\n<p>TaskID:&nbsp;<\/p>\n<p>{{vars.steps.retrieve_device_config.output.script_data.data.task_response.id}}<\/p>\n<p>{%- endif -%}<\/p>\n<p>&nbsp;<\/p>\n<p>{%- if \"id\" in vars.steps.retrieve_device_config.output.script_data.data.task_response -%}<\/p>\n<p>Line:&nbsp;<\/p>\n<p>{{vars.steps.retrieve_device_config.output.script_data.data.task_response.line|json_query('[].[name,state]')}}<\/p>\n<p>{%- endif -%}<\/p>",
+                    "content": "<p>{%- set taskdata = vars.steps.retrieve_device_config %}<\/p>\n<p><strong>Phase ( {{vars.ztpphase_input}} ) Results:<\/strong><\/p>\n<p><strong>Task: <\/strong>{{taskdata.output.task_id}}<br><strong>Error:<\/strong> {{taskdata.output.error}}<br><strong>Message:<\/strong> {{taskdata.output.msg}}<\/p>\n<p><br>{%- if taskdata.output.task_data.line is defined and taskdata.output.task_data.line not in [\"\",None,Null] %} {%- set line_cnt = taskdata.output.task_data.line|length %} History Details:<br>{%- for h in taskdata.output.task_data.line[line_cnt-1].history|json_query('[].[detail]') %} - {{h[0]}}<br>{%- endfor -%} {%- endif %}<\/p>\n<p>&nbsp;<\/p>",
                     "records": ""
                 },
                 "arguments": {
@@ -298,6 +315,7 @@
                     "connector_config": "{{vars.input.records[0].connectorConfig}}"
                 },
                 "apply_async": false,
+                "ignore_errors": true,
                 "step_variables": {
                     "phase_results": "{{vars.steps.retrieve_device_config}}"
                 },
@@ -330,16 +348,15 @@
                     "connector_config": "{{vars.input.records[0].connectorConfig}}"
                 },
                 "apply_async": false,
-                "step_variables": {
-                    "phase_results": "{{vars.steps.run_device_group}}"
-                },
+                "ignore_errors": true,
+                "step_variables": [],
                 "pass_parent_env": false,
                 "pass_input_record": false,
                 "workflowReference": "\/api\/3\/workflows\/def6e18c-0c50-467c-a146-9218e2658019"
             },
             "status": null,
             "top": "260",
-            "left": "1320",
+            "left": "1280",
             "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
             "group": null,
             "uuid": "e833980d-c02b-48cb-b7b5-9251e255a5e6"
@@ -354,7 +371,7 @@
                     "type": "\/api\/3\/picklists\/ff599189-3eeb-4c86-acb0-a7915e85ac3b",
                     "tenant": "",
                     "thread": false,
-                    "content": "<p><strong>Install Device Config<\/strong><\/p>\n<p>&nbsp;<\/p>\n<p>Message: {{vars.steps.run_install_device_config.output.msg}}<\/p>\n<p>Error: {{vars.steps.run_install_device_config.output.error}}<\/p>\n<p>&nbsp;<\/p>\n<p>TaskID:&nbsp;<\/p>\n<p>{{vars.steps.run_install_device_config.output.script_data.data.task_response.id}}<\/p>\n<p>&nbsp;<\/p>\n<p>Line:&nbsp;<\/p>\n<p>{{vars.steps.run_install_device_config.output.script_data.data.task_response.line|json_query('[].[name,state]')}}<\/p>\n<p>&nbsp;<\/p>\n<p>History:<br>{{vars.steps.run_install_device_config.output.script_data.data.task_response.line[0].history|json_query('[].[detail,percent]')}}<\/p>",
+                    "content": "<p>{%- set taskdata = vars.steps.run_install_device_config -%}<\/p>\n<p><strong>Phase ( {{vars.ztpphase_input}} ) Results:<\/strong><\/p>\n<p><strong>Task: <\/strong>{{taskdata.output.task_id}}<br><strong>Error:<\/strong> {{taskdata.output.error}}<br><strong>Message:<\/strong> {{taskdata.output.msg}}<\/p>\n<p><br>{%- if taskdata.output.task_data.line is defined and taskdata.output.task_data.line not in [\"\",None,Null] %} {%- set line_cnt = taskdata.output.task_data.line|length %} History Details:<br>{%- for h in taskdata.output.task_data.line[line_cnt-1].history|json_query('[].[detail]') %} - {{h[0]}}<br>{%- endfor -%} {%- endif %}<\/p>\n<p>&nbsp;<\/p>",
                     "records": ""
                 },
                 "arguments": {
@@ -364,6 +381,7 @@
                     "connector_config": "{{vars.input.records[0].connectorConfig}}"
                 },
                 "apply_async": false,
+                "ignore_errors": true,
                 "step_variables": {
                     "phase_results": "{{vars.steps.run_install_device_config}}"
                 },
@@ -389,7 +407,7 @@
                     "type": "\/api\/3\/picklists\/ff599189-3eeb-4c86-acb0-a7915e85ac3b",
                     "tenant": "",
                     "thread": false,
-                    "content": "<p><strong>Install Policy Package ( {{vars.policy_package}} )<\/strong><\/p>\n<p>&nbsp;<\/p>\n<p>Message: {{vars.steps.run_install_policy_pkg.output.msg}}<\/p>\n<p>Error: {{vars.steps.run_install_policy_pkg.output.error}}<\/p>\n<p>&nbsp;<\/p>\n<p>TaskID:&nbsp;<\/p>\n<p>{{vars.steps.run_install_policy_pkg.output.script_data.data.task_response.id}}<\/p>\n<p>&nbsp;<\/p>\n<p>Line:&nbsp;<\/p>\n<p>{{vars.steps.run_install_policy_pkg.output.script_data.data.task_response.line|json_query('[].[name,state]')}}<\/p>\n<p>&nbsp;<\/p>\n<p>History:<br>{{vars.steps.run_install_policy_pkg.output.script_data.data.task_response.line[0].history|json_query('[].[detail,percent]')}}<\/p>",
+                    "content": "<p>{%- set taskdata = vars.steps.run_install_policy_pkg -%}<\/p>\n<p><strong>Phase ( {{vars.ztpphase_input}} {{vars.policy_package}} ) Results:<\/strong><\/p>\n<p><strong>Task: <\/strong>{{taskdata.output.task_id}}<br><strong>Error:<\/strong> {{taskdata.output.error}}<br><strong>Message:<\/strong> {{taskdata.output.msg}}<\/p>\n<p><br>{%- if taskdata.output.task_data.line is defined and taskdata.output.task_data.line not in [\"\",None,Null] %} {%- set line_cnt = taskdata.output.task_data.line|length %} History Details:<br>{%- for h in taskdata.output.task_data.line[line_cnt-1].history|json_query('[].[detail]') %} - {{h[0]}}<br>{%- endfor -%} {%- endif %}<\/p>\n<p>&nbsp;<\/p>",
                     "records": ""
                 },
                 "arguments": {
@@ -401,6 +419,7 @@
                     "assign_device_flag": "True"
                 },
                 "apply_async": false,
+                "ignore_errors": true,
                 "step_variables": {
                     "phase_results": "{{vars.steps.run_install_policy_pkg}}"
                 },
@@ -424,6 +443,7 @@
                     "device_record_id": "{{vars.input.records[0].id}}"
                 },
                 "apply_async": false,
+                "ignore_errors": true,
                 "step_variables": {
                     "phase_results": "{{vars.steps.run_linked_scripts}}"
                 },
@@ -455,6 +475,7 @@
             "name": "set_initial_vars",
             "description": null,
             "arguments": {
+                "empty_data": "''",
                 "ztp_profile": "{{vars.input.records[0].zTPProfiles.name}}",
                 "ztpphase_last": "{{vars.input.records[0].zTPPhaseLast.itemValue}}",
                 "ztpphase_input": "{{vars.input.records[0].zTPPhase.itemValue}}",
@@ -559,6 +580,7 @@
                     "connector_config": "{{vars.input.records[0].connectorConfig}}"
                 },
                 "apply_async": false,
+                "ignore_errors": true,
                 "step_variables": [],
                 "pass_parent_env": false,
                 "pass_input_record": false,
@@ -684,11 +706,20 @@
             "name": "ztp_phase_complete",
             "description": null,
             "arguments": {
+                "message": {
+                    "tags": [],
+                    "type": "\/api\/3\/picklists\/ff599189-3eeb-4c86-acb0-a7915e85ac3b",
+                    "tenant": "",
+                    "thread": false,
+                    "content": "<p>Phase ( {{vars.ztpphase_input}} ) <span style=\"color: rgb(45, 194, 107);\">done<\/span>.<\/p>\n<p><br><span style=\"border: 2px solid GREY; color: grey; border-radius: 5px; background-color: black; font-family: verdana; font-weight: bold; font-size: 10px; padding: 2px;\">{{arrow.utcnow().format(\"HH:mm:ss ZZ\")}}<\/span><\/p>",
+                    "records": "",
+                    "parentstepid": "\/api\/3\/workflow_steps\/4a81852a-49d6-4cdf-bf6c-1ece6c19078c"
+                },
                 "resource": {
                     "zTPStatus": "Done",
                     "zTPPhaseLast": "{{\"ZTP Phase\"|picklist(vars.ztpphase_input)}}",
                     "zTPStatusHTML": "<p style=\"text-align: left;\"><span style=\"border: 2px solid GREEN; color: green; border-radius: 5px; background-color: black; font-family: verdana; font-weight: bold; font-size: 10px; padding: 2px;\"> Done <\/span><\/p>",
-                    "zTPPhaseStarted": "null",
+                    "zTPPhaseStarted": "{{vars.empty_data}}",
                     "zTPPhaseCompleted": "{{arrow.utcnow().int_timestamp}}"
                 },
                 "operation": "Append",
@@ -710,7 +741,7 @@
             "name": "ztp_phase_complete_vars",
             "description": null,
             "arguments": {
-                "next_step": "{%- set next_step = vars.step_map[vars.ztpphase_input].next_step|default(\"Complete\") -%}\n{%- set phase_results = vars.phase_results|default({}) -%}\n{%- if \"output\" in phase_results -%}\n  {%- if phase_results.output.error == True -%}\n    {%- set next_step = \"Fail\" -%}\n  {%- endif -%}\n{%- endif -%}\n{{next_step}}"
+                "next_step": "{%- set next_step = vars.step_map[vars.ztpphase_input].next_step|default(\"Complete\") -%}\n{%- set phase_results = vars.phase_results|default({}) -%}\n{%- if \"output\" in phase_results -%}\n  {# Check the previous step results. #} \n  {%- if phase_results.output.error == True -%}\n    {%- set next_step = \"Fail\" -%}\n  {%- endif -%}\n{%- else -%}\n  {# Previous step returned nothing and that's a fail. #} \n  {%- set next_step = \"Fail\" -%}\n{%- endif -%}\n{{next_step}}"
             },
             "status": null,
             "top": "520",
@@ -802,6 +833,16 @@
             "isExecuted": false,
             "group": null,
             "uuid": "e861d9fa-986e-446c-9149-24848a5749d2"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "device_group_results -> ztp_phase_complete_vars",
+            "targetStep": "\/api\/3\/workflow_steps\/96960759-a39a-42c4-9b69-62b9597f1522",
+            "sourceStep": "\/api\/3\/workflow_steps\/dfed0d4c-02ea-4bab-886a-862e135fb784",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "c8e3895d-efc3-488c-82d4-152491339991"
         },
         {
             "@type": "WorkflowRoute",
@@ -955,13 +996,13 @@
         },
         {
             "@type": "WorkflowRoute",
-            "name": "run_device_group -> ztp_phase_complete_vars",
-            "targetStep": "\/api\/3\/workflow_steps\/96960759-a39a-42c4-9b69-62b9597f1522",
+            "name": "run_device_group -> device_group_results",
+            "targetStep": "\/api\/3\/workflow_steps\/dfed0d4c-02ea-4bab-886a-862e135fb784",
             "sourceStep": "\/api\/3\/workflow_steps\/e833980d-c02b-48cb-b7b5-9251e255a5e6",
             "label": null,
             "isExecuted": false,
             "group": null,
-            "uuid": "20eeef03-268f-44e0-9de2-41cb0c656bc1"
+            "uuid": "4ef43719-75ac-476a-89e9-7937a097cc0f"
         },
         {
             "@type": "WorkflowRoute",
@@ -1165,7 +1206,7 @@
         }
     ],
     "groups": [],
-    "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+    "priority": "\/api\/3\/picklists\/df314249-88c8-4778-ab55-8aeafbe932cb",
     "uuid": "8fdcdcb0-0511-401a-9485-3b61ccfc8cc4",
     "owners": [],
     "isPrivate": false,

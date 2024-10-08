@@ -197,7 +197,9 @@
                 "clear_metafd_flag": "{{vars.input.records[0].zTPProfiles.clearDeviceMetadata|default(false)}}",
                 "clear_metaft_flag": "{{vars.input.records[0].zTPProfiles.clearLinkedMetafieldTemplates|default(false)}}",
                 "clear_reports_flag": "{{vars.input.records[0].zTPProfiles.clearDeviceReports|default(false)}}",
-                "clear_scripts_flag": "{{vars.input.records[0].zTPProfiles.clearLinkedScripts|default(false)}}"
+                "clear_scripts_flag": "{{vars.input.records[0].zTPProfiles.clearLinkedScripts|default(false)}}",
+                "ztp_status_started": "Started",
+                "ztp_status_started_html": "<span style=\"border: 2px solid BLUE; color: blue; border-radius: 5px; background-color: black; font-family: verdana; font-weight: bold; font-size: 10px; padding: 2px;\"> Started <\/span>"
             },
             "status": null,
             "top": "40",
@@ -270,16 +272,18 @@
                     "type": "\/api\/3\/picklists\/ff599189-3eeb-4c86-acb0-a7915e85ac3b",
                     "tenant": "",
                     "thread": false,
-                    "content": "<p>ZTP Profile ( {{vars.ztp_profile}} ) assigned and starting ZTP Phase ( {{vars.ztp_start_phase}} ) on device now.<\/p>",
+                    "content": "<p>ZTP Profile ( {{vars.ztp_profile}} ) <span style=\"color: rgb(53, 152, 219);\">assigned <\/span>and <span style=\"color: rgb(53, 152, 219);\">starting <\/span>ZTP Phase ( {{vars.ztp_start_phase}} ).<\/p>\n<p><br><span style=\"border: 2px solid GREY; color: grey; border-radius: 5px; background-color: black; font-family: verdana; font-weight: bold; font-size: 10px; padding: 2px;\">{{arrow.utcnow().format(\"YYYY-MM-DD HH:mm:ss ZZ\")}}<\/span><\/p>",
                     "records": ""
                 },
                 "resource": {
                     "zTPPhase": "{{vars.empty_value}}",
-                    "zTPStatus": "{{vars.empty_value}}",
+                    "zTPStatus": "{{vars.ztp_status_started}}",
                     "zTPPhaseLast": "{{vars.empty_value}}",
-                    "zTPStatusHTML": "<p>{{vars.empty_value}}<\/p>",
+                    "zTPStatusHTML": "<p>{{vars.ztp_status_started_html}}<\/p>",
                     "zTPPhaseStarted": "{{vars.empty_value}}",
-                    "zTPPhaseCompleted": "{{vars.empty_value}}"
+                    "zTPPhaseCompleted": "{{vars.empty_value}}",
+                    "zTPProfileStarted": "{{arrow.utcnow().int_timestamp}}",
+                    "zTPProfileCompleted": "{{vars.empty_value}}"
                 },
                 "operation": "Append",
                 "collection": "{{vars.input.records[0]['@id']}}",
