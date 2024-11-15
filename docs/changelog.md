@@ -14,12 +14,12 @@
    - Modify `> fmg install config - on devices.json` and `> fmg install policy package - on devices.json` playbooks to leverage the new playbook. Remove use of task monitor as the enhanced track_task functions are being added to pyFMG. 
    - Modify Dashboards to collapse Quick Links and show pie charts where useful. 
    - Modify playbook `On ZTP Profile Assignment in Device Record` to clear all ZTP fields when a new profile is assigned.
-   - Modify playbook `> fmg exec task - return standard output of results.json` to handle latest `task_track()` return from `pyfmg`. 
-   - Create playbook button `ZTP Phase Retry Failed on Device from Device Record.json` for devices that have failed a phase. 
+   - Modify playbook `> fmg exec task - return standard output of results` to handle latest `task_track()` return from `pyfmg`. 
+   - Create playbook button `ZTP Phase Retry Failed on Device from Device Record` for devices that have failed a phase. 
    - Add new fields for storing ZTP Start/Stop times per device and update playbooks to update these in the ZTP Flow. 
    - Enhance ZTP Phase comments on a device. 
-   - Modify `On ZTP Phase (Action Step) in Device Record.json` to better handle error conditions and set the device to fail instead of failing the playbook on problems.
-   - Modify playbook `Randomly Create Model Devices - by Manager Record.json` to have a better list of supported products by FMG firmware (7.2 - 7.6) to prevent errors during testing. 
+   - Modify `On ZTP Phase (Action Step) in Device Record` to better handle error conditions and set the device to fail instead of failing the playbook on problems.
+   - Modify `Randomly Create Model Devices - by Manager Record` to have a better list of supported products by FMG firmware (7.2 - 7.6) to prevent errors during testing. 
 
 - 20240701 (1.0.4)
   - Update json-rpc onnector to 1.0.4. 
