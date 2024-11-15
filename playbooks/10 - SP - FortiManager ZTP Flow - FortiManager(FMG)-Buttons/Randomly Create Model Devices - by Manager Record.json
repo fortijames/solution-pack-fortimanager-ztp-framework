@@ -85,7 +85,7 @@
                 "unauthenticated_input": false
             },
             "status": null,
-            "top": "300",
+            "top": "400",
             "left": "40",
             "stepType": "\/api\/3\/workflow_step_types\/fc04082a-d7dc-4299-96fb-6837b1baa0fe",
             "group": null,
@@ -153,7 +153,7 @@
                 "devices": "{%- set devices = [] -%}\n{%- for device_number in range(vars.lower_number, vars.upper_number + 1) | list -%}\n{%- set dev_model = vars.fmg_platform_strings | random  -%}\n{%- set adom = vars.fortimanager_adom_names | random  -%}\n{%- set adom_ver= vars.adom_ver_dict.get(adom).split('.') -%}\n{%- set os,mr = (adom_ver[0] | int),(adom_ver[1] | int) -%}\n{%- do devices.append({\"device_name\": (\"FG\" + '%05d' %  device_number), \"dev_model\": dev_model, \"fmg_adom\":  adom , \"fgt_os\": os, \"fgt_mr\": mr}) -%}\n{%- endfor -%}{{devices}}"
             },
             "status": null,
-            "top": "780",
+            "top": "860",
             "left": "400",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
@@ -187,7 +187,7 @@
                 "workflowReference": "\/api\/3\/workflows\/e2b45e0f-f56c-42f7-8a99-f33d26199559"
             },
             "status": null,
-            "top": "880",
+            "top": "960",
             "left": "400",
             "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
             "group": null,
@@ -232,11 +232,25 @@
                 "unauthenticated_input": false
             },
             "status": null,
-            "top": "360",
+            "top": "440",
             "left": "840",
             "stepType": "\/api\/3\/workflow_step_types\/fc04082a-d7dc-4299-96fb-6837b1baa0fe",
             "group": null,
             "uuid": "85818c71-d3e2-444a-b01c-7095bac766d3"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "fmg platform command output",
+            "description": "Paste results from \"diagnose dvm supported-platforms list fortigate\", with any modifications of removing lines, to override the platform index.",
+            "arguments": {
+                "fmg_platforms_command": ""
+            },
+            "status": null,
+            "top": "60",
+            "left": "400",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "0d6704d0-a854-47c1-82d8-ddeb1b960a9e"
         },
         {
             "@type": "WorkflowStep",
@@ -253,7 +267,7 @@
                 "workflowReference": "\/api\/3\/workflows\/c7781dd3-2aed-423e-91d1-d686bee7b4b4"
             },
             "status": null,
-            "top": "580",
+            "top": "660",
             "left": "400",
             "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
             "group": null,
@@ -268,7 +282,7 @@
                 "fortimanager_adom_names": "{% set options = []-%}\n\n{%- for adom in vars.steps.Get_fortimanager_adoms.output -%}\n{%- do options.append(adom.name) -%}\n{%endfor%}{{options}}"
             },
             "status": null,
-            "top": "680",
+            "top": "760",
             "left": "400",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
@@ -284,7 +298,7 @@
                 "upper_number": "{{vars.steps.Ask_for_user_input.input.rangeOfDevices.split('-')[1] | int}}"
             },
             "status": null,
-            "top": "480",
+            "top": "560",
             "left": "400",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
@@ -292,16 +306,31 @@
         },
         {
             "@type": "WorkflowStep",
-            "name": "Set Vars",
+            "name": "set platform list",
             "description": null,
             "arguments": {
-                "connector_name": "fortinet-fortimanager-json-rpc",
-                "connector_config": "{{vars.input.records[0].managerName}}",
-                "connector_version": "1.0.0",
-                "fmg_platform_strings": "[\n  \"FortiGate-40F\",\n  \"FortiGate-40F-3G4G\",\n  \"FortiGate-60E\",\n  \"FortiGate-60E-DSL\",\n  \"FortiGate-60E-DSLJ\",\n  \"FortiGate-60E-POE\",\n  \"FortiGate-60F\",\n  \"FortiGate-61E\",\n  \"FortiGate-61F\",\n  \"FortiGate-80E\",\n  \"FortiGate-80E-POE\",\n  \"FortiGate-80F\",\n  \"FortiGate-80F-Bypass\",\n  \"FortiGate-80F-POE\",\n  \"FortiGate-81E\",\n  \"FortiGate-81E-POE\",\n  \"FortiGate-81F\",\n  \"FortiGate-81F-POE\",\n  \"FortiGate-90E\",\n  \"FortiGate-91E\",\n  \"FortiGate-100E\",\n  \"FortiGate-100EF\",\n  \"FortiGate-100F\",\n  \"FortiGate-101E\",\n  \"FortiGate-101F\",\n  \"FortiGate-140E\",\n  \"FortiGate-140E-POE\",\n  \"FortiGate-200E\",\n  \"FortiGate-200F\",\n  \"FortiGate-201E\",\n  \"FortiGate-201F\",\n  \"FortiGate-300E\",\n  \"FortiGate-301E\",\n  \"FortiGate-400E\",\n  \"FortiGate-400E-Bypass\",\n  \"FortiGate-401E\",\n  \"FortiGate-500E\",\n  \"FortiGate-501E\",\n  \"FortiGate-600E\",\n  \"FortiGate-601E\",\n  \"FortiGate-800D\",\n  \"FortiGate-900D\",\n  \"FortiGate-1000D\",\n  \"FortiGate-1100E\",\n  \"FortiGate-1101E\",\n  \"FortiGate-1200D\",\n  \"FortiGate-1500D\",\n  \"FortiGate-1500DT\",\n  \"FortiGate-1800F\",\n  \"FortiGate-1801F\",\n  \"FortiGate-2000E\",\n  \"FortiGate-2200E\",\n  \"FortiGate-2201E\",\n  \"FortiGate-2500E\",\n  \"FortiGate-2600F\",\n  \"FortiGate-2601F\",\n  \"FortiGate-3000D\",\n  \"FortiGate-3100D\",\n  \"FortiGate-3200D\",\n  \"FortiGate-3300E\",\n  \"FortiGate-3301E\",\n  \"FortiGate-3400E\",\n  \"FortiGate-3401E\",\n  \"FortiGate-3500F\",\n  \"FortiGate-3501F\",\n  \"FortiGate-3600E\",\n  \"FortiGate-3601E\",\n  \"FortiGate-3700D\",\n  \"FortiGate-3800D\",\n  \"FortiGate-3960E\",\n  \"FortiGate-3980E\",\n  \"FortiGate-4200F\",\n  \"FortiGate-4201F\",\n  \"FortiGate-4400F\",\n  \"FortiGate-4401F\",\n  \"FortiGate-5001E\",\n  \"FortiGate-5001E1\",\n  \"FortiGate-VM64\",\n  \"FortiGate-VM64-ALI\",\n  \"FortiGate-VM64-AWS\",\n  \"FortiGate-VM64-Azure\",\n  \"FortiGate-VM64-GCP\",\n  \"FortiGate-VM64-HV\",\n  \"FortiGate-VM64-KVM\",\n  \"FortiGate-VM64-OPC\",\n  \"FortiGate-VM64-RAXONDEMAND\",\n  \"FortiGate-VM64-Xen\",\n  \"FortiGate-VMX-Service-Manager\",\n  \"FortiGateRugged-60F\",\n  \"FortiGateRugged-60F-3G4G\",\n  \"FortiOS-VM64\",\n  \"FortiOS-VM64-HV\",\n  \"FortiOS-VM64-KVM\",\n  \"FortiOS-VM64-Xen\",\n  \"FortiWiFi-40F\",\n  \"FortiWiFi-40F-3G4G\",\n  \"FortiWiFi-60E\",\n  \"FortiWiFi-60E-DSL\",\n  \"FortiWiFi-60E-DSLJ\",\n  \"FortiWiFi-60F\",\n  \"FortiWiFi-61E\",\n  \"FortiWiFi-61F\",\n  \"FortiWiFi-80F-2R\",\n  \"FortiWiFi-81F-2R\",\n  \"FortiWiFi-81F-2R-3G4G-POE\",\n  \"FortiWiFi-81F-2R-POE\",\n  \"FortiGate-ARM64-AWS\",\n  \"FortiGate-ARM64-Azure\",\n  \"FortiGate-ARM64-GCP\",\n  \"FortiGate-ARM64-KVM\",\n  \"FortiGate-ARM64-OCI\"\n]"
+                "fmg_platform_strings": "{%- set table = [] -%}\n{%- if vars.fmg_platforms_command != '' -%}\n  {%- for l in vars.fmg_platforms_command.split('\\n') -%}\n    {%- if l | regex_search(\"\\s+Forti.*-\") -%}\n      {%- set m = l | regex_replace(\"^\\s+\",\"\") | split(\" \")  -%}\n      {%- set _do = table.append(m[0]) -%}\n    {%- endif -%}\n  {%- endfor -%}\n{%- elif vars.fmg_platform_idx[vars.fmg_version] is defined -%}\n      {%- set table = vars.fmg_platform_idx[vars.fmg_version]  -%}\n{%- else -%}\n      {%- set _do = table.append(\"FortiGate-VM64\") -%}\n{%- endif -%}\n{{table}}"
             },
             "status": null,
-            "top": "180",
+            "top": "200",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "21b9ec73-b62d-4121-aab0-8d1b480ec559"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "setup vars",
+            "description": null,
+            "arguments": {
+                "fmg_version": "{%- set f = vars.input.records[0].firmware.split(\".\") -%}\n{{f[0] + \".\" + f[1]}}",
+                "connector_name": "fortinet-fortimanager-json-rpc",
+                "connector_config": "{{vars.input.records[0].managerName}}",
+                "fmg_platform_idx": "{\n  \"v7.2\": [\n    \"FortiGate-40F\",\n    \"FortiGate-40F-3G4G\",\n    \"FortiGate-60E\",\n    \"FortiGate-60E-DSL\",\n    \"FortiGate-60E-DSLJ\",\n    \"FortiGate-60E-POE\",\n    \"FortiGate-60F\",\n    \"FortiGate-61E\",\n    \"FortiGate-61F\",\n    \"FortiGate-70F\",\n    \"FortiGate-70G\",\n    \"FortiGate-70G-POE\",\n    \"FortiGate-71F\",\n    \"FortiGate-71G\",\n    \"FortiGate-71G-POE\",\n    \"FortiGate-80E\",\n    \"FortiGate-80E-POE\",\n    \"FortiGate-80F\",\n    \"FortiGate-80F-Bypass\",\n    \"FortiGate-80F-DSL\",\n    \"FortiGate-80F-POE\",\n    \"FortiGate-81E\",\n    \"FortiGate-81E-POE\",\n    \"FortiGate-81F\",\n    \"FortiGate-81F-POE\",\n    \"FortiGate-90E\",\n    \"FortiGate-90G\",\n    \"FortiGate-91E\",\n    \"FortiGate-91G\",\n    \"FortiGate-100E\",\n    \"FortiGate-100EF\",\n    \"FortiGate-100F\",\n    \"FortiGate-101E\",\n    \"FortiGate-101F\",\n    \"FortiGate-120G\",\n    \"FortiGate-121G\",\n    \"FortiGate-140E\",\n    \"FortiGate-140E-POE\",\n    \"FortiGate-200E\",\n    \"FortiGate-200F\",\n    \"FortiGate-200G\",\n    \"FortiGate-201E\",\n    \"FortiGate-201F\",\n    \"FortiGate-201G\",\n    \"FortiGate-300E\",\n    \"FortiGate-301E\",\n    \"FortiGate-400E\",\n    \"FortiGate-400E-Bypass\",\n    \"FortiGate-400F\",\n    \"FortiGate-401E\",\n    \"FortiGate-401F\",\n    \"FortiGate-500E\",\n    \"FortiGate-501E\",\n    \"FortiGate-600E\",\n    \"FortiGate-600F\",\n    \"FortiGate-601E\",\n    \"FortiGate-601F\",\n    \"FortiGate-800D\",\n    \"FortiGate-900D\",\n    \"FortiGate-900G\",\n    \"FortiGate-901G\",\n    \"FortiGate-1000D\",\n    \"FortiGate-1000F\",\n    \"FortiGate-1001F\",\n    \"FortiGate-1100E\",\n    \"FortiGate-1101E\",\n    \"FortiGate-1200D\",\n    \"FortiGate-1500D\",\n    \"FortiGate-1500DT\",\n    \"FortiGate-1800F\",\n    \"FortiGate-1801F\",\n    \"FortiGate-2000E\",\n    \"FortiGate-2200E\",\n    \"FortiGate-2201E\",\n    \"FortiGate-2500E\",\n    \"FortiGate-2600F\",\n    \"FortiGate-2601F\",\n    \"FortiGate-3000D\",\n    \"FortiGate-3000F\",\n    \"FortiGate-3001F\",\n    \"FortiGate-3100D\",\n    \"FortiGate-3200D\",\n    \"FortiGate-3200F\",\n    \"FortiGate-3201F\",\n    \"FortiGate-3300E\",\n    \"FortiGate-3301E\",\n    \"FortiGate-3400E\",\n    \"FortiGate-3401E\",\n    \"FortiGate-3500F\",\n    \"FortiGate-3501F\",\n    \"FortiGate-3600E\",\n    \"FortiGate-3601E\",\n    \"FortiGate-3700D\",\n    \"FortiGate-3700F\",\n    \"FortiGate-3701F\",\n    \"FortiGate-3800D\",\n    \"FortiGate-3960E\",\n    \"FortiGate-3980E\",\n    \"FortiGate-4200F\",\n    \"FortiGate-4201F\",\n    \"FortiGate-VM64\",\n    \"FortiGate-VM64-ALI\",\n    \"FortiGate-VM64-AWS\",\n    \"FortiGate-VM64-Azure\",\n    \"FortiGate-VM64-GCP\",\n    \"FortiGate-VM64-HV\",\n    \"FortiGate-VM64-IBM\",\n    \"FortiGate-VM64-KVM\",\n    \"FortiGate-VM64-OPC\",\n    \"FortiGate-VM64-RAXONDEMAND\",\n    \"FortiGate-VM64-Xen\",\n    \"FortiGate-VMX-Service-Manager\",\n    \"FortiGateRugged-60F\",\n    \"FortiGateRugged-60F-3G4G\",\n    \"FortiGateRugged-70F\",\n    \"FortiGateRugged-70F-3G4G\",\n    \"FortiOS-VM64\",\n    \"FortiOS-VM64-HV\",\n    \"FortiOS-VM64-KVM\",\n    \"FortiOS-VM64-Xen\",\n    \"FortiWiFi-30G\",\n    \"FortiWiFi-40F\",\n    \"FortiWiFi-40F-3G4G\",\n    \"FortiWiFi-60E\",\n    \"FortiWiFi-60E-DSL\",\n    \"FortiWiFi-60E-DSLJ\",\n    \"FortiWiFi-60F\",\n    \"FortiWiFi-61E\",\n    \"FortiWiFi-61F\",\n    \"FortiWiFi-70G\",\n    \"FortiWiFi-71G\",\n    \"FortiWiFi-80F-2R\",\n    \"FortiWiFi-80F-2R-3G4G-DSL\",\n    \"FortiWiFi-81F-2R\",\n    \"FortiWiFi-81F-2R-3G4G-DSL\",\n    \"FortiWiFi-81F-2R-3G4G-POE\",\n    \"FortiWiFi-81F-2R-POE\",\n    \"FortiGate-ARM64-AWS\",\n    \"FortiGate-ARM64-Azure\",\n    \"FortiGate-ARM64-GCP\",\n    \"FortiGate-ARM64-KVM\",\n    \"FortiGate-ARM64-OCI\"\n  ],\n  \"v7.4\": [\n    \"FortiGate-40F-3G4G\",\n    \"FortiGate-60E\",\n    \"FortiGate-60E-DSL\",\n    \"FortiGate-60E-DSLJ\",\n    \"FortiGate-60E-POE\",\n    \"FortiGate-60F\",\n    \"FortiGate-61E\",\n    \"FortiGate-61F\",\n    \"FortiGate-70F\",\n    \"FortiGate-71F\",\n    \"FortiGate-80E\",\n    \"FortiGate-80E-POE\",\n    \"FortiGate-80F\",\n    \"FortiGate-80F-Bypass\",\n    \"FortiGate-80F-DSL\",\n    \"FortiGate-80F-POE\",\n    \"FortiGate-81E\",\n    \"FortiGate-81E-POE\",\n    \"FortiGate-81F\",\n    \"FortiGate-81F-POE\",\n    \"FortiGate-90E\",\n    \"FortiGate-90G\",\n    \"FortiGate-91E\",\n    \"FortiGate-91G\",\n    \"FortiGate-100E\",\n    \"FortiGate-100EF\",\n    \"FortiGate-100F\",\n    \"FortiGate-101E\",\n    \"FortiGate-101F\",\n    \"FortiGate-120G\",\n    \"FortiGate-121G\",\n    \"FortiGate-140E\",\n    \"FortiGate-140E-POE\",\n    \"FortiGate-200E\",\n    \"FortiGate-200F\",\n    \"FortiGate-201E\",\n    \"FortiGate-201F\",\n    \"FortiGate-300E\",\n    \"FortiGate-301E\",\n    \"FortiGate-400E\",\n    \"FortiGate-400E-Bypass\",\n    \"FortiGate-400F\",\n    \"FortiGate-401E\",\n    \"FortiGate-401F\",\n    \"FortiGate-500E\",\n    \"FortiGate-501E\",\n    \"FortiGate-600E\",\n    \"FortiGate-600F\",\n    \"FortiGate-601E\",\n    \"FortiGate-601F\",\n    \"FortiGate-800D\",\n    \"FortiGate-900D\",\n    \"FortiGate-900G\",\n    \"FortiGate-901G\",\n    \"FortiGate-1000D\",\n    \"FortiGate-1000F\",\n    \"FortiGate-1001F\",\n    \"FortiGate-1100E\",\n    \"FortiGate-1101E\",\n    \"FortiGate-1500D\",\n    \"FortiGate-1500DT\",\n    \"FortiGate-1800F\",\n    \"FortiGate-1801F\",\n    \"FortiGate-2000E\",\n    \"FortiGate-2200E\",\n    \"FortiGate-2201E\",\n    \"FortiGate-2500E\",\n    \"FortiGate-2600F\",\n    \"FortiGate-2601F\",\n    \"FortiGate-3000D\",\n    \"FortiGate-3000F\",\n    \"FortiGate-3001F\",\n    \"FortiGate-3100D\",\n    \"FortiGate-3200D\",\n    \"FortiGate-3200F\",\n    \"FortiGate-3201F\",\n    \"FortiGate-3300E\",\n    \"FortiGate-3301E\",\n    \"FortiGate-3400E\",\n    \"FortiGate-3401E\",\n    \"FortiGate-3500F\",\n    \"FortiGate-3501F\",\n    \"FortiGate-3600E\",\n    \"FortiGate-3601E\",\n    \"FortiGate-3700D\",\n    \"FortiGate-3700F\",\n    \"FortiGate-3701F\",\n    \"FortiGate-3800D\",\n    \"FortiGate-3960E\",\n    \"FortiGate-3980E\",\n    \"FortiGate-4200F\",\n    \"FortiGate-4201F\",\n    \"FortiGate-4400F\",\n    \"FortiGate-4401F\",\n    \"FortiGate-4800F\",\n    \"FortiGate-4801F\",\n    \"FortiGate-VM64\",\n    \"FortiGate-VM64-ALI\",\n    \"FortiGate-VM64-AWS\",\n    \"FortiGate-VM64-Azure\",\n    \"FortiGate-VM64-GCP\",\n    \"FortiGate-VM64-HV\",\n    \"FortiGate-VM64-IBM\",\n    \"FortiGate-VM64-KVM\",\n    \"FortiGate-VM64-OPC\",\n    \"FortiGate-VM64-RAXONDEMAND\",\n    \"FortiGate-VM64-Xen\",\n    \"FortiGateRugged-60F\",\n    \"FortiGateRugged-60F-3G4G\",\n    \"FortiGateRugged-70F\",\n    \"FortiGateRugged-70F-3G4G\",\n    \"FortiWiFi-40F\",\n    \"FortiWiFi-40F-3G4G\",\n    \"FortiWiFi-60E\",\n    \"FortiWiFi-60E-DSL\",\n    \"FortiWiFi-60E-DSLJ\",\n    \"FortiWiFi-60F\",\n    \"FortiWiFi-61E\",\n    \"FortiWiFi-61F\",\n    \"FortiWiFi-80F-2R\",\n    \"FortiWiFi-80F-2R-3G4G-DSL\",\n    \"FortiWiFi-81F-2R\",\n    \"FortiWiFi-81F-2R-3G4G-DSL\",\n    \"FortiWiFi-81F-2R-3G4G-POE\",\n    \"FortiWiFi-81F-2R-POE\",\n    \"FortiGate-ARM64-AWS\",\n    \"FortiGate-ARM64-Azure\",\n    \"FortiGate-ARM64-GCP\",\n    \"FortiGate-ARM64-KVM\",\n    \"FortiGate-ARM64-OCI\"\n  ],\n  \"v7.6\": [\n    \"FortiGate-40F-3G4G\",\n    \"FortiGate-60F\",\n    \"FortiGate-61F\",\n    \"FortiGate-70F\",\n    \"FortiGate-71F\",\n    \"FortiGate-80F\",\n    \"FortiGate-80F-Bypass\",\n    \"FortiGate-80F-DSL\",\n    \"FortiGate-80F-POE\",\n    \"FortiGate-81F\",\n    \"FortiGate-81F-POE\",\n    \"FortiGate-100F\",\n    \"FortiGate-101F\",\n    \"FortiGate-200E\",\n    \"FortiGate-200F\",\n    \"FortiGate-201E\",\n    \"FortiGate-201F\",\n    \"FortiGate-300E\",\n    \"FortiGate-301E\",\n    \"FortiGate-400E\",\n    \"FortiGate-400E-Bypass\",\n    \"FortiGate-400F\",\n    \"FortiGate-401E\",\n    \"FortiGate-401F\",\n    \"FortiGate-500E\",\n    \"FortiGate-501E\",\n    \"FortiGate-600E\",\n    \"FortiGate-600F\",\n    \"FortiGate-601E\",\n    \"FortiGate-601F\",\n    \"FortiGate-800D\",\n    \"FortiGate-900D\",\n    \"FortiGate-900G\",\n    \"FortiGate-901G\",\n    \"FortiGate-1000D\",\n    \"FortiGate-1000F\",\n    \"FortiGate-1001F\",\n    \"FortiGate-1100E\",\n    \"FortiGate-1101E\",\n    \"FortiGate-1800F\",\n    \"FortiGate-1801F\",\n    \"FortiGate-2000E\",\n    \"FortiGate-2200E\",\n    \"FortiGate-2201E\",\n    \"FortiGate-2500E\",\n    \"FortiGate-2600F\",\n    \"FortiGate-2601F\",\n    \"FortiGate-3000D\",\n    \"FortiGate-3000F\",\n    \"FortiGate-3001F\",\n    \"FortiGate-3100D\",\n    \"FortiGate-3200D\",\n    \"FortiGate-3200F\",\n    \"FortiGate-3201F\",\n    \"FortiGate-3300E\",\n    \"FortiGate-3301E\",\n    \"FortiGate-3400E\",\n    \"FortiGate-3401E\",\n    \"FortiGate-3500F\",\n    \"FortiGate-3501F\",\n    \"FortiGate-3600E\",\n    \"FortiGate-3601E\",\n    \"FortiGate-3700D\",\n    \"FortiGate-3700F\",\n    \"FortiGate-3701F\",\n    \"FortiGate-3960E\",\n    \"FortiGate-3980E\",\n    \"FortiGate-4200F\",\n    \"FortiGate-4201F\",\n    \"FortiGate-VM64\",\n    \"FortiGate-VM64-ALI\",\n    \"FortiGate-VM64-AWS\",\n    \"FortiGate-VM64-Azure\",\n    \"FortiGate-VM64-GCP\",\n    \"FortiGate-VM64-HV\",\n    \"FortiGate-VM64-IBM\",\n    \"FortiGate-VM64-KVM\",\n    \"FortiGate-VM64-OPC\",\n    \"FortiGate-VM64-RAXONDEMAND\",\n    \"FortiGate-VM64-Xen\",\n    \"FortiGateRugged-60F\",\n    \"FortiGateRugged-60F-3G4G\",\n    \"FortiGateRugged-70F\",\n    \"FortiGateRugged-70F-3G4G\",\n    \"FortiWiFi-40F\",\n    \"FortiWiFi-40F-3G4G\",\n    \"FortiWiFi-60F\",\n    \"FortiWiFi-61F\",\n    \"FortiWiFi-80F-2R\",\n    \"FortiWiFi-80F-2R-3G4G-DSL\",\n    \"FortiWiFi-81F-2R\",\n    \"FortiWiFi-81F-2R-3G4G-DSL\",\n    \"FortiWiFi-81F-2R-3G4G-POE\",\n    \"FortiWiFi-81F-2R-POE\",\n    \"FortiGate-ARM64-AWS\",\n    \"FortiGate-ARM64-Azure\",\n    \"FortiGate-ARM64-GCP\",\n    \"FortiGate-ARM64-KVM\",\n    \"FortiGate-ARM64-OCI\"\n  ]\n}",
+                "connector_version": "1.0.0"
+            },
+            "status": null,
+            "top": "100",
             "left": "40",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
@@ -344,7 +373,7 @@
                 "singleRecordExecution": true
             },
             "status": null,
-            "top": "60",
+            "top": "20",
             "left": "40",
             "stepType": "\/api\/3\/workflow_step_types\/f414d039-bb0d-4e59-9c39-a8f1e880b18a",
             "group": null,
@@ -365,7 +394,7 @@
                 "workflowReference": "\/api\/3\/workflows\/7aa66310-639d-417a-9762-bc361df824ad"
             },
             "status": null,
-            "top": "420",
+            "top": "480",
             "left": "40",
             "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
             "group": null,
@@ -384,7 +413,7 @@
                 "step_variables": []
             },
             "status": null,
-            "top": "240",
+            "top": "360",
             "left": "400",
             "stepType": "\/api\/3\/workflow_step_types\/0109f35d-090b-4a2b-bd8a-94cbc3508562",
             "group": null,
@@ -411,7 +440,7 @@
                 ]
             },
             "status": null,
-            "top": "360",
+            "top": "440",
             "left": "400",
             "stepType": "\/api\/3\/workflow_step_types\/12254cf5-5db7-4b1a-8cb1-3af081924b28",
             "group": null,
@@ -461,6 +490,16 @@
         },
         {
             "@type": "WorkflowRoute",
+            "name": "fmg platform command output -> setup vars",
+            "targetStep": "\/api\/3\/workflow_steps\/84f2ff04-60ff-4876-8c80-bd3db1a17b96",
+            "sourceStep": "\/api\/3\/workflow_steps\/0d6704d0-a854-47c1-82d8-ddeb1b960a9e",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "6ec6d6cd-c7ee-4da3-8f5c-568f1dffbec8"
+        },
+        {
+            "@type": "WorkflowRoute",
             "name": "Get fortimanager vdoms -> Set fortimanager vdoms",
             "targetStep": "\/api\/3\/workflow_steps\/9fc724e1-b46e-4ea6-882e-e292787dac46",
             "sourceStep": "\/api\/3\/workflow_steps\/923ae0d5-1187-43e5-9038-4c7928aa84a9",
@@ -491,23 +530,33 @@
         },
         {
             "@type": "WorkflowRoute",
-            "name": "Set Vars -> Ask for user input",
+            "name": "set platform list -> Ask for user input",
             "targetStep": "\/api\/3\/workflow_steps\/4e401cca-0a2b-480b-b702-9929819bc7a1",
+            "sourceStep": "\/api\/3\/workflow_steps\/21b9ec73-b62d-4121-aab0-8d1b480ec559",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "c44f8894-e4bf-4df5-ab13-9ec0f44f72d9"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "setup vars -> set platform list",
+            "targetStep": "\/api\/3\/workflow_steps\/21b9ec73-b62d-4121-aab0-8d1b480ec559",
             "sourceStep": "\/api\/3\/workflow_steps\/84f2ff04-60ff-4876-8c80-bd3db1a17b96",
             "label": null,
             "isExecuted": false,
             "group": null,
-            "uuid": "f4aca1df-e815-4e2e-9e59-84f517ca4fe4"
+            "uuid": "7bfb0c8d-6325-4012-b6e9-ddc9d2d4258a"
         },
         {
             "@type": "WorkflowRoute",
-            "name": "Start -> Set Vars",
-            "targetStep": "\/api\/3\/workflow_steps\/84f2ff04-60ff-4876-8c80-bd3db1a17b96",
+            "name": "Start -> fmg platform command output",
+            "targetStep": "\/api\/3\/workflow_steps\/0d6704d0-a854-47c1-82d8-ddeb1b960a9e",
             "sourceStep": "\/api\/3\/workflow_steps\/95bc0614-e78c-4ad3-9ba0-4deb1e26cdba",
             "label": null,
             "isExecuted": false,
             "group": null,
-            "uuid": "6d4255da-2145-4edb-8509-df78df25a132"
+            "uuid": "5e30bc52-de02-441e-b57a-b89be9df24eb"
         },
         {
             "@type": "WorkflowRoute",
@@ -541,7 +590,7 @@
             "hideInLogs": true,
             "metadata": [],
             "reusable": false,
-            "top": "40",
+            "top": "100",
             "left": "840",
             "height": "199",
             "width": "409",
@@ -555,14 +604,31 @@
             "type": "note",
             "isCollapsed": false,
             "hasTriggerStep": false,
-            "hideInLogs": true,
+            "hideInLogs": false,
             "metadata": [],
             "reusable": false,
-            "top": "40",
-            "left": "380",
+            "top": "520",
+            "left": "680",
             "height": "133",
             "width": "425",
             "uuid": "703b29a9-9189-4262-a64f-6004218b07da",
+            "recordTags": []
+        },
+        {
+            "@type": "WorkflowGroup",
+            "name": "Platform Logic",
+            "description": "Platforms and OS supported by the FMG main version are stored inside vars.fmg_platform_idx. If you want to override this you can run the command \/diagnose dvm supported-platforms list fortigate\/ in the FMG and paste the results into the vars.fmg_platforms_command.",
+            "type": "note",
+            "isCollapsed": false,
+            "hasTriggerStep": false,
+            "hideInLogs": false,
+            "metadata": [],
+            "reusable": false,
+            "top": "160",
+            "left": "320",
+            "height": "168",
+            "width": "498",
+            "uuid": "38c87146-f74b-459f-ae8e-893e641392ab",
             "recordTags": []
         }
     ],
