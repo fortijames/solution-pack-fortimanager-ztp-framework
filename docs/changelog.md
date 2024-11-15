@@ -4,7 +4,7 @@
 # Change Log
  - 20240913-20241115 (1.0.5)
    - Update device synch to include hostname. 
-   - Update special fields in the ZTP step to include ADOM. 
+   - Update special fields in the ZTP steps for authorization to include ADOM. 
    - Update `> monitor task complete` to continue if it errors out but return an `error:True` so that a stuck task can show `Failed`. 
    - Modify `> synch record metadata to fmg adom variables - by device` to default to the Global context if not running in vdom mode. 
    - Modify `> fmg install config - on devices` to use `> monitor task complete`. 
