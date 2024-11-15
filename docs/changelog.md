@@ -2,7 +2,7 @@
 |--------------------------------------------|
 
 # Change Log
- - 20240913-20241105 (1.0.5)
+ - 20240913-20241115 (1.0.5)
    - Update device synch to include hostname. 
    - Update special fields in the ZTP step to include ADOM. 
    - Update `> monitor task complete` to continue if it errors out but return an `error:True` so that a stuck task can show `Failed`. 
@@ -19,7 +19,7 @@
    - Add new fields for storing ZTP Start/Stop times per device and update playbooks to update these in the ZTP Flow. 
    - Enhance ZTP Phase comments on a device. 
    - Modify `On ZTP Phase (Action Step) in Device Record.json` to better handle error conditions and set the device to fail instead of failing the playbook on problems.
-   
+   - Modify playbook `Randomly Create Model Devices - by Manager Record.json` to have a better list of supported products by FMG firmware (7.2 - 7.6) to prevent errors during testing. 
 
 - 20240701 (1.0.4)
   - Update json-rpc onnector to 1.0.4. 
