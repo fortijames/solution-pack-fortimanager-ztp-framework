@@ -6,7 +6,7 @@ Release of 1.0.4:
  - Add a task monitor playbook for tasks that take a long time. 
  - Modify the ZTP Profile Record View to ease editing settings. 
  - Fix multiple issues outlined in the repo>issues.
- - Update random device model creation for testing to better supported models of the FMG by firmware. 
+ - Update random device model creation to use supported device models as listed by the FMG `/pm/config/adom/<adom>/_data/dvm/device/model` resource. 
 
 Release of 1.0.3:
  - Add support for an exciting new Script Type: `Custom`

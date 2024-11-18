@@ -2,7 +2,7 @@
 |--------------------------------------------|
 
 # Change Log
- - 20240913-20241115 (1.0.5)
+ - 20240913-20241118 (1.0.5)
    - Update device synch to include hostname. 
    - Update special fields in the ZTP steps for authorization to include ADOM. 
    - Update `> monitor task complete` to continue if it errors out but return an `error:True` so that a stuck task can show `Failed`. 
@@ -20,11 +20,12 @@
    - Enhance ZTP Phase comments on a device. 
    - Modify `On ZTP Phase (Action Step) in Device Record` to better handle error conditions and set the device to fail instead of failing the playbook on problems.
    - Modify `Randomly Create Model Devices - by Manager Record` to have a better list of supported products by FMG firmware (7.2 - 7.6) to prevent errors during testing. 
+   - Add new playbook `> get fmg supported platforms` to get supported platforms from FMG and update `Randomly Create Model Devices - by Manager Record` to use it. 
 
 - 20240701 (1.0.4)
-  - Update json-rpc onnector to 1.0.4. 
+  - Update json-rpc Connector to 1.0.4. 
   - Modify ZTP Profile Views. 
-  - Modify URLs to use ADOM on API calls to beter support locking ADOMs. 
+  - Modify URLs to use ADOM on API calls to better support locking ADOMs. 
   - Add support for installing Policy Packages to a group within the playbook. 
   - Add get task and wait for task playbooks. 
 
@@ -65,13 +66,13 @@
   - Updated the auto assign profile. 
   - Add toggle for profile removals.
   - Add new playbooks for metafield handling and for auto assign options.
-  - Add logic to allow for chainint ZTP Profiles together. 
+  - Add logic to allow for chaining ZTP Profiles together. 
   - Tweak ZTP Auto Assignment and add Step Configuration. 
   - Added ZTP Trigger master playbook and implemented first assumed update path. 
   - Add new ZTP Phases and begin the ZTP Phase trigger system. 
 
 - 20230428
-  - Add ZTP Assignment and Mode picklists.
+  - Add ZTP Assignment and Mode pick lists.
   - Rename lots of buttons.
   - Added ZTP Phase data fields. 
   - Running Provisioning Templates now assigns devices to groups and uses the ZTP Profile Template Group Name if set...otherwise use the devname. 
@@ -117,4 +118,4 @@
   - Add synch with status in the playbook.
   - Multitenant support. 
   - Device Records with comments.
-  - Playbooks inclue synch, auth, and delete.
+  - Playbooks include synch, auth, and delete.

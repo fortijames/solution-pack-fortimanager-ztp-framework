@@ -24,7 +24,7 @@
                 "input": {
                     "schema": {
                         "title": "Provide Model Device details",
-                        "description": "# {{vars.input.records[0].managerName}}\nProvide a range of devices numbers to create. For example, if you select 1-100, Devices will be created with names FG0001-FG0100.<br>\nThe number you specify will be evenly distributes amongst all ADOMs.<br>\nThe preshared key will be the same as the device name.<br>\nThe platform_string will also be randomly generated. The valid options are set in this playbooks \"Set Vars\" step",
+                        "description": "# Platforms in Random Creation\n\n<center> \n<hr>\n{{vars.fmg_platform_strings | join(\", \")}} \n<hr>\n<\/center>\n\n# {{vars.input.records[0].managerName}}\nProvide a range of devices numbers to create. For example, if you select 1-100, Devices will be created with names FG0001-FG0100.<br>\nThe number you specify will be evenly distributes amongst all ADOMs.<br>\nThe preshared key will be the same as the device name.<br>\nThe platform_string will also be randomly generated. The valid options are set in this playbooks \"Set Vars\" step",
                         "inputVariables": [
                             {
                                 "name": "rangeOfDevices",
@@ -62,8 +62,10 @@
                 },
                 "agent_id": null,
                 "resources": "forti_cloud_assets",
+                "is_approval": false,
                 "owner_detail": {
-                    "isAssigned": false
+                    "isAssigned": false,
+                    "emailRecipients": ""
                 },
                 "isRecordLinked": false,
                 "step_variables": [],
@@ -72,17 +74,27 @@
                         {
                             "option": "Submit",
                             "step_iri": "\/api\/3\/workflow_steps\/63b55586-ff56-41e1-bd2b-58a97043b148"
+                        },
+                        {
+                            "option": "Cancel",
+                            "step_iri": "\/api\/3\/workflow_steps\/de467f4a-a9d1-4602-a472-a1484a2d94fb"
                         }
                     ],
-                    "duplicateOption": false
+                    "duplicateOption": false,
+                    "customSuccessMessage": "Awaiting Playbook resumed successfully."
                 },
                 "email_notification": {
                     "enabled": false,
                     "smtpParameters": []
                 },
+                "customEmailExternal": false,
                 "inline_channel_list": [],
                 "external_channel_list": [],
-                "unauthenticated_input": false
+                "unauthenticated_input": false,
+                "external_email_subject": null,
+                "internal_email_subject": "A FortiSOAR playbook is requesting your input",
+                "custom_email_body_external": null,
+                "external_email_attachments": null
             },
             "status": null,
             "top": "400",
@@ -112,6 +124,25 @@
             "stepType": "\/api\/3\/workflow_step_types\/1fdd14cc-d6b4-4335-a3af-ab49c8ed2fd8",
             "group": null,
             "uuid": "34551ce3-d7bd-497e-a1b9-3504a7ca2292"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Cancel or Timeout",
+            "description": null,
+            "arguments": {
+                "params": [],
+                "version": "3.4.0",
+                "connector": "cyops_utilities",
+                "operation": "no_op",
+                "operationTitle": "Utils: No Operation",
+                "step_variables": []
+            },
+            "status": null,
+            "top": "360",
+            "left": "400",
+            "stepType": "\/api\/3\/workflow_step_types\/0109f35d-090b-4a2b-bd8a-94cbc3508562",
+            "group": null,
+            "uuid": "de467f4a-a9d1-4602-a472-a1484a2d94fb"
         },
         {
             "@type": "WorkflowStep",
@@ -158,6 +189,20 @@
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
             "uuid": "4ce9ea62-13a7-4636-848d-2e3a2b47ac8b"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "create fmg platforms",
+            "description": null,
+            "arguments": {
+                "fmg_platforms": "{%- set table = [] -%}\n{%- if vars.fmg_platforms_command != '' -%}\n  {%- for l in vars.fmg_platforms_command.split('\\n') -%}\n    {%- if l | regex_search(\"\\s+Forti.*-\") -%}\n      {%- set m = l | regex_replace(\"^\\s+\",\"\") | split(\" \")  -%}\n      {%- set _do = table.append(m[0]) -%}\n    {%- endif -%}\n  {%- endfor -%}\n{%- else -%}\n      {%- set _do = table.append(\"FortiGate-VM64\") -%}\n{%- endif -%}\n{{table}}"
+            },
+            "status": null,
+            "top": "120",
+            "left": "400",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "959dd5fd-9850-4e2f-beb8-e5e3d8c1ed80"
         },
         {
             "@type": "WorkflowStep",
@@ -240,17 +285,60 @@
         },
         {
             "@type": "WorkflowStep",
-            "name": "fmg platform command output",
-            "description": "Paste results from \"diagnose dvm supported-platforms list fortigate\", with any modifications of removing lines, to override the platform index.",
+            "name": "extract fmg platforms",
+            "description": null,
             "arguments": {
-                "fmg_platforms_command": ""
+                "fmg_platforms": "{%- set platforms = vars.fmg_platform_data -%}\n{%- set table = [] -%}\n{%- set flags = {}-%}\n{%- for p in platforms -%}\n\n  {%- set _do = flags.update({\"exclude\": False}) -%}\n  {%- set _do = flags.update({\"include\": False}) -%}\n\n  {%- for e in vars.exclude_patterns -%}\n    {%- if not flags.exclude and (p['platform_name']|lower | regex_search(e|lower)) -%}\n      {%- set _do = flags.update({\"exclude\": True}) -%}\n    {%- endif -%} \n  {%- endfor -%}\n\n  {%- if vars.include_patterns|length > 0 -%}\n    {%- for e in vars.include_patterns -%}\n      {%- if not flags.include and (p['platform_name']|lower | regex_search(e|lower)) -%}\n        {%- set _do = flags.update({\"include\": True}) -%}\n      {%- endif -%} \n    {%- endfor -%}\n  {%- else -%}\n    {%- set _do = flags.update({\"include\": True}) -%}\n  {%- endif -%}\n\n  {%- if flags.include and not flags.exclude -%}\n    {%- set _do = table.append(p['platform_name']) -%}\n  {%- endif -%}\n\n{%- endfor -%}\n{{table}}"
             },
             "status": null,
-            "top": "60",
+            "top": "200",
+            "left": "400",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "77b11044-fc65-4981-8baa-da78a2d3a1f0"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "fmg platform override",
+            "description": "Paste results from \"diagnose dvm supported-platforms list fortigate\", with any modifications of removing lines, to override the platform index. Use the include or exclude variables, as a list, with regex to modify the list from the FMG API call.",
+            "arguments": {
+                "exclude_patterns": "{%- if vars.input.params.excludePatterns is iterable -%}\n{{vars.input.params.excludePatterns}}\n{%- else -%}\n[\n  'Container',\n  'FortiGate-[67]00\\d'\n]\n{%- endif -%}",
+                "include_patterns": "{%- if vars.input.params.includePatterns is iterable -%}\n{{vars.input.params.includePatterns}}\n{%- else -%}\n''\n{%- endif -%}",
+                "fmg_platforms_command": "",
+                "exclude_patterns_example": "[\n  'Container',\n  'FortiGate-[67]00\\d'\n]",
+                "include_patterns_example": "[\n\"FortiGate-4[012][A-Z]\",\n\"FortiGate-5[012][A-Z]\"\n]"
+            },
+            "status": null,
+            "top": "20",
             "left": "400",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
             "uuid": "0d6704d0-a854-47c1-82d8-ddeb1b960a9e"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "get fmg platforms",
+            "description": null,
+            "arguments": {
+                "arguments": {
+                    "adom": "root",
+                    "os_type": "fos",
+                    "connector_config": "{{vars.input.records[0].managerName}}"
+                },
+                "apply_async": false,
+                "step_variables": {
+                    "fmg_platform_data": "{{vars.steps.get_fmg_platforms.output[0].data}}"
+                },
+                "pass_parent_env": false,
+                "pass_input_record": false,
+                "workflowReference": "\/api\/3\/workflows\/5ead9a57-6f2d-4a12-b561-c924865c7cc8"
+            },
+            "status": null,
+            "top": "200",
+            "left": "780",
+            "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
+            "group": null,
+            "uuid": "5bc962e0-481d-4717-ba36-42de5803c5e8"
         },
         {
             "@type": "WorkflowStep",
@@ -272,6 +360,34 @@
             "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
             "group": null,
             "uuid": "923ae0d5-1187-43e5-9038-4c7928aa84a9"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Query for Patforms",
+            "description": null,
+            "arguments": {
+                "conditions": [
+                    {
+                        "option": "Query",
+                        "default": true,
+                        "step_iri": "\/api\/3\/workflow_steps\/5bc962e0-481d-4717-ba36-42de5803c5e8",
+                        "step_name": "get fmg platforms"
+                    },
+                    {
+                        "option": "Create Platform List",
+                        "step_iri": "\/api\/3\/workflow_steps\/959dd5fd-9850-4e2f-beb8-e5e3d8c1ed80",
+                        "condition": "{{ vars.fmg_platforms_command != '' }}",
+                        "step_name": "create fmg platforms"
+                    }
+                ],
+                "step_variables": []
+            },
+            "status": null,
+            "top": "60",
+            "left": "780",
+            "stepType": "\/api\/3\/workflow_step_types\/12254cf5-5db7-4b1a-8cb1-3af081924b28",
+            "group": null,
+            "uuid": "b9aa7e80-3724-4dc8-acec-7add75e76e42"
         },
         {
             "@type": "WorkflowStep",
@@ -306,31 +422,17 @@
         },
         {
             "@type": "WorkflowStep",
-            "name": "set platform list",
-            "description": null,
-            "arguments": {
-                "fmg_platform_strings": "{%- set table = [] -%}\n{%- if vars.fmg_platforms_command != '' -%}\n  {%- for l in vars.fmg_platforms_command.split('\\n') -%}\n    {%- if l | regex_search(\"\\s+Forti.*-\") -%}\n      {%- set m = l | regex_replace(\"^\\s+\",\"\") | split(\" \")  -%}\n      {%- set _do = table.append(m[0]) -%}\n    {%- endif -%}\n  {%- endfor -%}\n{%- elif vars.fmg_platform_idx[vars.fmg_version] is defined -%}\n      {%- set table = vars.fmg_platform_idx[vars.fmg_version]  -%}\n{%- else -%}\n      {%- set _do = table.append(\"FortiGate-VM64\") -%}\n{%- endif -%}\n{{table}}"
-            },
-            "status": null,
-            "top": "200",
-            "left": "40",
-            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
-            "group": null,
-            "uuid": "21b9ec73-b62d-4121-aab0-8d1b480ec559"
-        },
-        {
-            "@type": "WorkflowStep",
             "name": "setup vars",
             "description": null,
             "arguments": {
                 "fmg_version": "{%- set f = vars.input.records[0].firmware.split(\".\") -%}\n{{f[0] + \".\" + f[1]}}",
                 "connector_name": "fortinet-fortimanager-json-rpc",
                 "connector_config": "{{vars.input.records[0].managerName}}",
-                "fmg_platform_idx": "{\n  \"v7.2\": [\n    \"FortiGate-40F\",\n    \"FortiGate-40F-3G4G\",\n    \"FortiGate-60E\",\n    \"FortiGate-60E-DSL\",\n    \"FortiGate-60E-DSLJ\",\n    \"FortiGate-60E-POE\",\n    \"FortiGate-60F\",\n    \"FortiGate-61E\",\n    \"FortiGate-61F\",\n    \"FortiGate-70F\",\n    \"FortiGate-70G\",\n    \"FortiGate-70G-POE\",\n    \"FortiGate-71F\",\n    \"FortiGate-71G\",\n    \"FortiGate-71G-POE\",\n    \"FortiGate-80E\",\n    \"FortiGate-80E-POE\",\n    \"FortiGate-80F\",\n    \"FortiGate-80F-Bypass\",\n    \"FortiGate-80F-DSL\",\n    \"FortiGate-80F-POE\",\n    \"FortiGate-81E\",\n    \"FortiGate-81E-POE\",\n    \"FortiGate-81F\",\n    \"FortiGate-81F-POE\",\n    \"FortiGate-90E\",\n    \"FortiGate-90G\",\n    \"FortiGate-91E\",\n    \"FortiGate-91G\",\n    \"FortiGate-100E\",\n    \"FortiGate-100EF\",\n    \"FortiGate-100F\",\n    \"FortiGate-101E\",\n    \"FortiGate-101F\",\n    \"FortiGate-120G\",\n    \"FortiGate-121G\",\n    \"FortiGate-140E\",\n    \"FortiGate-140E-POE\",\n    \"FortiGate-200E\",\n    \"FortiGate-200F\",\n    \"FortiGate-200G\",\n    \"FortiGate-201E\",\n    \"FortiGate-201F\",\n    \"FortiGate-201G\",\n    \"FortiGate-300E\",\n    \"FortiGate-301E\",\n    \"FortiGate-400E\",\n    \"FortiGate-400E-Bypass\",\n    \"FortiGate-400F\",\n    \"FortiGate-401E\",\n    \"FortiGate-401F\",\n    \"FortiGate-500E\",\n    \"FortiGate-501E\",\n    \"FortiGate-600E\",\n    \"FortiGate-600F\",\n    \"FortiGate-601E\",\n    \"FortiGate-601F\",\n    \"FortiGate-800D\",\n    \"FortiGate-900D\",\n    \"FortiGate-900G\",\n    \"FortiGate-901G\",\n    \"FortiGate-1000D\",\n    \"FortiGate-1000F\",\n    \"FortiGate-1001F\",\n    \"FortiGate-1100E\",\n    \"FortiGate-1101E\",\n    \"FortiGate-1200D\",\n    \"FortiGate-1500D\",\n    \"FortiGate-1500DT\",\n    \"FortiGate-1800F\",\n    \"FortiGate-1801F\",\n    \"FortiGate-2000E\",\n    \"FortiGate-2200E\",\n    \"FortiGate-2201E\",\n    \"FortiGate-2500E\",\n    \"FortiGate-2600F\",\n    \"FortiGate-2601F\",\n    \"FortiGate-3000D\",\n    \"FortiGate-3000F\",\n    \"FortiGate-3001F\",\n    \"FortiGate-3100D\",\n    \"FortiGate-3200D\",\n    \"FortiGate-3200F\",\n    \"FortiGate-3201F\",\n    \"FortiGate-3300E\",\n    \"FortiGate-3301E\",\n    \"FortiGate-3400E\",\n    \"FortiGate-3401E\",\n    \"FortiGate-3500F\",\n    \"FortiGate-3501F\",\n    \"FortiGate-3600E\",\n    \"FortiGate-3601E\",\n    \"FortiGate-3700D\",\n    \"FortiGate-3700F\",\n    \"FortiGate-3701F\",\n    \"FortiGate-3800D\",\n    \"FortiGate-3960E\",\n    \"FortiGate-3980E\",\n    \"FortiGate-4200F\",\n    \"FortiGate-4201F\",\n    \"FortiGate-VM64\",\n    \"FortiGate-VM64-ALI\",\n    \"FortiGate-VM64-AWS\",\n    \"FortiGate-VM64-Azure\",\n    \"FortiGate-VM64-GCP\",\n    \"FortiGate-VM64-HV\",\n    \"FortiGate-VM64-IBM\",\n    \"FortiGate-VM64-KVM\",\n    \"FortiGate-VM64-OPC\",\n    \"FortiGate-VM64-RAXONDEMAND\",\n    \"FortiGate-VM64-Xen\",\n    \"FortiGate-VMX-Service-Manager\",\n    \"FortiGateRugged-60F\",\n    \"FortiGateRugged-60F-3G4G\",\n    \"FortiGateRugged-70F\",\n    \"FortiGateRugged-70F-3G4G\",\n    \"FortiOS-VM64\",\n    \"FortiOS-VM64-HV\",\n    \"FortiOS-VM64-KVM\",\n    \"FortiOS-VM64-Xen\",\n    \"FortiWiFi-30G\",\n    \"FortiWiFi-40F\",\n    \"FortiWiFi-40F-3G4G\",\n    \"FortiWiFi-60E\",\n    \"FortiWiFi-60E-DSL\",\n    \"FortiWiFi-60E-DSLJ\",\n    \"FortiWiFi-60F\",\n    \"FortiWiFi-61E\",\n    \"FortiWiFi-61F\",\n    \"FortiWiFi-70G\",\n    \"FortiWiFi-71G\",\n    \"FortiWiFi-80F-2R\",\n    \"FortiWiFi-80F-2R-3G4G-DSL\",\n    \"FortiWiFi-81F-2R\",\n    \"FortiWiFi-81F-2R-3G4G-DSL\",\n    \"FortiWiFi-81F-2R-3G4G-POE\",\n    \"FortiWiFi-81F-2R-POE\",\n    \"FortiGate-ARM64-AWS\",\n    \"FortiGate-ARM64-Azure\",\n    \"FortiGate-ARM64-GCP\",\n    \"FortiGate-ARM64-KVM\",\n    \"FortiGate-ARM64-OCI\"\n  ],\n  \"v7.4\": [\n    \"FortiGate-40F-3G4G\",\n    \"FortiGate-60E\",\n    \"FortiGate-60E-DSL\",\n    \"FortiGate-60E-DSLJ\",\n    \"FortiGate-60E-POE\",\n    \"FortiGate-60F\",\n    \"FortiGate-61E\",\n    \"FortiGate-61F\",\n    \"FortiGate-70F\",\n    \"FortiGate-71F\",\n    \"FortiGate-80E\",\n    \"FortiGate-80E-POE\",\n    \"FortiGate-80F\",\n    \"FortiGate-80F-Bypass\",\n    \"FortiGate-80F-DSL\",\n    \"FortiGate-80F-POE\",\n    \"FortiGate-81E\",\n    \"FortiGate-81E-POE\",\n    \"FortiGate-81F\",\n    \"FortiGate-81F-POE\",\n    \"FortiGate-90E\",\n    \"FortiGate-90G\",\n    \"FortiGate-91E\",\n    \"FortiGate-91G\",\n    \"FortiGate-100E\",\n    \"FortiGate-100EF\",\n    \"FortiGate-100F\",\n    \"FortiGate-101E\",\n    \"FortiGate-101F\",\n    \"FortiGate-120G\",\n    \"FortiGate-121G\",\n    \"FortiGate-140E\",\n    \"FortiGate-140E-POE\",\n    \"FortiGate-200E\",\n    \"FortiGate-200F\",\n    \"FortiGate-201E\",\n    \"FortiGate-201F\",\n    \"FortiGate-300E\",\n    \"FortiGate-301E\",\n    \"FortiGate-400E\",\n    \"FortiGate-400E-Bypass\",\n    \"FortiGate-400F\",\n    \"FortiGate-401E\",\n    \"FortiGate-401F\",\n    \"FortiGate-500E\",\n    \"FortiGate-501E\",\n    \"FortiGate-600E\",\n    \"FortiGate-600F\",\n    \"FortiGate-601E\",\n    \"FortiGate-601F\",\n    \"FortiGate-800D\",\n    \"FortiGate-900D\",\n    \"FortiGate-900G\",\n    \"FortiGate-901G\",\n    \"FortiGate-1000D\",\n    \"FortiGate-1000F\",\n    \"FortiGate-1001F\",\n    \"FortiGate-1100E\",\n    \"FortiGate-1101E\",\n    \"FortiGate-1500D\",\n    \"FortiGate-1500DT\",\n    \"FortiGate-1800F\",\n    \"FortiGate-1801F\",\n    \"FortiGate-2000E\",\n    \"FortiGate-2200E\",\n    \"FortiGate-2201E\",\n    \"FortiGate-2500E\",\n    \"FortiGate-2600F\",\n    \"FortiGate-2601F\",\n    \"FortiGate-3000D\",\n    \"FortiGate-3000F\",\n    \"FortiGate-3001F\",\n    \"FortiGate-3100D\",\n    \"FortiGate-3200D\",\n    \"FortiGate-3200F\",\n    \"FortiGate-3201F\",\n    \"FortiGate-3300E\",\n    \"FortiGate-3301E\",\n    \"FortiGate-3400E\",\n    \"FortiGate-3401E\",\n    \"FortiGate-3500F\",\n    \"FortiGate-3501F\",\n    \"FortiGate-3600E\",\n    \"FortiGate-3601E\",\n    \"FortiGate-3700D\",\n    \"FortiGate-3700F\",\n    \"FortiGate-3701F\",\n    \"FortiGate-3800D\",\n    \"FortiGate-3960E\",\n    \"FortiGate-3980E\",\n    \"FortiGate-4200F\",\n    \"FortiGate-4201F\",\n    \"FortiGate-4400F\",\n    \"FortiGate-4401F\",\n    \"FortiGate-4800F\",\n    \"FortiGate-4801F\",\n    \"FortiGate-VM64\",\n    \"FortiGate-VM64-ALI\",\n    \"FortiGate-VM64-AWS\",\n    \"FortiGate-VM64-Azure\",\n    \"FortiGate-VM64-GCP\",\n    \"FortiGate-VM64-HV\",\n    \"FortiGate-VM64-IBM\",\n    \"FortiGate-VM64-KVM\",\n    \"FortiGate-VM64-OPC\",\n    \"FortiGate-VM64-RAXONDEMAND\",\n    \"FortiGate-VM64-Xen\",\n    \"FortiGateRugged-60F\",\n    \"FortiGateRugged-60F-3G4G\",\n    \"FortiGateRugged-70F\",\n    \"FortiGateRugged-70F-3G4G\",\n    \"FortiWiFi-40F\",\n    \"FortiWiFi-40F-3G4G\",\n    \"FortiWiFi-60E\",\n    \"FortiWiFi-60E-DSL\",\n    \"FortiWiFi-60E-DSLJ\",\n    \"FortiWiFi-60F\",\n    \"FortiWiFi-61E\",\n    \"FortiWiFi-61F\",\n    \"FortiWiFi-80F-2R\",\n    \"FortiWiFi-80F-2R-3G4G-DSL\",\n    \"FortiWiFi-81F-2R\",\n    \"FortiWiFi-81F-2R-3G4G-DSL\",\n    \"FortiWiFi-81F-2R-3G4G-POE\",\n    \"FortiWiFi-81F-2R-POE\",\n    \"FortiGate-ARM64-AWS\",\n    \"FortiGate-ARM64-Azure\",\n    \"FortiGate-ARM64-GCP\",\n    \"FortiGate-ARM64-KVM\",\n    \"FortiGate-ARM64-OCI\"\n  ],\n  \"v7.6\": [\n    \"FortiGate-40F-3G4G\",\n    \"FortiGate-60F\",\n    \"FortiGate-61F\",\n    \"FortiGate-70F\",\n    \"FortiGate-71F\",\n    \"FortiGate-80F\",\n    \"FortiGate-80F-Bypass\",\n    \"FortiGate-80F-DSL\",\n    \"FortiGate-80F-POE\",\n    \"FortiGate-81F\",\n    \"FortiGate-81F-POE\",\n    \"FortiGate-100F\",\n    \"FortiGate-101F\",\n    \"FortiGate-200E\",\n    \"FortiGate-200F\",\n    \"FortiGate-201E\",\n    \"FortiGate-201F\",\n    \"FortiGate-300E\",\n    \"FortiGate-301E\",\n    \"FortiGate-400E\",\n    \"FortiGate-400E-Bypass\",\n    \"FortiGate-400F\",\n    \"FortiGate-401E\",\n    \"FortiGate-401F\",\n    \"FortiGate-500E\",\n    \"FortiGate-501E\",\n    \"FortiGate-600E\",\n    \"FortiGate-600F\",\n    \"FortiGate-601E\",\n    \"FortiGate-601F\",\n    \"FortiGate-800D\",\n    \"FortiGate-900D\",\n    \"FortiGate-900G\",\n    \"FortiGate-901G\",\n    \"FortiGate-1000D\",\n    \"FortiGate-1000F\",\n    \"FortiGate-1001F\",\n    \"FortiGate-1100E\",\n    \"FortiGate-1101E\",\n    \"FortiGate-1800F\",\n    \"FortiGate-1801F\",\n    \"FortiGate-2000E\",\n    \"FortiGate-2200E\",\n    \"FortiGate-2201E\",\n    \"FortiGate-2500E\",\n    \"FortiGate-2600F\",\n    \"FortiGate-2601F\",\n    \"FortiGate-3000D\",\n    \"FortiGate-3000F\",\n    \"FortiGate-3001F\",\n    \"FortiGate-3100D\",\n    \"FortiGate-3200D\",\n    \"FortiGate-3200F\",\n    \"FortiGate-3201F\",\n    \"FortiGate-3300E\",\n    \"FortiGate-3301E\",\n    \"FortiGate-3400E\",\n    \"FortiGate-3401E\",\n    \"FortiGate-3500F\",\n    \"FortiGate-3501F\",\n    \"FortiGate-3600E\",\n    \"FortiGate-3601E\",\n    \"FortiGate-3700D\",\n    \"FortiGate-3700F\",\n    \"FortiGate-3701F\",\n    \"FortiGate-3960E\",\n    \"FortiGate-3980E\",\n    \"FortiGate-4200F\",\n    \"FortiGate-4201F\",\n    \"FortiGate-VM64\",\n    \"FortiGate-VM64-ALI\",\n    \"FortiGate-VM64-AWS\",\n    \"FortiGate-VM64-Azure\",\n    \"FortiGate-VM64-GCP\",\n    \"FortiGate-VM64-HV\",\n    \"FortiGate-VM64-IBM\",\n    \"FortiGate-VM64-KVM\",\n    \"FortiGate-VM64-OPC\",\n    \"FortiGate-VM64-RAXONDEMAND\",\n    \"FortiGate-VM64-Xen\",\n    \"FortiGateRugged-60F\",\n    \"FortiGateRugged-60F-3G4G\",\n    \"FortiGateRugged-70F\",\n    \"FortiGateRugged-70F-3G4G\",\n    \"FortiWiFi-40F\",\n    \"FortiWiFi-40F-3G4G\",\n    \"FortiWiFi-60F\",\n    \"FortiWiFi-61F\",\n    \"FortiWiFi-80F-2R\",\n    \"FortiWiFi-80F-2R-3G4G-DSL\",\n    \"FortiWiFi-81F-2R\",\n    \"FortiWiFi-81F-2R-3G4G-DSL\",\n    \"FortiWiFi-81F-2R-3G4G-POE\",\n    \"FortiWiFi-81F-2R-POE\",\n    \"FortiGate-ARM64-AWS\",\n    \"FortiGate-ARM64-Azure\",\n    \"FortiGate-ARM64-GCP\",\n    \"FortiGate-ARM64-KVM\",\n    \"FortiGate-ARM64-OCI\"\n  ]\n}",
-                "connector_version": "1.0.0"
+                "connector_version": "1.0.0",
+                "fmg_platform_strings": "{{vars.fmg_platforms}}"
             },
             "status": null,
-            "top": "100",
+            "top": "160",
             "left": "40",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
@@ -346,14 +448,73 @@
                 "resources": [
                     "managers"
                 ],
-                "inputVariables": [],
+                "__triggerLimit": true,
+                "inputVariables": [
+                    {
+                        "name": "includePatterns",
+                        "type": "string",
+                        "label": "Include Patterns",
+                        "title": "Text Area",
+                        "usable": false,
+                        "tooltip": "Using a json list and regex patterns specify the models you want to INCLUDE in the random platform list.",
+                        "dataType": "text",
+                        "formType": "textarea",
+                        "required": false,
+                        "_expanded": true,
+                        "mmdUpdate": false,
+                        "collection": false,
+                        "searchable": false,
+                        "templateUrl": "app\/components\/form\/fields\/json.html",
+                        "defaultValue": null,
+                        "_previousName": "includePatterns",
+                        "playbookField": true,
+                        "lengthConstraint": false,
+                        "allowedGridColumn": false,
+                        "jinjaExpressionView": true,
+                        "useRecordFieldDefault": false
+                    },
+                    {
+                        "name": "excludePatterns",
+                        "type": "string",
+                        "label": "Exclude Patterns",
+                        "title": "Text Area",
+                        "usable": false,
+                        "tooltip": "Using a json list and regex patterns specify the models you want EXCLUDE in the random platform list.",
+                        "dataType": "text",
+                        "formType": "textarea",
+                        "required": false,
+                        "_expanded": true,
+                        "mmdUpdate": false,
+                        "collection": false,
+                        "searchable": false,
+                        "templateUrl": "app\/components\/form\/fields\/json.html",
+                        "defaultValue": null,
+                        "_previousName": "includePatterns",
+                        "playbookField": true,
+                        "visibilityQuery": {
+                            "sort": [],
+                            "limit": 30,
+                            "logic": "AND",
+                            "filters": []
+                        },
+                        "lengthConstraint": false,
+                        "allowedGridColumn": false,
+                        "jinjaExpressionView": true,
+                        "useRecordFieldDefault": false,
+                        "_addVisibilityConditions": true
+                    }
+                ],
                 "step_variables": {
                     "input": {
-                        "params": [],
+                        "params": {
+                            "excludePatterns": "{{vars.request.data[\"excludePatterns\"]}}",
+                            "includePatterns": "{{vars.request.data[\"includePatterns\"]}}"
+                        },
                         "records": "{{vars.input.records}}"
                     }
                 },
                 "_promptexpanded": true,
+                "triggerOnSource": true,
                 "displayConditions": {
                     "managers": {
                         "sort": [],
@@ -370,6 +531,11 @@
                 },
                 "executeButtonText": "Execute",
                 "noRecordExecution": false,
+                "showToasterMessage": {
+                    "visible": false,
+                    "messageVisible": true
+                },
+                "triggerOnReplicate": false,
                 "singleRecordExecution": true
             },
             "status": null,
@@ -399,25 +565,6 @@
             "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
             "group": null,
             "uuid": "0e92fd1e-2fa1-4849-9322-1b1044cf2530"
-        },
-        {
-            "@type": "WorkflowStep",
-            "name": "Timeout",
-            "description": null,
-            "arguments": {
-                "params": [],
-                "version": "3.2.3",
-                "connector": "cyops_utilities",
-                "operation": "no_op",
-                "operationTitle": "Utils: No Operation",
-                "step_variables": []
-            },
-            "status": null,
-            "top": "360",
-            "left": "400",
-            "stepType": "\/api\/3\/workflow_step_types\/0109f35d-090b-4a2b-bd8a-94cbc3508562",
-            "group": null,
-            "uuid": "de467f4a-a9d1-4602-a472-a1484a2d94fb"
         },
         {
             "@type": "WorkflowStep",
@@ -453,7 +600,7 @@
             "name": "Ask for user input -> Timeout",
             "targetStep": "\/api\/3\/workflow_steps\/de467f4a-a9d1-4602-a472-a1484a2d94fb",
             "sourceStep": "\/api\/3\/workflow_steps\/4e401cca-0a2b-480b-b702-9929819bc7a1",
-            "label": "",
+            "label": "Cancel",
             "isExecuted": false,
             "group": null,
             "uuid": "3a3b3464-bb75-43c6-9cb2-8d46268689a0"
@@ -480,6 +627,16 @@
         },
         {
             "@type": "WorkflowRoute",
+            "name": "create fmg platforms -> setup vars",
+            "targetStep": "\/api\/3\/workflow_steps\/84f2ff04-60ff-4876-8c80-bd3db1a17b96",
+            "sourceStep": "\/api\/3\/workflow_steps\/959dd5fd-9850-4e2f-beb8-e5e3d8c1ed80",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "8a46371b-91c0-4e1f-9662-c9407f6faf59"
+        },
+        {
+            "@type": "WorkflowRoute",
             "name": "Create model device -> synch_devicedb",
             "targetStep": "\/api\/3\/workflow_steps\/0e92fd1e-2fa1-4849-9322-1b1044cf2530",
             "sourceStep": "\/api\/3\/workflow_steps\/c57458d4-a7cb-499d-ac06-902af6c14d61",
@@ -490,13 +647,33 @@
         },
         {
             "@type": "WorkflowRoute",
-            "name": "fmg platform command output -> setup vars",
+            "name": "extract fmg platforms -> setup vars",
             "targetStep": "\/api\/3\/workflow_steps\/84f2ff04-60ff-4876-8c80-bd3db1a17b96",
+            "sourceStep": "\/api\/3\/workflow_steps\/77b11044-fc65-4981-8baa-da78a2d3a1f0",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "01fd2e12-197c-4f02-85ee-d16fbc2a4a81"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "fmg platform command output -> Query for Patforms",
+            "targetStep": "\/api\/3\/workflow_steps\/b9aa7e80-3724-4dc8-acec-7add75e76e42",
             "sourceStep": "\/api\/3\/workflow_steps\/0d6704d0-a854-47c1-82d8-ddeb1b960a9e",
             "label": null,
             "isExecuted": false,
             "group": null,
-            "uuid": "6ec6d6cd-c7ee-4da3-8f5c-568f1dffbec8"
+            "uuid": "567a7a3a-7159-4ac5-b9e8-fb77e6dcbceb"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "get fmg platforms -> extract fmg platforms",
+            "targetStep": "\/api\/3\/workflow_steps\/77b11044-fc65-4981-8baa-da78a2d3a1f0",
+            "sourceStep": "\/api\/3\/workflow_steps\/5bc962e0-481d-4717-ba36-42de5803c5e8",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "08e50724-8265-4efb-a0e0-204c9cb6cb8c"
         },
         {
             "@type": "WorkflowRoute",
@@ -507,6 +684,26 @@
             "isExecuted": false,
             "group": null,
             "uuid": "bf488ab3-d31f-49bc-8826-57280e6a3652"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Query for Patforms -> create fmg platforms",
+            "targetStep": "\/api\/3\/workflow_steps\/959dd5fd-9850-4e2f-beb8-e5e3d8c1ed80",
+            "sourceStep": "\/api\/3\/workflow_steps\/b9aa7e80-3724-4dc8-acec-7add75e76e42",
+            "label": "Create Platform List",
+            "isExecuted": false,
+            "group": null,
+            "uuid": "cf21325a-474d-40fa-b7ee-4eba9336f19a"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Query for Patforms -> get fmg platforms",
+            "targetStep": "\/api\/3\/workflow_steps\/5bc962e0-481d-4717-ba36-42de5803c5e8",
+            "sourceStep": "\/api\/3\/workflow_steps\/b9aa7e80-3724-4dc8-acec-7add75e76e42",
+            "label": "Query",
+            "isExecuted": false,
+            "group": null,
+            "uuid": "43467611-70a8-4562-80f9-346e6d8c90d0"
         },
         {
             "@type": "WorkflowRoute",
@@ -530,23 +727,13 @@
         },
         {
             "@type": "WorkflowRoute",
-            "name": "set platform list -> Ask for user input",
+            "name": "setup vars -> Ask for user input",
             "targetStep": "\/api\/3\/workflow_steps\/4e401cca-0a2b-480b-b702-9929819bc7a1",
-            "sourceStep": "\/api\/3\/workflow_steps\/21b9ec73-b62d-4121-aab0-8d1b480ec559",
-            "label": null,
-            "isExecuted": false,
-            "group": null,
-            "uuid": "c44f8894-e4bf-4df5-ab13-9ec0f44f72d9"
-        },
-        {
-            "@type": "WorkflowRoute",
-            "name": "setup vars -> set platform list",
-            "targetStep": "\/api\/3\/workflow_steps\/21b9ec73-b62d-4121-aab0-8d1b480ec559",
             "sourceStep": "\/api\/3\/workflow_steps\/84f2ff04-60ff-4876-8c80-bd3db1a17b96",
             "label": null,
             "isExecuted": false,
             "group": null,
-            "uuid": "7bfb0c8d-6325-4012-b6e9-ddc9d2d4258a"
+            "uuid": "a2095f13-aab9-483d-aa51-057b08ff0819"
         },
         {
             "@type": "WorkflowRoute",
@@ -582,23 +769,6 @@
     "groups": [
         {
             "@type": "WorkflowGroup",
-            "name": "Enhancements Needed",
-            "description": "This should ideally query the fortimanager connector automatically to find the api name and the version so that it's not hardcoded\n\nWould be nice to just pass `fortimanager` with an option to prefer dev builds of the connector, and it returns the full api name and latest version",
-            "type": "note",
-            "isCollapsed": false,
-            "hasTriggerStep": false,
-            "hideInLogs": true,
-            "metadata": [],
-            "reusable": false,
-            "top": "100",
-            "left": "840",
-            "height": "199",
-            "width": "409",
-            "uuid": "a92435b4-d1bc-4df5-af40-8fd9fa11fb4a",
-            "recordTags": []
-        },
-        {
-            "@type": "WorkflowGroup",
             "name": "Important Notes",
             "description": "This playbook will assume for you to use the same fortios version as the ADOM. IE if you chose ADOM X and it has version 7.2, 7.2 will be used for the fortios.",
             "type": "note",
@@ -617,15 +787,15 @@
         {
             "@type": "WorkflowGroup",
             "name": "Platform Logic",
-            "description": "Platforms and OS supported by the FMG main version are stored inside vars.fmg_platform_idx. If you want to override this you can run the command \/diagnose dvm supported-platforms list fortigate\/ in the FMG and paste the results into the vars.fmg_platforms_command.",
+            "description": "Platforms are obtained by querying FMG and using the include and excude variables to tune the results. If you want to override this you can run the command \/diagnose dvm supported-platforms list fortigate\/ in the FMG and paste the results into the vars.fmg_platforms_command.",
             "type": "note",
             "isCollapsed": false,
             "hasTriggerStep": false,
             "hideInLogs": false,
             "metadata": [],
             "reusable": false,
-            "top": "160",
-            "left": "320",
+            "top": "80",
+            "left": "1040",
             "height": "168",
             "width": "498",
             "uuid": "38c87146-f74b-459f-ae8e-893e641392ab",
@@ -638,6 +808,8 @@
     "isPrivate": false,
     "deletedAt": null,
     "recordTags": [
-        "Enhancements Needed"
+        "connector_config",
+        "erxclude_patterns",
+        "include_patterns"
     ]
 }
