@@ -40,11 +40,11 @@
             "name": "convert values",
             "description": null,
             "arguments": {
-                "config": "6452db36-dc11-44a1-9a7f-231a9b569ef5",
+                "config": "74c7e349-a99d-44ac-a576-8c1b158fc364",
                 "params": {
                     "python_function": "metadata_list = {{vars.device_metadatas}}\nall_values = {{vars.all_values}}\nremove_empty_devices = {{vars.remove_empty_devices}}\n\nfor metadata_dict in metadata_list:\n    device_key = list(metadata_dict.keys())[0]\n    metadata = metadata_dict.get(device_key)\n    # return all key:values, but fix falsy values to be an empty string\n    if all_values:\n        new_metadata = {k: v if v else \"\" for k, v in metadata.items()}\n    # only return falsy values\n    else:\n        new_metadata = {k: \"\" for k, v in metadata.items() if not v}\n\n    #remove empty devices from the list if they do not have any empty variables\n    if remove_empty_devices and len(new_metadata) == 0:\n        metadata_dict.pop(device_key)\n    else:\n        metadata_dict.update({device_key: new_metadata})\n\n#clean up empty dictionaries to handle possible pops from remove_empty_devices\nmetadata_list = [item for item in metadata_list if item]\nprint(metadata_list)"
                 },
-                "version": "2.0.3",
+                "version": "2.1.3",
                 "connector": "code-snippet",
                 "operation": "python_inline_code_editor",
                 "operationTitle": "Execute Python Code",
