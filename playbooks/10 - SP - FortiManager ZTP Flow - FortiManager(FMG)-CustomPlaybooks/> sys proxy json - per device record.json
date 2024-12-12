@@ -1,0 +1,212 @@
+{
+    "@type": "Workflow",
+    "triggerLimit": null,
+    "name": "> sys proxy json - per device record",
+    "aliasName": null,
+    "tag": null,
+    "description": "Perform a sys\/proxy\/json call to FMG for a device.",
+    "isActive": true,
+    "debug": false,
+    "singleRecordExecution": false,
+    "remoteExecutableFlag": false,
+    "parameters": [
+        "device_id",
+        "fos_resource",
+        "fos_action",
+        "payload"
+    ],
+    "synchronous": false,
+    "collection": "\/api\/3\/workflow_collections\/256151d7-abbd-444a-b28f-774e9f5582de",
+    "versions": [],
+    "triggerStep": "\/api\/3\/workflow_steps\/a6e50796-46bf-4f17-afb3-86365d52cf3e",
+    "steps": [
+        {
+            "@type": "WorkflowStep",
+            "name": "api_call",
+            "description": null,
+            "arguments": {
+                "name": "Fortinet FortiManager JSON-RPC",
+                "config": "{{vars.steps.device_data[0].connectorConfig}}",
+                "params": {
+                    "url": "{{vars.api_url}}",
+                    "data": "{{vars.payload}}",
+                    "track_task": false
+                },
+                "version": "1.0.6",
+                "connector": "fortinet-fortimanager-json-rpc",
+                "operation": "json_rpc_execute",
+                "operationTitle": "JSON RPC Exec",
+                "pickFromTenant": false,
+                "step_variables": []
+            },
+            "status": null,
+            "top": "380",
+            "left": "560",
+            "stepType": "\/api\/3\/workflow_step_types\/0bfed618-0316-11e7-93ae-92361f002671",
+            "group": null,
+            "uuid": "eb844ed8-a6ae-40c5-8189-0d9d23e79dca"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "device data",
+            "description": null,
+            "arguments": {
+                "query": {
+                    "sort": [],
+                    "limit": 30,
+                    "logic": "AND",
+                    "filters": [
+                        {
+                            "type": "primitive",
+                            "field": "id",
+                            "value": "{{vars.input.params['device_id']}}",
+                            "operator": "eq",
+                            "_operator": "eq"
+                        }
+                    ],
+                    "__selectFields": [
+                        "id",
+                        "deviceName",
+                        "connectorConfig",
+                        "aDOM"
+                    ]
+                },
+                "module": "devices?$limit=1",
+                "checkboxFields": true,
+                "step_variables": []
+            },
+            "status": null,
+            "top": "180",
+            "left": "560",
+            "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928770",
+            "group": null,
+            "uuid": "2168abc9-42e1-4f66-958b-cb25891d0786"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "exec_payload",
+            "description": null,
+            "arguments": {
+                "payload": "{\n  \"data\": {\n    \"action\": \"{{vars.input.params['fos_action']}}\",\n    \"resource\": \"{{vars.input.params['fos_resource']}}\",\n    \"target\": [\"device\/{{vars.steps.device_data[0].deviceName}}\"],\n    \"payload\": {{ vars.input.params.payload | default({}, true)}}\n  }\n}"
+            },
+            "status": null,
+            "top": "280",
+            "left": "560",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "042ce69c-3bbf-4a17-8edd-bf4c79b32ee6"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "return_results",
+            "description": null,
+            "arguments": {
+                "output": "{{vars.steps.api_call}}",
+                "params": "{{vars.input.params}}"
+            },
+            "status": null,
+            "top": "220",
+            "left": "100",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "8dfba26d-59a4-4ea6-ab97-947e420b0c79"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "setup_initial",
+            "description": null,
+            "arguments": {
+                "api_url": "\/sys\/proxy\/json"
+            },
+            "status": null,
+            "top": "80",
+            "left": "560",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "25d9dc94-4087-454d-bbcf-9867110e1822"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Start",
+            "description": null,
+            "arguments": {
+                "step_variables": {
+                    "input": {
+                        "params": []
+                    }
+                }
+            },
+            "status": null,
+            "top": "120",
+            "left": "100",
+            "stepType": "\/api\/3\/workflow_step_types\/b348f017-9a94-471f-87f8-ce88b6a7ad62",
+            "group": null,
+            "uuid": "a6e50796-46bf-4f17-afb3-86365d52cf3e"
+        }
+    ],
+    "routes": [
+        {
+            "@type": "WorkflowRoute",
+            "name": "api_call -> return_results",
+            "targetStep": "\/api\/3\/workflow_steps\/8dfba26d-59a4-4ea6-ab97-947e420b0c79",
+            "sourceStep": "\/api\/3\/workflow_steps\/eb844ed8-a6ae-40c5-8189-0d9d23e79dca",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "f513f8f8-7ce3-48ee-bd4c-6628003f4046"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "device data -> exec_payload",
+            "targetStep": "\/api\/3\/workflow_steps\/042ce69c-3bbf-4a17-8edd-bf4c79b32ee6",
+            "sourceStep": "\/api\/3\/workflow_steps\/2168abc9-42e1-4f66-958b-cb25891d0786",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "37314df7-a863-44c5-8b92-ff373aee1cef"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "exec_payload -> api_call",
+            "targetStep": "\/api\/3\/workflow_steps\/eb844ed8-a6ae-40c5-8189-0d9d23e79dca",
+            "sourceStep": "\/api\/3\/workflow_steps\/042ce69c-3bbf-4a17-8edd-bf4c79b32ee6",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "8c083861-ce03-4207-a275-96f7050cdbf3"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "setup_initial -> device data",
+            "targetStep": "\/api\/3\/workflow_steps\/2168abc9-42e1-4f66-958b-cb25891d0786",
+            "sourceStep": "\/api\/3\/workflow_steps\/25d9dc94-4087-454d-bbcf-9867110e1822",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "caf0634b-290f-4588-8cff-c0657b89db50"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Start -> parse_input_devices",
+            "targetStep": "\/api\/3\/workflow_steps\/25d9dc94-4087-454d-bbcf-9867110e1822",
+            "sourceStep": "\/api\/3\/workflow_steps\/a6e50796-46bf-4f17-afb3-86365d52cf3e",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "f186fd5e-004f-4b44-8170-0c7bb15cfe66"
+        }
+    ],
+    "groups": [],
+    "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+    "uuid": "f0a3e147-44ef-4502-acb2-0f530fdf3ad9",
+    "owners": [],
+    "isPrivate": false,
+    "deletedAt": null,
+    "recordTags": [
+        "adom",
+        "connector_config",
+        "devices",
+        "json_rpc",
+        "Subroutine"
+    ]
+}

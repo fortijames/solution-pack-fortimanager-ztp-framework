@@ -1,0 +1,108 @@
+{
+    "@type": "Workflow",
+    "triggerLimit": null,
+    "name": "Get Device Routing Table",
+    "aliasName": null,
+    "tag": null,
+    "description": "Using sys\/proxy\/json get the device's routing table.",
+    "isActive": true,
+    "debug": false,
+    "singleRecordExecution": false,
+    "remoteExecutableFlag": false,
+    "parameters": [
+        "payload"
+    ],
+    "synchronous": false,
+    "collection": "\/api\/3\/workflow_collections\/256151d7-abbd-444a-b28f-774e9f5582de",
+    "versions": [],
+    "triggerStep": "\/api\/3\/workflow_steps\/bf126f7d-0cec-40de-85d8-4aa0b96db9a2",
+    "steps": [
+        {
+            "@type": "WorkflowStep",
+            "name": "get routing table",
+            "description": null,
+            "arguments": {
+                "arguments": {
+                    "device_id": "{{vars.input.params.payload}}",
+                    "fos_action": "get",
+                    "fos_resource": "\/api\/v2\/monitor\/router\/ipv4"
+                },
+                "apply_async": false,
+                "step_variables": [],
+                "pass_parent_env": false,
+                "pass_input_record": false,
+                "workflowReference": "\/api\/3\/workflows\/f0a3e147-44ef-4502-acb2-0f530fdf3ad9"
+            },
+            "status": null,
+            "top": "80",
+            "left": "400",
+            "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
+            "group": null,
+            "uuid": "e6fc3486-1137-474e-944c-7d56614af828"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "return",
+            "description": null,
+            "arguments": {
+                "output": "{{vars.steps.get_routing_table.output.data['execute_response'][0].response.results}}"
+            },
+            "status": null,
+            "top": "120",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "b638e26b-3292-4fc3-847b-0a6a103fa521"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Start",
+            "description": null,
+            "arguments": {
+                "__triggerLimit": true,
+                "step_variables": {
+                    "input": {
+                        "params": []
+                    }
+                },
+                "triggerOnSource": true,
+                "triggerOnReplicate": false
+            },
+            "status": null,
+            "top": "40",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/b348f017-9a94-471f-87f8-ce88b6a7ad62",
+            "group": null,
+            "uuid": "bf126f7d-0cec-40de-85d8-4aa0b96db9a2"
+        }
+    ],
+    "routes": [
+        {
+            "@type": "WorkflowRoute",
+            "name": "get routing table -> return",
+            "targetStep": "\/api\/3\/workflow_steps\/b638e26b-3292-4fc3-847b-0a6a103fa521",
+            "sourceStep": "\/api\/3\/workflow_steps\/e6fc3486-1137-474e-944c-7d56614af828",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "1d7b4872-217c-4a3d-9a75-f9e2a5b57c0d"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Start -> get routing table",
+            "targetStep": "\/api\/3\/workflow_steps\/e6fc3486-1137-474e-944c-7d56614af828",
+            "sourceStep": "\/api\/3\/workflow_steps\/bf126f7d-0cec-40de-85d8-4aa0b96db9a2",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "784e1bdb-f241-4279-b83b-991ecd33a780"
+        }
+    ],
+    "groups": [],
+    "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+    "uuid": "eb7314ca-3761-4b66-bc04-ef1f9fc60cce",
+    "owners": [],
+    "isPrivate": false,
+    "deletedAt": null,
+    "recordTags": []
+}
