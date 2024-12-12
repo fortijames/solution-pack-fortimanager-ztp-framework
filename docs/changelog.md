@@ -2,7 +2,7 @@
 |--------------------------------------------|
 
 # Change Log
- - 20240913-20241118 (1.0.5)
+ - 20240913-20241212 (1.0.5)
    - Update device synch to include hostname. 
    - Update special fields in the ZTP steps for authorization to include ADOM. 
    - Update `> monitor task complete` to continue if it errors out but return an `error:True` so that a stuck task can show `Failed`. 
@@ -21,6 +21,10 @@
    - Modify `On ZTP Phase (Action Step) in Device Record` to better handle error conditions and set the device to fail instead of failing the playbook on problems.
    - Modify `Randomly Create Model Devices - by Manager Record` to have a better list of supported products by FMG firmware (7.2 - 7.6) to prevent errors during testing. 
    - Add new playbook `> get fmg supported platforms` to get supported platforms from FMG and update `Randomly Create Model Devices - by Manager Record` to use it. 
+   - Add new custom playbooks `> sys proxy json - per device record` and `Get Device Routing Table.json` for common report info. 
+   - Update dashboards where fields that are not needed take up space. 
+   - Correct device synch to assume "root" is the management vdom if the device does not have a `mgt_vdom` set from FMG. Often seen with model method processes. 
+   -  Update record views for devices, metafield templates, and script templates. 
 
 - 20240701 (1.0.4)
   - Update json-rpc Connector to 1.0.4. 
