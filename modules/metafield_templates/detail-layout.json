@@ -87,95 +87,202 @@
                                     "wid": "79295431-12d2-40b1-913f-5a27c5940080",
                                     "tabs": [
                                         {
-                                            "title": "Metafield Template as JSON",
+                                            "title": "Metafield Template",
                                             "active": 0,
-                                            "icon": "icon icon-json-new",
+                                            "icon": "icon icon-edit-template",
                                             "show": true,
                                             "visible": true,
                                             "widget": {
-                                                "type": "editableFormGroup",
+                                                "type": "rows",
                                                 "config": {
-                                                    "wid": "66f07fb6-7540-453c-93ff-6ab874119ebe",
+                                                    "wid": "5f99b528-7572-4b4c-a66f-d7f746384c98",
                                                     "rows": [
                                                         {
                                                             "columns": [
                                                                 {
-                                                                    "fields": [
+                                                                    "widgets": [
                                                                         {
-                                                                            "name": "metafieldTemplate",
-                                                                            "highlightMode": true,
-                                                                            "readOnly": false,
-                                                                            "renderWidget": "json",
-                                                                            "renderWidgetHeight": 500
+                                                                            "type": "sectionHeader",
+                                                                            "config": {
+                                                                                "wid": "43f1e564-221a-4b72-a27c-e827f8ed00a9",
+                                                                                "query": {
+                                                                                    "filters": [],
+                                                                                    "sort": [],
+                                                                                    "limit": 10
+                                                                                },
+                                                                                "editorType": "html",
+                                                                                "sectionText": "<p style=\"text-align: center;\"><strong>Metafield Template<\/strong><\/p>\n<ul>\n<li style=\"text-align: left;\">The template, as a jinja script, for building device metadata.&nbsp;<\/li>\n<li style=\"text-align: left;\">Metadata sources provide additional data from external sources to be used in building device metadata from jinja template.<\/li>\n<\/ul>"
+                                                                            }
                                                                         }
                                                                     ],
                                                                     "style": "col-lg-12"
                                                                 }
-                                                            ]
+                                                            ],
+                                                            "wid": "8f4b99a7-a613-4dec-bff4-5114b791d423",
+                                                            "collapsible": false,
+                                                            "collapsibleIndex": 0,
+                                                            "_collapsed": false
+                                                        },
+                                                        {
+                                                            "columns": [
+                                                                {
+                                                                    "widgets": [
+                                                                        {
+                                                                            "type": "tabs",
+                                                                            "config": {
+                                                                                "wid": "3f6e4494-973d-410c-840c-dddafbeb3a2b",
+                                                                                "tabs": [
+                                                                                    {
+                                                                                        "title": "Jinja Script",
+                                                                                        "active": 0,
+                                                                                        "widget": {
+                                                                                            "type": "editableFormGroup",
+                                                                                            "config": {
+                                                                                                "wid": "ba01d12c-db49-45e9-a48e-e4d7355b470f",
+                                                                                                "rows": [
+                                                                                                    {
+                                                                                                        "columns": [
+                                                                                                            {
+                                                                                                                "fields": [
+                                                                                                                    {
+                                                                                                                        "name": "metafieldTemplate",
+                                                                                                                        "highlightMode": true,
+                                                                                                                        "linky": true,
+                                                                                                                        "readOnly": false
+                                                                                                                    }
+                                                                                                                ]
+                                                                                                            }
+                                                                                                        ]
+                                                                                                    }
+                                                                                                ]
+                                                                                            },
+                                                                                            "visible": true
+                                                                                        },
+                                                                                        "icon": "fa fa-file-text-o",
+                                                                                        "show": true,
+                                                                                        "visible": true,
+                                                                                        "conditionalVisibility": false
+                                                                                    },
+                                                                                    {
+                                                                                        "title": "JSON",
+                                                                                        "active": 0,
+                                                                                        "widget": {
+                                                                                            "type": "editableFormGroup",
+                                                                                            "config": {
+                                                                                                "wid": "70feacf9-d01d-431e-9f06-aae88283cf37",
+                                                                                                "rows": [
+                                                                                                    {
+                                                                                                        "columns": [
+                                                                                                            {
+                                                                                                                "fields": [
+                                                                                                                    {
+                                                                                                                        "name": "metafieldTemplate",
+                                                                                                                        "highlightMode": true,
+                                                                                                                        "linky": true,
+                                                                                                                        "readOnly": false,
+                                                                                                                        "renderWidget": "json"
+                                                                                                                    }
+                                                                                                                ]
+                                                                                                            }
+                                                                                                        ]
+                                                                                                    }
+                                                                                                ]
+                                                                                            },
+                                                                                            "visible": true
+                                                                                        },
+                                                                                        "icon": "icon icon-json-new",
+                                                                                        "show": false,
+                                                                                        "visible": true,
+                                                                                        "conditionalVisibility": false
+                                                                                    }
+                                                                                ]
+                                                                            }
+                                                                        }
+                                                                    ],
+                                                                    "style": "col-lg-12"
+                                                                }
+                                                            ],
+                                                            "wid": "a13c366f-b054-4de0-9c7a-e1c14d481107",
+                                                            "_collapsed": false
                                                         }
                                                     ]
-                                                }
+                                                },
+                                                "visible": true
                                             }
-                                        },
-                                        {
-                                            "title": "Metafield Template as Text",
-                                            "active": 0,
-                                            "widget": {
-                                                "type": "editableFormGroup",
-                                                "config": {
-                                                    "wid": "adcfd6c6-dee1-4aa7-be0d-89b8ddfe511e",
-                                                    "rows": [
-                                                        {
-                                                            "columns": [
-                                                                {
-                                                                    "fields": [
-                                                                        {
-                                                                            "name": "metafieldTemplate",
-                                                                            "highlightMode": true,
-                                                                            "readOnly": false,
-                                                                            "renderWidgetHeight": 500
-                                                                        }
-                                                                    ],
-                                                                    "style": "col-lg-12"
-                                                                }
-                                                            ]
-                                                        }
-                                                    ]
-                                                }
-                                            },
-                                            "icon": "fa fa-file-o",
-                                            "show": false,
-                                            "visible": true
                                         },
                                         {
                                             "title": "Metafield Sources",
                                             "active": 0,
+                                            "icon": "icon icon-json",
+                                            "show": true,
+                                            "visible": true,
                                             "widget": {
-                                                "type": "editableFormGroup",
+                                                "type": "rows",
                                                 "config": {
-                                                    "wid": "d119470d-42e5-4a9c-ae22-1197d938569b",
+                                                    "wid": "0c486ce6-a17c-4a2d-8906-0ece993faa2f",
                                                     "rows": [
                                                         {
                                                             "columns": [
                                                                 {
-                                                                    "fields": [
+                                                                    "widgets": [
                                                                         {
-                                                                            "name": "metadataSources",
-                                                                            "highlightMode": true,
-                                                                            "readOnly": false,
-                                                                            "renderWidget": "json",
-                                                                            "renderWidgetHeight": 700
+                                                                            "type": "sectionHeader",
+                                                                            "config": {
+                                                                                "wid": "5710b4cc-0774-4c83-a41f-9cbdc9d0e15a",
+                                                                                "query": {
+                                                                                    "filters": [],
+                                                                                    "sort": [],
+                                                                                    "limit": 10
+                                                                                },
+                                                                                "editorType": "html",
+                                                                                "sectionText": "<p style=\"text-align: center;\"><strong>Metafield Sources<\/strong><\/p>\n<ul>\n<li style=\"text-align: left;\">Retrieve metadata from external sources to use in the metafield template.&nbsp;<\/li>\n<li style=\"text-align: left;\">Currently supports the <em>source_type<\/em> of \"fmg\" and \"playbook\".<\/li>\n<li style=\"text-align: left;\">See <a href=\"https:\/\/github.com\/fortinet-fortisoar\/solution-pack-fortimanager-ztp-framework\/blob\/develop\/docs\/usage\/jinja_rendering_with_metafield_sources.md\" target=\"_blank\" rel=\"noopener\">Metafield Sources Doc<\/a> for more information.&nbsp;<\/li>\n<\/ul>"
+                                                                            }
                                                                         }
-                                                                    ]
+                                                                    ],
+                                                                    "style": "col-lg-12"
                                                                 }
-                                                            ]
+                                                            ],
+                                                            "wid": "b33fa93b-23e7-4485-9064-31f6ed41ef84",
+                                                            "_collapsed": false
+                                                        },
+                                                        {
+                                                            "columns": [
+                                                                {
+                                                                    "widgets": [
+                                                                        {
+                                                                            "type": "editableFormGroup",
+                                                                            "config": {
+                                                                                "wid": "01fa64a9-850c-4d07-84ee-93ac457ecd89",
+                                                                                "rows": [
+                                                                                    {
+                                                                                        "columns": [
+                                                                                            {
+                                                                                                "fields": [
+                                                                                                    {
+                                                                                                        "name": "metadataSources",
+                                                                                                        "highlightMode": true,
+                                                                                                        "linky": true,
+                                                                                                        "readOnly": false,
+                                                                                                        "renderWidget": "json"
+                                                                                                    }
+                                                                                                ]
+                                                                                            }
+                                                                                        ]
+                                                                                    }
+                                                                                ]
+                                                                            }
+                                                                        }
+                                                                    ],
+                                                                    "style": "col-lg-12"
+                                                                }
+                                                            ],
+                                                            "wid": "a9e01826-51e6-4a8b-8c6c-98abd66c364b",
+                                                            "_collapsed": false
                                                         }
                                                     ]
-                                                }
-                                            },
-                                            "icon": "icon icon-json",
-                                            "show": true,
-                                            "visible": true
+                                                },
+                                                "visible": true
+                                            }
                                         },
                                         {
                                             "title": "Relationships",
@@ -192,7 +299,8 @@
                                                     ],
                                                     "selectionType": "exclude",
                                                     "includes": []
-                                                }
+                                                },
+                                                "visible": true
                                             },
                                             "icon": "icon icon-relationships",
                                             "show": false,
@@ -205,7 +313,8 @@
                                                 "type": "timeline",
                                                 "config": {
                                                     "wid": "051b371f-ffaf-49c9-b489-d52e219da465"
-                                                }
+                                                },
+                                                "visible": true
                                             },
                                             "icon": "icon icon-audit-log",
                                             "show": false,
@@ -218,7 +327,8 @@
                                                 "type": "editableForm",
                                                 "config": {
                                                     "wid": "cfcc54d8-5d13-4597-8d5f-d164d63948a1"
-                                                }
+                                                },
+                                                "visible": true
                                             },
                                             "icon": "icon icon-expand",
                                             "show": false,
@@ -245,7 +355,13 @@
                 "_collapsed": false
             }
         ],
-        "actionButtons": [],
+        "actionButtons": [
+            {
+                "id": "\/api\/3\/workflows\/14128fa6-8ffc-4ad7-8993-6c34925adba5",
+                "name": "Render Metadata with Device from Metafield Template Record",
+                "icon": "icon icon-txt"
+            }
+        ],
         "wid": "c43d2530-ab5d-4969-ba0e-855c09ff6756",
         "metadata": []
     },

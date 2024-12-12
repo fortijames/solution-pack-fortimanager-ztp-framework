@@ -94,63 +94,144 @@
                                         {
                                             "title": "Script",
                                             "active": 0,
+                                            "icon": "fa fa-none",
+                                            "show": false,
+                                            "visible": true,
                                             "widget": {
-                                                "type": "editableFormGroup",
+                                                "type": "rows",
                                                 "config": {
-                                                    "wid": "32f18ec2-9ee9-440b-9d35-4ca2a1b08588",
+                                                    "wid": "0bbfc79f-c8d3-4b25-959d-4f3040b4a135",
                                                     "rows": [
                                                         {
                                                             "columns": [
                                                                 {
-                                                                    "fields": [
+                                                                    "widgets": [
                                                                         {
-                                                                            "name": "script",
-                                                                            "highlightMode": true,
-                                                                            "readOnly": false
+                                                                            "type": "sectionHeader",
+                                                                            "config": {
+                                                                                "wid": "33d481f5-eff7-4369-a2fa-ffadf09f528a",
+                                                                                "query": {
+                                                                                    "filters": [],
+                                                                                    "sort": [],
+                                                                                    "limit": 10
+                                                                                },
+                                                                                "editorType": "html",
+                                                                                "sectionText": "<p style=\"text-align: center;\"><strong>Script<\/strong><\/p>\n<ul>\n<li><span style=\"letter-spacing: 0.76px;\">The template, as a jinja script, for building device scripts based on the script type.&nbsp;<\/span><\/li>\n<li>Metadata sources provide additional data from external sources to be used in building device scripts from jinja template.<\/li>\n<\/ul>"
+                                                                            }
                                                                         }
                                                                     ]
                                                                 }
-                                                            ]
+                                                            ],
+                                                            "wid": "062a9206-d044-4d5b-8c27-92bb09629de5"
+                                                        },
+                                                        {
+                                                            "columns": [
+                                                                {
+                                                                    "widgets": [
+                                                                        {
+                                                                            "type": "editableFormGroup",
+                                                                            "config": {
+                                                                                "wid": "6426e220-cc24-43fe-b4c5-2d2433010143",
+                                                                                "rows": [
+                                                                                    {
+                                                                                        "columns": [
+                                                                                            {
+                                                                                                "fields": [
+                                                                                                    {
+                                                                                                        "name": "script",
+                                                                                                        "highlightMode": true,
+                                                                                                        "linky": true,
+                                                                                                        "readOnly": false
+                                                                                                    }
+                                                                                                ]
+                                                                                            }
+                                                                                        ]
+                                                                                    }
+                                                                                ]
+                                                                            }
+                                                                        }
+                                                                    ]
+                                                                }
+                                                            ],
+                                                            "wid": "3e6e4141-8494-4be6-865e-33841290b46b"
                                                         }
                                                     ]
-                                                },
-                                                "visible": true
-                                            },
-                                            "icon": "fa fa-none",
-                                            "show": false,
-                                            "visible": true
+                                                }
+                                            }
                                         },
                                         {
                                             "title": "Metadata Sources",
                                             "active": 0,
+                                            "icon": "icon icon-json",
+                                            "show": true,
+                                            "visible": true,
                                             "widget": {
-                                                "type": "editableFormGroup",
+                                                "type": "rows",
                                                 "config": {
-                                                    "wid": "ec318841-8264-4e9f-a45c-b16971d1b10c",
+                                                    "wid": "f9c89419-5cc7-4313-bcb3-15d469232e73",
                                                     "rows": [
                                                         {
                                                             "columns": [
                                                                 {
-                                                                    "fields": [
+                                                                    "widgets": [
                                                                         {
-                                                                            "name": "scriptMetadataSources",
-                                                                            "highlightMode": true,
-                                                                            "readOnly": false,
-                                                                            "renderWidget": "json",
-                                                                            "renderWidgetHeight": 500,
-                                                                            "linky": true
+                                                                            "type": "sectionHeader",
+                                                                            "config": {
+                                                                                "wid": "7ba49a0b-ca6a-4d3c-a7cd-8aa3542d2435",
+                                                                                "query": {
+                                                                                    "filters": [],
+                                                                                    "sort": [],
+                                                                                    "limit": 10
+                                                                                },
+                                                                                "editorType": "html",
+                                                                                "sectionText": "<p style=\"text-align: center;\"><strong>Metafield Sources<\/strong><\/p>\n<ul>\n<li style=\"text-align: left;\">Retrieve metadata from external sources to use in the metafield template.&nbsp;<\/li>\n<li style=\"text-align: left;\">Currently supports the <em>source_type<\/em> of \"fmg\" and \"playbook\".<\/li>\n<li style=\"text-align: left;\">See <a href=\"https:\/\/github.com\/fortinet-fortisoar\/solution-pack-fortimanager-ztp-framework\/blob\/develop\/docs\/usage\/jinja_rendering_with_metafield_sources.md\" target=\"_blank\" rel=\"noopener\">Metafield Sources Doc<\/a> for more information.&nbsp;<\/li>\n<\/ul>"
+                                                                            }
                                                                         }
-                                                                    ]
+                                                                    ],
+                                                                    "style": "col-lg-12"
                                                                 }
-                                                            ]
+                                                            ],
+                                                            "wid": "4f5fda00-7091-43cb-befb-e574d064bbd7",
+                                                            "_collapsed": false
+                                                        },
+                                                        {
+                                                            "columns": [
+                                                                {
+                                                                    "widgets": [
+                                                                        {
+                                                                            "type": "editableFormGroup",
+                                                                            "config": {
+                                                                                "wid": "43757343-8847-4456-8190-915483d17fc0",
+                                                                                "rows": [
+                                                                                    {
+                                                                                        "columns": [
+                                                                                            {
+                                                                                                "fields": [
+                                                                                                    {
+                                                                                                        "name": "scriptMetadataSources",
+                                                                                                        "highlightMode": true,
+                                                                                                        "linky": true,
+                                                                                                        "readOnly": false,
+                                                                                                        "renderWidget": "json"
+                                                                                                    }
+                                                                                                ]
+                                                                                            }
+                                                                                        ]
+                                                                                    }
+                                                                                ]
+                                                                            }
+                                                                        }
+                                                                    ],
+                                                                    "style": "col-lg-12"
+                                                                }
+                                                            ],
+                                                            "wid": "122e3faa-4baa-4a5b-abb1-6a64dba03952",
+                                                            "_collapsed": false
                                                         }
                                                     ]
                                                 },
                                                 "visible": true
-                                            },
-                                            "icon": "icon icon-json",
-                                            "show": true,
-                                            "visible": true
+                                            }
                                         },
                                         {
                                             "title": "Relationships",
@@ -205,7 +286,13 @@
                 "_collapsed": false
             }
         ],
-        "actionButtons": [],
+        "actionButtons": [
+            {
+                "id": "\/api\/3\/workflows\/79802d5e-1d8e-4fed-b321-5b873be2be9b",
+                "name": "Render CLI Script with Device from Script Record",
+                "icon": "icon icon-txt"
+            }
+        ],
         "wid": "da023ba8-d92c-41ba-94fc-f31f56118abb",
         "metadata": []
     },
