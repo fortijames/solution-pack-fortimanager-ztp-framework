@@ -13,8 +13,7 @@
         "connector_config",
         "adom",
         "script_name",
-        "devices",
-        "script_type"
+        "devices"
     ],
     "synchronous": false,
     "collection": "\/api\/3\/workflow_collections\/acff9572-b869-4ceb-bbc1-1c3700ec9a4e",
@@ -31,7 +30,7 @@
             },
             "status": null,
             "top": "160",
-            "left": "420",
+            "left": "460",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
             "uuid": "60def08b-55b8-4cad-b021-43d40f48f08f"
@@ -41,11 +40,12 @@
             "name": "exec_payload",
             "description": null,
             "arguments": {
-                "fmg_data_payload": "{\n  \"data\": {    \n    \"adom\": \"{{vars.input.params.adom}}\", \n    \"script\": \"{{vars.input.params['script_name']}}\", \n    \"scope\": {{vars.device_scope}}\n  }\n}"
+                "api_url": "\/dvmdb\/adom\/{{vars.adom}}\/script\/execute",
+                "data_payload": "{\n  \"data\": {    \n    \"adom\": \"{{vars.adom}}\", \n    \"script\": \"{{vars.script_name}}\", \n    \"scope\": {{vars.device_scope}}\n  }\n}"
             },
             "status": null,
             "top": "260",
-            "left": "420",
+            "left": "460",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
             "uuid": "1ba7bb1c-7728-459c-addb-72ebab13d10b"
@@ -58,11 +58,15 @@
                 "name": "Fortinet FortiManager JSON-RPC",
                 "config": "{{vars.input.params['connector_config']}}",
                 "params": {
-                    "url": "\/dvmdb\/adom\/root\/script\/execute",
-                    "data": "{{vars.fmg_data_payload}}",
-                    "track_task": true
+                    "url": "{{vars.api_url}}",
+                    "data": "{{vars.data_payload}}",
+                    "track_task": true,
+                    "task_timeout": 21600,
+                    "task_stale_timeout": 120,
+                    "zero_percent_timeout": 30,
+                    "delete_task_on_timeout": true
                 },
-                "version": "1.0.0",
+                "version": "1.0.6",
                 "connector": "fortinet-fortimanager-json-rpc",
                 "operation": "json_rpc_execute",
                 "operationTitle": "JSON RPC Exec",
@@ -71,24 +75,10 @@
             },
             "status": null,
             "top": "360",
-            "left": "420",
+            "left": "460",
             "stepType": "\/api\/3\/workflow_step_types\/0bfed618-0316-11e7-93ae-92361f002671",
             "group": null,
             "uuid": "d65ab57c-17e2-4a89-b920-d495ecec65df"
-        },
-        {
-            "@type": "WorkflowStep",
-            "name": "prase_input_devices",
-            "description": null,
-            "arguments": {
-                "device_list": "{{vars.input.params.devices.split(\",\")}}"
-            },
-            "status": null,
-            "top": "60",
-            "left": "420",
-            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
-            "group": null,
-            "uuid": "790d9148-3bd1-46cc-8530-0dee048a32c4"
         },
         {
             "@type": "WorkflowStep",
@@ -104,6 +94,24 @@
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
             "uuid": "a51b23ce-3a59-4b60-87e9-7ec3fb7bb8be"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "setup env",
+            "description": null,
+            "arguments": {
+                "adom": "{%- if vars.input.params.adom not in ['',None,Null] -%}\n{{vars.input.params.adom}}\n{%- else -%}\nroot\n{%- endif -%}",
+                "devices": "{{vars.input.params.devices}}",
+                "device_list": "{{vars.input.params.devices.split(\",\")}}",
+                "script_name": "{{vars.input.params['script_name']}}",
+                "connector_config": "{{vars.input.params['connector_config']}}"
+            },
+            "status": null,
+            "top": "60",
+            "left": "460",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "7e11a816-b121-4b21-ad06-cd60a37e0110"
         },
         {
             "@type": "WorkflowStep",
@@ -157,23 +165,23 @@
         },
         {
             "@type": "WorkflowRoute",
-            "name": "prase_input_devices -> device_scope",
+            "name": "setup env -> device_scope",
             "targetStep": "\/api\/3\/workflow_steps\/60def08b-55b8-4cad-b021-43d40f48f08f",
-            "sourceStep": "\/api\/3\/workflow_steps\/790d9148-3bd1-46cc-8530-0dee048a32c4",
+            "sourceStep": "\/api\/3\/workflow_steps\/7e11a816-b121-4b21-ad06-cd60a37e0110",
             "label": null,
             "isExecuted": false,
             "group": null,
-            "uuid": "6dfd7507-3219-4e25-8434-315527b488c6"
+            "uuid": "74ed603d-cba8-4c38-a259-f7d41d06ebe3"
         },
         {
             "@type": "WorkflowRoute",
-            "name": "Start -> prase_input",
-            "targetStep": "\/api\/3\/workflow_steps\/790d9148-3bd1-46cc-8530-0dee048a32c4",
+            "name": "Start -> setup env",
+            "targetStep": "\/api\/3\/workflow_steps\/7e11a816-b121-4b21-ad06-cd60a37e0110",
             "sourceStep": "\/api\/3\/workflow_steps\/7c4040b6-350c-420a-9c1e-71fdbc30c3d7",
             "label": null,
             "isExecuted": false,
             "group": null,
-            "uuid": "802dc331-2b24-47e2-a069-af70bd5e929b"
+            "uuid": "22c803e1-3494-4b47-9fa9-37099226d707"
         }
     ],
     "groups": [],
