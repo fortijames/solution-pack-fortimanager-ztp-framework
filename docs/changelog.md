@@ -24,7 +24,8 @@
    - Add new custom playbooks `> sys proxy json - per device record` and `Get Device Routing Table.json` for common report info. 
    - Update dashboards where fields that are not needed take up space. 
    - Correct device synch to assume "root" is the management vdom if the device does not have a `mgt_vdom` set from FMG. Often seen with model method processes. 
-   -  Update record views for devices, metafield templates, and script templates. 
+   - Update record views for devices, metafield templates, and script templates. 
+   - Update `> fmg script - exec on devices` to support adom in the URL to fix workspace mode problems. 
 
 - 20240701 (1.0.4)
   - Update json-rpc Connector to 1.0.4. 
