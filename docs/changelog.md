@@ -2,7 +2,7 @@
 |--------------------------------------------|
 
 # Change Log
- - 20240913-20241212 (1.0.5)
+ - 20240913-20241220 (1.0.5)
    - Update device synch to include hostname. 
    - Update special fields in the ZTP steps for authorization to include ADOM. 
    - Update `> monitor task complete` to continue if it errors out but return an `error:True` so that a stuck task can show `Failed`. 
