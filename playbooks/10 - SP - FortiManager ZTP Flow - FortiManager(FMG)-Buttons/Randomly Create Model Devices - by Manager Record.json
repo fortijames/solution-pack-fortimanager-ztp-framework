@@ -119,8 +119,8 @@
                 "step_variables": []
             },
             "status": null,
-            "top": "1200",
-            "left": "660",
+            "top": "1260",
+            "left": "640",
             "stepType": "\/api\/3\/workflow_step_types\/1fdd14cc-d6b4-4335-a3af-ab49c8ed2fd8",
             "group": null,
             "uuid": "34551ce3-d7bd-497e-a1b9-3504a7ca2292"
@@ -181,10 +181,10 @@
             "name": "Create device Dictionary",
             "description": null,
             "arguments": {
-                "devices": "{%- set devices = [] -%}\n{%- for device_number in range(vars.lower_number, vars.upper_number + 1) | list -%}\n{%- set dev_model = vars.fmg_platform_strings | random  -%}\n{%- set adom = vars.fortimanager_adom_names | random  -%}\n{%- set adom_ver= vars.adom_ver_dict.get(adom).split('.') -%}\n{%- set os,mr = (adom_ver[0] | int),(adom_ver[1] | int) -%}\n{%- do devices.append({\"device_name\": (\"FG\" + '%05d' %  device_number), \"dev_model\": dev_model, \"fmg_adom\":  adom , \"fgt_os\": os, \"fgt_mr\": mr}) -%}\n{%- endfor -%}{{devices}}"
+                "devices": "{%- set devices = [] -%}\n{%- for device_number in range(vars.lower_number, vars.upper_number + 1) | list -%}\n  {%- set adom = vars.fortimanager_adom_names | random  -%}\n  {%- set adom_ver= vars.adom_ver_dict.get(adom).split('.') -%}\n  {%- set os,mr = (adom_ver[0] | int),(adom_ver[1] | int) -%}\n  {%- set os_base = adom_ver[0] + \".\" + adom_ver[1] -%}\n  {%- set adom_models = vars.fmg_platform_strings \n                        | intersect(vars.fmg_base2platforms[os_base].platforms)\n  -%}\n  {%- set dev_model = adom_models | random -%}\n  {%- do devices.append({\n    \"device_name\": (\"FG\" + '%05d' %  device_number), \n    \"dev_model\": dev_model, \n    \"fmg_adom\":  adom , \n    \"fgt_os\": os, \n    \"fgt_mr\": mr\n  }) -%}\n{%- endfor -%}\n{{devices}}"
             },
             "status": null,
-            "top": "860",
+            "top": "840",
             "left": "400",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
@@ -232,7 +232,7 @@
                 "workflowReference": "\/api\/3\/workflows\/e2b45e0f-f56c-42f7-8a99-f33d26199559"
             },
             "status": null,
-            "top": "960",
+            "top": "940",
             "left": "400",
             "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
             "group": null,
@@ -317,6 +317,27 @@
         },
         {
             "@type": "WorkflowStep",
+            "name": "Get fmg base firmware",
+            "description": null,
+            "arguments": {
+                "arguments": {
+                    "connector_config": "{{vars.connector_config}}"
+                },
+                "apply_async": false,
+                "step_variables": [],
+                "pass_parent_env": false,
+                "pass_input_record": false,
+                "workflowReference": "\/api\/3\/workflows\/661d7ee1-156e-400e-b03f-3d61b0896988"
+            },
+            "status": null,
+            "top": "800",
+            "left": "720",
+            "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
+            "group": null,
+            "uuid": "0c853a88-8463-40ef-858d-76e9006b823a"
+        },
+        {
+            "@type": "WorkflowStep",
             "name": "get fmg platforms",
             "description": null,
             "arguments": {
@@ -355,8 +376,8 @@
                 "workflowReference": "\/api\/3\/workflows\/c7781dd3-2aed-423e-91d1-d686bee7b4b4"
             },
             "status": null,
-            "top": "660",
-            "left": "400",
+            "top": "700",
+            "left": "720",
             "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
             "group": null,
             "uuid": "923ae0d5-1187-43e5-9038-4c7928aa84a9"
@@ -391,14 +412,15 @@
         },
         {
             "@type": "WorkflowStep",
-            "name": "Set fortimanager adoms vars",
+            "name": "Set fmg vars",
             "description": null,
             "arguments": {
                 "adom_ver_dict": "{% set options = {}-%}\n{%- for adom in vars.steps.Get_fortimanager_adoms.output -%}\n{%- do options.update({adom.name:  (adom.os_ver | int ) ~ \".\" ~ adom.mr}) -%}\n{%- endfor -%}{{options}}",
+                "fmg_base2platforms": "{{vars.steps.Get_fmg_base_firmware.output.base}}",
                 "fortimanager_adom_names": "{% set options = []-%}\n\n{%- for adom in vars.steps.Get_fortimanager_adoms.output -%}\n{%- do options.append(adom.name) -%}\n{%endfor%}{{options}}"
             },
             "status": null,
-            "top": "760",
+            "top": "740",
             "left": "400",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
@@ -414,7 +436,7 @@
                 "upper_number": "{{vars.steps.Ask_for_user_input.input.rangeOfDevices.split('-')[1] | int}}"
             },
             "status": null,
-            "top": "560",
+            "top": "640",
             "left": "400",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
@@ -667,6 +689,16 @@
         },
         {
             "@type": "WorkflowRoute",
+            "name": "Get fmg base firmware -> Set fortimanager adoms vars",
+            "targetStep": "\/api\/3\/workflow_steps\/9fc724e1-b46e-4ea6-882e-e292787dac46",
+            "sourceStep": "\/api\/3\/workflow_steps\/0c853a88-8463-40ef-858d-76e9006b823a",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "2888c2c1-ac75-47aa-b81b-6b0c783eb184"
+        },
+        {
+            "@type": "WorkflowRoute",
             "name": "get fmg platforms -> extract fmg platforms",
             "targetStep": "\/api\/3\/workflow_steps\/77b11044-fc65-4981-8baa-da78a2d3a1f0",
             "sourceStep": "\/api\/3\/workflow_steps\/5bc962e0-481d-4717-ba36-42de5803c5e8",
@@ -677,13 +709,13 @@
         },
         {
             "@type": "WorkflowRoute",
-            "name": "Get fortimanager vdoms -> Set fortimanager vdoms",
-            "targetStep": "\/api\/3\/workflow_steps\/9fc724e1-b46e-4ea6-882e-e292787dac46",
+            "name": "Get fortimanager adoms -> Get fmg base firmware",
+            "targetStep": "\/api\/3\/workflow_steps\/0c853a88-8463-40ef-858d-76e9006b823a",
             "sourceStep": "\/api\/3\/workflow_steps\/923ae0d5-1187-43e5-9038-4c7928aa84a9",
             "label": null,
             "isExecuted": false,
             "group": null,
-            "uuid": "bf488ab3-d31f-49bc-8826-57280e6a3652"
+            "uuid": "2a930d83-5a5f-4dfa-9b12-730e2e3b5485"
         },
         {
             "@type": "WorkflowRoute",
@@ -778,7 +810,7 @@
             "metadata": [],
             "reusable": false,
             "top": "520",
-            "left": "680",
+            "left": "660",
             "height": "133",
             "width": "425",
             "uuid": "703b29a9-9189-4262-a64f-6004218b07da",
