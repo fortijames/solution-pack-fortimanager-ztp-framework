@@ -2,8 +2,9 @@
 |--------------------------------------------|
 
 # Change Log
- - 20250219 (1.0.6)
+ - 20250219-20250310 (1.0.6)
    - Update `Randomly Create Model Devices` playbook to leverage `> get fmg supported firmware.json` and only create models that should be supported by adom. 
+   - Fix language file syntax. 
 
  - 20240913-20250129 (1.0.5)
    - Update device synch to include hostname. 

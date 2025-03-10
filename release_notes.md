@@ -25,4 +25,4 @@ If you are updating an existing solution pack then the included Announcement mig
 sudo su -
 env PGPASSWORD=$(cat /home/csadmin/device_uuid) psql -U cyberpgsql -d venom -c "update announcements set id=1 where uuid='83ca88a8-e02f-48a1-901f-39aede335b7d';"
 ```
-See internal Bug ID `0932566` for the latest status of the bug. 
+See internal Bug ID `0932566` for the latest status of the bug.
