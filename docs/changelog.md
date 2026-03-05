@@ -2,6 +2,21 @@
 |--------------------------------------------|
 
 # Change Log
+ - 20251118 (1.0.8)
+  - PR from @dspille
+    - Add 7.6.2 compatibility with playbook origin and editable flag support
+    - Add new playbook to unlock all playbooks in the ZTP solution pack
+    - Enhance Jinja templates for monitoring task execution time and policy script execution
+    - Add logic to handle Jinja template rendering errors with device comments
+    - Improve ZTP profile lookup performance using 7.6.2 loop breaking feature
+    - Enhance missing metadata prompts with direct device record linking
+    - Fix processing issue with running linked scripts on devices
+    - Add task parameters for device authorization
+    - Improve device name changing to use global device level
+    - Add 7.6.2 dashboard defaults and MMD changes
+    - Enhance format return for easier device IRI linking in dialogs
+    - Enhance comment creation for script results
+
  - 20250326 (1.0.7)
    - Correct error: 409 conflict from Playbook Collections(s) on install of 1.0.6. 
    - Cleanup `Randomly Create Model Devices` playbook to leverage `> get fmg supported firmware.json` removing old steps not in use.  
