@@ -25,10 +25,10 @@
                 "name": "Fortinet FortiManager JSON RPC",
                 "config": "{{vars.fmg_config}}",
                 "params": {
-                    "url": "{{vars.api_url}}",
+                    "url": "\/dvmdb\/device\/{{vars.hostname}}",
                     "data": "{{vars.api_payload}}"
                 },
-                "version": "1.0.4",
+                "version": "1.0.2",
                 "connector": "fortinet-fortimanager-json-rpc",
                 "operation": "json_rpc_set",
                 "operationTitle": "JSON RPC Set",
@@ -61,7 +61,6 @@
             "name": "setup payload",
             "description": null,
             "arguments": {
-                "api_url": "\/dvmdb\/adom\/{{vars.adom}}\/device\/{{vars.hostname}}",
                 "api_payload": "{\"name\":\"{{vars.new_hostname}}\"}"
             },
             "status": null,
@@ -76,7 +75,6 @@
             "name": "setup vars",
             "description": null,
             "arguments": {
-                "adom": "{{vars.input.params.payload['adom']|default(\"root\")}}",
                 "hostname": "{{vars.input.params.payload['name']}}",
                 "fmg_config": "{{vars.input.params.payload['fmg_config']}}",
                 "new_hostname": "{{vars.input.params.payload['newname']}}"
@@ -151,6 +149,8 @@
     ],
     "groups": [],
     "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+    "playbookOrigin": "\/api\/3\/picklists\/b6d710a9-a8ec-41ec-8817-fe9fa062fcdd",
+    "isEditable": true,
     "uuid": "8c3be36d-6637-4d19-9724-80e2953f5e7c",
     "owners": [],
     "isPrivate": false,

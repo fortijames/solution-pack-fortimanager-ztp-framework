@@ -123,11 +123,15 @@
                         ]
                     }
                 },
-                "record": "",
+                "record": "{{vars.steps.Lookup_and_return_device_metadata.device_iri}}",
+                "agent_id": null,
+                "resources": "devices",
+                "is_approval": false,
                 "owner_detail": {
-                    "isAssigned": false
+                    "isAssigned": false,
+                    "emailRecipients": ""
                 },
-                "isRecordLinked": false,
+                "isRecordLinked": true,
                 "step_variables": [],
                 "response_mapping": {
                     "options": [
@@ -137,15 +141,21 @@
                             "step_iri": "\/api\/3\/workflow_steps\/da846074-864f-4a70-88b9-a0e057b0e8bc"
                         }
                     ],
-                    "duplicateOption": false
+                    "duplicateOption": false,
+                    "customSuccessMessage": "Awaiting Playbook resumed successfully."
                 },
                 "email_notification": {
                     "enabled": false,
                     "smtpParameters": []
                 },
+                "customEmailExternal": false,
                 "inline_channel_list": [],
                 "external_channel_list": [],
-                "unauthenticated_input": false
+                "unauthenticated_input": false,
+                "external_email_subject": null,
+                "internal_email_subject": "A FortiSOAR playbook is requesting your input",
+                "custom_email_body_external": null,
+                "external_email_attachments": null
             },
             "status": null,
             "top": "680",
@@ -542,6 +552,8 @@
         }
     ],
     "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+    "playbookOrigin": "\/api\/3\/picklists\/b6d710a9-a8ec-41ec-8817-fe9fa062fcdd",
+    "isEditable": true,
     "uuid": "6663a942-1474-4d45-9536-78d221fc41b3",
     "owners": [],
     "isPrivate": false,

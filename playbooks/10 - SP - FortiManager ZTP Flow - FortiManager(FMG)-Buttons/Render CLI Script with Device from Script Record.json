@@ -196,20 +196,24 @@
                                 "tooltip": "",
                                 "dataType": "dynamicList",
                                 "formType": "dynamicList",
-                                "required": false,
+                                "required": true,
                                 "_expanded": true,
                                 "mmdUpdate": true,
                                 "collection": false,
                                 "searchable": false,
                                 "templateUrl": "app\/components\/form\/fields\/dynamicList.html",
                                 "_nameTouched": true,
-                                "defaultValue": null,
+                                "defaultValue": "{{vars.devices_list | first}}",
                                 "_previousName": "manager_selected",
                                 "playbookField": true,
+                                "requiredQuery": [],
                                 "lengthConstraint": true,
+                                "responseSelected": [],
                                 "allowedGridColumn": false,
+                                "requiredCondition": "required",
                                 "jinjaExpressionView": true,
-                                "useRecordFieldDefault": false
+                                "useRecordFieldDefault": false,
+                                "_addRequiredConditions": true
                             }
                         ]
                     }
@@ -223,8 +227,10 @@
                 },
                 "agent_id": null,
                 "resources": "metafield_templates",
+                "is_approval": false,
                 "owner_detail": {
-                    "isAssigned": false
+                    "isAssigned": false,
+                    "emailRecipients": ""
                 },
                 "isRecordLinked": false,
                 "step_variables": [],
@@ -236,15 +242,21 @@
                             "step_iri": "\/api\/3\/workflow_steps\/f5c9d923-0ae2-4462-95d3-d8386f5345c9"
                         }
                     ],
-                    "duplicateOption": false
+                    "duplicateOption": false,
+                    "customSuccessMessage": "Awaiting Playbook resumed successfully."
                 },
                 "email_notification": {
                     "enabled": false,
                     "smtpParameters": []
                 },
+                "customEmailExternal": false,
                 "inline_channel_list": [],
                 "external_channel_list": [],
-                "unauthenticated_input": false
+                "unauthenticated_input": false,
+                "external_email_subject": null,
+                "internal_email_subject": "A FortiSOAR playbook is requesting your input",
+                "custom_email_body_external": null,
+                "external_email_attachments": null
             },
             "status": null,
             "top": "650",
@@ -274,20 +286,24 @@
                                 "tooltip": "",
                                 "dataType": "dynamicList",
                                 "formType": "dynamicList",
-                                "required": false,
+                                "required": true,
                                 "_expanded": true,
                                 "mmdUpdate": true,
                                 "collection": false,
                                 "searchable": false,
                                 "templateUrl": "app\/components\/form\/fields\/dynamicList.html",
                                 "_nameTouched": true,
-                                "defaultValue": null,
+                                "defaultValue": "{{vars.managers_list | first}}",
                                 "_previousName": "manager",
                                 "playbookField": true,
+                                "requiredQuery": [],
                                 "lengthConstraint": true,
+                                "responseSelected": [],
                                 "allowedGridColumn": false,
+                                "requiredCondition": "required",
                                 "jinjaExpressionView": true,
-                                "useRecordFieldDefault": false
+                                "useRecordFieldDefault": false,
+                                "_addRequiredConditions": true
                             }
                         ]
                     }
@@ -301,8 +317,10 @@
                 },
                 "agent_id": null,
                 "resources": "metafield_templates",
+                "is_approval": false,
                 "owner_detail": {
-                    "isAssigned": false
+                    "isAssigned": false,
+                    "emailRecipients": ""
                 },
                 "isRecordLinked": false,
                 "step_variables": [],
@@ -314,15 +332,21 @@
                             "step_iri": "\/api\/3\/workflow_steps\/3ae7caf5-2b1d-4f95-9b10-67c25a48e493"
                         }
                     ],
-                    "duplicateOption": false
+                    "duplicateOption": false,
+                    "customSuccessMessage": "Awaiting Playbook resumed successfully."
                 },
                 "email_notification": {
                     "enabled": false,
                     "smtpParameters": []
                 },
+                "customEmailExternal": false,
                 "inline_channel_list": [],
                 "external_channel_list": [],
-                "unauthenticated_input": false
+                "unauthenticated_input": false,
+                "external_email_subject": null,
+                "internal_email_subject": "A FortiSOAR playbook is requesting your input",
+                "custom_email_body_external": null,
+                "external_email_attachments": null
             },
             "status": null,
             "top": "290",
@@ -708,6 +732,23 @@
     "groups": [
         {
             "@type": "WorkflowGroup",
+            "name": "Change Log",
+            "description": "1\/12\/26 - Make Manual Inputs required",
+            "type": "note",
+            "isCollapsed": false,
+            "hasTriggerStep": false,
+            "hideInLogs": true,
+            "metadata": [],
+            "reusable": false,
+            "top": "60",
+            "left": "1300",
+            "height": "0",
+            "width": "300",
+            "uuid": "cfc750a7-62ab-451b-8488-d09ea9e73850",
+            "recordTags": []
+        },
+        {
+            "@type": "WorkflowGroup",
             "name": "Dynamic Manager and Device List",
             "description": "",
             "type": "block",
@@ -725,6 +766,8 @@
         }
     ],
     "priority": "\/api\/3\/picklists\/9e8d41e4-8ada-4a2c-bd02-07f62c6d0a00",
+    "playbookOrigin": "\/api\/3\/picklists\/b6d710a9-a8ec-41ec-8817-fe9fa062fcdd",
+    "isEditable": true,
     "uuid": "79802d5e-1d8e-4fed-b321-5b873be2be9b",
     "owners": [],
     "isPrivate": false,

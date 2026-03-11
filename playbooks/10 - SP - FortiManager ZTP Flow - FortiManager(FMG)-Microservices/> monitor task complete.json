@@ -102,7 +102,7 @@
             "name": "task_error",
             "description": null,
             "arguments": {
-                "output": "{\n\"error\":true,\n\"script_data\": {},\n\"script_time\": {}\n}"
+                "output": "{%- macro format_seconds(seconds) -%}\n    {%- set hours = seconds \/\/ 3600 -%}\n    {%- set minutes = (seconds % 3600) \/\/ 60 -%}\n    {%- set remaining_seconds = seconds % 60 -%}\n    {{ hours }}h {{ minutes }}m {{ remaining_seconds }}s\n{%- endmacro -%}\n\n{%- set data = vars.steps.monitor_task.output.task_data.data -%}\n{%- set end_time = data.get_response.end_tm -%}\n{%- set start_time = data.get_response.start_tm -%}\n{%- set total_seconds = end_time-start_time -%}\n{%- set total_time = format_seconds(total_seconds) -%}\n\n{%- set ret = {} -%}\n{%- set _do = ret.update( {\"error\": true} ) -%}\n{%- set _do = ret.update( {\"script_data\":data} ) -%}\n{%- set _do = ret.update( {\"script_time\": {\"total_seconds\":total_seconds,\"total_time\":total_time} } ) -%}\n{{ret}}"
             },
             "status": null,
             "top": "400",
@@ -193,6 +193,8 @@
     ],
     "groups": [],
     "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+    "playbookOrigin": "\/api\/3\/picklists\/b6d710a9-a8ec-41ec-8817-fe9fa062fcdd",
+    "isEditable": true,
     "uuid": "70892d77-03fe-4353-81da-c2225be54dd3",
     "owners": [],
     "isPrivate": false,

@@ -29,9 +29,13 @@
                 "params": {
                     "url": "{{vars.url}}",
                     "data": "{{vars.payload}}",
-                    "track_task": true
+                    "track_task": true,
+                    "task_timeout": 300,
+                    "task_stale_timeout": 300,
+                    "zero_percent_timeout": 120,
+                    "delete_task_on_timeout": false
                 },
-                "version": "1.0.3",
+                "version": "1.0.6",
                 "connector": "fortinet-fortimanager-json-rpc",
                 "operation": "json_rpc_execute",
                 "operationTitle": "JSON RPC Exec",
@@ -146,6 +150,8 @@
         }
     ],
     "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+    "playbookOrigin": "\/api\/3\/picklists\/b6d710a9-a8ec-41ec-8817-fe9fa062fcdd",
+    "isEditable": true,
     "uuid": "fd89a790-ec77-4737-846b-e7a627606068",
     "owners": [],
     "isPrivate": false,

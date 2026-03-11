@@ -21,6 +21,34 @@
     "steps": [
         {
             "@type": "WorkflowStep",
+            "name": "Check if Jinja Render Error",
+            "description": null,
+            "arguments": {
+                "conditions": [
+                    {
+                        "option": "Error rendering Jinja",
+                        "step_iri": "\/api\/3\/workflow_steps\/04855105-2952-40bf-b5a4-1de1bd108800",
+                        "condition": "{{ vars.steps.render_jinja_template.error == True }}",
+                        "step_name": "Set Device to Failed"
+                    },
+                    {
+                        "option": "No Error",
+                        "default": true,
+                        "step_iri": "\/api\/3\/workflow_steps\/a7903a95-a584-4d8c-ad17-3bbcd269ec56",
+                        "step_name": "merge_metadata"
+                    }
+                ],
+                "step_variables": []
+            },
+            "status": null,
+            "top": "660",
+            "left": "380",
+            "stepType": "\/api\/3\/workflow_step_types\/12254cf5-5db7-4b1a-8cb1-3af081924b28",
+            "group": null,
+            "uuid": "f6ee4b3f-c87f-4289-9bed-803b8c157874"
+        },
+        {
+            "@type": "WorkflowStep",
             "name": "extract_record_data",
             "description": null,
             "arguments": {
@@ -33,6 +61,27 @@
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
             "uuid": "25a6f612-ee96-4b2a-b92b-2f3c91a08999"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Fail Playbook",
+            "description": null,
+            "arguments": {
+                "params": {
+                    "msg": "Error processing metadata for device."
+                },
+                "version": "3.5.0",
+                "connector": "cyops_utilities",
+                "operation": "raise_exception",
+                "operationTitle": "Utils: Raise Exception",
+                "step_variables": []
+            },
+            "status": null,
+            "top": "660",
+            "left": "1120",
+            "stepType": "\/api\/3\/workflow_step_types\/0109f35d-090b-4a2b-bd8a-94cbc3508562",
+            "group": null,
+            "uuid": "539fcc01-a36c-4054-afb9-f9edb0a70e61"
         },
         {
             "@type": "WorkflowStep",
@@ -157,7 +206,7 @@
                 "workflowReference": "\/api\/3\/workflows\/6ec4990d-074e-431c-a051-1edd7adec805"
             },
             "status": null,
-            "top": "640",
+            "top": "800",
             "left": "380",
             "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
             "group": null,
@@ -184,6 +233,38 @@
             "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
             "group": null,
             "uuid": "9f7c7f67-360a-48ce-a792-bd9a8323b272"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Set Device to Failed",
+            "description": null,
+            "arguments": {
+                "message": {
+                    "tags": [],
+                    "type": "\/api\/3\/picklists\/ff599189-3eeb-4c86-acb0-a7915e85ac3b",
+                    "tenant": "",
+                    "thread": false,
+                    "content": "<p>Error Rendering Expected metadata for Device<\/p>\n<p>&nbsp;<\/p>\n<p>{{vars.steps.render_jinja_template['error_details']}}<\/p>",
+                    "records": "{{vars.steps.find_device[0]['@id']}}"
+                },
+                "resource": {
+                    "zTPPhase": "{{\"ZTP Phase\"|picklist( \"Fail\" )}}"
+                },
+                "operation": "Append",
+                "collection": "{{vars.steps.find_device[0]['@id']}}",
+                "__recommend": [],
+                "collectionType": "\/api\/3\/devices",
+                "fieldOperation": {
+                    "recordTags": "Append"
+                },
+                "step_variables": []
+            },
+            "status": null,
+            "top": "660",
+            "left": "820",
+            "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928722",
+            "group": null,
+            "uuid": "04855105-2952-40bf-b5a4-1de1bd108800"
         },
         {
             "@type": "WorkflowStep",
@@ -227,6 +308,26 @@
         }
     ],
     "routes": [
+        {
+            "@type": "WorkflowRoute",
+            "name": "Check if Jinja Render Error -> Copy of update_device_record",
+            "targetStep": "\/api\/3\/workflow_steps\/04855105-2952-40bf-b5a4-1de1bd108800",
+            "sourceStep": "\/api\/3\/workflow_steps\/f6ee4b3f-c87f-4289-9bed-803b8c157874",
+            "label": "Error rendering Jinja",
+            "isExecuted": false,
+            "group": null,
+            "uuid": "6994f4eb-676f-4db4-a4ae-920d7e77d506"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Check if Jinja Render Error -> merge_metadata",
+            "targetStep": "\/api\/3\/workflow_steps\/a7903a95-a584-4d8c-ad17-3bbcd269ec56",
+            "sourceStep": "\/api\/3\/workflow_steps\/f6ee4b3f-c87f-4289-9bed-803b8c157874",
+            "label": "No Error",
+            "isExecuted": false,
+            "group": null,
+            "uuid": "93c6869b-b179-42f0-924a-ecff16d8e4e3"
+        },
         {
             "@type": "WorkflowRoute",
             "name": "extract_records -> get_jinja_variables",
@@ -289,13 +390,23 @@
         },
         {
             "@type": "WorkflowRoute",
-            "name": "render_jinja_template -> merge_metadata",
-            "targetStep": "\/api\/3\/workflow_steps\/a7903a95-a584-4d8c-ad17-3bbcd269ec56",
+            "name": "render_jinja_template -> Check if Jinja Render Error",
+            "targetStep": "\/api\/3\/workflow_steps\/f6ee4b3f-c87f-4289-9bed-803b8c157874",
             "sourceStep": "\/api\/3\/workflow_steps\/9f7c7f67-360a-48ce-a792-bd9a8323b272",
             "label": null,
             "isExecuted": false,
             "group": null,
-            "uuid": "5238e6a4-0c74-4e6f-b49a-2b7e79f379d3"
+            "uuid": "036995c6-d93f-43a9-a48e-fc7d474ca1f0"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Set Device to Failed -> Fail Playbook",
+            "targetStep": "\/api\/3\/workflow_steps\/539fcc01-a36c-4054-afb9-f9edb0a70e61",
+            "sourceStep": "\/api\/3\/workflow_steps\/04855105-2952-40bf-b5a4-1de1bd108800",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "6422a870-3dd2-4756-bab8-223ba10c283d"
         },
         {
             "@type": "WorkflowRoute",
@@ -308,8 +419,28 @@
             "uuid": "65e6c6da-b153-48b0-b95f-69853d6c60eb"
         }
     ],
-    "groups": [],
+    "groups": [
+        {
+            "@type": "WorkflowGroup",
+            "name": "Change Log",
+            "description": "5\/23\/25 - Add logic to Fail the device provisioning if the metadata can't be rendered  --DS",
+            "type": "note",
+            "isCollapsed": false,
+            "hasTriggerStep": false,
+            "hideInLogs": true,
+            "metadata": [],
+            "reusable": false,
+            "top": "60",
+            "left": "860",
+            "height": "123",
+            "width": "498",
+            "uuid": "1263b1da-c3b2-4d27-a4d6-788f16ac7ca3",
+            "recordTags": []
+        }
+    ],
     "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+    "playbookOrigin": "\/api\/3\/picklists\/b6d710a9-a8ec-41ec-8817-fe9fa062fcdd",
+    "isEditable": true,
     "uuid": "a4315a70-f4c8-47aa-9ee7-c99652dab930",
     "owners": [],
     "isPrivate": false,

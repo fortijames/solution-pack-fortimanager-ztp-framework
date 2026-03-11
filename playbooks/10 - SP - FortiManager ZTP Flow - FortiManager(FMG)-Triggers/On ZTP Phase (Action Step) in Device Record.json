@@ -161,6 +161,20 @@
         },
         {
             "@type": "WorkflowStep",
+            "name": "linked_scripts_results",
+            "description": null,
+            "arguments": {
+                "phase_results": "{{vars.steps.run_linked_scripts}}"
+            },
+            "status": null,
+            "top": "600",
+            "left": "1360",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "ac710ea7-4aca-4232-a919-5f410c7abd75"
+        },
+        {
+            "@type": "WorkflowStep",
             "name": "metadata_monitor",
             "description": null,
             "arguments": {
@@ -436,7 +450,7 @@
         },
         {
             "@type": "WorkflowStep",
-            "name": "run linked scripts",
+            "name": "run_linked_scripts",
             "description": null,
             "arguments": {
                 "arguments": {
@@ -452,8 +466,8 @@
                 "workflowReference": "\/api\/3\/workflows\/40821204-db12-4122-8ecd-ba6e944a058c"
             },
             "status": null,
-            "top": "720",
-            "left": "1460",
+            "top": "700",
+            "left": "1360",
             "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
             "group": null,
             "uuid": "eacd0ca0-f11f-458f-8465-7eda07222054"
@@ -464,8 +478,8 @@
             "description": null,
             "arguments": [],
             "status": null,
-            "top": "720",
-            "left": "1140",
+            "top": "700",
+            "left": "1060",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
             "uuid": "0ecd9d9f-3be8-4fa7-9738-e181666aedbd"
@@ -886,6 +900,16 @@
         },
         {
             "@type": "WorkflowRoute",
+            "name": "linked_scripts_results -> ztp_phase_complete_vars",
+            "targetStep": "\/api\/3\/workflow_steps\/96960759-a39a-42c4-9b69-62b9597f1522",
+            "sourceStep": "\/api\/3\/workflow_steps\/ac710ea7-4aca-4232-a919-5f410c7abd75",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "45baebfd-bbbc-4a21-8645-6b1f3dba5620"
+        },
+        {
+            "@type": "WorkflowRoute",
             "name": "metadata_monitor -> metafield_monitor",
             "targetStep": "\/api\/3\/workflow_steps\/3aca9a33-ed5c-4d02-ba7c-dd6f7ea0e6d6",
             "sourceStep": "\/api\/3\/workflow_steps\/f697e400-e6a0-4a78-8268-7e71d12bd58a",
@@ -1026,6 +1050,16 @@
         },
         {
             "@type": "WorkflowRoute",
+            "name": "run_linked_scripts -> linked_scripts_results",
+            "targetStep": "\/api\/3\/workflow_steps\/ac710ea7-4aca-4232-a919-5f410c7abd75",
+            "sourceStep": "\/api\/3\/workflow_steps\/eacd0ca0-f11f-458f-8465-7eda07222054",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "076447e9-4578-4050-a5a6-af8a0f4b5a52"
+        },
+        {
+            "@type": "WorkflowRoute",
             "name": "run_linked_scripts_vars -> run linked scripts",
             "targetStep": "\/api\/3\/workflow_steps\/eacd0ca0-f11f-458f-8465-7eda07222054",
             "sourceStep": "\/api\/3\/workflow_steps\/0ecd9d9f-3be8-4fa7-9738-e181666aedbd",
@@ -1033,16 +1067,6 @@
             "isExecuted": false,
             "group": null,
             "uuid": "8de956b0-513d-4f2a-97de-3713fea2b48f"
-        },
-        {
-            "@type": "WorkflowRoute",
-            "name": "run linked scripts -> ztp_phase_complete_vars",
-            "targetStep": "\/api\/3\/workflow_steps\/96960759-a39a-42c4-9b69-62b9597f1522",
-            "sourceStep": "\/api\/3\/workflow_steps\/eacd0ca0-f11f-458f-8465-7eda07222054",
-            "label": null,
-            "isExecuted": false,
-            "group": null,
-            "uuid": "0aaa4993-ec6c-4d48-87f9-25a97ff885c2"
         },
         {
             "@type": "WorkflowRoute",
@@ -1205,8 +1229,28 @@
             "uuid": "89bccc58-08f4-4f37-97e8-01068ad8b4d7"
         }
     ],
-    "groups": [],
+    "groups": [
+        {
+            "@type": "WorkflowGroup",
+            "name": "Change Log",
+            "description": "3\/31\/25 Added a set variable step after run_linked_scripts as some odd behavior was seen where the inline set variable step was not 100% working -DS",
+            "type": "note",
+            "isCollapsed": false,
+            "hasTriggerStep": false,
+            "hideInLogs": true,
+            "metadata": [],
+            "reusable": false,
+            "top": "180",
+            "left": "2780",
+            "height": "177",
+            "width": "417",
+            "uuid": "6d8572f3-a1cf-4739-8df0-d6ad2afed281",
+            "recordTags": []
+        }
+    ],
     "priority": "\/api\/3\/picklists\/df314249-88c8-4778-ab55-8aeafbe932cb",
+    "playbookOrigin": "\/api\/3\/picklists\/b6d710a9-a8ec-41ec-8817-fe9fa062fcdd",
+    "isEditable": true,
     "uuid": "8fdcdcb0-0511-401a-9485-3b61ccfc8cc4",
     "owners": [],
     "isPrivate": false,

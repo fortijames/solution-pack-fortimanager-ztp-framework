@@ -26,7 +26,7 @@
             "description": null,
             "arguments": {
                 "connector_api_url": "\/api\/integration\/configuration\/",
-                "new_connector_config": "{\n\"connector\": \"{{vars.connector_id}}\",\n\"name\": \"{{vars.input.params['manager_name']}}\",\n\"default\": false,\n\"config\": {\n  \"address\": \"{{vars.input.params['fmg_ip']}}\",\n  \"port\":\"443\",\n  \"auth_method\": \"Username\/Password\",\n  \"username\":\"{{vars.input.params['fmg_user']}}\",\n  \"password\":\"{{vars.input.params['fmg_pass']}}\",\n  \"verify_ssl\" : false\n  }\n}"
+                "new_connector_config": "{\n\"connector\": \"{{vars.connector_id}}\",\n\"name\": \"{{vars.input.params['manager_name']}}\",\n\"default\": false,\n\"config\": {\n  \"address\": \"{{vars.input.params['fmg_ip']}}\",\n  \"port\":\"443\",\n  \"auth_method\": \"Username\/Password\",\n  \"username\":\"{{vars.input.params['fmg_user']}}\",\n  \"password\":\"{{vars.input.params['fmg_pass']}}\",\n  \"verify_ssl\" : false,\n  \"verbose_json\": true\n  }\n}"
             },
             "status": null,
             "top": "400",
@@ -253,6 +253,8 @@
     ],
     "groups": [],
     "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+    "playbookOrigin": "\/api\/3\/picklists\/b6d710a9-a8ec-41ec-8817-fe9fa062fcdd",
+    "isEditable": true,
     "uuid": "a9794bd8-b1a7-4ee8-b79a-b8b93af5a44c",
     "owners": [],
     "isPrivate": false,

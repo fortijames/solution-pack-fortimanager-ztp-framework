@@ -37,7 +37,7 @@
             "name": "extract_jinja_results",
             "description": null,
             "arguments": {
-                "search_results": "{%- set i = namespace(x=0) -%}\n{%- set table = [] -%}\n{%- for dev in vars.device_record_data -%}\n  {%- set idx = {} -%}\n  {%- if vars.steps.render_jinja[i.x].output != \"\" -%}\n    {%- set ret = true -%}    \n  {%- endif -%}\n  {%- set _do = idx.update( {\n      \"ztp_profile_id\":vars.ztp_profile_id,\n      \"id\":dev.id,\n      \"matched\": ret|default(false),\n      \"jinja_vars\":vars.steps.get_jinja_vars[i.x].output,\n      \"jinja_search\":vars.zprof_search\n    } ) -%}\n  {%- set _do = table.append(idx)  -%}\n  {%- set i.x = i.x+1 -%}\n{%- endfor -%}\n{{table}}"
+                "search_results": "{%- set i = namespace(x=0) -%}\n{%- set table = [] -%}\n{%- for dev in vars.device_record_data -%}\n  {%- set idx = {} -%}\n  {%- if vars.steps.render_jinja[i.x].output not in [\"\", False, \"false\", \"False\"] -%}\n    {%- set ret = true -%}    \n  {%- endif -%}\n  {%- set _do = idx.update( {\n      \"ztp_profile_id\":vars.ztp_profile_id,\n      \"id\":dev.id,\n      \"matched\": ret|default(false),\n      \"jinja_vars\":vars.steps.get_jinja_vars[i.x].output,\n      \"jinja_search\":vars.zprof_search\n    } ) -%}\n  {%- set _do = table.append(idx)  -%}\n  {%- set i.x = i.x+1 -%}\n{%- endfor -%}\n{{table}}"
             },
             "status": null,
             "top": "680",
@@ -472,6 +472,23 @@
     "groups": [
         {
             "@type": "WorkflowGroup",
+            "name": "Change Log",
+            "description": "3\/31\/25 - `extract_jinja_results` step is too permisive. It only checks if output is not each to \"\". Changed to   {%- if vars.steps.render_jinja[i.x].output not in [\"\", False, \"false\", \"False\"] -%} - DS",
+            "type": "note",
+            "isCollapsed": false,
+            "hasTriggerStep": false,
+            "hideInLogs": true,
+            "metadata": [],
+            "reusable": false,
+            "top": "80",
+            "left": "1560",
+            "height": "161",
+            "width": "464",
+            "uuid": "f0970d19-99c9-4fc7-b7b1-d562657fc817",
+            "recordTags": []
+        },
+        {
+            "@type": "WorkflowGroup",
             "name": "Jinja",
             "description": "This area leverages the same logic as scripts and metadata templates",
             "type": "note",
@@ -540,6 +557,8 @@
         }
     ],
     "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+    "playbookOrigin": "\/api\/3\/picklists\/b6d710a9-a8ec-41ec-8817-fe9fa062fcdd",
+    "isEditable": true,
     "uuid": "fee784a7-7faa-4743-b68d-c69a6e710319",
     "owners": [],
     "isPrivate": false,

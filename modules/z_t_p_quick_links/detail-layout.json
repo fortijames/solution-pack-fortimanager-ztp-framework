@@ -1,0 +1,98 @@
+{
+    "@context": "\/api\/3\/contexts\/SystemViewTemplate",
+    "@type": "SystemViewTemplate",
+    "type": "rows",
+    "config": {
+        "rows": [
+            {
+                "columns": [
+                    {
+                        "widgets": [
+                            {
+                                "type": "editableFormGroup",
+                                "config": {
+                                    "wid": "49d354ee-7419-4d21-8407-410ddcad64c2",
+                                    "rows": [
+                                        {
+                                            "columns": [
+                                                {
+                                                    "fields": [
+                                                        {
+                                                            "name": "name",
+                                                            "highlightMode": true,
+                                                            "linky": true,
+                                                            "readOnly": false
+                                                        },
+                                                        {
+                                                            "name": "quickLinks",
+                                                            "highlightMode": true,
+                                                            "linky": true,
+                                                            "readOnly": false
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            }
+                        ],
+                        "style": "col-lg-12"
+                    }
+                ],
+                "wid": "b6f47661-59c3-4bf1-93a0-dffa27e6311f",
+                "_collapsed": false
+            },
+            {
+                "columns": [
+                    {
+                        "widgets": [
+                            {
+                                "type": "tabs",
+                                "config": {
+                                    "tabs": [
+                                        {
+                                            "title": "Related Records",
+                                            "widget": {
+                                                "type": "relationship.subtab",
+                                                "config": {
+                                                    "excludes": [
+                                                        "notes",
+                                                        "comments",
+                                                        "userOwners",
+                                                        "attachments"
+                                                    ],
+                                                    "wid": "a26e7bf2-d122-4766-8039-5334c21d88b3"
+                                                },
+                                                "visible": true
+                                            },
+                                            "show": true,
+                                            "visible": true,
+                                            "icon": "fa fa-none"
+                                        }
+                                    ],
+                                    "wid": "5230586d-d136-4c27-8fa3-f2824d008783"
+                                }
+                            }
+                        ],
+                        "style": "col-lg-12"
+                    }
+                ],
+                "wid": "96d443ae-5a7b-411c-914c-a9fb40d0cdc7",
+                "_collapsed": false
+            }
+        ],
+        "wid": "ab31cd5d-7a3b-4d13-9370-fb0753f8b13d",
+        "actionButtons": [],
+        "metadata": []
+    },
+    "module": "z_t_p_quick_links",
+    "filters": [],
+    "isDefault": true,
+    "visible": true,
+    "viewOptions": "detail",
+    "name": "Base Template",
+    "system": true,
+    "uuid": "modules-z_t_p_quick_links-detail",
+    "newUuid": "c006eb72-92f9-4221-81c4-1f13d23e5d5b"
+}

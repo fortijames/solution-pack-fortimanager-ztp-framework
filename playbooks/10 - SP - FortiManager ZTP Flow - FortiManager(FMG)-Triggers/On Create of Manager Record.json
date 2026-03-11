@@ -17,6 +17,304 @@
     "steps": [
         {
             "@type": "WorkflowStep",
+            "name": "Provide input",
+            "description": null,
+            "arguments": {
+                "type": "InputBased",
+                "input": {
+                    "schema": {
+                        "title": "Fill in Device Information",
+                        "description": "Complete the information below",
+                        "inputVariables": [
+                            {
+                                "name": "connectionType",
+                                "type": "array",
+                                "label": "Connection Type",
+                                "title": "Dynamic List",
+                                "usable": true,
+                                "options": [
+                                    "Domain",
+                                    "IPv4",
+                                    "IPv6"
+                                ],
+                                "tooltip": "Select whether SOAR will be connecting to FMG via an IP\/domain",
+                                "dataType": "dynamicList",
+                                "formType": "dynamicList",
+                                "required": true,
+                                "_expanded": false,
+                                "mmdUpdate": true,
+                                "collection": false,
+                                "dataSource": [],
+                                "searchable": false,
+                                "templateUrl": "app\/components\/form\/fields\/dynamicList.html",
+                                "defaultValue": "IPv4",
+                                "_previousName": "connectionType",
+                                "playbookField": true,
+                                "requiredQuery": [],
+                                "displayTemplate": "%7B%7B%20itemValue%20%7D%7D",
+                                "lengthConstraint": true,
+                                "responseSelected": [],
+                                "allowedEncryption": false,
+                                "allowedGridColumn": false,
+                                "requiredCondition": "required",
+                                "jinjaExpressionView": true,
+                                "useRecordFieldDefault": false,
+                                "_addRequiredConditions": true
+                            },
+                            {
+                                "name": "fMGIPv4Address",
+                                "type": "string",
+                                "label": "FMG IPv4 Address",
+                                "title": "IPv4",
+                                "usable": true,
+                                "tooltip": "",
+                                "dataType": "text",
+                                "formType": "ipv4",
+                                "required": true,
+                                "_expanded": true,
+                                "mmdUpdate": true,
+                                "collection": false,
+                                "searchable": true,
+                                "templateUrl": "app\/components\/form\/fields\/webAddress.html",
+                                "defaultValue": null,
+                                "_previousName": "fMGIPAddress",
+                                "playbookField": true,
+                                "requiredQuery": [],
+                                "visibilityQuery": {
+                                    "sort": [],
+                                    "limit": 30,
+                                    "logic": "AND",
+                                    "filters": [
+                                        {
+                                            "type": "array",
+                                            "field": "connectionType",
+                                            "value": [
+                                                "IPv4"
+                                            ],
+                                            "module": "connectionType",
+                                            "display": "",
+                                            "operator": "in",
+                                            "template": "tags",
+                                            "OPERATOR_KEY": "$",
+                                            "useInOperator": true,
+                                            "previousOperator": "in",
+                                            "previousTemplate": "tags"
+                                        }
+                                    ]
+                                },
+                                "lengthConstraint": false,
+                                "responseSelected": [],
+                                "allowedEncryption": true,
+                                "allowedGridColumn": true,
+                                "requiredCondition": "required",
+                                "jinjaExpressionView": true,
+                                "useRecordFieldDefault": false,
+                                "_addRequiredConditions": true,
+                                "_addVisibilityConditions": true
+                            },
+                            {
+                                "name": "fMGDomain",
+                                "type": "string",
+                                "label": "FMG Domain",
+                                "title": "Domain",
+                                "usable": true,
+                                "tooltip": "",
+                                "dataType": "text",
+                                "formType": "domain",
+                                "required": true,
+                                "_expanded": true,
+                                "mmdUpdate": true,
+                                "collection": false,
+                                "searchable": true,
+                                "templateUrl": "app\/components\/form\/fields\/webAddress.html",
+                                "defaultValue": null,
+                                "_previousName": "fMGDomain",
+                                "playbookField": true,
+                                "requiredQuery": [],
+                                "visibilityQuery": {
+                                    "sort": [],
+                                    "limit": 30,
+                                    "logic": "AND",
+                                    "filters": [
+                                        {
+                                            "type": "array",
+                                            "field": "connectionType",
+                                            "value": [
+                                                "Domain"
+                                            ],
+                                            "module": "connectionType",
+                                            "display": "",
+                                            "operator": "in",
+                                            "template": "tags",
+                                            "OPERATOR_KEY": "$",
+                                            "useInOperator": true,
+                                            "previousOperator": "in",
+                                            "previousTemplate": "tags"
+                                        }
+                                    ]
+                                },
+                                "lengthConstraint": false,
+                                "responseSelected": [],
+                                "allowedEncryption": true,
+                                "allowedGridColumn": true,
+                                "requiredCondition": "required",
+                                "jinjaExpressionView": true,
+                                "useRecordFieldDefault": false,
+                                "_addRequiredConditions": true,
+                                "_addVisibilityConditions": true
+                            },
+                            {
+                                "name": "fMGIpv6Address",
+                                "type": "string",
+                                "label": "FMG Ipv6 Address",
+                                "title": "IPv6",
+                                "usable": true,
+                                "tooltip": "",
+                                "dataType": "text",
+                                "formType": "ipv6",
+                                "required": true,
+                                "_expanded": true,
+                                "mmdUpdate": true,
+                                "collection": false,
+                                "searchable": true,
+                                "templateUrl": "app\/components\/form\/fields\/webAddress.html",
+                                "defaultValue": null,
+                                "_previousName": "fMGIpv6Address",
+                                "playbookField": true,
+                                "requiredQuery": [],
+                                "visibilityQuery": {
+                                    "sort": [],
+                                    "limit": 30,
+                                    "logic": "AND",
+                                    "filters": [
+                                        {
+                                            "type": "array",
+                                            "field": "connectionType",
+                                            "value": [
+                                                "IPv6"
+                                            ],
+                                            "module": "connectionType",
+                                            "display": "",
+                                            "operator": "in",
+                                            "template": "tags",
+                                            "OPERATOR_KEY": "$",
+                                            "useInOperator": true,
+                                            "previousOperator": "in",
+                                            "previousTemplate": "tags"
+                                        }
+                                    ]
+                                },
+                                "lengthConstraint": false,
+                                "responseSelected": [],
+                                "allowedEncryption": true,
+                                "allowedGridColumn": true,
+                                "requiredCondition": "required",
+                                "jinjaExpressionView": true,
+                                "useRecordFieldDefault": false,
+                                "_addRequiredConditions": true,
+                                "_addVisibilityConditions": true
+                            },
+                            {
+                                "name": "fMGAdminUser",
+                                "type": "string",
+                                "label": "FMG Admin User",
+                                "title": "Text Field",
+                                "usable": true,
+                                "tooltip": "User with JSON API Access",
+                                "dataType": "text",
+                                "formType": "text",
+                                "required": true,
+                                "_expanded": true,
+                                "mmdUpdate": true,
+                                "collection": false,
+                                "searchable": true,
+                                "templateUrl": "app\/components\/form\/fields\/input.html",
+                                "defaultValue": "fortisoar",
+                                "_previousName": "fMGAdminUser",
+                                "playbookField": true,
+                                "requiredQuery": [],
+                                "lengthConstraint": true,
+                                "responseSelected": [],
+                                "allowedEncryption": true,
+                                "allowedGridColumn": true,
+                                "requiredCondition": "required",
+                                "jinjaExpressionView": true,
+                                "useRecordFieldDefault": false,
+                                "_addRequiredConditions": true
+                            },
+                            {
+                                "name": "fMGPassword",
+                                "type": "string",
+                                "label": "FMG Password",
+                                "title": "Password",
+                                "usable": false,
+                                "tooltip": "Password of JSON REST User",
+                                "dataType": "text",
+                                "formType": "password",
+                                "required": true,
+                                "_expanded": true,
+                                "mmdUpdate": false,
+                                "collection": false,
+                                "searchable": false,
+                                "templateUrl": "app\/components\/form\/fields\/password.html",
+                                "defaultValue": null,
+                                "_previousName": "fMG",
+                                "playbookField": true,
+                                "requiredQuery": [],
+                                "lengthConstraint": true,
+                                "responseSelected": [],
+                                "allowedEncryption": false,
+                                "allowedGridColumn": false,
+                                "requiredCondition": "required",
+                                "jinjaExpressionView": true,
+                                "useRecordFieldDefault": false,
+                                "_addRequiredConditions": true
+                            }
+                        ]
+                    }
+                },
+                "record": "{{ vars.input.records[0][\"@id\"] }}",
+                "agent_id": null,
+                "resources": "managers",
+                "is_approval": false,
+                "owner_detail": {
+                    "isAssigned": false,
+                    "emailRecipients": ""
+                },
+                "isRecordLinked": true,
+                "step_variables": [],
+                "response_mapping": {
+                    "options": [
+                        {
+                            "option": "Continue",
+                            "step_iri": "\/api\/3\/workflow_steps\/6f57278d-cf22-4c6d-85fb-900237bf10f4"
+                        }
+                    ],
+                    "duplicateOption": false,
+                    "customSuccessMessage": "Awaiting Playbook resumed successfully."
+                },
+                "email_notification": {
+                    "enabled": false,
+                    "smtpParameters": []
+                },
+                "customEmailExternal": false,
+                "inline_channel_list": [],
+                "external_channel_list": [],
+                "unauthenticated_input": false,
+                "external_email_subject": null,
+                "internal_email_subject": "A FortiSOAR playbook is requesting your input",
+                "custom_email_body_external": null,
+                "external_email_attachments": null
+            },
+            "status": null,
+            "top": "280",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/fc04082a-d7dc-4299-96fb-6837b1baa0fe",
+            "group": null,
+            "uuid": "ca3f2ed2-54de-44d3-8779-29e5ff8809b6"
+        },
+        {
+            "@type": "WorkflowStep",
             "name": "Start",
             "description": null,
             "arguments": {
@@ -24,6 +322,7 @@
                 "resources": [
                     "managers"
                 ],
+                "__triggerLimit": true,
                 "step_variables": {
                     "input": {
                         "params": [],
@@ -32,27 +331,14 @@
                         ]
                     }
                 },
+                "triggerOnSource": true,
                 "fieldbasedtrigger": {
                     "sort": [],
                     "limit": 30,
                     "logic": "AND",
-                    "filters": [
-                        {
-                            "type": "primitive",
-                            "field": "adminRpcPassword",
-                            "value": "false",
-                            "operator": "isnull",
-                            "_operator": "isnull"
-                        },
-                        {
-                            "type": "primitive",
-                            "field": "adminRpcUser",
-                            "value": "false",
-                            "operator": "isnull",
-                            "_operator": "isnull"
-                        }
-                    ]
-                }
+                    "filters": []
+                },
+                "triggerOnReplicate": false
             },
             "status": null,
             "top": "40",
@@ -81,8 +367,8 @@
                 "workflowReference": "\/api\/3\/workflows\/b165d6ba-da8e-47ce-88f6-65b24ae5fc53"
             },
             "status": null,
-            "top": "160",
-            "left": "380",
+            "top": "300",
+            "left": "540",
             "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
             "group": null,
             "uuid": "8d216b5b-5c8c-4b40-9925-e6a1ac0e39b4"
@@ -92,16 +378,11 @@
             "name": "update connector config",
             "description": null,
             "arguments": {
-                "for_each": {
-                    "item": "{{vars.input.records}}",
-                    "parallel": false,
-                    "condition": ""
-                },
                 "arguments": {
-                    "fmg_ip": "{{vars.item.managerIP}}",
-                    "fmg_pass": "{{vars.item.adminRpcPassword}}",
-                    "fmg_user": "{{vars.item.adminRpcUser}}",
-                    "manager_name": "{{vars.item.managerName}}"
+                    "fmg_ip": "{{vars.steps.Provide_input.input.fMGIPv4Address or vars.steps.Provide_input.input.fMGDomain or vars.steps.Provide_input.input.fMGIpv6Address }}",
+                    "fmg_pass": "{{vars.steps.Provide_input.input.fMGPassword}}",
+                    "fmg_user": "{{vars.steps.Provide_input.input.fMGAdminUser}}",
+                    "manager_name": "{{vars.input.records[0].managerName}}"
                 },
                 "apply_async": false,
                 "step_variables": [],
@@ -110,23 +391,89 @@
                 "workflowReference": "\/api\/3\/workflows\/a9794bd8-b1a7-4ee8-b79a-b8b93af5a44c"
             },
             "status": null,
-            "top": "40",
-            "left": "380",
+            "top": "160",
+            "left": "540",
             "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
             "group": null,
             "uuid": "3ee5e4d1-6255-4f4f-83a6-561c78abfe5c"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Update record with info",
+            "description": null,
+            "arguments": {
+                "resource": {
+                    "managerIP": "{{vars.steps.Provide_input.input.fMGIPv4Address or vars.steps.Provide_input.input.fMGDomain or vars.steps.Provide_input.input.fMGIpv6Address }}",
+                    "adminRpcUser": "{{vars.steps.Provide_input.input.fMGAdminUser}}"
+                },
+                "operation": "Append",
+                "collection": "{{vars.input.records[0]['@id']}}",
+                "__recommend": [],
+                "collectionType": "\/api\/3\/managers",
+                "fieldOperation": {
+                    "recordTags": "Append"
+                },
+                "step_variables": []
+            },
+            "status": null,
+            "top": "40",
+            "left": "540",
+            "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928722",
+            "group": null,
+            "uuid": "6f57278d-cf22-4c6d-85fb-900237bf10f4"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "wait for page to load",
+            "description": null,
+            "arguments": {
+                "rule": {
+                    "actions": [
+                        {
+                            "type": "resume_playbook",
+                            "enabled": true,
+                            "channel_uuid": "e2ce87c2-c55a-11ec-9d64-0242ac120002"
+                        }
+                    ],
+                    "is_active": true,
+                    "event_source": "crudhub"
+                },
+                "type": "TimeBased",
+                "delay": {
+                    "days": 0,
+                    "hours": 0,
+                    "minutes": 0,
+                    "seconds": 2
+                }
+            },
+            "status": null,
+            "top": "160",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/6832e556-b9c7-497a-babe-feda3bd27dbf",
+            "group": null,
+            "uuid": "43f48880-24ab-4cd4-bd4f-1daa60ead54e"
         }
     ],
     "routes": [
         {
             "@type": "WorkflowRoute",
-            "name": "Start -> update connector config",
-            "targetStep": "\/api\/3\/workflow_steps\/3ee5e4d1-6255-4f4f-83a6-561c78abfe5c",
+            "name": "Provide input -> Update record with info",
+            "targetStep": "\/api\/3\/workflow_steps\/6f57278d-cf22-4c6d-85fb-900237bf10f4",
+            "sourceStep": "\/api\/3\/workflow_steps\/ca3f2ed2-54de-44d3-8779-29e5ff8809b6",
+            "label": "Continue",
+            "isExecuted": false,
+            "group": null,
+            "uuid": "37e1ce5a-1593-430d-a342-7d05e5cbc2fb"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Start -> wait for page to load",
+            "targetStep": "\/api\/3\/workflow_steps\/43f48880-24ab-4cd4-bd4f-1daa60ead54e",
             "sourceStep": "\/api\/3\/workflow_steps\/69790070-1603-4d6b-95a3-662f3bc57439",
             "label": null,
             "isExecuted": false,
             "group": null,
-            "uuid": "b9fad3f0-219f-4aca-b03d-0f733bc8cd38"
+            "uuid": "aa105985-0e50-4f70-ad67-ea0321664f63"
         },
         {
             "@type": "WorkflowRoute",
@@ -137,10 +484,50 @@
             "isExecuted": false,
             "group": null,
             "uuid": "5bbca9bc-7411-4270-acff-7864340c7131"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Update record with info -> update connector config",
+            "targetStep": "\/api\/3\/workflow_steps\/3ee5e4d1-6255-4f4f-83a6-561c78abfe5c",
+            "sourceStep": "\/api\/3\/workflow_steps\/6f57278d-cf22-4c6d-85fb-900237bf10f4",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "57b8886f-4b3c-472c-b668-59780a79b2d1"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "wait for page to load -> Provide input",
+            "targetStep": "\/api\/3\/workflow_steps\/ca3f2ed2-54de-44d3-8779-29e5ff8809b6",
+            "sourceStep": "\/api\/3\/workflow_steps\/43f48880-24ab-4cd4-bd4f-1daa60ead54e",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "3ec59665-bf80-44fb-b913-7a63758b7122"
         }
     ],
-    "groups": [],
+    "groups": [
+        {
+            "@type": "WorkflowGroup",
+            "name": "Change Log",
+            "description": "1\/12\/26 - Added Manual Input for asking for Password. Needs 7.6.5 to work",
+            "type": "note",
+            "isCollapsed": false,
+            "hasTriggerStep": false,
+            "hideInLogs": false,
+            "metadata": [],
+            "reusable": false,
+            "top": "60",
+            "left": "960",
+            "height": "111",
+            "width": "498",
+            "uuid": "9c70233a-d125-4d73-b195-4bd009b4c0a7",
+            "recordTags": []
+        }
+    ],
     "priority": "\/api\/3\/picklists\/9e8d41e4-8ada-4a2c-bd02-07f62c6d0a00",
+    "playbookOrigin": "\/api\/3\/picklists\/b6d710a9-a8ec-41ec-8817-fe9fa062fcdd",
+    "isEditable": true,
     "uuid": "3a9300f4-2819-416f-b1bc-5cde5f16b61b",
     "owners": [],
     "isPrivate": false,

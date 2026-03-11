@@ -1,6 +1,8 @@
 {
     "@context": "\/api\/3\/contexts\/Dashboard",
     "@type": "Dashboard",
+    "isDefault": false,
+    "hidden": false,
     "uuid": "f6c40227-a1d1-48a1-bbdd-d4bcb9f5b1cd",
     "displayName": "FortiManager Device Metadata Assignments and Data",
     "type": "rows",
@@ -16,19 +18,55 @@
                     {
                         "widgets": [
                             {
-                                "type": "sectionHeader",
+                                "type": "readonlyFormGroup",
                                 "config": {
-                                    "wid": "362f28f7-b0cd-41f8-a6f6-57957da062f8",
+                                    "wid": "61de7741-57d1-454b-9874-ed46d6ee5c66",
+                                    "gridColumns": [],
+                                    "displayType": "card-view",
+                                    "widgetAlwaysDisplay": true,
                                     "query": {
-                                        "filters": [],
                                         "sort": [],
-                                        "limit": 10
+                                        "limit": 1,
+                                        "logic": "OR",
+                                        "filters": [
+                                            {
+                                                "field": "name",
+                                                "operator": "eq",
+                                                "_operator": "eq",
+                                                "value": "FortiManager - Quick Links",
+                                                "type": "primitive"
+                                            }
+                                        ]
                                     },
-                                    "editorType": "html",
-                                    "sectionText": "<p><span class=\"cs-richtext-field\" title=\"Announcements ID 1 - Description\">{{description}}<\/span><\/p>",
-                                    "fieldType": "record fields",
-                                    "resource": "announcements",
-                                    "resourceId": 1
+                                    "recordTitle": {
+                                        "type": "sectionHeader",
+                                        "wid": "af1fbe1b-fe1e-40d0-aee1-b81c7761c670",
+                                        "clone": false,
+                                        "remove": false
+                                    },
+                                    "relatedTemplate": {
+                                        "type": "rows",
+                                        "rows": [],
+                                        "wid": "0063d99e-e4dc-4763-8ac9-2a785fbb67b4"
+                                    },
+                                    "rows": [
+                                        {
+                                            "columns": [
+                                                {
+                                                    "fields": [
+                                                        {
+                                                            "name": "quickLinks",
+                                                            "highlightMode": true,
+                                                            "linky": true,
+                                                            "readOnly": true
+                                                        }
+                                                    ],
+                                                    "style": "col-lg-12"
+                                                }
+                                            ]
+                                        }
+                                    ],
+                                    "resource": "z_t_p_quick_links"
                                 }
                             }
                         ],

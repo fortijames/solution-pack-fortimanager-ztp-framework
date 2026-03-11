@@ -27,7 +27,7 @@
                 },
                 "arguments": {
                     "fmg_ip": "{{vars.item.managerIP}}",
-                    "fmg_pass": "{{vars.item.adminRpcPassword}}",
+                    "fmg_pass": "{{vars.steps.Provide_Password.input.fMGPassword}}",
                     "fmg_user": "{{vars.item.adminRpcUser}}",
                     "manager_name": "{{vars.item.managerName}}"
                 },
@@ -39,10 +39,92 @@
             },
             "status": null,
             "top": "40",
-            "left": "340",
+            "left": "540",
             "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
             "group": null,
             "uuid": "147a8802-e6cf-4d4b-bc07-8234f84878da"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Provide Password",
+            "description": null,
+            "arguments": {
+                "type": "InputBased",
+                "input": {
+                    "schema": {
+                        "title": "Fill in below",
+                        "description": "Fill in below",
+                        "inputVariables": [
+                            {
+                                "name": "fMGPassword",
+                                "type": "string",
+                                "label": "FMG Password",
+                                "title": "Password",
+                                "usable": false,
+                                "tooltip": "FortiManager password",
+                                "dataType": "text",
+                                "formType": "password",
+                                "required": true,
+                                "_expanded": true,
+                                "mmdUpdate": false,
+                                "collection": false,
+                                "searchable": false,
+                                "templateUrl": "app\/components\/form\/fields\/password.html",
+                                "defaultValue": null,
+                                "_previousName": "fMGPassword",
+                                "playbookField": true,
+                                "requiredQuery": [],
+                                "lengthConstraint": true,
+                                "responseSelected": [],
+                                "allowedEncryption": false,
+                                "allowedGridColumn": false,
+                                "requiredCondition": "required",
+                                "jinjaExpressionView": true,
+                                "useRecordFieldDefault": false,
+                                "_addRequiredConditions": true
+                            }
+                        ]
+                    }
+                },
+                "record": "{{ vars.input.records[0][\"@id\"] }}",
+                "agent_id": null,
+                "resources": "managers",
+                "is_approval": false,
+                "owner_detail": {
+                    "isAssigned": false,
+                    "emailRecipients": ""
+                },
+                "isRecordLinked": true,
+                "step_variables": [],
+                "response_mapping": {
+                    "options": [
+                        {
+                            "option": "Continue",
+                            "step_iri": "\/api\/3\/workflow_steps\/147a8802-e6cf-4d4b-bc07-8234f84878da"
+                        }
+                    ],
+                    "duplicateOption": false,
+                    "customSuccessMessage": "Awaiting Playbook resumed successfully."
+                },
+                "email_notification": {
+                    "enabled": false,
+                    "smtpParameters": []
+                },
+                "customEmailExternal": false,
+                "inline_channel_list": [],
+                "external_channel_list": [],
+                "unauthenticated_input": false,
+                "external_email_subject": null,
+                "internal_email_subject": "A FortiSOAR playbook is requesting your input",
+                "custom_email_body_external": null,
+                "external_email_attachments": null
+            },
+            "status": null,
+            "top": "160",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/fc04082a-d7dc-4299-96fb-6837b1baa0fe",
+            "group": null,
+            "uuid": "33066265-3a4f-40b9-a12e-43cd62e993c5"
         },
         {
             "@type": "WorkflowStep",
@@ -54,6 +136,7 @@
                 "resources": [
                     "managers"
                 ],
+                "__triggerLimit": true,
                 "inputVariables": [],
                 "step_variables": {
                     "input": {
@@ -61,6 +144,7 @@
                         "records": "{{vars.input.records}}"
                     }
                 },
+                "triggerOnSource": true,
                 "displayConditions": {
                     "managers": {
                         "sort": [],
@@ -87,19 +171,17 @@
                                 "value": "false",
                                 "operator": "isnull",
                                 "_operator": "isnull"
-                            },
-                            {
-                                "type": "primitive",
-                                "field": "adminRpcPassword",
-                                "value": "false",
-                                "operator": "isnull",
-                                "_operator": "isnull"
                             }
                         ]
                     }
                 },
                 "executeButtonText": "Execute",
                 "noRecordExecution": false,
+                "showToasterMessage": {
+                    "visible": false,
+                    "messageVisible": true
+                },
+                "triggerOnReplicate": false,
                 "singleRecordExecution": true
             },
             "status": null,
@@ -113,17 +195,47 @@
     "routes": [
         {
             "@type": "WorkflowRoute",
-            "name": "Start -> create_fortimanager_config",
+            "name": "Provide Password -> create_fortimanager_config",
             "targetStep": "\/api\/3\/workflow_steps\/147a8802-e6cf-4d4b-bc07-8234f84878da",
+            "sourceStep": "\/api\/3\/workflow_steps\/33066265-3a4f-40b9-a12e-43cd62e993c5",
+            "label": "Continue",
+            "isExecuted": false,
+            "group": null,
+            "uuid": "c67ae294-d0b3-43bb-8c71-4de918c399de"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Start -> Provide Password",
+            "targetStep": "\/api\/3\/workflow_steps\/33066265-3a4f-40b9-a12e-43cd62e993c5",
             "sourceStep": "\/api\/3\/workflow_steps\/920a2057-e5b5-4ab8-92a5-47acf7d491c8",
             "label": null,
             "isExecuted": false,
             "group": null,
-            "uuid": "109123c9-0adb-4038-9c95-fdd76a21631d"
+            "uuid": "1ca3e97f-a980-40ed-b341-bb2824b242d7"
         }
     ],
-    "groups": [],
+    "groups": [
+        {
+            "@type": "WorkflowGroup",
+            "name": "Change Log",
+            "description": "1\/12\/26 - Add support for FMG 7.6.5 and 8.0.0",
+            "type": "note",
+            "isCollapsed": false,
+            "hasTriggerStep": false,
+            "hideInLogs": true,
+            "metadata": [],
+            "reusable": false,
+            "top": "60",
+            "left": "980",
+            "height": "0",
+            "width": "300",
+            "uuid": "79de8cd4-addf-43fa-b3a7-efd4b1f42476",
+            "recordTags": []
+        }
+    ],
     "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+    "playbookOrigin": "\/api\/3\/picklists\/b6d710a9-a8ec-41ec-8817-fe9fa062fcdd",
+    "isEditable": true,
     "uuid": "4c62d13a-8222-4fcf-9d7d-55f17ed3ec10",
     "owners": [],
     "isPrivate": false,
