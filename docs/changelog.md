@@ -3,6 +3,8 @@
 
 # Change Log
  - 20260311 (1.2.0)
+   - Tweak manager connector playbook to delete/add configurations if changed. 
+   - Add support for storing/changing the FMG TCP Port. 
    - Merge changes form 1.0.8 and 1.1.0. 
    - Add 7.6.2 compatibility with playbook origin and editable flag support
    - Add new playbook to unlock all playbooks in the ZTP solution pack

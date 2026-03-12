@@ -1,7 +1,7 @@
 {
     "@type": "Workflow",
     "triggerLimit": null,
-    "name": "Create FortiManager Connector Configuration from Manager Record",
+    "name": "Create\/Update FortiManager Connector Configuration from Manager Record",
     "aliasName": null,
     "tag": null,
     "description": "Manager records create connector configs if ready with enough fields.",
@@ -28,6 +28,7 @@
                 "arguments": {
                     "fmg_ip": "{{vars.item.managerIP}}",
                     "fmg_pass": "{{vars.steps.Provide_Password.input.fMGPassword}}",
+                    "fmg_port": "{{vars.item.managerPort}}",
                     "fmg_user": "{{vars.item.adminRpcUser}}",
                     "manager_name": "{{vars.item.managerName}}"
                 },
@@ -132,7 +133,7 @@
             "description": null,
             "arguments": {
                 "route": "a74a94d0-6980-488d-98ba-9d908c3053ac",
-                "title": "Create Connector Configuration",
+                "title": "Create\/Update Connector Configuration",
                 "resources": [
                     "managers"
                 ],
