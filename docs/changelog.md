@@ -3,6 +3,7 @@
 
 # Change Log
  - 20260311-20260313 (1.2.0)
+   - Update manager record priority fields. Add playbook buttons. Remove unused tabs.
    - Change random create playbook to prompt for ADOM. 
    - Remove Playground collection. 
    - Tweak manager connector playbook to delete/add configurations if changed. 
