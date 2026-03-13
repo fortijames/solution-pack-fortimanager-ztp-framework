@@ -3,6 +3,8 @@
 
 # Change Log
  - 20260311 (1.2.0)
+   - Change random create playbook to prompt for ADOM. 
+   - Remove Playground collection. 
    - Tweak manager connector playbook to delete/add configurations if changed. 
    - Add support for storing/changing the FMG TCP Port. 
    - Merge changes form 1.0.8 and 1.1.0. 

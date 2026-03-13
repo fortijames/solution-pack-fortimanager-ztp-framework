@@ -58,9 +58,15 @@
                                                         },
                                                         {
                                                             "name": "managerIP",
+                                                            "highlightMode": false,
+                                                            "readOnly": true,
+                                                            "linky": false
+                                                        },
+                                                        {
+                                                            "name": "managerPort",
                                                             "highlightMode": true,
-                                                            "readOnly": false,
-                                                            "linky": true
+                                                            "linky": true,
+                                                            "readOnly": true
                                                         },
                                                         {
                                                             "name": "platform",
@@ -71,7 +77,7 @@
                                                         {
                                                             "name": "sN",
                                                             "highlightMode": true,
-                                                            "readOnly": false,
+                                                            "readOnly": true,
                                                             "linky": true
                                                         }
                                                     ],
@@ -94,7 +100,7 @@
                                                         {
                                                             "name": "timeZone",
                                                             "highlightMode": true,
-                                                            "readOnly": false,
+                                                            "readOnly": true,
                                                             "linky": true
                                                         },
                                                         {
@@ -147,8 +153,8 @@
                                                         {
                                                             "name": "adminRpcUser",
                                                             "highlightMode": true,
-                                                            "readOnly": false,
-                                                            "linky": true
+                                                            "readOnly": true,
+                                                            "linky": false
                                                         }
                                                     ],
                                                     "style": "col-lg-4"
@@ -200,7 +206,7 @@
                                                 "visible": true
                                             },
                                             "icon": "fa fa-file-text-o",
-                                            "show": true,
+                                            "show": false,
                                             "visible": true
                                         },
                                         {
@@ -232,6 +238,69 @@
                                             },
                                             "icon": "icon icon-json",
                                             "show": false,
+                                            "visible": true
+                                        },
+                                        {
+                                            "title": "Devices",
+                                            "active": 0,
+                                            "widget": {
+                                                "type": "rows",
+                                                "config": {
+                                                    "wid": "2f0366d3-a20f-4305-b98c-b58990a32fd3",
+                                                    "rows": [
+                                                        {
+                                                            "columns": [
+                                                                {
+                                                                    "widgets": [
+                                                                        {
+                                                                            "type": "relationship.subtab",
+                                                                            "config": {
+                                                                                "wid": "28dd4eac-bca3-42ef-b9cd-c4b0ded126e1",
+                                                                                "excludes": [],
+                                                                                "selectionType": "include",
+                                                                                "actionButtons": {
+                                                                                    "devices": []
+                                                                                },
+                                                                                "expandableCol": {
+                                                                                    "devices": {
+                                                                                        "columns": [],
+                                                                                        "checkBox": false
+                                                                                    }
+                                                                                },
+                                                                                "enableHorizontalScroll": {
+                                                                                    "devices": {
+                                                                                        "enable": true
+                                                                                    }
+                                                                                },
+                                                                                "queryFilters": {
+                                                                                    "devices": {
+                                                                                        "sort": [],
+                                                                                        "limit": 30,
+                                                                                        "logic": "AND",
+                                                                                        "filters": []
+                                                                                    }
+                                                                                },
+                                                                                "lightMode": {
+                                                                                    "devices": true
+                                                                                },
+                                                                                "includes": [
+                                                                                    "devices"
+                                                                                ]
+                                                                            }
+                                                                        }
+                                                                    ],
+                                                                    "style": "col-lg-12"
+                                                                }
+                                                            ],
+                                                            "wid": "aa04a586-04a3-4cdd-ac28-4bca1de70b6c",
+                                                            "_collapsed": false
+                                                        }
+                                                    ]
+                                                },
+                                                "visible": true
+                                            },
+                                            "icon": "fa fa-laptop",
+                                            "show": true,
                                             "visible": true
                                         },
                                         {
@@ -283,20 +352,6 @@
                                             "show": false,
                                             "visible": true,
                                             "icon": "icon icon-relationships"
-                                        },
-                                        {
-                                            "title": "All Fields",
-                                            "active": 0,
-                                            "widget": {
-                                                "type": "editableForm",
-                                                "config": {
-                                                    "wid": "2403f180-1124-4d1e-8cb0-b149fdc50703"
-                                                },
-                                                "visible": true
-                                            },
-                                            "icon": "icon icon-expand",
-                                            "show": false,
-                                            "visible": true
                                         }
                                     ],
                                     "wid": "5a3c43af-07dd-4c52-a7de-22ce383932f9"

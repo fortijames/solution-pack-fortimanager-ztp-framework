@@ -432,7 +432,7 @@
             "searchable": false,
             "peerReplicable": true,
             "system": false,
-            "encrypted": false,
+            "encrypted": true,
             "gridColumn": false,
             "collection": false,
             "inversedField": null,
@@ -452,7 +452,22 @@
             "dataSourceFilters": null,
             "defaultValue": "",
             "tooltip": null,
-            "visibility": true,
+            "visibility": [
+                {
+                    "sort": [],
+                    "limit": 30,
+                    "logic": "AND",
+                    "filters": [
+                        {
+                            "field": "adminRpcPassword",
+                            "operator": "isnull",
+                            "_operator": "isnull",
+                            "value": "true",
+                            "type": "primitive"
+                        }
+                    ]
+                }
+            ],
             "htmlEscape": false,
             "orphanRemoval": null,
             "readable": true,

@@ -17,14 +17,147 @@
     "steps": [
         {
             "@type": "WorkflowStep",
+            "name": "Ask for ADOM and Filter",
+            "description": null,
+            "arguments": {
+                "type": "InputBased",
+                "input": {
+                    "schema": {
+                        "title": "Which ADOM and Filter",
+                        "description": "# Platforms Supported\n\nRandomly created devices supported by the ADOM from this list or add regex filters below to narrow down the list. \n\n<center> \n<hr>\n{{vars.fmg_platform_data|json_query('[].platform_name')|join(', ')}}\n<hr>\n<\/center>",
+                        "inputVariables": [
+                            {
+                                "name": "aDOM",
+                                "type": "array",
+                                "label": "ADOM",
+                                "title": "Dynamic List",
+                                "usable": true,
+                                "options": "{{vars.steps.Get_fortimanager_adoms.output|json_query('[].name')}}",
+                                "tooltip": "",
+                                "dataType": "dynamicList",
+                                "formType": "dynamicList",
+                                "required": false,
+                                "_expanded": false,
+                                "mmdUpdate": true,
+                                "collection": false,
+                                "dataSource": [],
+                                "searchable": false,
+                                "templateUrl": "app\/components\/form\/fields\/dynamicList.html",
+                                "defaultValue": null,
+                                "_previousName": "aDOM",
+                                "playbookField": true,
+                                "displayTemplate": "%7B%7B%20itemValue%20%7D%7D",
+                                "lengthConstraint": true,
+                                "allowedEncryption": false,
+                                "allowedGridColumn": false,
+                                "requiredCondition": "notrequired",
+                                "jinjaExpressionView": true,
+                                "useRecordFieldDefault": false,
+                                "_addRequiredConditions": false
+                            },
+                            {
+                                "name": "includePatterns",
+                                "type": "string",
+                                "label": "Include Patterns",
+                                "title": "Text Area",
+                                "usable": false,
+                                "tooltip": "List of regex patterns to specify the models you want to INCLUDE in the random platform list.",
+                                "dataType": "text",
+                                "formType": "textarea",
+                                "required": false,
+                                "_expanded": false,
+                                "mmdUpdate": false,
+                                "collection": false,
+                                "searchable": false,
+                                "templateUrl": "app\/components\/form\/fields\/json.html",
+                                "defaultValue": null,
+                                "_previousName": "",
+                                "playbookField": true,
+                                "lengthConstraint": false,
+                                "allowedGridColumn": false,
+                                "requiredCondition": "notrequired",
+                                "jinjaExpressionView": true,
+                                "useRecordFieldDefault": false,
+                                "_addRequiredConditions": false
+                            },
+                            {
+                                "name": "excludePatterns",
+                                "type": "string",
+                                "label": "Exclude Patterns",
+                                "title": "Text Area",
+                                "usable": false,
+                                "tooltip": "List of regex patterns to specify the models you want to EXCLUDE from the random platform list.",
+                                "dataType": "text",
+                                "formType": "textarea",
+                                "required": false,
+                                "_expanded": false,
+                                "mmdUpdate": false,
+                                "collection": false,
+                                "searchable": false,
+                                "templateUrl": "app\/components\/form\/fields\/json.html",
+                                "defaultValue": null,
+                                "_previousName": "excludePatterns",
+                                "playbookField": true,
+                                "lengthConstraint": false,
+                                "allowedGridColumn": false,
+                                "requiredCondition": "notrequired",
+                                "jinjaExpressionView": true,
+                                "useRecordFieldDefault": false,
+                                "_addRequiredConditions": false
+                            }
+                        ]
+                    }
+                },
+                "record": "",
+                "agent_id": null,
+                "resources": "managers",
+                "is_approval": false,
+                "owner_detail": {
+                    "isAssigned": false,
+                    "emailRecipients": ""
+                },
+                "isRecordLinked": false,
+                "step_variables": [],
+                "response_mapping": {
+                    "options": [
+                        {
+                            "option": "Proceed",
+                            "step_iri": "\/api\/3\/workflow_steps\/f0bec882-8755-49bf-9f62-3cc6d5bd76c8"
+                        }
+                    ],
+                    "duplicateOption": false,
+                    "customSuccessMessage": "Awaiting Playbook resumed successfully."
+                },
+                "email_notification": {
+                    "enabled": false,
+                    "smtpParameters": []
+                },
+                "customEmailExternal": false,
+                "inline_channel_list": [],
+                "external_channel_list": [],
+                "unauthenticated_input": false,
+                "external_email_subject": null,
+                "internal_email_subject": "A FortiSOAR playbook is requesting your input",
+                "custom_email_body_external": null,
+                "external_email_attachments": null
+            },
+            "status": null,
+            "top": "20",
+            "left": "360",
+            "stepType": "\/api\/3\/workflow_step_types\/fc04082a-d7dc-4299-96fb-6837b1baa0fe",
+            "group": null,
+            "uuid": "df030ef5-7369-458e-9c1c-5f8aa229d1a8"
+        },
+        {
+            "@type": "WorkflowStep",
             "name": "Ask for user input",
             "description": null,
             "arguments": {
                 "type": "InputBased",
                 "input": {
                     "schema": {
-                        "title": "Provide Model Device details",
-                        "description": "# Platforms in Random Creation\n\n<center> \n<hr>\n{{vars.fmg_platform_strings | join(\", \")}} \n<hr>\n<\/center>\n\n# {{vars.input.records[0].managerName}}\nProvide a range of devices numbers to create. For example, if you select 1-100, Devices will be created with names FG0001-FG0100.<br>\nThe number you specify will be evenly distributes amongst all ADOMs.<br>\nThe preshared key will be the same as the device name.<br>\nThe platform_string will also be randomly generated. The valid options are set in this playbooks \"Set Vars\" step",
+                        "title": "Provide Range from Filtered Platforms",
+                        "description": "# Create Random Platforms on {{vars.connector_config}} ({{vars.adom}})\n\n***only if supported by the adom***\n\n<center> \n<hr>\n{{vars.fmg_platform_strings | join(\", \")}} \n<hr>\n<\/center>",
                         "inputVariables": [
                             {
                                 "name": "rangeOfDevices",
@@ -32,7 +165,7 @@
                                 "label": "Range of devices",
                                 "title": "Integer Field",
                                 "usable": true,
-                                "tooltip": "",
+                                "tooltip": "`1-100` will create devices with names `FG0001-FG0100`.",
                                 "dataType": "text",
                                 "formType": "text",
                                 "required": true,
@@ -41,14 +174,16 @@
                                 "collection": false,
                                 "searchable": true,
                                 "templateUrl": "app\/components\/form\/fields\/integer.html",
-                                "defaultValue": "1-10",
+                                "defaultValue": "1-9",
                                 "_previousName": "rangeOfDevices",
                                 "playbookField": true,
                                 "lengthConstraint": true,
                                 "allowedEncryption": false,
                                 "allowedGridColumn": true,
+                                "requiredCondition": "required",
                                 "jinjaExpressionView": true,
-                                "useRecordFieldDefault": false
+                                "useRecordFieldDefault": false,
+                                "_addRequiredConditions": true
                             }
                         ]
                     }
@@ -72,7 +207,7 @@
                 "response_mapping": {
                     "options": [
                         {
-                            "option": "Submit",
+                            "option": "Create",
                             "step_iri": "\/api\/3\/workflow_steps\/63b55586-ff56-41e1-bd2b-58a97043b148"
                         },
                         {
@@ -97,7 +232,7 @@
                 "external_email_attachments": null
             },
             "status": null,
-            "top": "400",
+            "top": "380",
             "left": "40",
             "stepType": "\/api\/3\/workflow_step_types\/fc04082a-d7dc-4299-96fb-6837b1baa0fe",
             "group": null,
@@ -116,7 +251,7 @@
                 "step_variables": []
             },
             "status": null,
-            "top": "360",
+            "top": "340",
             "left": "400",
             "stepType": "\/api\/3\/workflow_step_types\/0109f35d-090b-4a2b-bd8a-94cbc3508562",
             "group": null,
@@ -127,10 +262,10 @@
             "name": "Create device Dictionary",
             "description": null,
             "arguments": {
-                "devices": "{%- set devices = [] -%}\n{%- for device_number in range(vars.lower_number, vars.upper_number + 1) | list -%}\n  {%- set adom = vars.fortimanager_adom_names | random  -%}\n  {%- set adom_ver= vars.adom_ver_dict.get(adom).split('.') -%}\n  {%- set os,mr = (adom_ver[0] | int),(adom_ver[1] | int) -%}\n  {%- set os_base = adom_ver[0] + \".\" + adom_ver[1] -%}\n  {%- set adom_models = vars.fmg_platform_strings \n                        | intersect(vars.fmg_base2platforms[os_base].platforms)\n  -%}\n  {%- set dev_model = adom_models | random -%}\n  {%- do devices.append({\n    \"device_name\": (\"FG\" + '%05d' %  device_number), \n    \"dev_model\": dev_model, \n    \"fmg_adom\":  adom , \n    \"fgt_os\": os, \n    \"fgt_mr\": mr\n  }) -%}\n{%- endfor -%}\n{{devices}}"
+                "devices": "{%- set devices = [] -%}\n{%- for device_number in range(vars.lower_number, vars.upper_number + 1) | list -%}\n  {%- set adom = vars.adom  -%}\n  {%- set adom_ver= vars.adom_ver_dict.get(adom).split('.') -%}\n  {%- set os,mr = (adom_ver[0] | int),(adom_ver[1] | int) -%}\n  {%- set os_base = adom_ver[0] + \".\" + adom_ver[1] -%}\n  {%- set adom_models = vars.fmg_platform_strings \n                        | intersect(vars.fmg_base2platforms[os_base].platforms)\n  -%}\n  {%- set dev_model = adom_models | random -%}\n  {%- do devices.append({\n    \"device_name\": (\"FG\" + '%05d' %  device_number), \n    \"dev_model\": dev_model, \n    \"fmg_adom\":  adom , \n    \"fgt_os\": os, \n    \"fgt_mr\": mr\n  }) -%}\n{%- endfor -%}\n{{devices}}"
             },
             "status": null,
-            "top": "840",
+            "top": "820",
             "left": "400",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
@@ -144,8 +279,8 @@
                 "fmg_platforms": "{%- set table = [] -%}\n{%- if vars.fmg_platforms_command != '' -%}\n  {%- for l in vars.fmg_platforms_command.split('\\n') -%}\n    {%- if l | regex_search(\"\\s+Forti.*-\") -%}\n      {%- set m = l | regex_replace(\"^\\s+\",\"\") | split(\" \")  -%}\n      {%- set _do = table.append(m[0]) -%}\n    {%- endif -%}\n  {%- endfor -%}\n{%- else -%}\n      {%- set _do = table.append(\"FortiGate-VM64\") -%}\n{%- endif -%}\n{{table}}"
             },
             "status": null,
-            "top": "120",
-            "left": "400",
+            "top": "260",
+            "left": "720",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
             "uuid": "959dd5fd-9850-4e2f-beb8-e5e3d8c1ed80"
@@ -178,7 +313,7 @@
                 "workflowReference": "\/api\/3\/workflows\/e2b45e0f-f56c-42f7-8a99-f33d26199559"
             },
             "status": null,
-            "top": "940",
+            "top": "900",
             "left": "400",
             "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
             "group": null,
@@ -223,8 +358,8 @@
                 "unauthenticated_input": false
             },
             "status": null,
-            "top": "440",
-            "left": "840",
+            "top": "340",
+            "left": "720",
             "stepType": "\/api\/3\/workflow_step_types\/fc04082a-d7dc-4299-96fb-6837b1baa0fe",
             "group": null,
             "uuid": "85818c71-d3e2-444a-b01c-7095bac766d3"
@@ -238,7 +373,7 @@
             },
             "status": null,
             "top": "200",
-            "left": "400",
+            "left": "360",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
             "uuid": "77b11044-fc65-4981-8baa-da78a2d3a1f0"
@@ -248,15 +383,13 @@
             "name": "fmg platform override",
             "description": "Paste results from \"diagnose dvm supported-platforms list fortigate\", with any modifications of removing lines, to override the platform index. Use the include or exclude variables, as a list, with regex to modify the list from the FMG API call.",
             "arguments": {
-                "exclude_patterns": "{%- if vars.input.params.excludePatterns is iterable -%}\n{{vars.input.params.excludePatterns}}\n{%- else -%}\n[\n  'Container',\n  'FortiGate-[67]00\\d'\n]\n{%- endif -%}",
-                "include_patterns": "{%- if vars.input.params.includePatterns is iterable -%}\n{{vars.input.params.includePatterns}}\n{%- else -%}\n''\n{%- endif -%}",
                 "fmg_platforms_command": "",
                 "exclude_patterns_example": "[\n  'Container',\n  'FortiGate-[67]00\\d'\n]",
                 "include_patterns_example": "[\n\"FortiGate-4[012][A-Z]\",\n\"FortiGate-5[012][A-Z]\"\n]"
             },
             "status": null,
-            "top": "20",
-            "left": "400",
+            "top": "100",
+            "left": "360",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
             "uuid": "0d6704d0-a854-47c1-82d8-ddeb1b960a9e"
@@ -276,8 +409,8 @@
                 "workflowReference": "\/api\/3\/workflows\/661d7ee1-156e-400e-b03f-3d61b0896988"
             },
             "status": null,
-            "top": "800",
-            "left": "720",
+            "top": "660",
+            "left": "700",
             "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
             "group": null,
             "uuid": "0c853a88-8463-40ef-858d-76e9006b823a"
@@ -290,7 +423,7 @@
                 "arguments": {
                     "adom": "root",
                     "os_type": "fos",
-                    "connector_config": "{{vars.input.records[0].managerName}}"
+                    "connector_config": "{{vars.connector_config}}"
                 },
                 "apply_async": false,
                 "step_variables": {
@@ -301,11 +434,11 @@
                 "workflowReference": "\/api\/3\/workflows\/5ead9a57-6f2d-4a12-b561-c924865c7cc8"
             },
             "status": null,
-            "top": "200",
-            "left": "780",
+            "top": "180",
+            "left": "40",
             "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
             "group": null,
-            "uuid": "5bc962e0-481d-4717-ba36-42de5803c5e8"
+            "uuid": "2cb72b70-4dc3-45b9-972b-d5bfc6f14ede"
         },
         {
             "@type": "WorkflowStep",
@@ -316,17 +449,19 @@
                     "fortimanager_config": "{{vars.connector_config}}"
                 },
                 "apply_async": false,
-                "step_variables": [],
+                "step_variables": {
+                    "fmg_adom_data": "{{vars.steps.Get_fortimanager_adoms.output}}"
+                },
                 "pass_parent_env": false,
                 "pass_input_record": false,
                 "workflowReference": "\/api\/3\/workflows\/c7781dd3-2aed-423e-91d1-d686bee7b4b4"
             },
             "status": null,
-            "top": "700",
-            "left": "720",
+            "top": "100",
+            "left": "40",
             "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
             "group": null,
-            "uuid": "923ae0d5-1187-43e5-9038-4c7928aa84a9"
+            "uuid": "de7930ab-86db-495d-a04c-5e82a0de4868"
         },
         {
             "@type": "WorkflowStep",
@@ -335,13 +470,13 @@
             "arguments": {
                 "conditions": [
                     {
-                        "option": "Query",
+                        "option": "Filter Query",
                         "default": true,
-                        "step_iri": "\/api\/3\/workflow_steps\/5bc962e0-481d-4717-ba36-42de5803c5e8",
-                        "step_name": "get fmg platforms"
+                        "step_iri": "\/api\/3\/workflow_steps\/77b11044-fc65-4981-8baa-da78a2d3a1f0",
+                        "step_name": "extract fmg platforms"
                     },
                     {
-                        "option": "Create Platform List",
+                        "option": "Static List",
                         "step_iri": "\/api\/3\/workflow_steps\/959dd5fd-9850-4e2f-beb8-e5e3d8c1ed80",
                         "condition": "{{ vars.fmg_platforms_command != '' }}",
                         "step_name": "create fmg platforms"
@@ -350,23 +485,37 @@
                 "step_variables": []
             },
             "status": null,
-            "top": "60",
-            "left": "780",
+            "top": "160",
+            "left": "720",
             "stepType": "\/api\/3\/workflow_step_types\/12254cf5-5db7-4b1a-8cb1-3af081924b28",
             "group": null,
             "uuid": "b9aa7e80-3724-4dc8-acec-7add75e76e42"
         },
         {
             "@type": "WorkflowStep",
+            "name": "set fmg_platform_strings",
+            "description": null,
+            "arguments": {
+                "fmg_platform_strings": "{{vars.fmg_platforms}}"
+            },
+            "status": null,
+            "top": "280",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "84f2ff04-60ff-4876-8c80-bd3db1a17b96"
+        },
+        {
+            "@type": "WorkflowStep",
             "name": "Set fmg vars",
             "description": null,
             "arguments": {
-                "adom_ver_dict": "{% set options = {}-%}\n{%- for adom in vars.steps.Get_fortimanager_adoms.output -%}\n{%- do options.update({adom.name:  (adom.os_ver | int ) ~ \".\" ~ adom.mr}) -%}\n{%- endfor -%}{{options}}",
+                "adom_ver_dict": "{% set options = {}-%}\n{%- for adom in vars.fmg_adom_data -%}\n{%- do options.update({adom.name:  (adom.os_ver | int ) ~ \".\" ~ adom.mr}) -%}\n{%- endfor -%}{{options}}",
                 "fmg_base2platforms": "{{vars.steps.Get_fmg_base_firmware.output.base}}",
-                "fortimanager_adom_names": "{% set options = []-%}\n\n{%- for adom in vars.steps.Get_fortimanager_adoms.output -%}\n{%- do options.append(adom.name) -%}\n{%endfor%}{{options}}"
+                "fortimanager_adom_names": "{% set options = []-%}\n\n{%- for adom in vars.fmg_adom_data -%}\n{%- do options.append(adom.name) -%}\n{%endfor%}{{options}}"
             },
             "status": null,
-            "top": "740",
+            "top": "720",
             "left": "400",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
@@ -377,12 +526,11 @@
             "name": "Set input vars",
             "description": null,
             "arguments": {
-                "fortimanager": "{{vars.steps.Ask_for_user_input.input.fortiManager}}",
                 "lower_number": "{{vars.steps.Ask_for_user_input.input.rangeOfDevices.split('-')[0] | int}}",
                 "upper_number": "{{vars.steps.Ask_for_user_input.input.rangeOfDevices.split('-')[1] | int}}"
             },
             "status": null,
-            "top": "640",
+            "top": "600",
             "left": "400",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
@@ -393,18 +541,19 @@
             "name": "setup vars",
             "description": null,
             "arguments": {
+                "adom": "{{vars.steps.Ask_for_ADOM_and_Filter.input.aDOM}}",
                 "fmg_version": "{%- set f = vars.input.records[0].firmware.split(\".\") -%}\n{{f[0] + \".\" + f[1]}}",
                 "connector_name": "fortinet-fortimanager-json-rpc",
-                "connector_config": "{{vars.input.records[0].managerName}}",
-                "connector_version": "1.0.0",
-                "fmg_platform_strings": "{{vars.fmg_platforms}}"
+                "exclude_patterns": "{%- set v = vars.steps.Ask_for_ADOM_and_Filter.input.excludePatterns -%}\n{%- if v -%}\n{{v.split('\\n')}}\n{%- endif -%}",
+                "include_patterns": "{%- set v = vars.steps.Ask_for_ADOM_and_Filter.input.includePatterns -%}\n{%- if v -%}\n{{v.split('\\n')}}\n{%- endif -%}",
+                "connector_version": "1.0.0"
             },
             "status": null,
-            "top": "160",
-            "left": "40",
+            "top": "60",
+            "left": "720",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
-            "uuid": "84f2ff04-60ff-4876-8c80-bd3db1a17b96"
+            "uuid": "f0bec882-8755-49bf-9f62-3cc6d5bd76c8"
         },
         {
             "@type": "WorkflowStep",
@@ -417,71 +566,15 @@
                     "managers"
                 ],
                 "__triggerLimit": true,
-                "inputVariables": [
-                    {
-                        "name": "includePatterns",
-                        "type": "string",
-                        "label": "Include Patterns",
-                        "title": "Text Area",
-                        "usable": false,
-                        "tooltip": "Using a json list and regex patterns specify the models you want to INCLUDE in the random platform list.",
-                        "dataType": "text",
-                        "formType": "textarea",
-                        "required": false,
-                        "_expanded": true,
-                        "mmdUpdate": false,
-                        "collection": false,
-                        "searchable": false,
-                        "templateUrl": "app\/components\/form\/fields\/json.html",
-                        "defaultValue": null,
-                        "_previousName": "includePatterns",
-                        "playbookField": true,
-                        "lengthConstraint": false,
-                        "allowedGridColumn": false,
-                        "jinjaExpressionView": true,
-                        "useRecordFieldDefault": false
-                    },
-                    {
-                        "name": "excludePatterns",
-                        "type": "string",
-                        "label": "Exclude Patterns",
-                        "title": "Text Area",
-                        "usable": false,
-                        "tooltip": "Using a json list and regex patterns specify the models you want EXCLUDE in the random platform list.",
-                        "dataType": "text",
-                        "formType": "textarea",
-                        "required": false,
-                        "_expanded": true,
-                        "mmdUpdate": false,
-                        "collection": false,
-                        "searchable": false,
-                        "templateUrl": "app\/components\/form\/fields\/json.html",
-                        "defaultValue": null,
-                        "_previousName": "includePatterns",
-                        "playbookField": true,
-                        "visibilityQuery": {
-                            "sort": [],
-                            "limit": 30,
-                            "logic": "AND",
-                            "filters": []
-                        },
-                        "lengthConstraint": false,
-                        "allowedGridColumn": false,
-                        "jinjaExpressionView": true,
-                        "useRecordFieldDefault": false,
-                        "_addVisibilityConditions": true
-                    }
-                ],
+                "inputVariables": [],
                 "step_variables": {
                     "input": {
-                        "params": {
-                            "excludePatterns": "{{vars.request.data[\"excludePatterns\"]}}",
-                            "includePatterns": "{{vars.request.data[\"includePatterns\"]}}"
-                        },
+                        "params": [],
                         "records": "{{vars.input.records}}"
-                    }
+                    },
+                    "connector_config": "{{vars.input.records[0].managerName}}"
                 },
-                "_promptexpanded": true,
+                "_promptexpanded": false,
                 "triggerOnSource": true,
                 "displayConditions": {
                     "managers": {
@@ -528,7 +621,7 @@
                 "workflowReference": "\/api\/3\/workflows\/7aa66310-639d-417a-9762-bc361df824ad"
             },
             "status": null,
-            "top": "480",
+            "top": "460",
             "left": "40",
             "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
             "group": null,
@@ -555,7 +648,7 @@
                 ]
             },
             "status": null,
-            "top": "440",
+            "top": "420",
             "left": "400",
             "stepType": "\/api\/3\/workflow_step_types\/12254cf5-5db7-4b1a-8cb1-3af081924b28",
             "group": null,
@@ -563,6 +656,16 @@
         }
     ],
     "routes": [
+        {
+            "@type": "WorkflowRoute",
+            "name": "Ask for ADOM and Filter -> setup vars",
+            "targetStep": "\/api\/3\/workflow_steps\/f0bec882-8755-49bf-9f62-3cc6d5bd76c8",
+            "sourceStep": "\/api\/3\/workflow_steps\/df030ef5-7369-458e-9c1c-5f8aa229d1a8",
+            "label": "Proceed",
+            "isExecuted": false,
+            "group": null,
+            "uuid": "5bedab98-b09e-40a7-a82b-0f74f7359065"
+        },
         {
             "@type": "WorkflowRoute",
             "name": "Ask for user input -> Timeout",
@@ -578,7 +681,7 @@
             "name": "Ask for user input -> Validate Input",
             "targetStep": "\/api\/3\/workflow_steps\/63b55586-ff56-41e1-bd2b-58a97043b148",
             "sourceStep": "\/api\/3\/workflow_steps\/4e401cca-0a2b-480b-b702-9929819bc7a1",
-            "label": "Submit",
+            "label": "Create",
             "isExecuted": false,
             "group": null,
             "uuid": "3880ef0a-53f0-4084-97a9-7755648069fc"
@@ -645,43 +748,43 @@
         },
         {
             "@type": "WorkflowRoute",
-            "name": "get fmg platforms -> extract fmg platforms",
-            "targetStep": "\/api\/3\/workflow_steps\/77b11044-fc65-4981-8baa-da78a2d3a1f0",
-            "sourceStep": "\/api\/3\/workflow_steps\/5bc962e0-481d-4717-ba36-42de5803c5e8",
+            "name": "get fmg platforms -> Ask for ADOM and Filter",
+            "targetStep": "\/api\/3\/workflow_steps\/df030ef5-7369-458e-9c1c-5f8aa229d1a8",
+            "sourceStep": "\/api\/3\/workflow_steps\/2cb72b70-4dc3-45b9-972b-d5bfc6f14ede",
             "label": null,
             "isExecuted": false,
             "group": null,
-            "uuid": "08e50724-8265-4efb-a0e0-204c9cb6cb8c"
+            "uuid": "174794fd-36fe-49bf-acea-94358766dcda"
         },
         {
             "@type": "WorkflowRoute",
-            "name": "Get fortimanager adoms -> Get fmg base firmware",
-            "targetStep": "\/api\/3\/workflow_steps\/0c853a88-8463-40ef-858d-76e9006b823a",
-            "sourceStep": "\/api\/3\/workflow_steps\/923ae0d5-1187-43e5-9038-4c7928aa84a9",
+            "name": "Get fortimanager adoms -> get fmg platforms",
+            "targetStep": "\/api\/3\/workflow_steps\/2cb72b70-4dc3-45b9-972b-d5bfc6f14ede",
+            "sourceStep": "\/api\/3\/workflow_steps\/de7930ab-86db-495d-a04c-5e82a0de4868",
             "label": null,
             "isExecuted": false,
             "group": null,
-            "uuid": "2a930d83-5a5f-4dfa-9b12-730e2e3b5485"
+            "uuid": "393a8b4a-2ec7-4ec7-93b5-89d3956ac8a3"
         },
         {
             "@type": "WorkflowRoute",
             "name": "Query for Patforms -> create fmg platforms",
             "targetStep": "\/api\/3\/workflow_steps\/959dd5fd-9850-4e2f-beb8-e5e3d8c1ed80",
             "sourceStep": "\/api\/3\/workflow_steps\/b9aa7e80-3724-4dc8-acec-7add75e76e42",
-            "label": "Create Platform List",
+            "label": "Static List",
             "isExecuted": false,
             "group": null,
             "uuid": "cf21325a-474d-40fa-b7ee-4eba9336f19a"
         },
         {
             "@type": "WorkflowRoute",
-            "name": "Query for Patforms -> get fmg platforms",
-            "targetStep": "\/api\/3\/workflow_steps\/5bc962e0-481d-4717-ba36-42de5803c5e8",
+            "name": "Query for Patforms -> extract fmg platforms",
+            "targetStep": "\/api\/3\/workflow_steps\/77b11044-fc65-4981-8baa-da78a2d3a1f0",
             "sourceStep": "\/api\/3\/workflow_steps\/b9aa7e80-3724-4dc8-acec-7add75e76e42",
-            "label": "Query",
+            "label": "Filter Query",
             "isExecuted": false,
             "group": null,
-            "uuid": "43467611-70a8-4562-80f9-346e6d8c90d0"
+            "uuid": "98efe017-a689-408d-aeb1-8e2f6808d130"
         },
         {
             "@type": "WorkflowRoute",
@@ -695,13 +798,23 @@
         },
         {
             "@type": "WorkflowRoute",
-            "name": "Set input vars -> Get fortimanager adoms",
-            "targetStep": "\/api\/3\/workflow_steps\/923ae0d5-1187-43e5-9038-4c7928aa84a9",
+            "name": "Set input vars -> Get fmg base firmware",
+            "targetStep": "\/api\/3\/workflow_steps\/0c853a88-8463-40ef-858d-76e9006b823a",
             "sourceStep": "\/api\/3\/workflow_steps\/139d0eb2-f8bb-460c-98c1-14d77b953cce",
             "label": null,
             "isExecuted": false,
             "group": null,
-            "uuid": "1dfa7172-f152-4805-b0be-9d803507cc02"
+            "uuid": "4e5f9d0e-58c8-4d3f-b9b8-b589e4c16129"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "setup input vars -> fmg platform override",
+            "targetStep": "\/api\/3\/workflow_steps\/0d6704d0-a854-47c1-82d8-ddeb1b960a9e",
+            "sourceStep": "\/api\/3\/workflow_steps\/f0bec882-8755-49bf-9f62-3cc6d5bd76c8",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "3a22c11c-5db7-43a3-b2ea-d0a7763f435a"
         },
         {
             "@type": "WorkflowRoute",
@@ -715,13 +828,13 @@
         },
         {
             "@type": "WorkflowRoute",
-            "name": "Start -> fmg platform command output",
-            "targetStep": "\/api\/3\/workflow_steps\/0d6704d0-a854-47c1-82d8-ddeb1b960a9e",
+            "name": "Start -> Get fortimanager adoms",
+            "targetStep": "\/api\/3\/workflow_steps\/de7930ab-86db-495d-a04c-5e82a0de4868",
             "sourceStep": "\/api\/3\/workflow_steps\/95bc0614-e78c-4ad3-9ba0-4deb1e26cdba",
             "label": null,
             "isExecuted": false,
             "group": null,
-            "uuid": "5e30bc52-de02-441e-b57a-b89be9df24eb"
+            "uuid": "292ac4b0-7897-4309-848f-977558f409aa"
         },
         {
             "@type": "WorkflowRoute",
@@ -755,7 +868,7 @@
             "hideInLogs": false,
             "metadata": [],
             "reusable": false,
-            "top": "520",
+            "top": "480",
             "left": "660",
             "height": "133",
             "width": "425",
@@ -772,15 +885,15 @@
             "hideInLogs": false,
             "metadata": [],
             "reusable": false,
-            "top": "80",
-            "left": "1040",
+            "top": "20",
+            "left": "980",
             "height": "168",
             "width": "498",
             "uuid": "38c87146-f74b-459f-ae8e-893e641392ab",
             "recordTags": []
         }
     ],
-    "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+    "priority": "\/api\/3\/picklists\/9e8d41e4-8ada-4a2c-bd02-07f62c6d0a00",
     "playbookOrigin": "\/api\/3\/picklists\/b6d710a9-a8ec-41ec-8817-fe9fa062fcdd",
     "isEditable": true,
     "uuid": "14c3e417-9eb7-47f8-bd7f-0f45b56e495b",

@@ -421,7 +421,8 @@
             "arguments": {
                 "resource": {
                     "managerIP": "{{vars.steps.Provide_input.input.fMGIPv4Address or vars.steps.Provide_input.input.fMGDomain or vars.steps.Provide_input.input.fMGIpv6Address }}",
-                    "adminRpcUser": "{{vars.steps.Provide_input.input.fMGAdminUser}}"
+                    "adminRpcUser": "{{vars.steps.Provide_input.input.fMGAdminUser}}",
+                    "adminRpcPassword": "{{vars.steps.Provide_input.input.fMGPassword}}"
                 },
                 "operation": "Append",
                 "collection": "{{vars.input.records[0]['@id']}}",
