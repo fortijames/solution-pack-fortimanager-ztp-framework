@@ -2,12 +2,13 @@
 |--------------------------------------------|
 
 # Change Log
- - 20260311 (1.2.0)
+ - 20260311-20260313 (1.2.0)
    - Change random create playbook to prompt for ADOM. 
    - Remove Playground collection. 
    - Tweak manager connector playbook to delete/add configurations if changed. 
    - Add support for storing/changing the FMG TCP Port. 
    - Merge changes form 1.0.8 and 1.1.0. 
+   - Migrate playbooks using `/dvmdb/script` to `/pm/config/adom/root/obj/fmg/script` for FMG 7.6.5+ versions. 
    - Add 7.6.2 compatibility with playbook origin and editable flag support
    - Add new playbook to unlock all playbooks in the ZTP solution pack
    - Enhance Jinja templates for monitoring task execution time and policy script execution
