@@ -18,10 +18,17 @@
                                     "featuredRelationship": {
                                         "field": null,
                                         "preText": "Under Investigation In",
-                                        "query": null,
-                                        "statusField": null,
+                                        "query": {
+                                            "sort": [],
+                                            "limit": 30,
+                                            "logic": "AND",
+                                            "filters": []
+                                        },
+                                        "statusField": "zTPPhase",
                                         "sort": []
-                                    }
+                                    },
+                                    "picklistField": "adminStatus",
+                                    "titleField": "firmware"
                                 }
                             }
                         ],
@@ -36,6 +43,29 @@
                     {
                         "widgets": [
                             {
+                                "type": "playbookButtons-1.1.1",
+                                "config": {
+                                    "wid": "92552c1b-d48f-4ce8-b799-d013fd2a7ff4",
+                                    "widgetName": "Playbook Execution Wizard",
+                                    "selectedPlaybooksWithRecord": [
+                                        {
+                                            "name": "Synch FMG Manager System Button - by record",
+                                            "uuid": "0317a44c-f854-4c2a-909c-755fcfdc5fb6",
+                                            "actionTriggerName": "Synchronize System Info",
+                                            "collectionName": "10 - SP - FortiManager ZTP Flow - FortiManager(FMG)-Buttons",
+                                            "icon": "fa fa-refresh"
+                                        },
+                                        {
+                                            "name": "Create\/Update FortiManager Connector Configuration from Manager Record",
+                                            "uuid": "4c62d13a-8222-4fcf-9d7d-55f17ed3ec10",
+                                            "actionTriggerName": "Create\/Update Connector Configuration",
+                                            "collectionName": "10 - SP - FortiManager ZTP Flow - FortiManager(FMG)-Buttons",
+                                            "icon": "icon icon-update-record"
+                                        }
+                                    ]
+                                }
+                            },
+                            {
                                 "type": "editableFormGroup",
                                 "config": {
                                     "wid": "d524020b-12f7-42ca-bfd5-c733fe524cb6",
@@ -44,12 +74,6 @@
                                             "columns": [
                                                 {
                                                     "fields": [
-                                                        {
-                                                            "name": "adminStatus",
-                                                            "highlightMode": true,
-                                                            "readOnly": false,
-                                                            "linky": true
-                                                        },
                                                         {
                                                             "name": "managerName",
                                                             "highlightMode": true,
@@ -206,7 +230,7 @@
                                                 "visible": true
                                             },
                                             "icon": "fa fa-file-text-o",
-                                            "show": false,
+                                            "show": true,
                                             "visible": true
                                         },
                                         {
@@ -252,6 +276,22 @@
                                                             "columns": [
                                                                 {
                                                                     "widgets": [
+                                                                        {
+                                                                            "type": "playbookButtons-1.1.1",
+                                                                            "config": {
+                                                                                "wid": "108c4495-0d40-463d-8201-13a0a5c0db59",
+                                                                                "widgetName": "Playbook Execution Wizard",
+                                                                                "selectedPlaybooksWithRecord": [
+                                                                                    {
+                                                                                        "name": "Synch FMG Manager DeviceDB Button - by manager record",
+                                                                                        "uuid": "ec0399b0-75bc-436a-bd88-f4b612bd3995",
+                                                                                        "actionTriggerName": "Synchronize DeviceDB",
+                                                                                        "collectionName": "10 - SP - FortiManager ZTP Flow - FortiManager(FMG)-Buttons",
+                                                                                        "icon": "icon icon-refresh"
+                                                                                    }
+                                                                                ]
+                                                                            }
+                                                                        },
                                                                         {
                                                                             "type": "relationship.subtab",
                                                                             "config": {
@@ -300,7 +340,7 @@
                                                 "visible": true
                                             },
                                             "icon": "fa fa-laptop",
-                                            "show": true,
+                                            "show": false,
                                             "visible": true
                                         },
                                         {
@@ -333,25 +373,6 @@
                                             "icon": "icon icon-source-code",
                                             "show": false,
                                             "visible": true
-                                        },
-                                        {
-                                            "title": "Related Records",
-                                            "widget": {
-                                                "type": "relationship.subtab",
-                                                "config": {
-                                                    "excludes": [
-                                                        "notes",
-                                                        "comments",
-                                                        "userOwners",
-                                                        "attachments"
-                                                    ],
-                                                    "wid": "c19e6cc9-7848-4328-916a-50bd23d138dc"
-                                                },
-                                                "visible": true
-                                            },
-                                            "show": false,
-                                            "visible": true,
-                                            "icon": "icon icon-relationships"
                                         }
                                     ],
                                     "wid": "5a3c43af-07dd-4c52-a7de-22ce383932f9"
@@ -365,18 +386,7 @@
                 "_collapsed": false
             }
         ],
-        "actionButtons": [
-            {
-                "id": "\/api\/3\/workflows\/0317a44c-f854-4c2a-909c-755fcfdc5fb6",
-                "name": "Synch FMG Managers Button - by record",
-                "icon": "fa fa-refresh"
-            },
-            {
-                "id": "\/api\/3\/workflows\/ec0399b0-75bc-436a-bd88-f4b612bd3995",
-                "name": "Synch FMG Manager DeviceDB Button - by record",
-                "icon": "icon icon-refresh"
-            }
-        ],
+        "actionButtons": [],
         "wid": "d1753c94-c628-4e6d-97e5-2dc705c982fc",
         "metadata": []
     },
