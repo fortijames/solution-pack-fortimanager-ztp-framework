@@ -53,6 +53,28 @@
         },
         {
             "@type": "WorkflowStep",
+            "name": "setup vars",
+            "description": null,
+            "arguments": {
+                "sn": "{{vars.input.params['manager_data']['Serial Number']}}",
+                "firmware": "{{vars.input.params['manager_data']['Version']}}",
+                "platform": "{{vars.input.params['manager_data']['Platform Type']}}",
+                "timezone": "{%- if \"Time Zone\" in vars.input.params['manager_data'] -%}\n{{vars.input.params['manager_data']['Time Zone']}}\n{%- elif \"TZ\" in vars.input.params['manager_data'] -%}\n{{vars.input.params['manager_data']['TZ']}}\n{%- endif -%}",
+                "adom_mode": "{{vars.input.params['manager_data']['Admin Domain Configuration']}}",
+                "max_adoms": "{{vars.input.params['manager_data']['Max Number of Admin Domains']}}",
+                "max_devices": "{{vars.input.params['manager_data']['Max Number of Device Groups']}}",
+                "record_fqid": "{{vars.steps.find_record[0]['@id']}}",
+                "license_status": "{{vars.input.params['manager_data']['License Status']}}"
+            },
+            "status": null,
+            "top": "140",
+            "left": "360",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "55cd990d-e33d-4800-8ced-944ca451783d"
+        },
+        {
+            "@type": "WorkflowStep",
             "name": "Start",
             "description": null,
             "arguments": {
@@ -75,18 +97,18 @@
             "description": null,
             "arguments": {
                 "resource": {
-                    "sN": "{{vars.input.params['manager_data']['Serial Number']}}",
-                    "aDOMMode": "{{vars.input.params['manager_data']['Admin Domain Configuration']}}",
-                    "firmware": "{{vars.input.params['manager_data'].Version}}",
-                    "maxADOMS": "{{vars.input.params['manager_data']['Max Number of Admin Domains']}}",
+                    "sN": "{{vars.sn}}",
+                    "aDOMMode": "{{vars.adom_mode}}",
+                    "firmware": "{{vars.firmware}}",
+                    "maxADOMS": "{{vars.max_adoms}}",
                     "platform": "{{vars.input.params['manager_data']['Platform Full Name']}}",
-                    "timeZone": "{{vars.input.params['manager_data'].TZ}}",
-                    "maxDevices": "{{vars.input.params['manager_data']['Max Number of Device Groups']}}",
+                    "timeZone": "{{vars.timezone}}",
+                    "maxDevices": "{{vars.max_devices}}",
                     "sourceData": "{{vars.input.params['manager_data']|toJSON}}",
-                    "licenseStatus": "{{vars.input.params['manager_data']['License Status']}}"
+                    "licenseStatus": "{{vars.license_status}}"
                 },
                 "operation": "Append",
-                "collection": "{{vars.steps.find_record[0]['@id']}}",
+                "collection": "{{vars.record_fqid}}",
                 "__recommend": [],
                 "collectionType": "\/api\/3\/managers",
                 "fieldOperation": {
@@ -95,8 +117,8 @@
                 "step_variables": []
             },
             "status": null,
-            "top": "180",
-            "left": "360",
+            "top": "140",
+            "left": "40",
             "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928722",
             "group": null,
             "uuid": "2565a545-1f2c-4042-9ab8-61604042c30b"
@@ -105,13 +127,23 @@
     "routes": [
         {
             "@type": "WorkflowRoute",
-            "name": "find_record -> updated_record",
-            "targetStep": "\/api\/3\/workflow_steps\/2565a545-1f2c-4042-9ab8-61604042c30b",
+            "name": "find_record -> setup vars",
+            "targetStep": "\/api\/3\/workflow_steps\/55cd990d-e33d-4800-8ced-944ca451783d",
             "sourceStep": "\/api\/3\/workflow_steps\/32bd3059-dda5-4f72-91a1-8b82b871a51f",
             "label": null,
             "isExecuted": false,
             "group": null,
-            "uuid": "a124ca76-7368-416a-9eea-25c47e6867a2"
+            "uuid": "907b944b-fea1-4641-a36b-39adb828f86d"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "setup vars -> updated_record",
+            "targetStep": "\/api\/3\/workflow_steps\/2565a545-1f2c-4042-9ab8-61604042c30b",
+            "sourceStep": "\/api\/3\/workflow_steps\/55cd990d-e33d-4800-8ced-944ca451783d",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "16f6fc8c-e09b-441d-a603-123ff1a48530"
         },
         {
             "@type": "WorkflowRoute",
@@ -127,7 +159,7 @@
     "groups": [],
     "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
     "playbookOrigin": "\/api\/3\/picklists\/b6d710a9-a8ec-41ec-8817-fe9fa062fcdd",
-    "isEditable": false,
+    "isEditable": true,
     "uuid": "eee9fe36-f427-4c65-b745-6188c3e63e24",
     "owners": [],
     "isPrivate": false,
