@@ -3,6 +3,7 @@
 
 # Change Log
  - 20260311-20260313 (1.2.0)
+   - Update `> synch fmg adom variables to device records - by adom` to ignore metadata assigned to groups. 
    - Update manager record priority fields. Add playbook buttons. Remove unused tabs.
    - Change random create playbook to prompt for ADOM. 
    - Remove Playground collection. 
