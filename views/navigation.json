@@ -6,86 +6,70 @@
         "navigation": [
             {
                 "editMode": false,
-                "icon": "icon icon-manual-task",
+                "icon": "icon icon-automation",
                 "items": [
                     {
                         "editMode": false,
-                        "icon": "fa fa-server",
+                        "icon": "icon icon-queue-management",
                         "require": {
                             "action": "read",
-                            "module": "managers"
+                            "module": "ztpf_managers"
                         },
                         "state": {
                             "name": "main.modules.list",
                             "parameters": {
-                                "module": "managers"
+                                "module": "ztpf_managers"
                             }
                         },
-                        "title": "Managers"
+                        "title": "ztpfManagers"
                     },
                     {
                         "editMode": false,
-                        "icon": "fa fa-fire",
+                        "icon": "fa fa-hdd-o",
                         "require": {
                             "action": "read",
-                            "module": "devices"
+                            "module": "ztpf_devices"
                         },
                         "state": {
                             "name": "main.modules.list",
                             "parameters": {
-                                "module": "devices"
+                                "module": "ztpf_devices"
                             }
                         },
-                        "title": "Devices"
+                        "title": "ztpfDevices"
                     },
                     {
                         "editMode": false,
-                        "icon": "icon icon-source-code",
+                        "icon": "fa fa-file-text-o",
                         "require": {
                             "action": "read",
-                            "module": "metafield_templates"
+                            "module": "ztpf_automation_profiles"
                         },
                         "state": {
                             "name": "main.modules.list",
                             "parameters": {
-                                "module": "metafield_templates"
+                                "module": "ztpf_automation_profiles"
                             }
                         },
-                        "title": "Metafield Templates"
+                        "title": "AutomationProfiles"
                     },
                     {
                         "editMode": false,
-                        "icon": "icon icon-description",
+                        "icon": "icon icon-edit-template",
                         "require": {
                             "action": "read",
-                            "module": "scripts"
+                            "module": "ztpf_templates"
                         },
                         "state": {
                             "name": "main.modules.list",
                             "parameters": {
-                                "module": "scripts"
+                                "module": "ztpf_templates"
                             }
                         },
-                        "title": "Scripts"
-                    },
-                    {
-                        "editMode": false,
-                        "icon": "fa fa-fighter-jet",
-                        "require": {
-                            "action": "read",
-                            "module": "z_t_p_profiles"
-                        },
-                        "state": {
-                            "name": "main.modules.list",
-                            "parameters": {
-                                "module": "z_t_p_profiles"
-                            }
-                        },
-                        "title": "ZTP Profiles"
+                        "title": "ztpfTemplates"
                     }
                 ],
-                "mergeType": "merge",
-                "title": "FortiManager"
+                "title": "ZTP Flow"
             }
         ]
     },

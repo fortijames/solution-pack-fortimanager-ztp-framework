@@ -21,27 +21,76 @@
     "postInstallConfig": {
         "enabled": false
     },
-    "recordTags": [
-    ],
-    "date": "2026-03-13T20:17:08+00:00",
+    "date": "2026-03-20T19:15:30+00:00",
     "contents": {
-        "picklistNames": [
-
-        ],
         "modules": {
-
+            "ztpf_automation_profiles": {
+                "name": "ztpfAutomationProfiles",
+                "apiName": "ztpf_automation_profiles"
+            },
+            "ztpf_devices": {
+                "name": "ztpfDevices",
+                "apiName": "ztpf_devices"
+            },
+            "ztpf_managers": {
+                "name": "ztpfManagers",
+                "apiName": "ztpf_managers"
+            },
+            "ztpf_templates": {
+                "name": "ztpfTemplates",
+                "apiName": "ztpf_templates"
+            }
         },
         "viewTemplates": {
-            
-        ],
-        "playbooks": [
-            
-        ],
-        "playbookBlocks": [
-
-        ],
-        "dashboards": [
-            
+            "ztpf_automation_profiles": {
+                "name": "ztpfAutomationProfiles",
+                "apiName": "ztpf_automation_profiles",
+                "views": [
+                    "form",
+                    "list",
+                    "detail"
+                ]
+            },
+            "ztpf_devices": {
+                "name": "ztpfDevices",
+                "apiName": "ztpf_devices",
+                "views": [
+                    "detail",
+                    "form",
+                    "list"
+                ]
+            },
+            "ztpf_managers": {
+                "name": "ztpfManagers",
+                "apiName": "ztpf_managers",
+                "views": [
+                    "detail",
+                    "form",
+                    "list"
+                ]
+            },
+            "ztpf_templates": {
+                "name": "ztpfTemplates",
+                "apiName": "ztpf_templates",
+                "views": [
+                    "list",
+                    "form",
+                    "detail"
+                ]
+            }
+        },
+        "views": {
+            "navigation": [
+                "ZTP Flow"
+            ]
+        },
+        "roles": [
+            {
+                "name": "ztpfPlaybookAppliance"
+            },
+            {
+                "name": "ztpfAdmin"
+            }
         ],
         "connectors": [
             {
@@ -52,9 +101,6 @@
                 "name": "Fortinet FortiManager JSON RPC",
                 "apiName": "fortinet-fortimanager-json-rpc"
             }
-        ],
-        "recordSets": [
-
         ]
     }
 }
