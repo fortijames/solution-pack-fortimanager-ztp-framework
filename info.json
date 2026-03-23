@@ -21,16 +21,35 @@
     "postInstallConfig": {
         "enabled": false
     },
-    "date": "2026-03-20T21:10:06+00:00",
+    "date": "2026-03-23T19:48:47+00:00",
     "contents": {
+        "picklistNames": [
+            {
+                "name": "ztpfAdminStatus"
+            },
+            {
+                "name": "ztpfMetadataType"
+            },
+            {
+                "name": "ztpfStatus"
+            }
+        ],
         "modules": {
             "ztpf_automation_profiles": {
                 "name": "ztpfAutomationProfiles",
                 "apiName": "ztpf_automation_profiles"
             },
+            "ztpf_automation_steps": {
+                "name": "ztpfAutomationSteps",
+                "apiName": "ztpf_automation_steps"
+            },
             "": {
                 "name": "ztpfTemplates",
                 "apiName": "ztpf_templates"
+            },
+            "ztpf_metadata_devices": {
+                "name": "ztpfMetadataDevices",
+                "apiName": "ztpf_metadata_devices"
             }
         },
         "viewTemplates": {
@@ -41,6 +60,15 @@
                     "form",
                     "list",
                     "detail"
+                ]
+            },
+            "ztpf_automation_steps": {
+                "name": "ztpfAutomationSteps",
+                "apiName": "ztpf_automation_steps",
+                "views": [
+                    "detail",
+                    "form",
+                    "list"
                 ]
             },
             "ztpf_devices": {
@@ -59,6 +87,15 @@
                     "detail",
                     "form",
                     "list"
+                ]
+            },
+            "ztpf_metadata_devices": {
+                "name": "ztpfMetadataDevices",
+                "apiName": "ztpf_metadata_devices",
+                "views": [
+                    "form",
+                    "list",
+                    "detail"
                 ]
             },
             "ztpf_templates": {

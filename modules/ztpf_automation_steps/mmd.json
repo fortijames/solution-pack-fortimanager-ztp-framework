@@ -1,9 +1,27 @@
 {
-    "descriptions": {
-        "singular": "ztpfDevice",
-        "plural": "ztpfDevices"
-    },
-    "type": "ztpf_devices",
+    "@context": "\/api\/3\/contexts\/StagingModelMetadata",
+    "@type": "StagingModelMetadata",
+    "type": "ztpf_automation_steps",
+    "parentType": null,
+    "tableName": "ztpf_automation_step",
+    "ownable": false,
+    "userOwnable": false,
+    "queueable": false,
+    "trackable": true,
+    "taggable": true,
+    "peerReplicable": false,
+    "defaultSort": [],
+    "uniqueConstraint": [
+        {
+            "ztpf_automation_steps_unique": {
+                "columns": [
+                    "name"
+                ]
+            }
+        }
+    ],
+    "indexable": true,
+    "writable": true,
     "attributes": [
         {
             "@type": "AttributeMetadata",
@@ -12,7 +30,7 @@
             "length": null,
             "formType": "text",
             "dataSource": null,
-            "searchable": true,
+            "searchable": false,
             "peerReplicable": true,
             "system": false,
             "encrypted": false,
@@ -34,7 +52,7 @@
             },
             "dataSourceFilters": null,
             "defaultValue": "",
-            "tooltip": "Name of Device.",
+            "tooltip": null,
             "visibility": true,
             "htmlEscape": false,
             "orphanRemoval": null,
@@ -51,12 +69,12 @@
         },
         {
             "@type": "AttributeMetadata",
-            "type": "object",
-            "name": "sourceData",
+            "type": "string",
+            "name": "description",
             "length": null,
-            "formType": "object",
+            "formType": "richtext",
             "dataSource": null,
-            "searchable": false,
+            "searchable": true,
             "peerReplicable": true,
             "system": false,
             "encrypted": false,
@@ -67,8 +85,7 @@
             "validation": {
                 "required": false,
                 "minlength": 0,
-                "maxlength": 10485761,
-                "_enableRange": false
+                "maxlength": 10485761
             },
             "bulkAction": {
                 "allow": false,
@@ -88,12 +105,28 @@
             "unique": false,
             "recommend": false,
             "skipSerialization": false,
-            "displayName": "{{ sourceData }}",
+            "displayName": "{{ description }}",
             "descriptions": {
-                "singular": "Source Data"
+                "singular": "Description"
             }
         }
     ],
-    "tableName": "ztpf_device",
-    "displayName": "{{ name }}"
+    "system": false,
+    "module": "ztpf_automation_steps",
+    "softDeleteable": false,
+    "archivable": false,
+    "paused": false,
+    "partitionBy": "modifyDate",
+    "archivalCriteria": {
+        "keep_primary_data_for": 24,
+        "delete_primary_data_after": 60
+    },
+    "archivalFilters": [],
+    "replicationFilters": [],
+    "enableReplication": true,
+    "displayName": "{{ name }}",
+    "descriptions": {
+        "singular": "ztpfAutomationStep",
+        "plural": "ztpfAutomationSteps"
+    }
 }
