@@ -1,0 +1,335 @@
+{
+    "@context": "\/api\/3\/contexts\/Workflow",
+    "@type": "Workflow",
+    "triggerLimit": null,
+    "name": "> update fortimanager-json-rpc connector config",
+    "aliasName": null,
+    "tag": null,
+    "description": null,
+    "isActive": true,
+    "debug": false,
+    "singleRecordExecution": false,
+    "remoteExecutableFlag": false,
+    "parameters": [
+        "fmg_ip",
+        "fmg_user",
+        "fmg_pass",
+        "fmg_port",
+        "connector_config"
+    ],
+    "synchronous": false,
+    "collection": "\/api\/3\/workflow_collections\/517fb52d-36f5-4bac-a344-7d4599d7dec6",
+    "versions": [],
+    "triggerStep": "\/api\/3\/workflow_steps\/5e313d09-2534-496b-8eed-f99086b41030",
+    "steps": [
+        {
+            "@type": "WorkflowStep",
+            "name": "check_connector_configs",
+            "description": null,
+            "arguments": {
+                "existing_config": "{%- set config  = vars.connector_configs | json_query('[?name==`{}`]'.format(vars.connector_config)) -%}\n{%- if config|length > 0 -%}\n{{config[0]}}\n{%- else -%}\n0\n{%- endif -%}",
+                "connector_ip_list": "{{vars.connector_configs|json_query('[].config.address')}}",
+                "connector_name_list": "{{vars.connector_configs|json_query('[].name')}}",
+                "connector_nameip_list": "{{vars.connector_configs|json_query('[][name,config.address,id]')}}"
+            },
+            "status": null,
+            "top": "120",
+            "left": "460",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "742dc0ba-cd91-4a53-bda1-ab41a0c38012"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "config exists",
+            "description": null,
+            "arguments": {
+                "config_api_url": "{{vars.connector_api_url}}{{vars.existing_config['id']}}\/?format=json"
+            },
+            "status": null,
+            "top": "360",
+            "left": "520",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "5c67aa46-1f34-4ed1-bdeb-323b6ac566d8"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "connector config",
+            "description": null,
+            "arguments": {
+                "new_connector_config": "{\n\"connector\": \"{{vars.connector_id}}\",\n\"name\": \"{{vars.connector_config}}\",\n\"default\": false,\n\"config\": {\n  \"address\": \"{{vars.fmg_ip}}\",\n  \"port\":\"{{vars.fmg_port}}\",\n  \"auth_method\": \"Username\/Password\",\n  \"username\":\"{{vars.fmg_user}}\",\n  \"password\":\"{{vars.fmg_pass}}\",\n  \"verify_ssl\" : false,\n  \"verbose_json\": true\n  }\n}"
+            },
+            "status": null,
+            "top": "260",
+            "left": "160",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "decb8527-e10a-47a0-9694-aa6aa02f5538"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "create_connector_config",
+            "description": null,
+            "arguments": {
+                "params": {
+                    "iri": "{{vars.connector_api_url}}",
+                    "body": "{{vars.new_connector_config}}",
+                    "method": "POST"
+                },
+                "version": "3.4.0",
+                "connector": "cyops_utilities",
+                "operation": "make_cyops_request",
+                "operationTitle": "FSR: Make FortiSOAR API Call",
+                "step_variables": []
+            },
+            "status": null,
+            "top": "160",
+            "left": "160",
+            "stepType": "\/api\/3\/workflow_step_types\/0109f35d-090b-4a2b-bd8a-94cbc3508562",
+            "group": null,
+            "uuid": "7a18eacc-19b7-4f13-92b3-c70486bc887d"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "delete_connector_config",
+            "description": null,
+            "arguments": {
+                "params": {
+                    "iri": "{{vars.config_api_url}}",
+                    "body": "",
+                    "method": "DELETE"
+                },
+                "version": "3.7.0",
+                "connector": "cyops_utilities",
+                "operation": "make_cyops_request",
+                "operationTitle": "FSR: Make FortiSOAR API Call",
+                "step_variables": []
+            },
+            "status": null,
+            "top": "480",
+            "left": "520",
+            "stepType": "\/api\/3\/workflow_step_types\/0109f35d-090b-4a2b-bd8a-94cbc3508562",
+            "group": null,
+            "uuid": "4c557c0b-befd-474d-aa71-9cf9d70f43ca"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "does_config_exist",
+            "description": null,
+            "arguments": {
+                "conditions": [
+                    {
+                        "option": "Yes",
+                        "step_iri": "\/api\/3\/workflow_steps\/5c67aa46-1f34-4ed1-bdeb-323b6ac566d8",
+                        "condition": "{{ vars.existing_config != 0 }}",
+                        "step_name": "config exists"
+                    },
+                    {
+                        "option": "No",
+                        "default": true,
+                        "step_iri": "\/api\/3\/workflow_steps\/decb8527-e10a-47a0-9694-aa6aa02f5538",
+                        "step_name": "connector config"
+                    }
+                ],
+                "step_variables": []
+            },
+            "status": null,
+            "top": "200",
+            "left": "460",
+            "stepType": "\/api\/3\/workflow_step_types\/12254cf5-5db7-4b1a-8cb1-3af081924b28",
+            "group": null,
+            "uuid": "1d5e981b-9469-4311-9045-80270087e7d8"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "extract_connector_details",
+            "description": null,
+            "arguments": {
+                "connector_id": "{{vars.steps.get_connector_details.data.id}}",
+                "connector_configs": "{{vars.steps.get_connector_details.data.configuration}}",
+                "connector_data_test": "{{vars.steps.get_connector_details}}"
+            },
+            "status": null,
+            "top": "140",
+            "left": "780",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "72464ce4-f6f9-4221-a8ee-6b7ee9313263"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "get_connector_details",
+            "description": null,
+            "arguments": {
+                "params": {
+                    "iri": "\/api\/integration\/connectors\/fortinet-fortimanager-json-rpc\/1.0.1\/?format=json",
+                    "body": "{}",
+                    "method": "POST"
+                },
+                "version": "3.2.2",
+                "connector": "cyops_utilities",
+                "operation": "make_cyops_request",
+                "operationTitle": "FSR: Make FortiSOAR API Call",
+                "step_variables": []
+            },
+            "status": null,
+            "top": "40",
+            "left": "780",
+            "stepType": "\/api\/3\/workflow_step_types\/0109f35d-090b-4a2b-bd8a-94cbc3508562",
+            "group": null,
+            "uuid": "27483ee8-69c5-4f8c-95ea-0b362fe91467"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "setup vars",
+            "description": null,
+            "arguments": {
+                "fmg_ip": "{{vars.input.params['fmg_ip']}}",
+                "fmg_pass": "{{vars.input.params['fmg_pass']}}",
+                "fmg_port": "{{vars.input.params['fmg_port']}}",
+                "fmg_user": "{{vars.input.params['fmg_user']}}",
+                "connector_config": "{{vars.input.params['connector_config']}}",
+                "connector_api_url": "\/api\/integration\/configuration\/"
+            },
+            "status": null,
+            "top": "40",
+            "left": "460",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "6a0836b2-906e-4099-820e-d0d46f9aaa84"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Start",
+            "description": null,
+            "arguments": {
+                "__triggerLimit": true,
+                "step_variables": {
+                    "input": {
+                        "params": []
+                    }
+                },
+                "triggerOnSource": true,
+                "triggerOnReplicate": false
+            },
+            "status": null,
+            "top": "40",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/b348f017-9a94-471f-87f8-ce88b6a7ad62",
+            "group": null,
+            "uuid": "5e313d09-2534-496b-8eed-f99086b41030"
+        }
+    ],
+    "routes": [
+        {
+            "@type": "WorkflowRoute",
+            "name": "check_connector_configs -> does_config_exist",
+            "targetStep": "\/api\/3\/workflow_steps\/1d5e981b-9469-4311-9045-80270087e7d8",
+            "sourceStep": "\/api\/3\/workflow_steps\/742dc0ba-cd91-4a53-bda1-ab41a0c38012",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "30f7b57b-6ec1-48fd-b150-20e72e2eb060"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "config exists -> delete_connector_config",
+            "targetStep": "\/api\/3\/workflow_steps\/4c557c0b-befd-474d-aa71-9cf9d70f43ca",
+            "sourceStep": "\/api\/3\/workflow_steps\/5c67aa46-1f34-4ed1-bdeb-323b6ac566d8",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "c77909bf-f21f-402b-a51f-7954dca5e1d4"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "connector config -> create_connector_config",
+            "targetStep": "\/api\/3\/workflow_steps\/7a18eacc-19b7-4f13-92b3-c70486bc887d",
+            "sourceStep": "\/api\/3\/workflow_steps\/decb8527-e10a-47a0-9694-aa6aa02f5538",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "35a774ab-7d24-449d-abd3-f28a8a4e74ae"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "delete_connector_config -> connector config",
+            "targetStep": "\/api\/3\/workflow_steps\/decb8527-e10a-47a0-9694-aa6aa02f5538",
+            "sourceStep": "\/api\/3\/workflow_steps\/4c557c0b-befd-474d-aa71-9cf9d70f43ca",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "a74fa129-813d-417d-8221-f187d56a1e4c"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "does_config_exist -> config exists",
+            "targetStep": "\/api\/3\/workflow_steps\/5c67aa46-1f34-4ed1-bdeb-323b6ac566d8",
+            "sourceStep": "\/api\/3\/workflow_steps\/1d5e981b-9469-4311-9045-80270087e7d8",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "f8649fde-d235-4b44-ad9a-56f4d0a93da7"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "does_config_exist -> connector config",
+            "targetStep": "\/api\/3\/workflow_steps\/decb8527-e10a-47a0-9694-aa6aa02f5538",
+            "sourceStep": "\/api\/3\/workflow_steps\/1d5e981b-9469-4311-9045-80270087e7d8",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "d408ce99-207c-4f14-ab1e-e6f2be61f4ae"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "extract_connector_details -> check_connector_configs",
+            "targetStep": "\/api\/3\/workflow_steps\/742dc0ba-cd91-4a53-bda1-ab41a0c38012",
+            "sourceStep": "\/api\/3\/workflow_steps\/72464ce4-f6f9-4221-a8ee-6b7ee9313263",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "a9505e8d-033f-4d06-ba8e-e6413f1533bc"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "get_connector_details -> extract_connector_details",
+            "targetStep": "\/api\/3\/workflow_steps\/72464ce4-f6f9-4221-a8ee-6b7ee9313263",
+            "sourceStep": "\/api\/3\/workflow_steps\/27483ee8-69c5-4f8c-95ea-0b362fe91467",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "0da63bfa-c0a9-4d4e-a983-e74d270436a1"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "setup vars -> get_connector_details",
+            "targetStep": "\/api\/3\/workflow_steps\/27483ee8-69c5-4f8c-95ea-0b362fe91467",
+            "sourceStep": "\/api\/3\/workflow_steps\/6a0836b2-906e-4099-820e-d0d46f9aaa84",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "08bcf06e-a073-412a-a300-3de076e44fa3"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Start -> setup vars",
+            "targetStep": "\/api\/3\/workflow_steps\/6a0836b2-906e-4099-820e-d0d46f9aaa84",
+            "sourceStep": "\/api\/3\/workflow_steps\/5e313d09-2534-496b-8eed-f99086b41030",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "2df40e7b-5eef-465d-ac1c-3609e17a56fa"
+        }
+    ],
+    "groups": [],
+    "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+    "playbookOrigin": "\/api\/3\/picklists\/b6d710a9-a8ec-41ec-8817-fe9fa062fcdd",
+    "isEditable": false,
+    "uuid": "7728f4bf-f7aa-470c-a027-077311e473b0",
+    "owners": [],
+    "isPrivate": false,
+    "deletedAt": null,
+    "recordTags": []
+}
