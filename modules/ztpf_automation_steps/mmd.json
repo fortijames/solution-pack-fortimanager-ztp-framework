@@ -1,27 +1,9 @@
 {
-    "@context": "\/api\/3\/contexts\/StagingModelMetadata",
-    "@type": "StagingModelMetadata",
+    "descriptions": {
+        "singular": "ztpfAutomationStep",
+        "plural": "ztpfAutomationSteps"
+    },
     "type": "ztpf_automation_steps",
-    "parentType": null,
-    "tableName": "ztpf_automation_step",
-    "ownable": false,
-    "userOwnable": false,
-    "queueable": false,
-    "trackable": true,
-    "taggable": true,
-    "peerReplicable": false,
-    "defaultSort": [],
-    "uniqueConstraint": [
-        {
-            "ztpf_automation_steps_unique": {
-                "columns": [
-                    "name"
-                ]
-            }
-        }
-    ],
-    "indexable": true,
-    "writable": true,
     "attributes": [
         {
             "@type": "AttributeMetadata",
@@ -30,7 +12,7 @@
             "length": null,
             "formType": "text",
             "dataSource": null,
-            "searchable": false,
+            "searchable": true,
             "peerReplicable": true,
             "system": false,
             "encrypted": false,
@@ -111,22 +93,6 @@
             }
         }
     ],
-    "system": false,
-    "module": "ztpf_automation_steps",
-    "softDeleteable": false,
-    "archivable": false,
-    "paused": false,
-    "partitionBy": "modifyDate",
-    "archivalCriteria": {
-        "keep_primary_data_for": 24,
-        "delete_primary_data_after": 60
-    },
-    "archivalFilters": [],
-    "replicationFilters": [],
-    "enableReplication": true,
-    "displayName": "{{ name }}",
-    "descriptions": {
-        "singular": "ztpfAutomationStep",
-        "plural": "ztpfAutomationSteps"
-    }
+    "tableName": "ztpf_automation_step",
+    "displayName": "{{ name }}"
 }

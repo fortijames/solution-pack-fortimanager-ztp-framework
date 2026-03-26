@@ -9,9 +9,80 @@
                     {
                         "widgets": [
                             {
+                                "type": "cardList",
+                                "config": {
+                                    "wid": "7bed3586-3762-4c1d-b0fc-9759210cb215",
+                                    "query": {
+                                        "sort": [],
+                                        "limit": 10,
+                                        "logic": "AND",
+                                        "filters": [
+                                            {
+                                                "field": "name",
+                                                "operator": "eq",
+                                                "_operator": "eq",
+                                                "value": "ZTPF Quick Links",
+                                                "type": "primitive"
+                                            }
+                                        ]
+                                    },
+                                    "mapping": {
+                                        "templateView": "viewType",
+                                        "assignedToPerson": null,
+                                        "picklistBar": null,
+                                        "title": "name",
+                                        "subTitle": null,
+                                        "subTitle3": null,
+                                        "subTitle4": null
+                                    },
+                                    "assignedToSetting": "all",
+                                    "module": "ztpf_quick_links",
+                                    "title": "Quick Links",
+                                    "widgetAlwaysExpanded": true
+                                }
+                            }
+                        ],
+                        "style": "col-lg-3"
+                    },
+                    {
+                        "widgets": [],
+                        "style": "col-lg-9"
+                    }
+                ],
+                "wid": "30e2e930-e6be-41aa-8eba-b70de52cafd8",
+                "_collapsed": false,
+                "collapsible": true,
+                "collapsibleIndex": 0
+            },
+            {
+                "columns": [
+                    {
+                        "widgets": [
+                            {
                                 "type": "grid",
                                 "config": {
-                                    "wid": "b6eb20d5-9ed1-41ae-b6d2-9abeae5bb8c1"
+                                    "wid": "b6eb20d5-9ed1-41ae-b6d2-9abeae5bb8c1",
+                                    "module": "ztpf_managers",
+                                    "columns": [
+                                        "id",
+                                        "adminStatus",
+                                        "name",
+                                        "platform",
+                                        "firmware",
+                                        "managerIPDomain",
+                                        "status"
+                                    ],
+                                    "expandableCol": [],
+                                    "relationshipField": [],
+                                    "checkboxStatus": false,
+                                    "editableFields": false,
+                                    "actionButtons": [],
+                                    "query": {
+                                        "sort": [],
+                                        "limit": 30,
+                                        "logic": "AND",
+                                        "filters": []
+                                    }
                                 }
                             }
                         ],

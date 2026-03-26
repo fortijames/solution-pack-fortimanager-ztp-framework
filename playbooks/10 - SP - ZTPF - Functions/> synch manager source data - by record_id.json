@@ -1,0 +1,291 @@
+{
+    "@context": "\/api\/3\/contexts\/Workflow",
+    "@type": "Workflow",
+    "triggerLimit": null,
+    "name": "> synch manager source data - by record_id",
+    "aliasName": null,
+    "tag": null,
+    "description": "Update source data of a manager record.",
+    "isActive": true,
+    "debug": false,
+    "singleRecordExecution": false,
+    "remoteExecutableFlag": false,
+    "parameters": [
+        "record_id"
+    ],
+    "synchronous": false,
+    "collection": "\/api\/3\/workflow_collections\/517fb52d-36f5-4bac-a344-7d4599d7dec6",
+    "versions": [],
+    "triggerStep": "\/api\/3\/workflow_steps\/c7c62bb0-cde8-4c76-a175-c3626ac8d84d",
+    "steps": [
+        {
+            "@type": "WorkflowStep",
+            "name": "create source data",
+            "description": null,
+            "arguments": {
+                "source_data": "{%- set ret = {} -%}\n{%- do ret.update({\"system\":vars.steps.get_system_status.output['get_response']}) -%}\n{{ret}}"
+            },
+            "status": null,
+            "top": "360",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "25e6900f-025d-4dc5-82ff-6c99cb199a55"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "find manager",
+            "description": null,
+            "arguments": {
+                "query": {
+                    "sort": [],
+                    "limit": 30,
+                    "logic": "AND",
+                    "filters": [
+                        {
+                            "type": "primitive",
+                            "field": "id",
+                            "value": "{{vars.input.params['record_id']}}",
+                            "operator": "eq",
+                            "_operator": "eq"
+                        }
+                    ],
+                    "__selectFields": [
+                        "name",
+                        "sourceData",
+                        "id"
+                    ]
+                },
+                "module": "ztpf_managers?$limit=1",
+                "checkboxFields": true,
+                "step_variables": []
+            },
+            "status": null,
+            "top": "40",
+            "left": "340",
+            "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928770",
+            "group": null,
+            "uuid": "087bcd09-b191-4103-b06d-f75cef76f13f"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "get system status",
+            "description": null,
+            "arguments": {
+                "arguments": {
+                    "connector_config": "{{vars.connector_config}}"
+                },
+                "apply_async": false,
+                "step_variables": [],
+                "pass_parent_env": false,
+                "pass_input_record": false,
+                "workflowReference": "\/api\/3\/workflows\/14cba42b-8174-40d2-92b8-0a2dd78b6feb"
+            },
+            "status": null,
+            "top": "120",
+            "left": "340",
+            "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
+            "group": null,
+            "uuid": "2e022980-4d77-4b7e-9aca-23e8e86b2dd3"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "parse source data",
+            "description": null,
+            "arguments": {
+                "arguments": {
+                    "record_id": "{{vars.record_id}}"
+                },
+                "apply_async": false,
+                "step_variables": [],
+                "pass_parent_env": false,
+                "pass_input_record": false,
+                "workflowReference": "\/api\/3\/workflows\/29763486-fcce-4af6-a199-bdf6762b88cd"
+            },
+            "status": null,
+            "top": "200",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
+            "group": null,
+            "uuid": "325744db-9b83-404b-b9b9-680c51292f13"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "return",
+            "description": null,
+            "arguments": {
+                "output": "{\"status\":\"ok\"}"
+            },
+            "status": null,
+            "top": "120",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "92355758-c3a3-4ecd-9af1-1b2a8d25ce39"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "setup vars",
+            "description": null,
+            "arguments": {
+                "record_id": "{{vars.steps.find_manager[0].id}}",
+                "manager_fqid": "{{vars.steps.find_manager[0]['@id']}}",
+                "connector_config": "{{globalVars.ztpf_manager_config_prefix}}{{vars.steps.find_manager[0].id}}"
+            },
+            "status": null,
+            "top": "80",
+            "left": "680",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "14385528-b982-4bb0-b47e-739f68e8e354"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Start",
+            "description": null,
+            "arguments": {
+                "__triggerLimit": true,
+                "step_variables": {
+                    "input": {
+                        "params": []
+                    }
+                },
+                "triggerOnSource": true,
+                "triggerOnReplicate": false
+            },
+            "status": null,
+            "top": "40",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/b348f017-9a94-471f-87f8-ce88b6a7ad62",
+            "group": null,
+            "uuid": "c7c62bb0-cde8-4c76-a175-c3626ac8d84d"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "update manager source_data",
+            "description": null,
+            "arguments": {
+                "resource": {
+                    "sourceData": "{{vars.source_data}}"
+                },
+                "operation": "Append",
+                "collection": "{{vars.manager_fqid}}",
+                "__recommend": [],
+                "collectionType": "\/api\/3\/ztpf_managers",
+                "fieldOperation": {
+                    "recordTags": "Append"
+                },
+                "step_variables": []
+            },
+            "status": null,
+            "top": "280",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928722",
+            "group": null,
+            "uuid": "81800f05-a348-4b5b-8d54-c9969f68f10a"
+        }
+    ],
+    "routes": [
+        {
+            "@type": "WorkflowRoute",
+            "name": "create source data -> update manager",
+            "targetStep": "\/api\/3\/workflow_steps\/81800f05-a348-4b5b-8d54-c9969f68f10a",
+            "sourceStep": "\/api\/3\/workflow_steps\/25e6900f-025d-4dc5-82ff-6c99cb199a55",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "afd169a4-419d-4436-b9dd-e657fe314dc2"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "find manager -> setup vars",
+            "targetStep": "\/api\/3\/workflow_steps\/14385528-b982-4bb0-b47e-739f68e8e354",
+            "sourceStep": "\/api\/3\/workflow_steps\/087bcd09-b191-4103-b06d-f75cef76f13f",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "6e9367bf-e80f-4693-9c28-3f0c82ab607b"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "get system status -> create source data",
+            "targetStep": "\/api\/3\/workflow_steps\/25e6900f-025d-4dc5-82ff-6c99cb199a55",
+            "sourceStep": "\/api\/3\/workflow_steps\/2e022980-4d77-4b7e-9aca-23e8e86b2dd3",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "1d49a5bf-0cbe-4d8e-bee7-0a22e8c2b449"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "parse source data -> return",
+            "targetStep": "\/api\/3\/workflow_steps\/92355758-c3a3-4ecd-9af1-1b2a8d25ce39",
+            "sourceStep": "\/api\/3\/workflow_steps\/325744db-9b83-404b-b9b9-680c51292f13",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "e89f8c5e-1cc2-4e19-a0d7-848f2492db86"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "setup vars -> get system status",
+            "targetStep": "\/api\/3\/workflow_steps\/2e022980-4d77-4b7e-9aca-23e8e86b2dd3",
+            "sourceStep": "\/api\/3\/workflow_steps\/14385528-b982-4bb0-b47e-739f68e8e354",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "2f13d06e-b795-4657-9922-fc82eb53a94b"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Start -> find manager",
+            "targetStep": "\/api\/3\/workflow_steps\/087bcd09-b191-4103-b06d-f75cef76f13f",
+            "sourceStep": "\/api\/3\/workflow_steps\/c7c62bb0-cde8-4c76-a175-c3626ac8d84d",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "ec835c61-c0bd-49a4-9036-d33b9533eeb6"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "update manager source_data -> parse source data",
+            "targetStep": "\/api\/3\/workflow_steps\/325744db-9b83-404b-b9b9-680c51292f13",
+            "sourceStep": "\/api\/3\/workflow_steps\/81800f05-a348-4b5b-8d54-c9969f68f10a",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "472f6626-5b7a-431d-ab16-749b6fdec7ac"
+        }
+    ],
+    "groups": [
+        {
+            "@type": "WorkflowGroup",
+            "name": "Details",
+            "description": "1. Run get system status playbook.\n2. Update manager source data fields.\n3. Run Parse source data into fields playbook.",
+            "type": "note",
+            "isCollapsed": false,
+            "hasTriggerStep": false,
+            "hideInLogs": false,
+            "metadata": [],
+            "reusable": false,
+            "top": "200",
+            "left": "340",
+            "height": "130",
+            "width": "367",
+            "uuid": "117f0f26-3c5f-45e5-9312-fa45d7ec19d5",
+            "recordTags": []
+        }
+    ],
+    "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+    "playbookOrigin": "\/api\/3\/picklists\/b6d710a9-a8ec-41ec-8817-fe9fa062fcdd",
+    "isEditable": false,
+    "uuid": "d653b755-cf23-4935-93e4-474acc7534d8",
+    "owners": [],
+    "isPrivate": false,
+    "deletedAt": null,
+    "recordTags": [
+        "record_management",
+        "source_data",
+        "ztpfManager"
+    ]
+}

@@ -12,7 +12,7 @@
                                 "type": "primaryDetail",
                                 "config": {
                                     "wid": "f0053621-bb7a-4809-9049-fbe070488b3c",
-                                    "idField": "name",
+                                    "idField": "id",
                                     "picklistFieldReadOnly": true,
                                     "titleFieldReadOnly": true,
                                     "featuredRelationship": {
@@ -55,9 +55,38 @@
                                                                 {
                                                                     "widgets": [
                                                                         {
+                                                                            "type": "sectionHeader",
+                                                                            "config": {
+                                                                                "wid": "7c72d920-4e75-4059-9d30-6ff1c85479ff",
+                                                                                "query": {
+                                                                                    "filters": [],
+                                                                                    "sort": [],
+                                                                                    "limit": 10
+                                                                                },
+                                                                                "editorType": "html",
+                                                                                "sectionText": "<p style=\"text-align: center;\"><strong>Manager Connection Settings and Description<\/strong><\/p>"
+                                                                            }
+                                                                        },
+                                                                        {
+                                                                            "type": "playbookButtons-1.1.1",
+                                                                            "config": {
+                                                                                "wid": "2b042cbf-dc70-4a0e-bdfa-1a37dc9de49a",
+                                                                                "widgetName": "Playbook Execution Wizard",
+                                                                                "selectedPlaybooksWithRecord": [
+                                                                                    {
+                                                                                        "name": "Create\/Update FortiManager Connector Configuration from Manager Record",
+                                                                                        "uuid": "a9051804-9230-4c21-a735-487669ad56ae",
+                                                                                        "actionTriggerName": "Create\/Update Connector Configuration",
+                                                                                        "collectionName": "10 - SP - ZTPF - Buttons",
+                                                                                        "icon": "icon icon-settings-01"
+                                                                                    }
+                                                                                ]
+                                                                            }
+                                                                        },
+                                                                        {
                                                                             "type": "editableFormGroup",
                                                                             "config": {
-                                                                                "wid": "418af559-f160-4f38-989e-7641367ecc92",
+                                                                                "wid": "37682417-def4-4a7e-afe7-743f992468d7",
                                                                                 "rows": [
                                                                                     {
                                                                                         "columns": [
@@ -68,6 +97,116 @@
                                                                                                         "highlightMode": true,
                                                                                                         "linky": true,
                                                                                                         "readOnly": true
+                                                                                                    },
+                                                                                                    {
+                                                                                                        "name": "description",
+                                                                                                        "highlightMode": true,
+                                                                                                        "linky": true,
+                                                                                                        "readOnly": false
+                                                                                                    }
+                                                                                                ],
+                                                                                                "style": "col-lg-6"
+                                                                                            },
+                                                                                            {
+                                                                                                "fields": [
+                                                                                                    {
+                                                                                                        "name": "managerIPDomain",
+                                                                                                        "highlightMode": true,
+                                                                                                        "linky": true,
+                                                                                                        "readOnly": true
+                                                                                                    },
+                                                                                                    {
+                                                                                                        "name": "managerPort",
+                                                                                                        "highlightMode": true,
+                                                                                                        "linky": true,
+                                                                                                        "readOnly": true
+                                                                                                    },
+                                                                                                    {
+                                                                                                        "name": "adminRPCUser",
+                                                                                                        "highlightMode": true,
+                                                                                                        "linky": true,
+                                                                                                        "readOnly": true
+                                                                                                    },
+                                                                                                    {
+                                                                                                        "name": "connectorConfig",
+                                                                                                        "highlightMode": true,
+                                                                                                        "linky": true,
+                                                                                                        "readOnly": true
+                                                                                                    }
+                                                                                                ],
+                                                                                                "style": "col-lg-6"
+                                                                                            }
+                                                                                        ]
+                                                                                    }
+                                                                                ]
+                                                                            }
+                                                                        }
+                                                                    ],
+                                                                    "style": "col-lg-6"
+                                                                },
+                                                                {
+                                                                    "widgets": [
+                                                                        {
+                                                                            "type": "sectionHeader",
+                                                                            "config": {
+                                                                                "wid": "81a830ed-c11c-4f84-baec-5e54e4bc0bf0",
+                                                                                "query": {
+                                                                                    "filters": [],
+                                                                                    "sort": [],
+                                                                                    "limit": 10
+                                                                                },
+                                                                                "editorType": "html",
+                                                                                "sectionText": "<p style=\"text-align: center;\"><strong>Manager Details from Source Data<\/strong><\/p>"
+                                                                            }
+                                                                        },
+                                                                        {
+                                                                            "type": "playbookButtons-1.1.1",
+                                                                            "config": {
+                                                                                "wid": "3a082e36-a006-4de8-9dae-eca791d29df0",
+                                                                                "widgetName": "Playbook Execution Wizard",
+                                                                                "selectedPlaybooksWithRecord": [
+                                                                                    {
+                                                                                        "name": "Synchronize FMG System Info from Record",
+                                                                                        "uuid": "6afb35d4-b6c1-442e-97b7-b7c5e2113a30",
+                                                                                        "actionTriggerName": "Synchronize System Info",
+                                                                                        "collectionName": "10 - SP - ZTPF - Buttons",
+                                                                                        "icon": "fa fa-refresh"
+                                                                                    }
+                                                                                ]
+                                                                            }
+                                                                        },
+                                                                        {
+                                                                            "type": "editableFormGroup",
+                                                                            "config": {
+                                                                                "wid": "418af559-f160-4f38-989e-7641367ecc92",
+                                                                                "rows": [
+                                                                                    {
+                                                                                        "columns": [
+                                                                                            {
+                                                                                                "fields": [
+                                                                                                    {
+                                                                                                        "name": "serialNumber",
+                                                                                                        "highlightMode": true,
+                                                                                                        "linky": true,
+                                                                                                        "readOnly": true
+                                                                                                    },
+                                                                                                    {
+                                                                                                        "name": "platform",
+                                                                                                        "highlightMode": true,
+                                                                                                        "linky": true,
+                                                                                                        "readOnly": true
+                                                                                                    },
+                                                                                                    {
+                                                                                                        "name": "firmware",
+                                                                                                        "highlightMode": true,
+                                                                                                        "linky": true,
+                                                                                                        "readOnly": true
+                                                                                                    },
+                                                                                                    {
+                                                                                                        "name": "licenseStatus",
+                                                                                                        "highlightMode": true,
+                                                                                                        "linky": true,
+                                                                                                        "readOnly": true
                                                                                                     }
                                                                                                 ],
                                                                                                 "style": "col-lg-4"
@@ -75,10 +214,28 @@
                                                                                             {
                                                                                                 "fields": [
                                                                                                     {
-                                                                                                        "name": "description",
+                                                                                                        "name": "timeZone",
                                                                                                         "highlightMode": true,
                                                                                                         "linky": true,
-                                                                                                        "readOnly": false
+                                                                                                        "readOnly": true
+                                                                                                    },
+                                                                                                    {
+                                                                                                        "name": "maxADOMs",
+                                                                                                        "highlightMode": true,
+                                                                                                        "linky": true,
+                                                                                                        "readOnly": true
+                                                                                                    },
+                                                                                                    {
+                                                                                                        "name": "maxDevices",
+                                                                                                        "highlightMode": true,
+                                                                                                        "linky": true,
+                                                                                                        "readOnly": true
+                                                                                                    },
+                                                                                                    {
+                                                                                                        "name": "aDOMMode",
+                                                                                                        "highlightMode": true,
+                                                                                                        "linky": true,
+                                                                                                        "readOnly": true
                                                                                                     }
                                                                                                 ],
                                                                                                 "style": "col-lg-4"
@@ -89,25 +246,25 @@
                                                                                                         "name": "createDate",
                                                                                                         "highlightMode": true,
                                                                                                         "linky": true,
-                                                                                                        "readOnly": false
+                                                                                                        "readOnly": true
                                                                                                     },
                                                                                                     {
                                                                                                         "name": "createUser",
                                                                                                         "highlightMode": true,
                                                                                                         "linky": true,
-                                                                                                        "readOnly": false
-                                                                                                    },
-                                                                                                    {
-                                                                                                        "name": "modifyUser",
-                                                                                                        "highlightMode": true,
-                                                                                                        "linky": true,
-                                                                                                        "readOnly": false
+                                                                                                        "readOnly": true
                                                                                                     },
                                                                                                     {
                                                                                                         "name": "modifyDate",
                                                                                                         "highlightMode": true,
                                                                                                         "linky": true,
-                                                                                                        "readOnly": false
+                                                                                                        "readOnly": true
+                                                                                                    },
+                                                                                                    {
+                                                                                                        "name": "modifyUser",
+                                                                                                        "highlightMode": true,
+                                                                                                        "linky": true,
+                                                                                                        "readOnly": true
                                                                                                     }
                                                                                                 ],
                                                                                                 "style": "col-lg-4"
@@ -118,11 +275,13 @@
                                                                             }
                                                                         }
                                                                     ],
-                                                                    "style": "col-lg-12"
+                                                                    "style": "col-lg-6"
                                                                 }
                                                             ],
                                                             "wid": "5b1cf24b-72fc-491f-83e2-9fe3c12e9e7f",
-                                                            "_collapsed": false
+                                                            "_collapsed": false,
+                                                            "collapsible": false,
+                                                            "collapsibleIndex": 0
                                                         }
                                                     ]
                                                 },
@@ -143,8 +302,135 @@
                                         {
                                             "title": "Devices",
                                             "active": 0,
-                                            "widget": null,
+                                            "widget": {
+                                                "type": "rows",
+                                                "config": {
+                                                    "wid": "947ed1f3-350d-4835-af03-608b1283f9ca",
+                                                    "rows": [
+                                                        {
+                                                            "columns": [
+                                                                {
+                                                                    "widgets": [
+                                                                        {
+                                                                            "type": "sectionHeader",
+                                                                            "config": {
+                                                                                "wid": "dd4e0b69-585d-48be-b2d2-0be747f6d3ab",
+                                                                                "query": {
+                                                                                    "filters": [],
+                                                                                    "sort": [],
+                                                                                    "limit": 10
+                                                                                },
+                                                                                "editorType": "html",
+                                                                                "sectionText": "<p style=\"text-align: center;\"><span style=\"font-size: 14pt;\"><strong>Devices Found in FortiManager<\/strong><\/span><\/p>",
+                                                                                "fieldType": "",
+                                                                                "resource": "ztpf_managers"
+                                                                            }
+                                                                        },
+                                                                        {
+                                                                            "type": "relationship.subtab",
+                                                                            "config": {
+                                                                                "wid": "21122c4d-3826-4c6c-a078-402dd38869e4",
+                                                                                "excludes": [],
+                                                                                "selectionType": "include",
+                                                                                "actionButtons": [],
+                                                                                "expandableCol": [],
+                                                                                "enableHorizontalScroll": [],
+                                                                                "includes": [
+                                                                                    "ztpfDevices"
+                                                                                ]
+                                                                            }
+                                                                        }
+                                                                    ],
+                                                                    "style": "col-lg-12"
+                                                                }
+                                                            ],
+                                                            "wid": "df571647-349a-46d8-94d7-126487688d76",
+                                                            "_collapsed": false
+                                                        }
+                                                    ]
+                                                },
+                                                "visible": true
+                                            },
                                             "icon": "fa fa-hdd-o",
+                                            "show": false,
+                                            "visible": true
+                                        },
+                                        {
+                                            "title": "Source Data",
+                                            "active": 0,
+                                            "widget": {
+                                                "type": "rows",
+                                                "config": {
+                                                    "wid": "f73046b6-47a5-4fd5-962e-f0d8d9f70ee0",
+                                                    "rows": [
+                                                        {
+                                                            "columns": [
+                                                                {
+                                                                    "widgets": [
+                                                                        {
+                                                                            "type": "sectionHeader",
+                                                                            "config": {
+                                                                                "wid": "97e403d6-936d-445e-b9ce-777ba3fa5654",
+                                                                                "query": {
+                                                                                    "filters": [],
+                                                                                    "sort": [],
+                                                                                    "limit": 10
+                                                                                },
+                                                                                "editorType": "html",
+                                                                                "sectionText": "<p style=\"text-align: center;\"><strong>Source Data from Synchronizing System Info<\/strong><\/p>"
+                                                                            }
+                                                                        },
+                                                                        {
+                                                                            "type": "playbookButtons-1.1.1",
+                                                                            "config": {
+                                                                                "wid": "321b7865-d262-48d2-b758-48d40cb62b37",
+                                                                                "widgetName": "Playbook Execution Wizard",
+                                                                                "selectedPlaybooksWithRecord": [
+                                                                                    {
+                                                                                        "name": "Synchronize FMG System Info from Record",
+                                                                                        "uuid": "6afb35d4-b6c1-442e-97b7-b7c5e2113a30",
+                                                                                        "actionTriggerName": "Synchronize System Info",
+                                                                                        "collectionName": "10 - SP - ZTPF - Buttons",
+                                                                                        "icon": "fa fa-refresh"
+                                                                                    }
+                                                                                ]
+                                                                            }
+                                                                        },
+                                                                        {
+                                                                            "type": "editableFormGroup",
+                                                                            "config": {
+                                                                                "wid": "f0b0e95b-a610-44db-8c19-0ffb8e4194d5",
+                                                                                "rows": [
+                                                                                    {
+                                                                                        "columns": [
+                                                                                            {
+                                                                                                "fields": [
+                                                                                                    {
+                                                                                                        "name": "sourceData",
+                                                                                                        "highlightMode": true,
+                                                                                                        "linky": true,
+                                                                                                        "readOnly": true,
+                                                                                                        "renderWidgetHeight": 800
+                                                                                                    }
+                                                                                                ]
+                                                                                            }
+                                                                                        ]
+                                                                                    }
+                                                                                ]
+                                                                            }
+                                                                        }
+                                                                    ],
+                                                                    "style": "col-lg-12"
+                                                                }
+                                                            ],
+                                                            "wid": "77f7645c-63d3-4b97-866b-ac74d393e58c",
+                                                            "_collapsed": false
+                                                        }
+                                                    ]
+                                                },
+                                                "visible": true
+                                            },
+                                            "icon": "icon icon-source-data",
                                             "show": false,
                                             "visible": true
                                         }
@@ -156,6 +442,16 @@
                     }
                 ],
                 "wid": "a8e1ce1c-9916-47fa-b485-21f917b1dc94",
+                "_collapsed": false
+            },
+            {
+                "columns": [
+                    {
+                        "widgets": [],
+                        "style": "col-lg-12"
+                    }
+                ],
+                "wid": "a723fd95-8edc-4260-a279-39b41b165bab",
                 "_collapsed": false
             }
         ],

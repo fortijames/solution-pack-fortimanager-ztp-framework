@@ -40,6 +40,21 @@
                     },
                     {
                         "editMode": false,
+                        "icon": "icon icon-data_sets",
+                        "require": {
+                            "action": "read",
+                            "module": "ztpf_metadata_devices"
+                        },
+                        "state": {
+                            "name": "main.modules.list",
+                            "parameters": {
+                                "module": "ztpf_metadata_devices"
+                            }
+                        },
+                        "title": "Metadata Devices"
+                    },
+                    {
+                        "editMode": false,
                         "icon": "fa fa-file-text-o",
                         "require": {
                             "action": "read",
@@ -55,6 +70,21 @@
                     },
                     {
                         "editMode": false,
+                        "icon": "icon icon-chart",
+                        "require": {
+                            "action": "read",
+                            "module": "ztpf_automation_steps"
+                        },
+                        "state": {
+                            "name": "main.modules.list",
+                            "parameters": {
+                                "module": "ztpf_automation_steps"
+                            }
+                        },
+                        "title": "Automation Steps"
+                    },
+                    {
+                        "editMode": false,
                         "icon": "icon icon-edit-template",
                         "require": {
                             "action": "read",
@@ -67,6 +97,21 @@
                             }
                         },
                         "title": "Templates"
+                    },
+                    {
+                        "editMode": false,
+                        "icon": "icon icon-set-variables",
+                        "require": {
+                            "action": "read",
+                            "module": "ztpf_metadata_sources"
+                        },
+                        "state": {
+                            "name": "main.modules.list",
+                            "parameters": {
+                                "module": "ztpf_metadata_sources"
+                            }
+                        },
+                        "title": "Metadata Sources"
                     }
                 ],
                 "title": "ZTP Flow"

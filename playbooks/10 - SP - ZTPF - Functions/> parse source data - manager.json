@@ -1,0 +1,189 @@
+{
+    "@context": "\/api\/3\/contexts\/Workflow",
+    "@type": "Workflow",
+    "triggerLimit": null,
+    "name": "> parse source data - manager",
+    "aliasName": null,
+    "tag": null,
+    "description": "Read source_data and parse the results to load into the record fields.",
+    "isActive": true,
+    "debug": false,
+    "singleRecordExecution": false,
+    "remoteExecutableFlag": false,
+    "parameters": [
+        "record_id"
+    ],
+    "synchronous": false,
+    "collection": "\/api\/3\/workflow_collections\/517fb52d-36f5-4bac-a344-7d4599d7dec6",
+    "versions": [],
+    "triggerStep": "\/api\/3\/workflow_steps\/f99a5efe-a9ff-4447-af75-61bec3ae9727",
+    "steps": [
+        {
+            "@type": "WorkflowStep",
+            "name": "find record",
+            "description": null,
+            "arguments": {
+                "query": {
+                    "sort": [],
+                    "limit": 30,
+                    "logic": "AND",
+                    "filters": [
+                        {
+                            "type": "primitive",
+                            "field": "id",
+                            "value": "{{vars.input.params['record_id']}}",
+                            "operator": "eq",
+                            "_operator": "eq"
+                        }
+                    ],
+                    "__selectFields": [
+                        "id",
+                        "sourceData"
+                    ]
+                },
+                "module": "ztpf_managers?$limit=1",
+                "checkboxFields": true,
+                "step_variables": []
+            },
+            "status": null,
+            "top": "40",
+            "left": "400",
+            "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928770",
+            "group": null,
+            "uuid": "050e27e7-5fa1-4fd8-a3a8-c8bcbbf252b5"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "setup vars system",
+            "description": null,
+            "arguments": {
+                "sn": "{{vars.steps.find_record[0].sourceData.system['Serial Number']}}",
+                "firmware": "{{vars.steps.find_record[0].sourceData.system['Version']}}",
+                "platform": "{{vars.steps.find_record[0].sourceData.system['Platform Type']}}",
+                "timezone": "{%- set sd = vars.steps.find_record[0].sourceData.system -%}\n{%- if \"Time Zone\" in sd -%}\n{{sd['Time Zone']}}\n{%- elif \"TZ\" in sd -%}\n{{sd['TZ']}}\n{%- endif -%}",
+                "adom_mode": "{{vars.steps.find_record[0].sourceData.system['Admin Domain Configuration']}}",
+                "max_adoms": "{{vars.steps.find_record[0].sourceData.system['Max Number of Admin Domains']}}",
+                "max_devices": "{{vars.steps.find_record[0].sourceData.system['Max Number of Device Groups']}}",
+                "record_fqid": "{{vars.steps.find_record[0]['@id']}}",
+                "license_status": "{{vars.steps.find_record[0].sourceData.system['License Status']}}"
+            },
+            "status": null,
+            "top": "260",
+            "left": "400",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "c38f2e27-cae4-4a92-841a-b66731ce092d"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Start",
+            "description": null,
+            "arguments": {
+                "__triggerLimit": true,
+                "step_variables": {
+                    "input": {
+                        "params": []
+                    }
+                },
+                "triggerOnSource": true,
+                "triggerOnReplicate": false
+            },
+            "status": null,
+            "top": "40",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/b348f017-9a94-471f-87f8-ce88b6a7ad62",
+            "group": null,
+            "uuid": "f99a5efe-a9ff-4447-af75-61bec3ae9727"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "update record",
+            "description": null,
+            "arguments": {
+                "resource": {
+                    "aDOMMode": "{{vars.adom_mode}}",
+                    "firmware": "{{vars.firmware}}",
+                    "maxADOMs": "{{vars.max_adoms}}",
+                    "platform": "{{vars.platform}}",
+                    "timeZone": "{{vars.timezone}}",
+                    "maxDevices": "{{vars.max_devices}}",
+                    "serialNumber": "{{vars.sn}}",
+                    "licenseStatus": "{{vars.license_status}}"
+                },
+                "operation": "Append",
+                "collection": "{{vars.record_fqid}}",
+                "__recommend": [],
+                "collectionType": "\/api\/3\/ztpf_managers",
+                "fieldOperation": {
+                    "recordTags": "Append"
+                },
+                "step_variables": []
+            },
+            "status": null,
+            "top": "120",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928722",
+            "group": null,
+            "uuid": "9a852228-3c8b-42d0-8c8c-1b7eb09f8e4e"
+        }
+    ],
+    "routes": [
+        {
+            "@type": "WorkflowRoute",
+            "name": "find record -> setup vars",
+            "targetStep": "\/api\/3\/workflow_steps\/c38f2e27-cae4-4a92-841a-b66731ce092d",
+            "sourceStep": "\/api\/3\/workflow_steps\/050e27e7-5fa1-4fd8-a3a8-c8bcbbf252b5",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "dd778968-9efa-4cb3-8fad-9ffc0c8081f8"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "setup vars system -> update record",
+            "targetStep": "\/api\/3\/workflow_steps\/9a852228-3c8b-42d0-8c8c-1b7eb09f8e4e",
+            "sourceStep": "\/api\/3\/workflow_steps\/c38f2e27-cae4-4a92-841a-b66731ce092d",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "6bb798f5-985a-4301-a3b9-2953501a0fa4"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Start -> find record",
+            "targetStep": "\/api\/3\/workflow_steps\/050e27e7-5fa1-4fd8-a3a8-c8bcbbf252b5",
+            "sourceStep": "\/api\/3\/workflow_steps\/f99a5efe-a9ff-4447-af75-61bec3ae9727",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "bf7d9e89-6bbf-4b6b-9538-bac4a774ce22"
+        }
+    ],
+    "groups": [
+        {
+            "@type": "WorkflowGroup",
+            "name": "Details",
+            "description": "Parse source_data and populate fields:\nSerial, Platform, Firmware, License Status, Timezone, Max Adoms, Max Devices, ADOM Mode",
+            "type": "note",
+            "isCollapsed": false,
+            "hasTriggerStep": false,
+            "hideInLogs": false,
+            "metadata": [],
+            "reusable": false,
+            "top": "120",
+            "left": "540",
+            "height": "132",
+            "width": "298",
+            "uuid": "35458bf8-9936-44e3-a532-6988d0c9555a",
+            "recordTags": []
+        }
+    ],
+    "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+    "playbookOrigin": "\/api\/3\/picklists\/b6d710a9-a8ec-41ec-8817-fe9fa062fcdd",
+    "isEditable": false,
+    "uuid": "29763486-fcce-4af6-a199-bdf6762b88cd",
+    "owners": [],
+    "isPrivate": false,
+    "deletedAt": null,
+    "recordTags": []
+}

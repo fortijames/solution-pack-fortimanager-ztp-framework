@@ -9,12 +9,29 @@
                     {
                         "widgets": [
                             {
-                                "type": "editableForm",
-                                "config": []
+                                "type": "primaryDetail",
+                                "config": {
+                                    "wid": "9b9b1866-28cc-484b-8199-87b33dcb0dff",
+                                    "idField": "id",
+                                    "picklistFieldReadOnly": true,
+                                    "titleFieldReadOnly": true,
+                                    "featuredRelationship": {
+                                        "field": null,
+                                        "preText": "Under Investigation In",
+                                        "query": null,
+                                        "statusField": null,
+                                        "sort": []
+                                    },
+                                    "picklistField": "status",
+                                    "titleField": "name"
+                                }
                             }
-                        ]
+                        ],
+                        "style": "col-lg-12"
                     }
-                ]
+                ],
+                "wid": "dc126332-020b-48ae-83ff-5eee70fb08c0",
+                "_collapsed": false
             },
             {
                 "columns": [
@@ -23,22 +40,367 @@
                             {
                                 "type": "tabs",
                                 "config": {
+                                    "wid": "1b25a3c6-4a43-4c65-af43-6ff2a8dc25de",
                                     "tabs": [
                                         {
-                                            "title": "Related Records",
+                                            "title": "Details",
+                                            "active": 0,
                                             "widget": {
-                                                "type": "relationship.subtab",
-                                                "config": []
-                                            }
+                                                "type": "rows",
+                                                "config": {
+                                                    "wid": "6b97268f-e1ad-49ed-8eba-0997c34acb97",
+                                                    "rows": [
+                                                        {
+                                                            "columns": [
+                                                                {
+                                                                    "widgets": [
+                                                                        {
+                                                                            "type": "editableFormGroup",
+                                                                            "config": {
+                                                                                "wid": "39fbc862-35be-4f53-ae9b-7a0f22adf4de",
+                                                                                "rows": [
+                                                                                    {
+                                                                                        "columns": [
+                                                                                            {
+                                                                                                "fields": [
+                                                                                                    {
+                                                                                                        "name": "ztpfManagers",
+                                                                                                        "highlightMode": true,
+                                                                                                        "linky": true,
+                                                                                                        "readOnly": true
+                                                                                                    },
+                                                                                                    {
+                                                                                                        "name": "name",
+                                                                                                        "highlightMode": true,
+                                                                                                        "linky": true,
+                                                                                                        "readOnly": true
+                                                                                                    },
+                                                                                                    {
+                                                                                                        "name": "description",
+                                                                                                        "highlightMode": true,
+                                                                                                        "linky": true,
+                                                                                                        "readOnly": false
+                                                                                                    }
+                                                                                                ]
+                                                                                            }
+                                                                                        ]
+                                                                                    }
+                                                                                ]
+                                                                            }
+                                                                        }
+                                                                    ],
+                                                                    "style": "col-lg-6"
+                                                                },
+                                                                {
+                                                                    "widgets": [
+                                                                        {
+                                                                            "type": "editableFormGroup",
+                                                                            "config": {
+                                                                                "wid": "d1b3914b-0a58-4410-81a7-f1bc3d6489b0",
+                                                                                "rows": [
+                                                                                    {
+                                                                                        "columns": [
+                                                                                            {
+                                                                                                "fields": [],
+                                                                                                "style": "col-lg-4"
+                                                                                            },
+                                                                                            {
+                                                                                                "fields": [],
+                                                                                                "style": "col-lg-4"
+                                                                                            },
+                                                                                            {
+                                                                                                "fields": [
+                                                                                                    {
+                                                                                                        "name": "createDate",
+                                                                                                        "highlightMode": true,
+                                                                                                        "linky": true,
+                                                                                                        "readOnly": false
+                                                                                                    },
+                                                                                                    {
+                                                                                                        "name": "createUser",
+                                                                                                        "highlightMode": true,
+                                                                                                        "linky": true,
+                                                                                                        "readOnly": false
+                                                                                                    },
+                                                                                                    {
+                                                                                                        "name": "modifyDate",
+                                                                                                        "highlightMode": true,
+                                                                                                        "linky": true,
+                                                                                                        "readOnly": false
+                                                                                                    },
+                                                                                                    {
+                                                                                                        "name": "modifyUser",
+                                                                                                        "highlightMode": true,
+                                                                                                        "linky": true,
+                                                                                                        "readOnly": false
+                                                                                                    }
+                                                                                                ],
+                                                                                                "style": "col-lg-4"
+                                                                                            }
+                                                                                        ]
+                                                                                    }
+                                                                                ]
+                                                                            }
+                                                                        }
+                                                                    ],
+                                                                    "style": "col-lg-6"
+                                                                }
+                                                            ],
+                                                            "wid": "2c83d40f-0019-4959-b0b3-69b2cfb176da",
+                                                            "collapsible": false,
+                                                            "collapsibleIndex": 0,
+                                                            "_collapsed": false
+                                                        }
+                                                    ]
+                                                },
+                                                "visible": true
+                                            },
+                                            "icon": "icon icon-details",
+                                            "show": false,
+                                            "visible": true
+                                        },
+                                        {
+                                            "title": "Settings",
+                                            "active": 0,
+                                            "widget": null,
+                                            "icon": "icon icon-settings",
+                                            "show": false,
+                                            "visible": true
+                                        },
+                                        {
+                                            "title": "Metadata",
+                                            "active": 0,
+                                            "widget": {
+                                                "type": "rows",
+                                                "config": {
+                                                    "wid": "8b4a6074-9bc8-43a4-92a3-209a3b054565",
+                                                    "rows": [
+                                                        {
+                                                            "columns": [
+                                                                {
+                                                                    "widgets": [
+                                                                        {
+                                                                            "type": "sectionHeader",
+                                                                            "config": {
+                                                                                "wid": "bec7d556-e972-4d9d-8c79-6a239ef5ac0e",
+                                                                                "query": {
+                                                                                    "filters": [],
+                                                                                    "sort": [],
+                                                                                    "limit": 10
+                                                                                },
+                                                                                "editorType": "html",
+                                                                                "sectionText": "<p style=\"text-align: center;\"><span style=\"font-size: 14pt;\"><strong>Device Metadata Records<\/strong><\/span><\/p>"
+                                                                            }
+                                                                        },
+                                                                        {
+                                                                            "type": "rows",
+                                                                            "config": {
+                                                                                "wid": "93d50350-689a-46df-b5cc-4645f816b6a1",
+                                                                                "rows": [
+                                                                                    {
+                                                                                        "columns": [
+                                                                                            {
+                                                                                                "widgets": [
+                                                                                                    {
+                                                                                                        "type": "relationship.lineItem",
+                                                                                                        "config": {
+                                                                                                            "wid": "19825ac1-705a-4d0f-b09a-4021080c00d9",
+                                                                                                            "query": {
+                                                                                                                "sort": [],
+                                                                                                                "limit": 50,
+                                                                                                                "logic": "AND",
+                                                                                                                "filters": [
+                                                                                                                    {
+                                                                                                                        "field": "type",
+                                                                                                                        "operator": "eq",
+                                                                                                                        "value": "\/api\/3\/picklists\/36b18f9c-fd7b-4022-b00f-9525101a6317",
+                                                                                                                        "_value": {
+                                                                                                                            "display": "Text",
+                                                                                                                            "itemValue": "Text",
+                                                                                                                            "@id": "\/api\/3\/picklists\/36b18f9c-fd7b-4022-b00f-9525101a6317"
+                                                                                                                        },
+                                                                                                                        "type": "object"
+                                                                                                                    }
+                                                                                                                ]
+                                                                                                            },
+                                                                                                            "mapping": {
+                                                                                                                "assignedToPerson": ""
+                                                                                                            },
+                                                                                                            "assignedToSetting": "all",
+                                                                                                            "columns": [
+                                                                                                                {
+                                                                                                                    "column_name": "name",
+                                                                                                                    "display_type": "block"
+                                                                                                                },
+                                                                                                                {
+                                                                                                                    "column_name": "dataText",
+                                                                                                                    "display_type": "block"
+                                                                                                                }
+                                                                                                            ],
+                                                                                                            "title": "TEXT",
+                                                                                                            "module": "ztpf_metadata_devices",
+                                                                                                            "fieldName": "ztpfMetadataDevices"
+                                                                                                        }
+                                                                                                    }
+                                                                                                ],
+                                                                                                "style": "col-lg-4"
+                                                                                            },
+                                                                                            {
+                                                                                                "widgets": [
+                                                                                                    {
+                                                                                                        "type": "relationship.lineItem",
+                                                                                                        "config": {
+                                                                                                            "wid": "befdb1a6-15cc-4e9f-9183-aedbc4fa2c41",
+                                                                                                            "query": {
+                                                                                                                "sort": [],
+                                                                                                                "limit": 50,
+                                                                                                                "logic": "AND",
+                                                                                                                "filters": [
+                                                                                                                    {
+                                                                                                                        "field": "type",
+                                                                                                                        "value": [
+                                                                                                                            "cdd4a3b0-424d-4941-b2c0-1b4ae05ccdf8"
+                                                                                                                        ],
+                                                                                                                        "display": "",
+                                                                                                                        "operator": "in",
+                                                                                                                        "type": "array",
+                                                                                                                        "OPERATOR_KEY": "$",
+                                                                                                                        "module": "type",
+                                                                                                                        "template": "multiselectpicklist",
+                                                                                                                        "previousOperator": "in",
+                                                                                                                        "previousTemplate": "multiselectpicklist",
+                                                                                                                        "useInOperator": true
+                                                                                                                    }
+                                                                                                                ]
+                                                                                                            },
+                                                                                                            "mapping": {
+                                                                                                                "assignedToPerson": ""
+                                                                                                            },
+                                                                                                            "assignedToSetting": "all",
+                                                                                                            "columns": [
+                                                                                                                {
+                                                                                                                    "column_name": "name",
+                                                                                                                    "display_type": "block"
+                                                                                                                },
+                                                                                                                {
+                                                                                                                    "column_name": "dataJSON",
+                                                                                                                    "display_type": "block"
+                                                                                                                }
+                                                                                                            ],
+                                                                                                            "title": "JSON",
+                                                                                                            "module": "ztpf_metadata_devices",
+                                                                                                            "fieldName": "ztpfMetadataDevices"
+                                                                                                        }
+                                                                                                    }
+                                                                                                ],
+                                                                                                "style": "col-lg-4"
+                                                                                            },
+                                                                                            {
+                                                                                                "widgets": [
+                                                                                                    {
+                                                                                                        "type": "relationship.lineItem",
+                                                                                                        "config": {
+                                                                                                            "wid": "8fcd1f87-9371-4039-87ca-ef7afd3b7a88",
+                                                                                                            "query": {
+                                                                                                                "sort": [],
+                                                                                                                "limit": 50,
+                                                                                                                "logic": "AND",
+                                                                                                                "filters": [
+                                                                                                                    {
+                                                                                                                        "field": "type",
+                                                                                                                        "value": [
+                                                                                                                            "c373cd17-df08-428c-b042-b07b5fad9038"
+                                                                                                                        ],
+                                                                                                                        "display": "",
+                                                                                                                        "operator": "in",
+                                                                                                                        "type": "array",
+                                                                                                                        "OPERATOR_KEY": "$",
+                                                                                                                        "module": "type",
+                                                                                                                        "template": "multiselectpicklist",
+                                                                                                                        "previousOperator": "in",
+                                                                                                                        "previousTemplate": "multiselectpicklist",
+                                                                                                                        "useInOperator": true
+                                                                                                                    }
+                                                                                                                ]
+                                                                                                            },
+                                                                                                            "mapping": {
+                                                                                                                "assignedToPerson": ""
+                                                                                                            },
+                                                                                                            "assignedToSetting": "all",
+                                                                                                            "columns": [
+                                                                                                                {
+                                                                                                                    "column_name": "name",
+                                                                                                                    "display_type": "block"
+                                                                                                                }
+                                                                                                            ],
+                                                                                                            "title": "SECRET",
+                                                                                                            "module": "ztpf_metadata_devices",
+                                                                                                            "fieldName": "ztpfMetadataDevices"
+                                                                                                        }
+                                                                                                    }
+                                                                                                ],
+                                                                                                "style": "col-lg-4"
+                                                                                            }
+                                                                                        ],
+                                                                                        "wid": "1a347b98-4d33-427a-aef9-58b3b88275ef",
+                                                                                        "collapsible": false,
+                                                                                        "collapsibleIndex": 0,
+                                                                                        "_collapsed": false
+                                                                                    }
+                                                                                ]
+                                                                            }
+                                                                        }
+                                                                    ],
+                                                                    "style": "col-lg-12"
+                                                                }
+                                                            ],
+                                                            "wid": "aa1ba00f-8021-402f-ad50-026e81f184fb",
+                                                            "_collapsed": false
+                                                        }
+                                                    ]
+                                                },
+                                                "visible": true
+                                            },
+                                            "icon": "fa fa-hdd-o",
+                                            "show": true,
+                                            "visible": true
+                                        },
+                                        {
+                                            "title": "Source Data",
+                                            "active": 0,
+                                            "widget": null,
+                                            "icon": "icon icon-source-data",
+                                            "show": false,
+                                            "visible": true
+                                        },
+                                        {
+                                            "title": "All Fields",
+                                            "active": 0,
+                                            "widget": {
+                                                "type": "editableForm",
+                                                "config": {
+                                                    "wid": "c194ada3-89e5-44c6-adb9-04c307689dc0"
+                                                },
+                                                "visible": true
+                                            },
+                                            "icon": "fa fa-none",
+                                            "show": false,
+                                            "visible": true
                                         }
                                     ]
                                 }
                             }
-                        ]
+                        ],
+                        "style": "col-lg-12"
                     }
-                ]
+                ],
+                "wid": "1e8d8891-f24e-490b-8131-7906d3a0f1b1",
+                "_collapsed": false
             }
-        ]
+        ],
+        "wid": "713546cc-7347-43e3-9d4e-d0617de022c7",
+        "actionButtons": [],
+        "metadata": []
     },
     "module": "ztpf_devices",
     "filters": [],

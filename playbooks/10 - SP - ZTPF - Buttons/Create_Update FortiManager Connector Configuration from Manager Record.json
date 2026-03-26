@@ -42,7 +42,7 @@
                                 "dataType": "dynamicList",
                                 "formType": "dynamicList",
                                 "required": true,
-                                "_expanded": false,
+                                "_expanded": true,
                                 "mmdUpdate": true,
                                 "collection": false,
                                 "dataSource": [],
@@ -72,12 +72,12 @@
                                 "dataType": "text",
                                 "formType": "ipv4",
                                 "required": true,
-                                "_expanded": false,
+                                "_expanded": true,
                                 "mmdUpdate": true,
                                 "collection": false,
                                 "searchable": true,
                                 "templateUrl": "app\/components\/form\/fields\/webAddress.html",
-                                "defaultValue": "{{vars.input.records[0].managerIP}}",
+                                "defaultValue": "{{vars.steps.set_record_updating.managerIPDomain}}",
                                 "_previousName": "fMGIPAddress",
                                 "playbookField": true,
                                 "requiredQuery": [],
@@ -223,8 +223,8 @@
                                 "dataType": "text",
                                 "formType": "text",
                                 "required": false,
-                                "_expanded": false,
-                                "defaultValue": "{{vars.input.records[0].managerPort}}",
+                                "_expanded": true,
+                                "defaultValue": "{{vars.steps.set_record_updating.managerPort}}",
                                 "_previousName": "fMGP",
                                 "requiredCondition": "notrequired",
                                 "jinjaExpressionView": true,
@@ -324,11 +324,35 @@
                 "external_email_attachments": null
             },
             "status": null,
-            "top": "200",
+            "top": "180",
             "left": "40",
             "stepType": "\/api\/3\/workflow_step_types\/fc04082a-d7dc-4299-96fb-6837b1baa0fe",
             "group": null,
             "uuid": "19e2e6e7-3a9f-4056-b60a-5f9a166a54d9"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "set record updating",
+            "description": null,
+            "arguments": {
+                "resource": {
+                    "status": "\/api\/3\/picklists\/286ba1d0-2aa4-4919-a418-5363e59077dc"
+                },
+                "operation": "Append",
+                "collection": "{{vars.input.records[0]['@id']}}",
+                "__recommend": [],
+                "collectionType": "\/api\/3\/ztpf_managers",
+                "fieldOperation": {
+                    "recordTags": "Append"
+                },
+                "step_variables": []
+            },
+            "status": null,
+            "top": "100",
+            "left": "380",
+            "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928722",
+            "group": null,
+            "uuid": "a5ea51c6-e903-4a62-a27e-918e062d2518"
         },
         {
             "@type": "WorkflowStep",
@@ -402,17 +426,17 @@
                     "condition": ""
                 },
                 "arguments": {
-                    "connector_config": "{{vars.item.managerName}}"
+                    "record_id": "{{vars.item.id}}"
                 },
                 "apply_async": false,
                 "step_variables": [],
                 "pass_parent_env": false,
                 "pass_input_record": false,
-                "workflowReference": "\/api\/3\/workflows\/b165d6ba-da8e-47ce-88f6-65b24ae5fc53"
+                "workflowReference": "\/api\/3\/workflows\/d653b755-cf23-4935-93e4-474acc7534d8"
             },
             "status": null,
-            "top": "620",
-            "left": "100",
+            "top": "280",
+            "left": "40",
             "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
             "group": null,
             "uuid": "73ccb7ae-f5ea-4f91-9bc9-708a9195746e"
@@ -436,7 +460,7 @@
                 "workflowReference": "\/api\/3\/workflows\/7728f4bf-f7aa-470c-a027-077311e473b0"
             },
             "status": null,
-            "top": "440",
+            "top": "400",
             "left": "380",
             "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
             "group": null,
@@ -463,7 +487,7 @@
                 "step_variables": []
             },
             "status": null,
-            "top": "340",
+            "top": "320",
             "left": "380",
             "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928722",
             "group": null,
@@ -476,10 +500,20 @@
             "name": "Provide input -> setup vars",
             "targetStep": "\/api\/3\/workflow_steps\/91bab8a4-78aa-4635-a9e1-32bb665872c3",
             "sourceStep": "\/api\/3\/workflow_steps\/19e2e6e7-3a9f-4056-b60a-5f9a166a54d9",
-            "label": null,
+            "label": "Continue",
             "isExecuted": false,
             "group": null,
             "uuid": "d8883288-2bf6-41a6-bcad-686a314ff85c"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "record updating -> Provide input",
+            "targetStep": "\/api\/3\/workflow_steps\/19e2e6e7-3a9f-4056-b60a-5f9a166a54d9",
+            "sourceStep": "\/api\/3\/workflow_steps\/a5ea51c6-e903-4a62-a27e-918e062d2518",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "8993edce-5eb5-4041-8dcf-1ba897c3a0b8"
         },
         {
             "@type": "WorkflowRoute",
@@ -493,13 +527,23 @@
         },
         {
             "@type": "WorkflowRoute",
-            "name": "Start -> Provide input",
-            "targetStep": "\/api\/3\/workflow_steps\/19e2e6e7-3a9f-4056-b60a-5f9a166a54d9",
+            "name": "Start -> record updating",
+            "targetStep": "\/api\/3\/workflow_steps\/a5ea51c6-e903-4a62-a27e-918e062d2518",
             "sourceStep": "\/api\/3\/workflow_steps\/2f8b3b1d-a670-489a-985e-9c15803e6b4b",
             "label": null,
             "isExecuted": false,
             "group": null,
-            "uuid": "2c30863b-d867-4cef-a32e-23a996b4a78a"
+            "uuid": "4ec79aab-1d29-4a6f-b916-74fac949bbdd"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "update connector config -> synch manager info",
+            "targetStep": "\/api\/3\/workflow_steps\/73ccb7ae-f5ea-4f91-9bc9-708a9195746e",
+            "sourceStep": "\/api\/3\/workflow_steps\/8288a09a-ad48-4fd4-a7bf-0d78cd8ce538",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "bd7527d7-b4d6-4e25-8051-3a2f92470f6e"
         },
         {
             "@type": "WorkflowRoute",
