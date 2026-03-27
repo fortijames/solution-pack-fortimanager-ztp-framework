@@ -18,6 +18,34 @@
     "steps": [
         {
             "@type": "WorkflowStep",
+            "name": "create input_timeout",
+            "description": null,
+            "arguments": {
+                "input_timeout": "true"
+            },
+            "status": null,
+            "top": "440",
+            "left": "340",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "1d8a43e5-4cc7-47b4-a032-36de1bf6d0c8"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "create playbook_status",
+            "description": null,
+            "arguments": {
+                "playbook_status": "{%- set s = {\"status\":\"Ok\",\"message\":\"\"} -%}\n\n{%- if vars.input_timeout -%}\n  {%- do s.update({\"message\":\"Manual Input Timeout.\"}) -%}\n  \n{%- elif vars.steps.synch_manager_info['Error message'] -%}\n  {%-do s.update({\n  \"status\":\"Failed\",\n  \"message\":\"FMG Connectivity Failed. Check your network connectivity and\/or credentials.<br>\"\n    + '<br><code>'\n    + vars.steps.synch_manager_info['Error message']\n    + '<\/code>'\n}) -%}\n  \n{%- elif vars.steps.synch_manager_info.output.status == \"ok\" -%}\n  {%- do s.update({\n    \"message\":\"API to FMG works with the sanitized connector config (\" \n    + vars.connector_config \n    +\"):\"\n    + '<br><code>'\n    + vars.steps.update_connector_config.data.config|to_nice_json\n    + '<\/code>'\n  }) -%}\n\n{%- endif -%}\n{{s}}"
+            },
+            "status": null,
+            "top": "400",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "3d90379b-5a4d-48b4-a20e-3239c2e48a51"
+        },
+        {
+            "@type": "WorkflowStep",
             "name": "Provide input",
             "description": null,
             "arguments": {
@@ -42,7 +70,7 @@
                                 "dataType": "dynamicList",
                                 "formType": "dynamicList",
                                 "required": true,
-                                "_expanded": true,
+                                "_expanded": false,
                                 "mmdUpdate": true,
                                 "collection": false,
                                 "dataSource": [],
@@ -72,12 +100,12 @@
                                 "dataType": "text",
                                 "formType": "ipv4",
                                 "required": true,
-                                "_expanded": true,
+                                "_expanded": false,
                                 "mmdUpdate": true,
                                 "collection": false,
                                 "searchable": true,
                                 "templateUrl": "app\/components\/form\/fields\/webAddress.html",
-                                "defaultValue": "{{vars.steps.set_record_updating.managerIPDomain}}",
+                                "defaultValue": "{{vars.input.records[0].managerIPDomain}}",
                                 "_previousName": "fMGIPAddress",
                                 "playbookField": true,
                                 "requiredQuery": [],
@@ -223,8 +251,8 @@
                                 "dataType": "text",
                                 "formType": "text",
                                 "required": false,
-                                "_expanded": true,
-                                "defaultValue": "{{vars.steps.set_record_updating.managerPort}}",
+                                "_expanded": false,
+                                "defaultValue": "{{vars.input.records[0].managerPort}}",
                                 "_previousName": "fMGP",
                                 "requiredCondition": "notrequired",
                                 "jinjaExpressionView": true,
@@ -241,12 +269,12 @@
                                 "dataType": "text",
                                 "formType": "text",
                                 "required": true,
-                                "_expanded": false,
+                                "_expanded": true,
                                 "mmdUpdate": true,
                                 "collection": false,
                                 "searchable": true,
                                 "templateUrl": "app\/components\/form\/fields\/input.html",
-                                "defaultValue": "{{vars.input.records[0].adminRpcUser}}",
+                                "defaultValue": "{{vars.input.records[0].adminRPCUser}}",
                                 "_previousName": "fMGAdminUser",
                                 "playbookField": true,
                                 "requiredQuery": [],
@@ -291,6 +319,11 @@
                     }
                 },
                 "record": "{{ vars.input.records[0][\"@id\"] }}",
+                "timeout": {
+                    "minutes": 1,
+                    "step_iri": "\/api\/3\/workflow_steps\/1d8a43e5-4cc7-47b4-a032-36de1bf6d0c8",
+                    "undefined": 2
+                },
                 "agent_id": null,
                 "resources": "managers",
                 "is_approval": false,
@@ -324,11 +357,43 @@
                 "external_email_attachments": null
             },
             "status": null,
-            "top": "180",
-            "left": "40",
+            "top": "120",
+            "left": "660",
             "stepType": "\/api\/3\/workflow_step_types\/fc04082a-d7dc-4299-96fb-6837b1baa0fe",
             "group": null,
             "uuid": "19e2e6e7-3a9f-4056-b60a-5f9a166a54d9"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "set record done",
+            "description": null,
+            "arguments": {
+                "message": {
+                    "tags": [],
+                    "type": "\/api\/3\/picklists\/ff599189-3eeb-4c86-acb0-a7915e85ac3b",
+                    "tenant": "",
+                    "thread": false,
+                    "content": "<p><span style=\"text-decoration: underline;\"><strong>Connector Configuration Update Message:<\/strong><\/span><br>{{vars.playbook_status.message}}<\/p>",
+                    "records": ""
+                },
+                "resource": {
+                    "status": "{{\"ztpfStatus\" | picklist(vars.playbook_status.status, \"@id\")}}"
+                },
+                "operation": "Append",
+                "collection": "{{vars.input.records[0]['@id']}}",
+                "__recommend": [],
+                "collectionType": "\/api\/3\/ztpf_managers",
+                "fieldOperation": {
+                    "recordTags": "Append"
+                },
+                "step_variables": []
+            },
+            "status": null,
+            "top": "120",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928722",
+            "group": null,
+            "uuid": "79ab4887-1d60-4347-9500-9d85446d1328"
         },
         {
             "@type": "WorkflowStep",
@@ -348,8 +413,8 @@
                 "step_variables": []
             },
             "status": null,
-            "top": "100",
-            "left": "380",
+            "top": "40",
+            "left": "340",
             "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928722",
             "group": null,
             "uuid": "a5ea51c6-e903-4a62-a27e-918e062d2518"
@@ -362,12 +427,12 @@
                 "fmg_ip": "{{vars.steps.Provide_input.input.fMGIPv4Address or vars.steps.Provide_input.input.fMGDomain or vars.steps.Provide_input.input.fMGIpv6Address }}",
                 "fmg_port": "{{vars.steps.Provide_input.input.fMGPort}}",
                 "fmg_user": "{{vars.steps.Provide_input.input.fMGAdminUser}}",
-                "fmg_password": "{%- if vars.steps.Provide_input.input.fMGPassword -%}{{vars.steps.Provide_input.input.fMGPassword}}{%- else -%}{{vars.input.records[0].adminRpcPassword}}{%- endif -%}",
-                "connector_config": "managerID_{{vars.input.records[0].id}}"
+                "fmg_password": "{%- if vars.steps.Provide_input.input.fMGPassword -%}\n{{vars.steps.Provide_input.input.fMGPassword}}\n{%- else -%}\n{{vars.input.records[0].adminRPCPassword}}\n{%- endif -%}",
+                "connector_config": "{%- if vars.input.records[0].connectorConfig -%}\n{{vars.input.records[0].connectorConfig}}\n{%- else -%}\nmanagerID_{{vars.input.records[0].id}}\n{%- endif -%}"
             },
             "status": null,
-            "top": "240",
-            "left": "380",
+            "top": "120",
+            "left": "340",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
             "uuid": "91bab8a4-78aa-4635-a9e1-32bb665872c3"
@@ -396,7 +461,23 @@
                         "sort": [],
                         "limit": 30,
                         "logic": "AND",
-                        "filters": []
+                        "filters": [
+                            {
+                                "type": "array",
+                                "field": "status",
+                                "value": [
+                                    "\/api\/3\/picklists\/286ba1d0-2aa4-4919-a418-5363e59077dc",
+                                    "\/api\/3\/picklists\/fb778ac2-a7ab-4fff-ba44-fe95b22ddc62"
+                                ],
+                                "module": "status",
+                                "display": "",
+                                "operator": "nin",
+                                "template": "multiselectpicklist",
+                                "OPERATOR_KEY": "$",
+                                "previousOperator": "nin",
+                                "previousTemplate": "multiselectpicklist"
+                            }
+                        ]
                     }
                 },
                 "executeButtonText": "Execute",
@@ -420,23 +501,19 @@
             "name": "synch manager info",
             "description": null,
             "arguments": {
-                "for_each": {
-                    "item": "{{vars.input.records}}",
-                    "parallel": false,
-                    "condition": ""
-                },
                 "arguments": {
-                    "record_id": "{{vars.item.id}}"
+                    "record_id": "{{vars.input.records[0].id}}"
                 },
                 "apply_async": false,
+                "ignore_errors": true,
                 "step_variables": [],
                 "pass_parent_env": false,
                 "pass_input_record": false,
                 "workflowReference": "\/api\/3\/workflows\/d653b755-cf23-4935-93e4-474acc7534d8"
             },
             "status": null,
-            "top": "280",
-            "left": "40",
+            "top": "360",
+            "left": "340",
             "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
             "group": null,
             "uuid": "73ccb7ae-f5ea-4f91-9bc9-708a9195746e"
@@ -460,20 +537,21 @@
                 "workflowReference": "\/api\/3\/workflows\/7728f4bf-f7aa-470c-a027-077311e473b0"
             },
             "status": null,
-            "top": "400",
-            "left": "380",
+            "top": "280",
+            "left": "340",
             "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
             "group": null,
             "uuid": "8288a09a-ad48-4fd4-a7bf-0d78cd8ce538"
         },
         {
             "@type": "WorkflowStep",
-            "name": "Update record with info",
+            "name": "update record connection info",
             "description": null,
             "arguments": {
                 "resource": {
                     "managerPort": "{{vars.fmg_port}}",
                     "adminRPCUser": "{{vars.fmg_user}}",
+                    "connectorConfig": "{{vars.connector_config}}",
                     "managerIPDomain": "{{vars.fmg_ip}}",
                     "adminRPCPassword": "{{vars.fmg_password}}"
                 },
@@ -487,14 +565,44 @@
                 "step_variables": []
             },
             "status": null,
-            "top": "320",
-            "left": "380",
+            "top": "200",
+            "left": "340",
             "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928722",
             "group": null,
             "uuid": "5ac883de-5de5-4e69-9cbf-9c37d8b19c9e"
         }
     ],
     "routes": [
+        {
+            "@type": "WorkflowRoute",
+            "name": "create playbook_status -> set record done",
+            "targetStep": "\/api\/3\/workflow_steps\/79ab4887-1d60-4347-9500-9d85446d1328",
+            "sourceStep": "\/api\/3\/workflow_steps\/3d90379b-5a4d-48b4-a20e-3239c2e48a51",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "60e2b813-110e-4768-954f-c683ccc91e28"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Input Timeout -> create playbook_status",
+            "targetStep": "\/api\/3\/workflow_steps\/3d90379b-5a4d-48b4-a20e-3239c2e48a51",
+            "sourceStep": "\/api\/3\/workflow_steps\/1d8a43e5-4cc7-47b4-a032-36de1bf6d0c8",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "e496288c-f88d-458d-8df6-4886ed2e78f5"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Provide input -> Input Timeout",
+            "targetStep": "\/api\/3\/workflow_steps\/1d8a43e5-4cc7-47b4-a032-36de1bf6d0c8",
+            "sourceStep": "\/api\/3\/workflow_steps\/19e2e6e7-3a9f-4056-b60a-5f9a166a54d9",
+            "label": "",
+            "isExecuted": false,
+            "group": null,
+            "uuid": "1aba0f65-ca33-4f27-a525-26d6a5ba88c2"
+        },
         {
             "@type": "WorkflowRoute",
             "name": "Provide input -> setup vars",
@@ -537,6 +645,16 @@
         },
         {
             "@type": "WorkflowRoute",
+            "name": "synch manager info -> create playbook_status",
+            "targetStep": "\/api\/3\/workflow_steps\/3d90379b-5a4d-48b4-a20e-3239c2e48a51",
+            "sourceStep": "\/api\/3\/workflow_steps\/73ccb7ae-f5ea-4f91-9bc9-708a9195746e",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "1f0d9929-d7b9-4e4d-a88f-84b241efd78e"
+        },
+        {
+            "@type": "WorkflowRoute",
             "name": "update connector config -> synch manager info",
             "targetStep": "\/api\/3\/workflow_steps\/73ccb7ae-f5ea-4f91-9bc9-708a9195746e",
             "sourceStep": "\/api\/3\/workflow_steps\/8288a09a-ad48-4fd4-a7bf-0d78cd8ce538",
@@ -556,7 +674,25 @@
             "uuid": "9da38043-1da2-4954-ad4f-1b618f7ac4fb"
         }
     ],
-    "groups": [],
+    "groups": [
+        {
+            "@type": "WorkflowGroup",
+            "name": "Details",
+            "description": "Initiated by the user to updated, or just rebuild, the connector configuration for the manager. The connector configuration is built using data that is already stored on the record OR the data entered by the user at the input prompt.\n\nIf anything goes wrong in this process we set the Managed to *Failed* and details of the failure goes into the Manager comments.",
+            "type": "note",
+            "isCollapsed": false,
+            "hasTriggerStep": false,
+            "hideInLogs": false,
+            "metadata": [],
+            "reusable": false,
+            "top": "200",
+            "left": "640",
+            "height": "205",
+            "width": "498",
+            "uuid": "484a5dfb-2fe0-4887-89d0-763612fac707",
+            "recordTags": []
+        }
+    ],
     "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
     "playbookOrigin": "\/api\/3\/picklists\/b6d710a9-a8ec-41ec-8817-fe9fa062fcdd",
     "isEditable": false,
