@@ -1,0 +1,163 @@
+{
+    "@context": "\/api\/3\/contexts\/Workflow",
+    "@type": "Workflow",
+    "triggerLimit": null,
+    "name": "> get fmg system metafields - device",
+    "aliasName": null,
+    "tag": null,
+    "description": "API call for \/dvmdb\/_meta_fields\/device.",
+    "isActive": true,
+    "debug": false,
+    "singleRecordExecution": false,
+    "remoteExecutableFlag": false,
+    "parameters": [
+        "connector_config"
+    ],
+    "synchronous": false,
+    "collection": "\/api\/3\/workflow_collections\/c15a8515-33ae-46d2-9166-fa6fa47ac762",
+    "versions": [],
+    "triggerStep": "\/api\/3\/workflow_steps\/8ba21160-5c51-47e7-b8d1-7539ea35b8c6",
+    "steps": [
+        {
+            "@type": "WorkflowStep",
+            "name": "fmg_api",
+            "description": null,
+            "arguments": {
+                "name": "Fortinet FortiManager JSON RPC",
+                "when": "{{vars.connector_config}}",
+                "config": "{{vars.connector_config}}",
+                "params": {
+                    "url": "{{vars.api_url}}",
+                    "data": "{{vars.api_data}}"
+                },
+                "version": "1.1.0",
+                "connector": "fortinet-fortimanager-json-rpc",
+                "operation": "json_rpc_get",
+                "operationTitle": "JSON RPC Get",
+                "pickFromTenant": false,
+                "step_variables": []
+            },
+            "status": null,
+            "top": "120",
+            "left": "340",
+            "stepType": "\/api\/3\/workflow_step_types\/0bfed618-0316-11e7-93ae-92361f002671",
+            "group": null,
+            "uuid": "cd2cccf5-9a2d-4586-98c2-17fc88fe82a2"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "return",
+            "description": null,
+            "arguments": {
+                "output": "{{vars.steps.fmg_api.data}}",
+                "params": "{{vars.input.params}}",
+                "status": "{%- set ret = vars.status -%}\n{%- if not vars.connector_config -%}\n{%- do ret.update({\n  \"error\":true,\n  \"message\":\"Connector config missing.\"\n}) -%}\n{%- endif -%}\n{{ret}}"
+            },
+            "status": null,
+            "top": "120",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "0eaed3d8-5108-4745-99a3-4565f1fe3af6"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "setup vars",
+            "description": null,
+            "arguments": {
+                "status": "{# Set a default status #}\n{%- set ret = {} -%}\n{%- do ret.update({\n  \"error\":false,\n  \"message\":\"\"\n}) -%}\n{{ret}}",
+                "api_url": "\/dvmdb\/_meta_fields\/device",
+                "api_data": "{%- set ret = {\n  \"option\": []\n} -%}\n{{ret}}",
+                "connector_config": "{{vars.input.params['connector_config']}}"
+            },
+            "status": null,
+            "top": "40",
+            "left": "340",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "f6e5bdc7-f4dc-4156-9a70-a989a11103ab"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Start",
+            "description": null,
+            "arguments": {
+                "__triggerLimit": true,
+                "step_variables": {
+                    "input": {
+                        "params": []
+                    }
+                },
+                "triggerOnSource": true,
+                "triggerOnReplicate": false
+            },
+            "status": null,
+            "top": "40",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/b348f017-9a94-471f-87f8-ce88b6a7ad62",
+            "group": null,
+            "uuid": "8ba21160-5c51-47e7-b8d1-7539ea35b8c6"
+        }
+    ],
+    "routes": [
+        {
+            "@type": "WorkflowRoute",
+            "name": "fmg_api -> return",
+            "targetStep": "\/api\/3\/workflow_steps\/0eaed3d8-5108-4745-99a3-4565f1fe3af6",
+            "sourceStep": "\/api\/3\/workflow_steps\/cd2cccf5-9a2d-4586-98c2-17fc88fe82a2",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "316efcf2-389a-4333-be11-756cbec369d5"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "setup vars -> fmg_api",
+            "targetStep": "\/api\/3\/workflow_steps\/cd2cccf5-9a2d-4586-98c2-17fc88fe82a2",
+            "sourceStep": "\/api\/3\/workflow_steps\/f6e5bdc7-f4dc-4156-9a70-a989a11103ab",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "d713fa71-81be-491d-8f5c-178025c4c222"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Start -> setup vars",
+            "targetStep": "\/api\/3\/workflow_steps\/f6e5bdc7-f4dc-4156-9a70-a989a11103ab",
+            "sourceStep": "\/api\/3\/workflow_steps\/8ba21160-5c51-47e7-b8d1-7539ea35b8c6",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "c83421fa-4abd-43a2-89d3-bc0035dd65b6"
+        }
+    ],
+    "groups": [
+        {
+            "@type": "WorkflowGroup",
+            "name": "Details",
+            "description": "Call FMG for system info using:\n\/dvmdb\/_meta_fields\/device",
+            "type": "note",
+            "isCollapsed": false,
+            "hasTriggerStep": false,
+            "hideInLogs": false,
+            "metadata": [],
+            "reusable": false,
+            "top": "60",
+            "left": "620",
+            "height": "99",
+            "width": "245",
+            "uuid": "28cdcb67-d6c0-48aa-87e0-0d164263bacf",
+            "recordTags": []
+        }
+    ],
+    "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+    "playbookOrigin": "\/api\/3\/picklists\/b6d710a9-a8ec-41ec-8817-fe9fa062fcdd",
+    "isEditable": false,
+    "uuid": "d7d4198e-4bc5-456b-a2c8-e84a12f0f2c5",
+    "owners": [],
+    "isPrivate": false,
+    "deletedAt": null,
+    "recordTags": [
+        "fmg_api"
+    ]
+}

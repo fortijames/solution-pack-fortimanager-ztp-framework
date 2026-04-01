@@ -1,0 +1,252 @@
+{
+    "@context": "\/api\/3\/contexts\/Workflow",
+    "@type": "Workflow",
+    "triggerLimit": null,
+    "name": "> retrieve new fmg devices - by manager record_id",
+    "aliasName": null,
+    "tag": null,
+    "description": "Get devices with minimal information from FMG and create a device record to be managed.",
+    "isActive": true,
+    "debug": false,
+    "singleRecordExecution": false,
+    "remoteExecutableFlag": false,
+    "parameters": [
+        "record_id"
+    ],
+    "synchronous": false,
+    "collection": "\/api\/3\/workflow_collections\/517fb52d-36f5-4bac-a344-7d4599d7dec6",
+    "versions": [],
+    "triggerStep": "\/api\/3\/workflow_steps\/d6f21dcd-21da-4d8e-9044-c27424b4cce8",
+    "steps": [
+        {
+            "@type": "WorkflowStep",
+            "name": "create device records",
+            "description": null,
+            "arguments": {
+                "for_each": {
+                    "item": "{{vars.fmg_devices}}",
+                    "__bulk": true,
+                    "parallel": false,
+                    "condition": "",
+                    "batch_size": 100
+                },
+                "resource": {
+                    "name": "{{vars.item[\"name\"]}}",
+                    "status": "\/api\/3\/picklists\/83db709f-e76b-4f0a-883b-e5c0dbb0f6da",
+                    "__replace": "false",
+                    "adminStatus": "\/api\/3\/picklists\/03d3043d-5010-47bd-9176-3389facfea6b",
+                    "ztpfManagers": "{{vars.steps.find_manager[0]['@id']}}"
+                },
+                "_showJson": false,
+                "operation": "Overwrite",
+                "collection": "\/api\/3\/upsert\/ztpf_devices",
+                "__recommend": [],
+                "fieldOperation": {
+                    "recordTags": "Overwrite"
+                },
+                "step_variables": []
+            },
+            "status": null,
+            "top": "260",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/2597053c-e718-44b4-8394-4d40fe26d357",
+            "group": null,
+            "uuid": "84d3f818-2b66-40fe-99a1-0921a7816ac9"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "create fmg devices vars",
+            "description": null,
+            "arguments": {
+                "fmg_devices": "{{vars.steps.get_fmg_devices.output['get_response']}}"
+            },
+            "status": null,
+            "top": "180",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "f98284da-48cc-478e-bb69-21357cff044f"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "find manager",
+            "description": null,
+            "arguments": {
+                "query": {
+                    "sort": [],
+                    "limit": 30,
+                    "logic": "AND",
+                    "filters": [
+                        {
+                            "type": "primitive",
+                            "field": "id",
+                            "value": "{{vars.input.params['record_id']}}",
+                            "operator": "eq",
+                            "_operator": "eq"
+                        }
+                    ],
+                    "__selectFields": [
+                        "name",
+                        "connectorConfig",
+                        "id"
+                    ]
+                },
+                "module": "ztpf_managers?$limit=1",
+                "checkboxFields": true,
+                "step_variables": []
+            },
+            "status": null,
+            "top": "40",
+            "left": "360",
+            "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928770",
+            "group": null,
+            "uuid": "18076218-ea5c-4c7b-ba16-89f3123c07ff"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "get fmg devices",
+            "description": null,
+            "arguments": {
+                "arguments": {
+                    "api_adom": "",
+                    "api_fields": "{{vars.api_fields}}",
+                    "api_filter": "",
+                    "api_loadsub": "0",
+                    "connector_config": "{{vars.connector_config}}"
+                },
+                "apply_async": false,
+                "step_variables": [],
+                "pass_parent_env": false,
+                "pass_input_record": false,
+                "workflowReference": "\/api\/3\/workflows\/000fef7b-5d40-4010-beb2-c6144d0bd12e"
+            },
+            "status": null,
+            "top": "120",
+            "left": "360",
+            "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
+            "group": null,
+            "uuid": "edb07dc7-1233-4b60-9705-1de7269e52ec"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "setup vars",
+            "description": null,
+            "arguments": {
+                "record_id": "{{vars.steps.find_manager[0].id}}",
+                "api_fields": "[\"name\"]",
+                "manager_fqid": "{{vars.steps.find_manager[0]['@id']}}",
+                "connector_config": "{{vars.steps.find_manager[0].connectorConfig}}"
+            },
+            "status": null,
+            "top": "80",
+            "left": "680",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "d7faad78-19c9-47bb-8383-79613c0fc916"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Start",
+            "description": null,
+            "arguments": {
+                "__triggerLimit": true,
+                "step_variables": {
+                    "input": {
+                        "params": []
+                    }
+                },
+                "triggerOnSource": true,
+                "triggerOnReplicate": false
+            },
+            "status": null,
+            "top": "40",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/b348f017-9a94-471f-87f8-ce88b6a7ad62",
+            "group": null,
+            "uuid": "d6f21dcd-21da-4d8e-9044-c27424b4cce8"
+        }
+    ],
+    "routes": [
+        {
+            "@type": "WorkflowRoute",
+            "name": "create fmg devices vars -> create device records",
+            "targetStep": "\/api\/3\/workflow_steps\/84d3f818-2b66-40fe-99a1-0921a7816ac9",
+            "sourceStep": "\/api\/3\/workflow_steps\/f98284da-48cc-478e-bb69-21357cff044f",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "da75185b-202c-4642-b825-51d43d3b8381"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "find manager -> Copy of setup vars",
+            "targetStep": "\/api\/3\/workflow_steps\/d7faad78-19c9-47bb-8383-79613c0fc916",
+            "sourceStep": "\/api\/3\/workflow_steps\/18076218-ea5c-4c7b-ba16-89f3123c07ff",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "4939c061-57a0-49e9-844e-93ec4d6185ad"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "get fmg devices -> create devices vars",
+            "targetStep": "\/api\/3\/workflow_steps\/f98284da-48cc-478e-bb69-21357cff044f",
+            "sourceStep": "\/api\/3\/workflow_steps\/edb07dc7-1233-4b60-9705-1de7269e52ec",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "8e8abbcc-d629-4ab9-8513-ed1541124a6e"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "setup vars -> get fmg devices",
+            "targetStep": "\/api\/3\/workflow_steps\/edb07dc7-1233-4b60-9705-1de7269e52ec",
+            "sourceStep": "\/api\/3\/workflow_steps\/d7faad78-19c9-47bb-8383-79613c0fc916",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "d38595e4-d43f-4780-ba70-52b0d5cb5ae5"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Start -> find manager",
+            "targetStep": "\/api\/3\/workflow_steps\/18076218-ea5c-4c7b-ba16-89f3123c07ff",
+            "sourceStep": "\/api\/3\/workflow_steps\/d6f21dcd-21da-4d8e-9044-c27424b4cce8",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "4a8ffad5-022c-4aeb-9fe0-cf28858d3140"
+        }
+    ],
+    "groups": [
+        {
+            "@type": "WorkflowGroup",
+            "name": "Details",
+            "description": "Query FMG for devices that might be new. By default we will query for all devices and only create new device records for devices we do not yet know about. This can be limited by changing the setting of the ZTPF Manager record.",
+            "type": "note",
+            "isCollapsed": false,
+            "hasTriggerStep": false,
+            "hideInLogs": false,
+            "metadata": [],
+            "reusable": false,
+            "top": "200",
+            "left": "360",
+            "height": "207",
+            "width": "264",
+            "uuid": "790f2f45-38c0-41f0-b785-81edaa48d3dc",
+            "recordTags": []
+        }
+    ],
+    "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+    "playbookOrigin": "\/api\/3\/picklists\/b6d710a9-a8ec-41ec-8817-fe9fa062fcdd",
+    "isEditable": false,
+    "uuid": "fa5eea78-898f-4d08-8d39-f30736803467",
+    "owners": [],
+    "isPrivate": false,
+    "deletedAt": null,
+    "recordTags": [
+        "record_management",
+        "ztpfDevice",
+        "ztpfManager"
+    ]
+}

@@ -15,11 +15,20 @@
         "fmg_user",
         "fmg_pass",
         "fmg_port",
-        "connector_config"
+        "record_id"
     ],
     "synchronous": false,
     "collection": "\/api\/3\/workflow_collections\/517fb52d-36f5-4bac-a344-7d4599d7dec6",
-    "versions": [],
+    "versions": [
+        {
+            "@type": "WorkflowVersion",
+            "note": "original working - before adding record_id support.",
+            "json": "{\"name\":\"> update fortimanager-json-rpc connector config\",\"description\":\"Rebuild the FMG JSON-RPC Connector.\",\"isActive\":true,\"debug\":false,\"singleRecordExecution\":false,\"remoteExecutableFlag\":false,\"parameters\":[\"fmg_ip\",\"fmg_user\",\"fmg_pass\",\"fmg_port\",\"connector_config\"],\"synchronous\":false,\"triggerStep\":\"\/api\/3\/workflow_steps\/5e313d09-2534-496b-8eed-f99086b41030\",\"steps\":[{\"@id\":\"\/api\/3\/workflow_steps\/742dc0ba-cd91-4a53-bda1-ab41a0c38012\",\"@type\":\"WorkflowStep\",\"name\":\"check_connector_configs\",\"description\":null,\"arguments\":{\"existing_config\":\"{%- set config  = vars.connector_configs | json_query('[?name==`{}`]'.format(vars.connector_config)) -%}\\n{%- if config|length > 0 -%}\\n{{config[0]}}\\n{%- else -%}\\n0\\n{%- endif -%}\",\"connector_ip_list\":\"{{vars.connector_configs|json_query('[].config.address')}}\",\"connector_name_list\":\"{{vars.connector_configs|json_query('[].name')}}\",\"connector_nameip_list\":\"{{vars.connector_configs|json_query('[][name,config.address,id]')}}\"},\"status\":null,\"top\":\"120\",\"left\":\"460\",\"stepType\":{\"@id\":\"\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f\",\"@type\":\"WorkflowStepType\",\"name\":\"SetVariable\",\"displayName\":\"Set Variable\",\"widget\":null,\"collection\":\"\/api\/3\/step_type_collections\/c04ab14a-669e-4502-92a3-3beef3cf6219\",\"arguments\":{\"script\":\"\/wf\/workflow\/tasks\/set_multiple\"},\"parent\":{\"@id\":\"\/api\/3\/workflow_step_types\/ee73e569-2188-43fe-a7f0-1964ba82a4de\",\"@type\":\"WorkflowStepType\",\"name\":\"RunScript\",\"displayName\":\"Run Utility Functions\",\"widget\":null,\"collection\":\"\/api\/3\/step_type_collections\/f3561053-417f-4591-8fa4-ca9da8e1da8b\",\"arguments\":[],\"parent\":null,\"icon\":\"fa fa-file-code-o\",\"background\":\"#ba0017\",\"index\":340,\"visible\":false,\"deprecated\":false,\"description\":null,\"uuid\":\"ee73e569-2188-43fe-a7f0-1964ba82a4de\",\"id\":2},\"icon\":\"icon icon-set-variables\",\"background\":\"#f7ac20\",\"index\":140,\"visible\":true,\"deprecated\":false,\"description\":null,\"uuid\":\"04d0cf46-b6a8-42c4-8683-60a7eaa69e8f\",\"id\":6},\"group\":null,\"uuid\":\"742dc0ba-cd91-4a53-bda1-ab41a0c38012\"},{\"@id\":\"\/api\/3\/workflow_steps\/5c67aa46-1f34-4ed1-bdeb-323b6ac566d8\",\"@type\":\"WorkflowStep\",\"name\":\"config exists\",\"description\":null,\"arguments\":{\"config_api_url\":\"{{vars.connector_api_url}}{{vars.existing_config['id']}}\/?format=json\"},\"status\":null,\"top\":\"460\",\"left\":\"560\",\"stepType\":{\"@id\":\"\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f\",\"@type\":\"WorkflowStepType\",\"name\":\"SetVariable\",\"displayName\":\"Set Variable\",\"widget\":null,\"collection\":\"\/api\/3\/step_type_collections\/c04ab14a-669e-4502-92a3-3beef3cf6219\",\"arguments\":{\"script\":\"\/wf\/workflow\/tasks\/set_multiple\"},\"parent\":{\"@id\":\"\/api\/3\/workflow_step_types\/ee73e569-2188-43fe-a7f0-1964ba82a4de\",\"@type\":\"WorkflowStepType\",\"name\":\"RunScript\",\"displayName\":\"Run Utility Functions\",\"widget\":null,\"collection\":\"\/api\/3\/step_type_collections\/f3561053-417f-4591-8fa4-ca9da8e1da8b\",\"arguments\":[],\"parent\":null,\"icon\":\"fa fa-file-code-o\",\"background\":\"#ba0017\",\"index\":340,\"visible\":false,\"deprecated\":false,\"description\":null,\"uuid\":\"ee73e569-2188-43fe-a7f0-1964ba82a4de\",\"id\":2},\"icon\":\"icon icon-set-variables\",\"background\":\"#f7ac20\",\"index\":140,\"visible\":true,\"deprecated\":false,\"description\":null,\"uuid\":\"04d0cf46-b6a8-42c4-8683-60a7eaa69e8f\",\"id\":6},\"group\":null,\"uuid\":\"5c67aa46-1f34-4ed1-bdeb-323b6ac566d8\"},{\"@id\":\"\/api\/3\/workflow_steps\/decb8527-e10a-47a0-9694-aa6aa02f5538\",\"@type\":\"WorkflowStep\",\"name\":\"connector config\",\"description\":null,\"arguments\":{\"new_connector_config\":\"{\\n\\\"connector\\\": \\\"{{vars.connector_id}}\\\",\\n\\\"name\\\": \\\"{{vars.connector_config}}\\\",\\n\\\"default\\\": false,\\n\\\"config\\\": {\\n  \\\"address\\\": \\\"{{vars.fmg_ip}}\\\",\\n  \\\"port\\\":\\\"{{vars.fmg_port}}\\\",\\n  \\\"auth_method\\\": \\\"Username\/Password\\\",\\n  \\\"username\\\":\\\"{{vars.fmg_user}}\\\",\\n  \\\"password\\\":\\\"{{vars.fmg_pass}}\\\",\\n  \\\"verify_ssl\\\" : false,\\n  \\\"verbose_json\\\": true\\n  }\\n}\"},\"status\":null,\"top\":\"260\",\"left\":\"160\",\"stepType\":{\"@id\":\"\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f\",\"@type\":\"WorkflowStepType\",\"name\":\"SetVariable\",\"displayName\":\"Set Variable\",\"widget\":null,\"collection\":\"\/api\/3\/step_type_collections\/c04ab14a-669e-4502-92a3-3beef3cf6219\",\"arguments\":{\"script\":\"\/wf\/workflow\/tasks\/set_multiple\"},\"parent\":{\"@id\":\"\/api\/3\/workflow_step_types\/ee73e569-2188-43fe-a7f0-1964ba82a4de\",\"@type\":\"WorkflowStepType\",\"name\":\"RunScript\",\"displayName\":\"Run Utility Functions\",\"widget\":null,\"collection\":\"\/api\/3\/step_type_collections\/f3561053-417f-4591-8fa4-ca9da8e1da8b\",\"arguments\":[],\"parent\":null,\"icon\":\"fa fa-file-code-o\",\"background\":\"#ba0017\",\"index\":340,\"visible\":false,\"deprecated\":false,\"description\":null,\"uuid\":\"ee73e569-2188-43fe-a7f0-1964ba82a4de\",\"id\":2},\"icon\":\"icon icon-set-variables\",\"background\":\"#f7ac20\",\"index\":140,\"visible\":true,\"deprecated\":false,\"description\":null,\"uuid\":\"04d0cf46-b6a8-42c4-8683-60a7eaa69e8f\",\"id\":6},\"group\":null,\"uuid\":\"decb8527-e10a-47a0-9694-aa6aa02f5538\"},{\"@id\":\"\/api\/3\/workflow_steps\/7a18eacc-19b7-4f13-92b3-c70486bc887d\",\"@type\":\"WorkflowStep\",\"name\":\"create_connector_config\",\"description\":null,\"arguments\":{\"params\":{\"iri\":\"{{vars.connector_api_url}}\",\"body\":\"{{vars.new_connector_config}}\",\"method\":\"POST\"},\"version\":\"3.4.0\",\"connector\":\"cyops_utilities\",\"operation\":\"make_cyops_request\",\"operationTitle\":\"FSR: Make FortiSOAR API Call\",\"step_variables\":{}},\"status\":null,\"top\":\"160\",\"left\":\"160\",\"stepType\":{\"@id\":\"\/api\/3\/workflow_step_types\/0109f35d-090b-4a2b-bd8a-94cbc3508562\",\"@type\":\"WorkflowStepType\",\"name\":\"CyopsUtilites\",\"displayName\":\"Utilities\",\"widget\":null,\"collection\":\"\/api\/3\/step_type_collections\/f3561053-417f-4591-8fa4-ca9da8e1da8b\",\"arguments\":{\"script\":\"\/wf\/workflow\/tasks\/connector\",\"arguments\":{\"connector\":\"cyops_utilities\"}},\"parent\":{\"@id\":\"\/api\/3\/workflow_step_types\/ee73e569-2188-43fe-a7f0-1964ba82a4de\",\"@type\":\"WorkflowStepType\",\"name\":\"RunScript\",\"displayName\":\"Run Utility Functions\",\"widget\":null,\"collection\":\"\/api\/3\/step_type_collections\/f3561053-417f-4591-8fa4-ca9da8e1da8b\",\"arguments\":[],\"parent\":null,\"icon\":\"fa fa-file-code-o\",\"background\":\"#ba0017\",\"index\":340,\"visible\":false,\"deprecated\":false,\"description\":null,\"uuid\":\"ee73e569-2188-43fe-a7f0-1964ba82a4de\",\"id\":2},\"icon\":\"icon icon-utilities\",\"background\":\"#ff7600\",\"index\":321,\"visible\":true,\"deprecated\":false,\"description\":null,\"uuid\":\"0109f35d-090b-4a2b-bd8a-94cbc3508562\",\"id\":16},\"group\":null,\"uuid\":\"7a18eacc-19b7-4f13-92b3-c70486bc887d\"},{\"@id\":\"\/api\/3\/workflow_steps\/4c557c0b-befd-474d-aa71-9cf9d70f43ca\",\"@type\":\"WorkflowStep\",\"name\":\"delete_connector_config\",\"description\":null,\"arguments\":{\"params\":{\"iri\":\"{{vars.config_api_url}}\",\"body\":\"\",\"method\":\"DELETE\"},\"version\":\"3.7.0\",\"connector\":\"cyops_utilities\",\"operation\":\"make_cyops_request\",\"operationTitle\":\"FSR: Make FortiSOAR API Call\",\"step_variables\":{}},\"status\":null,\"top\":\"380\",\"left\":\"160\",\"stepType\":{\"@id\":\"\/api\/3\/workflow_step_types\/0109f35d-090b-4a2b-bd8a-94cbc3508562\",\"@type\":\"WorkflowStepType\",\"name\":\"CyopsUtilites\",\"displayName\":\"Utilities\",\"widget\":null,\"collection\":\"\/api\/3\/step_type_collections\/f3561053-417f-4591-8fa4-ca9da8e1da8b\",\"arguments\":{\"script\":\"\/wf\/workflow\/tasks\/connector\",\"arguments\":{\"connector\":\"cyops_utilities\"}},\"parent\":{\"@id\":\"\/api\/3\/workflow_step_types\/ee73e569-2188-43fe-a7f0-1964ba82a4de\",\"@type\":\"WorkflowStepType\",\"name\":\"RunScript\",\"displayName\":\"Run Utility Functions\",\"widget\":null,\"collection\":\"\/api\/3\/step_type_collections\/f3561053-417f-4591-8fa4-ca9da8e1da8b\",\"arguments\":[],\"parent\":null,\"icon\":\"fa fa-file-code-o\",\"background\":\"#ba0017\",\"index\":340,\"visible\":false,\"deprecated\":false,\"description\":null,\"uuid\":\"ee73e569-2188-43fe-a7f0-1964ba82a4de\",\"id\":2},\"icon\":\"icon icon-utilities\",\"background\":\"#ff7600\",\"index\":321,\"visible\":true,\"deprecated\":false,\"description\":null,\"uuid\":\"0109f35d-090b-4a2b-bd8a-94cbc3508562\",\"id\":16},\"group\":null,\"uuid\":\"4c557c0b-befd-474d-aa71-9cf9d70f43ca\"},{\"@id\":\"\/api\/3\/workflow_steps\/1d5e981b-9469-4311-9045-80270087e7d8\",\"@type\":\"WorkflowStep\",\"name\":\"does_config_exist\",\"description\":null,\"arguments\":{\"conditions\":[{\"option\":\"Yes\",\"step_iri\":\"\/api\/3\/workflow_steps\/5c67aa46-1f34-4ed1-bdeb-323b6ac566d8\",\"condition\":\"{{ vars.existing_config != 0 }}\",\"step_name\":\"config exists\"},{\"option\":\"No\",\"default\":true,\"step_iri\":\"\/api\/3\/workflow_steps\/decb8527-e10a-47a0-9694-aa6aa02f5538\",\"step_name\":\"connector config\"}],\"step_variables\":{}},\"status\":null,\"top\":\"200\",\"left\":\"460\",\"stepType\":{\"@id\":\"\/api\/3\/workflow_step_types\/12254cf5-5db7-4b1a-8cb1-3af081924b28\",\"@type\":\"WorkflowStepType\",\"name\":\"Decision\",\"displayName\":\"Decision\",\"widget\":null,\"collection\":\"\/api\/3\/step_type_collections\/c06cd820-a031-433b-9094-220dda64b4e4\",\"arguments\":{\"script\":\"\/wf\/workflow\/tasks\/cond\"},\"parent\":{\"@id\":\"\/api\/3\/workflow_step_types\/ee73e569-2188-43fe-a7f0-1964ba82a4de\",\"@type\":\"WorkflowStepType\",\"name\":\"RunScript\",\"displayName\":\"Run Utility Functions\",\"widget\":null,\"collection\":\"\/api\/3\/step_type_collections\/f3561053-417f-4591-8fa4-ca9da8e1da8b\",\"arguments\":[],\"parent\":null,\"icon\":\"fa fa-file-code-o\",\"background\":\"#ba0017\",\"index\":340,\"visible\":false,\"deprecated\":false,\"description\":null,\"uuid\":\"ee73e569-2188-43fe-a7f0-1964ba82a4de\",\"id\":2},\"icon\":\"icon icon-decision\",\"background\":\"#52b200\",\"index\":210,\"visible\":true,\"deprecated\":false,\"description\":null,\"uuid\":\"12254cf5-5db7-4b1a-8cb1-3af081924b28\",\"id\":8},\"group\":null,\"uuid\":\"1d5e981b-9469-4311-9045-80270087e7d8\"},{\"@id\":\"\/api\/3\/workflow_steps\/72464ce4-f6f9-4221-a8ee-6b7ee9313263\",\"@type\":\"WorkflowStep\",\"name\":\"extract_connector_details\",\"description\":null,\"arguments\":{\"connector_id\":\"{{vars.steps.get_connector_details.data.id}}\",\"connector_configs\":\"{{vars.steps.get_connector_details.data.configuration}}\",\"connector_data_test\":\"{{vars.steps.get_connector_details}}\"},\"status\":null,\"top\":\"140\",\"left\":\"780\",\"stepType\":{\"@id\":\"\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f\",\"@type\":\"WorkflowStepType\",\"name\":\"SetVariable\",\"displayName\":\"Set Variable\",\"widget\":null,\"collection\":\"\/api\/3\/step_type_collections\/c04ab14a-669e-4502-92a3-3beef3cf6219\",\"arguments\":{\"script\":\"\/wf\/workflow\/tasks\/set_multiple\"},\"parent\":{\"@id\":\"\/api\/3\/workflow_step_types\/ee73e569-2188-43fe-a7f0-1964ba82a4de\",\"@type\":\"WorkflowStepType\",\"name\":\"RunScript\",\"displayName\":\"Run Utility Functions\",\"widget\":null,\"collection\":\"\/api\/3\/step_type_collections\/f3561053-417f-4591-8fa4-ca9da8e1da8b\",\"arguments\":[],\"parent\":null,\"icon\":\"fa fa-file-code-o\",\"background\":\"#ba0017\",\"index\":340,\"visible\":false,\"deprecated\":false,\"description\":null,\"uuid\":\"ee73e569-2188-43fe-a7f0-1964ba82a4de\",\"id\":2},\"icon\":\"icon icon-set-variables\",\"background\":\"#f7ac20\",\"index\":140,\"visible\":true,\"deprecated\":false,\"description\":null,\"uuid\":\"04d0cf46-b6a8-42c4-8683-60a7eaa69e8f\",\"id\":6},\"group\":null,\"uuid\":\"72464ce4-f6f9-4221-a8ee-6b7ee9313263\"},{\"@id\":\"\/api\/3\/workflow_steps\/27483ee8-69c5-4f8c-95ea-0b362fe91467\",\"@type\":\"WorkflowStep\",\"name\":\"get_connector_details\",\"description\":null,\"arguments\":{\"params\":{\"iri\":\"\/api\/integration\/connectors\/fortinet-fortimanager-json-rpc\/1.0.1\/?format=json\",\"body\":\"{}\",\"method\":\"POST\"},\"version\":\"3.2.2\",\"connector\":\"cyops_utilities\",\"operation\":\"make_cyops_request\",\"operationTitle\":\"FSR: Make FortiSOAR API Call\",\"step_variables\":{}},\"status\":null,\"top\":\"40\",\"left\":\"780\",\"stepType\":{\"@id\":\"\/api\/3\/workflow_step_types\/0109f35d-090b-4a2b-bd8a-94cbc3508562\",\"@type\":\"WorkflowStepType\",\"name\":\"CyopsUtilites\",\"displayName\":\"Utilities\",\"widget\":null,\"collection\":\"\/api\/3\/step_type_collections\/f3561053-417f-4591-8fa4-ca9da8e1da8b\",\"arguments\":{\"script\":\"\/wf\/workflow\/tasks\/connector\",\"arguments\":{\"connector\":\"cyops_utilities\"}},\"parent\":{\"@id\":\"\/api\/3\/workflow_step_types\/ee73e569-2188-43fe-a7f0-1964ba82a4de\",\"@type\":\"WorkflowStepType\",\"name\":\"RunScript\",\"displayName\":\"Run Utility Functions\",\"widget\":null,\"collection\":\"\/api\/3\/step_type_collections\/f3561053-417f-4591-8fa4-ca9da8e1da8b\",\"arguments\":[],\"parent\":null,\"icon\":\"fa fa-file-code-o\",\"background\":\"#ba0017\",\"index\":340,\"visible\":false,\"deprecated\":false,\"description\":null,\"uuid\":\"ee73e569-2188-43fe-a7f0-1964ba82a4de\",\"id\":2},\"icon\":\"icon icon-utilities\",\"background\":\"#ff7600\",\"index\":321,\"visible\":true,\"deprecated\":false,\"description\":null,\"uuid\":\"0109f35d-090b-4a2b-bd8a-94cbc3508562\",\"id\":16},\"group\":null,\"uuid\":\"27483ee8-69c5-4f8c-95ea-0b362fe91467\"},{\"@id\":\"\/api\/3\/workflow_steps\/6a0836b2-906e-4099-820e-d0d46f9aaa84\",\"@type\":\"WorkflowStep\",\"name\":\"setup vars\",\"description\":null,\"arguments\":{\"fmg_ip\":\"{{vars.input.params['fmg_ip']}}\",\"fmg_pass\":\"{{vars.input.params['fmg_pass']}}\",\"fmg_port\":\"{{vars.input.params['fmg_port']}}\",\"fmg_user\":\"{{vars.input.params['fmg_user']}}\",\"connector_config\":\"{{vars.input.params['connector_config']}}\",\"connector_api_url\":\"\/api\/integration\/configuration\/\"},\"status\":null,\"top\":\"40\",\"left\":\"460\",\"stepType\":{\"@id\":\"\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f\",\"@type\":\"WorkflowStepType\",\"name\":\"SetVariable\",\"displayName\":\"Set Variable\",\"widget\":null,\"collection\":\"\/api\/3\/step_type_collections\/c04ab14a-669e-4502-92a3-3beef3cf6219\",\"arguments\":{\"script\":\"\/wf\/workflow\/tasks\/set_multiple\"},\"parent\":{\"@id\":\"\/api\/3\/workflow_step_types\/ee73e569-2188-43fe-a7f0-1964ba82a4de\",\"@type\":\"WorkflowStepType\",\"name\":\"RunScript\",\"displayName\":\"Run Utility Functions\",\"widget\":null,\"collection\":\"\/api\/3\/step_type_collections\/f3561053-417f-4591-8fa4-ca9da8e1da8b\",\"arguments\":[],\"parent\":null,\"icon\":\"fa fa-file-code-o\",\"background\":\"#ba0017\",\"index\":340,\"visible\":false,\"deprecated\":false,\"description\":null,\"uuid\":\"ee73e569-2188-43fe-a7f0-1964ba82a4de\",\"id\":2},\"icon\":\"icon icon-set-variables\",\"background\":\"#f7ac20\",\"index\":140,\"visible\":true,\"deprecated\":false,\"description\":null,\"uuid\":\"04d0cf46-b6a8-42c4-8683-60a7eaa69e8f\",\"id\":6},\"group\":null,\"uuid\":\"6a0836b2-906e-4099-820e-d0d46f9aaa84\"},{\"@id\":\"\/api\/3\/workflow_steps\/5e313d09-2534-496b-8eed-f99086b41030\",\"@type\":\"WorkflowStep\",\"name\":\"Start\",\"description\":null,\"arguments\":{\"__triggerLimit\":true,\"step_variables\":{\"input\":{\"params\":[]}},\"triggerOnSource\":true,\"triggerOnReplicate\":false},\"status\":null,\"top\":\"40\",\"left\":\"40\",\"stepType\":{\"@id\":\"\/api\/3\/workflow_step_types\/b348f017-9a94-471f-87f8-ce88b6a7ad62\",\"@type\":\"WorkflowStepType\",\"name\":\"cybersponse.abstract_trigger\",\"displayName\":\"Referenced\",\"widget\":null,\"collection\":\"\/api\/3\/step_type_collections\/51627f80-3dd5-4260-b86d-cc53a7cece15\",\"arguments\":[],\"parent\":{\"@id\":\"\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f\",\"@type\":\"WorkflowStepType\",\"name\":\"SetVariable\",\"displayName\":\"Set Variable\",\"widget\":null,\"collection\":\"\/api\/3\/step_type_collections\/c04ab14a-669e-4502-92a3-3beef3cf6219\",\"arguments\":{\"script\":\"\/wf\/workflow\/tasks\/set_multiple\"},\"parent\":{\"@id\":\"\/api\/3\/workflow_step_types\/ee73e569-2188-43fe-a7f0-1964ba82a4de\",\"@type\":\"WorkflowStepType\",\"name\":\"RunScript\",\"displayName\":\"Run Utility Functions\",\"widget\":null,\"collection\":\"\/api\/3\/step_type_collections\/f3561053-417f-4591-8fa4-ca9da8e1da8b\",\"arguments\":[],\"parent\":null,\"icon\":\"fa fa-file-code-o\",\"background\":\"#ba0017\",\"index\":340,\"visible\":false,\"deprecated\":false,\"description\":null,\"uuid\":\"ee73e569-2188-43fe-a7f0-1964ba82a4de\",\"id\":2},\"icon\":\"icon icon-set-variables\",\"background\":\"#f7ac20\",\"index\":140,\"visible\":true,\"deprecated\":false,\"description\":null,\"uuid\":\"04d0cf46-b6a8-42c4-8683-60a7eaa69e8f\",\"id\":6},\"icon\":\"icon icon-referenced\",\"background\":null,\"index\":140,\"visible\":true,\"deprecated\":false,\"description\":\"Triggered from another playbook using a \\\"Reference Playbook\\\" step or from a schedule.\",\"uuid\":\"b348f017-9a94-471f-87f8-ce88b6a7ad62\",\"id\":30},\"group\":null,\"uuid\":\"5e313d09-2534-496b-8eed-f99086b41030\"}],\"groups\":[],\"routes\":[{\"@id\":\"\/api\/3\/workflow_routes\/30f7b57b-6ec1-48fd-b150-20e72e2eb060\",\"@type\":\"WorkflowRoute\",\"name\":\"check_connector_configs -> does_config_exist\",\"targetStep\":\"\/api\/3\/workflow_steps\/1d5e981b-9469-4311-9045-80270087e7d8\",\"sourceStep\":\"\/api\/3\/workflow_steps\/742dc0ba-cd91-4a53-bda1-ab41a0c38012\",\"label\":null,\"isExecuted\":false,\"group\":null,\"uuid\":\"30f7b57b-6ec1-48fd-b150-20e72e2eb060\"},{\"@id\":\"\/api\/3\/workflow_routes\/c77909bf-f21f-402b-a51f-7954dca5e1d4\",\"@type\":\"WorkflowRoute\",\"name\":\"config exists -> delete_connector_config\",\"targetStep\":\"\/api\/3\/workflow_steps\/4c557c0b-befd-474d-aa71-9cf9d70f43ca\",\"sourceStep\":\"\/api\/3\/workflow_steps\/5c67aa46-1f34-4ed1-bdeb-323b6ac566d8\",\"label\":null,\"isExecuted\":false,\"group\":null,\"uuid\":\"c77909bf-f21f-402b-a51f-7954dca5e1d4\"},{\"@id\":\"\/api\/3\/workflow_routes\/35a774ab-7d24-449d-abd3-f28a8a4e74ae\",\"@type\":\"WorkflowRoute\",\"name\":\"connector config -> create_connector_config\",\"targetStep\":\"\/api\/3\/workflow_steps\/7a18eacc-19b7-4f13-92b3-c70486bc887d\",\"sourceStep\":\"\/api\/3\/workflow_steps\/decb8527-e10a-47a0-9694-aa6aa02f5538\",\"label\":null,\"isExecuted\":false,\"group\":null,\"uuid\":\"35a774ab-7d24-449d-abd3-f28a8a4e74ae\"},{\"@id\":\"\/api\/3\/workflow_routes\/a74fa129-813d-417d-8221-f187d56a1e4c\",\"@type\":\"WorkflowRoute\",\"name\":\"delete_connector_config -> connector config\",\"targetStep\":\"\/api\/3\/workflow_steps\/decb8527-e10a-47a0-9694-aa6aa02f5538\",\"sourceStep\":\"\/api\/3\/workflow_steps\/4c557c0b-befd-474d-aa71-9cf9d70f43ca\",\"label\":null,\"isExecuted\":false,\"group\":null,\"uuid\":\"a74fa129-813d-417d-8221-f187d56a1e4c\"},{\"@id\":\"\/api\/3\/workflow_routes\/f8649fde-d235-4b44-ad9a-56f4d0a93da7\",\"@type\":\"WorkflowRoute\",\"name\":\"does_config_exist -> config exists\",\"targetStep\":\"\/api\/3\/workflow_steps\/5c67aa46-1f34-4ed1-bdeb-323b6ac566d8\",\"sourceStep\":\"\/api\/3\/workflow_steps\/1d5e981b-9469-4311-9045-80270087e7d8\",\"label\":null,\"isExecuted\":false,\"group\":null,\"uuid\":\"f8649fde-d235-4b44-ad9a-56f4d0a93da7\"},{\"@id\":\"\/api\/3\/workflow_routes\/d408ce99-207c-4f14-ab1e-e6f2be61f4ae\",\"@type\":\"WorkflowRoute\",\"name\":\"does_config_exist -> connector config\",\"targetStep\":\"\/api\/3\/workflow_steps\/decb8527-e10a-47a0-9694-aa6aa02f5538\",\"sourceStep\":\"\/api\/3\/workflow_steps\/1d5e981b-9469-4311-9045-80270087e7d8\",\"label\":null,\"isExecuted\":false,\"group\":null,\"uuid\":\"d408ce99-207c-4f14-ab1e-e6f2be61f4ae\"},{\"@id\":\"\/api\/3\/workflow_routes\/a9505e8d-033f-4d06-ba8e-e6413f1533bc\",\"@type\":\"WorkflowRoute\",\"name\":\"extract_connector_details -> check_connector_configs\",\"targetStep\":\"\/api\/3\/workflow_steps\/742dc0ba-cd91-4a53-bda1-ab41a0c38012\",\"sourceStep\":\"\/api\/3\/workflow_steps\/72464ce4-f6f9-4221-a8ee-6b7ee9313263\",\"label\":null,\"isExecuted\":false,\"group\":null,\"uuid\":\"a9505e8d-033f-4d06-ba8e-e6413f1533bc\"},{\"@id\":\"\/api\/3\/workflow_routes\/0da63bfa-c0a9-4d4e-a983-e74d270436a1\",\"@type\":\"WorkflowRoute\",\"name\":\"get_connector_details -> extract_connector_details\",\"targetStep\":\"\/api\/3\/workflow_steps\/72464ce4-f6f9-4221-a8ee-6b7ee9313263\",\"sourceStep\":\"\/api\/3\/workflow_steps\/27483ee8-69c5-4f8c-95ea-0b362fe91467\",\"label\":null,\"isExecuted\":false,\"group\":null,\"uuid\":\"0da63bfa-c0a9-4d4e-a983-e74d270436a1\"},{\"@id\":\"\/api\/3\/workflow_routes\/08bcf06e-a073-412a-a300-3de076e44fa3\",\"@type\":\"WorkflowRoute\",\"name\":\"setup vars -> get_connector_details\",\"targetStep\":\"\/api\/3\/workflow_steps\/27483ee8-69c5-4f8c-95ea-0b362fe91467\",\"sourceStep\":\"\/api\/3\/workflow_steps\/6a0836b2-906e-4099-820e-d0d46f9aaa84\",\"label\":null,\"isExecuted\":false,\"group\":null,\"uuid\":\"08bcf06e-a073-412a-a300-3de076e44fa3\"},{\"@id\":\"\/api\/3\/workflow_routes\/2df40e7b-5eef-465d-ac1c-3609e17a56fa\",\"@type\":\"WorkflowRoute\",\"name\":\"Start -> setup vars\",\"targetStep\":\"\/api\/3\/workflow_steps\/6a0836b2-906e-4099-820e-d0d46f9aaa84\",\"sourceStep\":\"\/api\/3\/workflow_steps\/5e313d09-2534-496b-8eed-f99086b41030\",\"label\":null,\"isExecuted\":false,\"group\":null,\"uuid\":\"2df40e7b-5eef-465d-ac1c-3609e17a56fa\"}],\"lastModifyDate\":1774357394,\"priority\":{\"@id\":\"\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2\",\"@type\":\"Picklist\",\"itemValue\":\"Medium\",\"orderIndex\":1,\"color\":null,\"icon\":null,\"listName\":\"\/api\/3\/picklist_names\/e104ef72-11b4-4d0c-be0e-e1cf3b87b5f2\",\"uuid\":\"2b563c61-ae2c-41c0-a85a-c9709585e3f2\",\"id\":111,\"importedBy\":[],\"display\":\"Medium\"},\"uuid\":\"7728f4bf-f7aa-470c-a027-077311e473b0\",\"id\":323,\"createUser\":{\"@id\":\"\/api\/3\/people\/3451141c-bac6-467c-8d72-85e0fab569ce\",\"@type\":\"Person\",\"firstname\":\"CS\",\"lastname\":\"Admin\",\"title\":\"Admin\",\"department\":null,\"email\":\"admin@example.com\",\"description\":null,\"phoneFax\":null,\"phoneHome\":null,\"phoneMobile\":null,\"phoneWork\":\"+16462759691\",\"csActive\":true,\"accessType\":\"Named\",\"companyId\":null,\"type\":null,\"userType\":null,\"avatar\":null,\"uuid\":\"3451141c-bac6-467c-8d72-85e0fab569ce\",\"createUser\":\"\/api\/3\/people\/3451141c-bac6-467c-8d72-85e0fab569ce\",\"createDate\":1766515643,\"modifyUser\":\"\/api\/3\/people\/3451141c-bac6-467c-8d72-85e0fab569ce\",\"modifyDate\":1774034628.451705,\"id\":3,\"userId\":\"d8124250-c138-408f-aa62-59d75e307b69\",\"@settings\":\"\/api\/3\/user_settings\/3451141c-bac6-467c-8d72-85e0fab569ce\",\"display\":\"CS Admin\"},\"createDate\":1774040110513.183,\"recordTags\":[\"connector_management\",\"ztpfManager\"],\"isPrivate\":false,\"owners\":[],\"playbookOrigin\":{\"@id\":\"\/api\/3\/picklists\/15c1e8c9-22bf-4e66-8fbb-0a502d4a4a3f\",\"@type\":\"Picklist\",\"itemValue\":\"Custom\",\"orderIndex\":1,\"color\":\"#ed1515\",\"icon\":null,\"listName\":\"\/api\/3\/picklist_names\/aa754880-6334-484b-9b49-cfccab09cafb\",\"uuid\":\"15c1e8c9-22bf-4e66-8fbb-0a502d4a4a3f\",\"id\":188,\"importedBy\":[],\"display\":\"Custom\"},\"isEditable\":true,\"@id\":\"\/api\/3\/workflows\/7728f4bf-f7aa-470c-a027-077311e473b0\"}",
+            "autosave": false,
+            "workflow": "\/api\/3\/workflows\/7728f4bf-f7aa-470c-a027-077311e473b0",
+            "uuid": "696deab4-491f-4b1b-af69-f6b8a759970e"
+        }
+    ],
     "triggerStep": "\/api\/3\/workflow_steps\/5e313d09-2534-496b-8eed-f99086b41030",
     "steps": [
         {
@@ -33,8 +42,8 @@
                 "connector_nameip_list": "{{vars.connector_configs|json_query('[][name,config.address,id]')}}"
             },
             "status": null,
-            "top": "120",
-            "left": "460",
+            "top": "200",
+            "left": "940",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
             "uuid": "742dc0ba-cd91-4a53-bda1-ab41a0c38012"
@@ -47,8 +56,8 @@
                 "config_api_url": "{{vars.connector_api_url}}{{vars.existing_config['id']}}\/?format=json"
             },
             "status": null,
-            "top": "360",
-            "left": "520",
+            "top": "320",
+            "left": "1240",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
             "uuid": "5c67aa46-1f34-4ed1-bdeb-323b6ac566d8"
@@ -61,8 +70,8 @@
                 "new_connector_config": "{\n\"connector\": \"{{vars.connector_id}}\",\n\"name\": \"{{vars.connector_config}}\",\n\"default\": false,\n\"config\": {\n  \"address\": \"{{vars.fmg_ip}}\",\n  \"port\":\"{{vars.fmg_port}}\",\n  \"auth_method\": \"Username\/Password\",\n  \"username\":\"{{vars.fmg_user}}\",\n  \"password\":\"{{vars.fmg_pass}}\",\n  \"verify_ssl\" : false,\n  \"verbose_json\": true\n  }\n}"
             },
             "status": null,
-            "top": "260",
-            "left": "160",
+            "top": "320",
+            "left": "640",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
             "uuid": "decb8527-e10a-47a0-9694-aa6aa02f5538"
@@ -84,11 +93,25 @@
                 "step_variables": []
             },
             "status": null,
-            "top": "160",
-            "left": "160",
+            "top": "240",
+            "left": "640",
             "stepType": "\/api\/3\/workflow_step_types\/0109f35d-090b-4a2b-bd8a-94cbc3508562",
             "group": null,
             "uuid": "7a18eacc-19b7-4f13-92b3-c70486bc887d"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "create playbook_status",
+            "description": null,
+            "arguments": {
+                "playbook_status": "{%- set apiret = vars.steps.create_connector_config -%}\n\n{# Default status is ok #}\n{%- set s = {\n  \"error\":false,\n  \"status\":\"Ok\",\n  \"message\":\"Connector Built without Error.\"\n} -%}\n\n{# Catch Any issues below #}\n{%- if apiret.data.status.status is not defined -%}\n  {%-do s.update({\n    \"error\":true,\n    \"status\":\"Failed\",\n    \"message\":\"Connector Config Status Missing.\"\n  }) -%}\n{%- elif apiret.data.status.status != \"finished\" -%}\n  {%-do s.update({\n    \"error\":true,\n    \"status\":\"Failed\",\n    \"message\":\"Connector Config Failed.\\n\" + apiret.data.status.message\n  }) -%}\n{%- else -%}\n  {%-do s.update({\n    \"message\": apiret.data.status.message\n  }) -%}\n{%- endif -%}\n\n{{s}}"
+            },
+            "status": null,
+            "top": "120",
+            "left": "340",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "9717b6a3-2c41-4b86-a9ac-fbf462d53bc6"
         },
         {
             "@type": "WorkflowStep",
@@ -107,8 +130,8 @@
                 "step_variables": []
             },
             "status": null,
-            "top": "480",
-            "left": "520",
+            "top": "360",
+            "left": "940",
             "stepType": "\/api\/3\/workflow_step_types\/0109f35d-090b-4a2b-bd8a-94cbc3508562",
             "group": null,
             "uuid": "4c557c0b-befd-474d-aa71-9cf9d70f43ca"
@@ -135,8 +158,8 @@
                 "step_variables": []
             },
             "status": null,
-            "top": "200",
-            "left": "460",
+            "top": "280",
+            "left": "940",
             "stepType": "\/api\/3\/workflow_step_types\/12254cf5-5db7-4b1a-8cb1-3af081924b28",
             "group": null,
             "uuid": "1d5e981b-9469-4311-9045-80270087e7d8"
@@ -151,11 +174,45 @@
                 "connector_data_test": "{{vars.steps.get_connector_details}}"
             },
             "status": null,
-            "top": "140",
-            "left": "780",
+            "top": "120",
+            "left": "940",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
             "uuid": "72464ce4-f6f9-4221-a8ee-6b7ee9313263"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "find manager",
+            "description": null,
+            "arguments": {
+                "query": {
+                    "sort": [],
+                    "limit": 30,
+                    "logic": "AND",
+                    "filters": [
+                        {
+                            "type": "primitive",
+                            "field": "id",
+                            "value": "{{vars.input.params['record_id']}}",
+                            "operator": "eq",
+                            "_operator": "eq"
+                        }
+                    ],
+                    "__selectFields": [
+                        "name",
+                        "connectorConfig"
+                    ]
+                },
+                "module": "ztpf_managers?$limit=1",
+                "checkboxFields": true,
+                "step_variables": []
+            },
+            "status": null,
+            "top": "40",
+            "left": "340",
+            "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928770",
+            "group": null,
+            "uuid": "99019d10-323c-401f-8dae-5f3efc7f8f84"
         },
         {
             "@type": "WorkflowStep",
@@ -174,11 +231,27 @@
                 "step_variables": []
             },
             "status": null,
-            "top": "40",
-            "left": "780",
+            "top": "120",
+            "left": "640",
             "stepType": "\/api\/3\/workflow_step_types\/0109f35d-090b-4a2b-bd8a-94cbc3508562",
             "group": null,
             "uuid": "27483ee8-69c5-4f8c-95ea-0b362fe91467"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "return",
+            "description": null,
+            "arguments": {
+                "output": "{{vars.steps.create_connector_config}}",
+                "params": "{{vars.input.params}}",
+                "status": "{{vars.playbook_status}}"
+            },
+            "status": null,
+            "top": "120",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "a4cc8ae7-871d-48fc-8f53-63c5c436d988"
         },
         {
             "@type": "WorkflowStep",
@@ -189,12 +262,13 @@
                 "fmg_pass": "{{vars.input.params['fmg_pass']}}",
                 "fmg_port": "{{vars.input.params['fmg_port']}}",
                 "fmg_user": "{{vars.input.params['fmg_user']}}",
-                "connector_config": "{{vars.input.params['connector_config']}}",
+                "manager_fqid": "{{vars.steps.find_manager[0]['@id']}}",
+                "connector_config": "{%- if vars.steps.find_manager[0].connectorConfig -%}\n{{vars.steps.find_manager[0].connectorConfig}}\n{%- else -%}\nmanagerID_{{vars.input.params['record_id']}}\n{%- endif -%}",
                 "connector_api_url": "\/api\/integration\/configuration\/"
             },
             "status": null,
             "top": "40",
-            "left": "460",
+            "left": "640",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
             "uuid": "6a0836b2-906e-4099-820e-d0d46f9aaa84"
@@ -219,6 +293,35 @@
             "stepType": "\/api\/3\/workflow_step_types\/b348f017-9a94-471f-87f8-ce88b6a7ad62",
             "group": null,
             "uuid": "5e313d09-2534-496b-8eed-f99086b41030"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "update manager connector info",
+            "description": null,
+            "arguments": {
+                "resource": {
+                    "status": "{{\"ztpfStatus\" | picklist(vars.playbook_status.status, \"@id\")}}",
+                    "managerPort": "{{vars.fmg_port}}",
+                    "adminRPCUser": "{{vars.fmg_user}}",
+                    "connectorConfig": "{{vars.connector_config}}",
+                    "managerIPDomain": "{{vars.fmg_ip}}",
+                    "adminRPCPassword": "{{vars.fmg_pass}}"
+                },
+                "operation": "Append",
+                "collection": "{{vars.manager_fqid}}",
+                "__recommend": [],
+                "collectionType": "\/api\/3\/ztpf_managers",
+                "fieldOperation": {
+                    "recordTags": "Append"
+                },
+                "step_variables": []
+            },
+            "status": null,
+            "top": "200",
+            "left": "340",
+            "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928722",
+            "group": null,
+            "uuid": "c4d630b9-3ef6-4ad7-af72-79090e594713"
         }
     ],
     "routes": [
@@ -254,6 +357,26 @@
         },
         {
             "@type": "WorkflowRoute",
+            "name": "create_connector_config -> create playbook_status",
+            "targetStep": "\/api\/3\/workflow_steps\/9717b6a3-2c41-4b86-a9ac-fbf462d53bc6",
+            "sourceStep": "\/api\/3\/workflow_steps\/7a18eacc-19b7-4f13-92b3-c70486bc887d",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "87dad2da-e116-4911-b9a8-820fcfdf08b0"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "create playbook_status -> update manager",
+            "targetStep": "\/api\/3\/workflow_steps\/c4d630b9-3ef6-4ad7-af72-79090e594713",
+            "sourceStep": "\/api\/3\/workflow_steps\/9717b6a3-2c41-4b86-a9ac-fbf462d53bc6",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "cb9a7a68-e414-467c-8466-d97b0e78e574"
+        },
+        {
+            "@type": "WorkflowRoute",
             "name": "delete_connector_config -> connector config",
             "targetStep": "\/api\/3\/workflow_steps\/decb8527-e10a-47a0-9694-aa6aa02f5538",
             "sourceStep": "\/api\/3\/workflow_steps\/4c557c0b-befd-474d-aa71-9cf9d70f43ca",
@@ -267,7 +390,7 @@
             "name": "does_config_exist -> config exists",
             "targetStep": "\/api\/3\/workflow_steps\/5c67aa46-1f34-4ed1-bdeb-323b6ac566d8",
             "sourceStep": "\/api\/3\/workflow_steps\/1d5e981b-9469-4311-9045-80270087e7d8",
-            "label": null,
+            "label": "Yes",
             "isExecuted": false,
             "group": null,
             "uuid": "f8649fde-d235-4b44-ad9a-56f4d0a93da7"
@@ -277,7 +400,7 @@
             "name": "does_config_exist -> connector config",
             "targetStep": "\/api\/3\/workflow_steps\/decb8527-e10a-47a0-9694-aa6aa02f5538",
             "sourceStep": "\/api\/3\/workflow_steps\/1d5e981b-9469-4311-9045-80270087e7d8",
-            "label": null,
+            "label": "No",
             "isExecuted": false,
             "group": null,
             "uuid": "d408ce99-207c-4f14-ab1e-e6f2be61f4ae"
@@ -291,6 +414,16 @@
             "isExecuted": false,
             "group": null,
             "uuid": "a9505e8d-033f-4d06-ba8e-e6413f1533bc"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "find manager -> setup vars",
+            "targetStep": "\/api\/3\/workflow_steps\/6a0836b2-906e-4099-820e-d0d46f9aaa84",
+            "sourceStep": "\/api\/3\/workflow_steps\/99019d10-323c-401f-8dae-5f3efc7f8f84",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "00445522-70a2-4940-aea5-681f756d73a8"
         },
         {
             "@type": "WorkflowRoute",
@@ -310,17 +443,27 @@
             "label": null,
             "isExecuted": false,
             "group": null,
-            "uuid": "08bcf06e-a073-412a-a300-3de076e44fa3"
+            "uuid": "1a02f7c5-282c-4cb8-af0d-37e1474ff914"
         },
         {
             "@type": "WorkflowRoute",
-            "name": "Start -> setup vars",
-            "targetStep": "\/api\/3\/workflow_steps\/6a0836b2-906e-4099-820e-d0d46f9aaa84",
+            "name": "Start -> find manager",
+            "targetStep": "\/api\/3\/workflow_steps\/99019d10-323c-401f-8dae-5f3efc7f8f84",
             "sourceStep": "\/api\/3\/workflow_steps\/5e313d09-2534-496b-8eed-f99086b41030",
             "label": null,
             "isExecuted": false,
             "group": null,
-            "uuid": "2df40e7b-5eef-465d-ac1c-3609e17a56fa"
+            "uuid": "31dd75e9-4780-490a-99dd-c48584af2950"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "update manager connector info -> return",
+            "targetStep": "\/api\/3\/workflow_steps\/a4cc8ae7-871d-48fc-8f53-63c5c436d988",
+            "sourceStep": "\/api\/3\/workflow_steps\/c4d630b9-3ef6-4ad7-af72-79090e594713",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "6340dc54-59bc-4604-9700-8585437b5f5e"
         }
     ],
     "groups": [],

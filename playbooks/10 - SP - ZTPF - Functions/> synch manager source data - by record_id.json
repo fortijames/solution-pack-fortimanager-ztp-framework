@@ -5,7 +5,7 @@
     "name": "> synch manager source data - by record_id",
     "aliasName": null,
     "tag": null,
-    "description": "Update source data of a manager record.",
+    "description": "Retrieve source data of a manager record.",
     "isActive": true,
     "debug": false,
     "singleRecordExecution": false,
@@ -20,14 +20,15 @@
     "steps": [
         {
             "@type": "WorkflowStep",
-            "name": "create source data",
+            "name": "create status return vars",
             "description": null,
             "arguments": {
-                "source_data": "{%- set ret = {} -%}\n{%- do ret.update({\"system\":vars.steps.get_system_status.output['get_response']}) -%}\n{{ret}}"
+                "source_data": "{%- set ret = {} -%}\n{%- if vars.steps.get_system_status.output['get_response'] is defined -%}\n  {%- do ret.update({\"system\":vars.steps.get_system_status.output['get_response']}) -%}\n{%- endif -%}\n{{ret}}",
+                "playbook_status": "{%- set apiret = vars.steps.get_system_status -%}\n{%- set s = {\"error\":false,\"status\":\"Ok\",\"message\":\"\"} -%}\n\n{%- if apiret['Error message'] -%}\n  {%-do s.update({\n  \"error\":true,\n  \"status\":\"Failed\",\n  \"message\":\"FMG Connectivity Failed. Check your network connectivity and\/or credentials.<br>\"\n    + '<br><code>'\n    + apiret['Error message']\n    + '<\/code>'\n}) -%}\n  \n{%- elif apiret == \"ok\" -%}\n  {%- do s.update({\n    \"message\":\"Synch FMG Status ok.\"\n  }) -%}\n\n{%- endif -%}\n{{s}}"
             },
             "status": null,
-            "top": "360",
-            "left": "40",
+            "top": "200",
+            "left": "340",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
             "uuid": "25e6900f-025d-4dc5-82ff-6c99cb199a55"
@@ -77,6 +78,7 @@
                     "connector_config": "{{vars.connector_config}}"
                 },
                 "apply_async": false,
+                "ignore_errors": true,
                 "step_variables": [],
                 "pass_parent_env": false,
                 "pass_input_record": false,
@@ -94,6 +96,7 @@
             "name": "parse source data",
             "description": null,
             "arguments": {
+                "when": "{{not vars.playbook_status.error}}",
                 "arguments": {
                     "record_id": "{{vars.record_id}}"
                 },
@@ -115,7 +118,9 @@
             "name": "return",
             "description": null,
             "arguments": {
-                "output": "{\"status\":\"ok\"}"
+                "output": "{{vars.steps.get_system_status.output['get_response']}}",
+                "params": "{{vars.input.params}}",
+                "status": "{{vars.playbook_status}}"
             },
             "status": null,
             "top": "120",
@@ -166,7 +171,16 @@
             "name": "update manager source_data",
             "description": null,
             "arguments": {
+                "message": {
+                    "tags": [],
+                    "type": "\/api\/3\/picklists\/ff599189-3eeb-4c86-acb0-a7915e85ac3b",
+                    "tenant": "",
+                    "thread": false,
+                    "content": "<p>{%- if vars.playbook_status.error -%}<\/p>\n<p><strong>Synch Source Data Error:<\/strong><\/p>\n<p>{{vars.playbook_status.message}}<\/p>\n<p>{%- endif -%}<\/p>",
+                    "records": "{{vars.manager_fqid}}"
+                },
                 "resource": {
+                    "status": "{{\"ztpfStatus\" | picklist(vars.playbook_status.status, \"@id\")}}",
                     "sourceData": "{{vars.source_data}}"
                 },
                 "operation": "Append",
@@ -189,13 +203,13 @@
     "routes": [
         {
             "@type": "WorkflowRoute",
-            "name": "create source data -> update manager",
+            "name": "create status return vars -> update manager source_data",
             "targetStep": "\/api\/3\/workflow_steps\/81800f05-a348-4b5b-8d54-c9969f68f10a",
             "sourceStep": "\/api\/3\/workflow_steps\/25e6900f-025d-4dc5-82ff-6c99cb199a55",
             "label": null,
             "isExecuted": false,
             "group": null,
-            "uuid": "afd169a4-419d-4436-b9dd-e657fe314dc2"
+            "uuid": "7a3f4903-0e0f-49a2-a4ea-5be0b9fc71f7"
         },
         {
             "@type": "WorkflowRoute",
@@ -262,17 +276,17 @@
         {
             "@type": "WorkflowGroup",
             "name": "Details",
-            "description": "1. Run get system status playbook.\n2. Update manager source data fields.\n3. Run Parse source data into fields playbook.",
+            "description": "1. Run get system status playbook.\n2. Update manager source data fields.\n3. Update status of manager record. \n3. Run Parse source data into fields playbook if no errors.",
             "type": "note",
             "isCollapsed": false,
             "hasTriggerStep": false,
             "hideInLogs": false,
             "metadata": [],
             "reusable": false,
-            "top": "200",
-            "left": "340",
-            "height": "130",
-            "width": "367",
+            "top": "180",
+            "left": "600",
+            "height": "142",
+            "width": "472",
             "uuid": "117f0f26-3c5f-45e5-9312-fa45d7ec19d5",
             "recordTags": []
         }
@@ -287,6 +301,7 @@
     "recordTags": [
         "record_management",
         "source_data",
+        "update_status",
         "ztpfManager"
     ]
 }
