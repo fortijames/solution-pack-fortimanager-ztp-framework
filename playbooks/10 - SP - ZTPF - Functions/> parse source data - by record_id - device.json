@@ -1,0 +1,215 @@
+{
+    "@context": "\/api\/3\/contexts\/Workflow",
+    "@type": "Workflow",
+    "triggerLimit": null,
+    "name": "> parse source data - by record_id - device",
+    "aliasName": null,
+    "tag": null,
+    "description": "Read source_data and parse the results to load into the record fields.",
+    "isActive": true,
+    "debug": false,
+    "singleRecordExecution": false,
+    "remoteExecutableFlag": false,
+    "parameters": [
+        "record_id"
+    ],
+    "synchronous": false,
+    "collection": "\/api\/3\/workflow_collections\/517fb52d-36f5-4bac-a344-7d4599d7dec6",
+    "versions": [],
+    "triggerStep": "\/api\/3\/workflow_steps\/b6043226-59ec-4b5b-b636-528b643f701b",
+    "steps": [
+        {
+            "@type": "WorkflowStep",
+            "name": "create firmware",
+            "description": null,
+            "arguments": {
+                "firmware": "{%- set ret = \n   vars.os_ver|int|string\n + \".\" + vars.mr|string\n + \".\" + vars.patch|string\n + \"-build\" + vars.build|string\n-%}\n\n{{ret}}"
+            },
+            "status": null,
+            "top": "120",
+            "left": "760",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "bf6c8042-4aa2-43b4-8418-d890ae1edef9"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "find record",
+            "description": null,
+            "arguments": {
+                "query": {
+                    "sort": [],
+                    "limit": 30,
+                    "logic": "AND",
+                    "filters": [
+                        {
+                            "type": "primitive",
+                            "field": "id",
+                            "value": "{{vars.input.params['record_id']}}",
+                            "operator": "eq",
+                            "_operator": "eq"
+                        }
+                    ]
+                },
+                "module": "ztpf_devices?$limit=1",
+                "checkboxFields": true,
+                "step_variables": []
+            },
+            "status": null,
+            "top": "40",
+            "left": "320",
+            "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928770",
+            "group": null,
+            "uuid": "77f54f86-0034-4ac9-bc79-7203fd978f3c"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "setup inital vars",
+            "description": null,
+            "arguments": {
+                "mr": "{{vars.steps.find_record[0].sourceData.dvmdb['mr']}}",
+                "sn": "{{vars.steps.find_record[0].sourceData.dvmdb.sn}}",
+                "adom": "{{vars.steps.find_record[0].sourceData.dvmdb['extra info'].adom}}",
+                "vdom": "{{vars.steps.find_record[0].sourceData.dvmdb.vdom}}",
+                "build": "{{vars.steps.find_record[0].sourceData.dvmdb['build']}}",
+                "patch": "{{vars.steps.find_record[0].sourceData.dvmdb['patch']}}",
+                "os_ver": "{{vars.steps.find_record[0].sourceData.dvmdb['os_ver']}}",
+                "mgt_vdom": "{{vars.steps.find_record[0].sourceData.dvmdb['mgt_vdom']}}",
+                "platform": "{{vars.steps.find_record[0].sourceData.dvmdb['platform_str']}}",
+                "db_status": "{{vars.steps.find_record[0].sourceData.dvmdb['db_status']}}",
+                "mgmt_mode": "{{vars.steps.find_record[0].sourceData.dvmdb['mgmt_mode']}}",
+                "conf_status": "{{vars.steps.find_record[0].sourceData.dvmdb['conf_status']}}",
+                "conn_status": "{{vars.steps.find_record[0].sourceData.dvmdb['conn_status']}}",
+                "meta_fields": "{{vars.steps.find_record[0].sourceData.dvmdb['meta fields']}}",
+                "record_fqid": "{{vars.steps.find_record[0]['@id']}}"
+            },
+            "status": null,
+            "top": "40",
+            "left": "600",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "6ada7a1a-d280-4cdc-b83e-02f63454dfc2"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Start",
+            "description": null,
+            "arguments": {
+                "__triggerLimit": true,
+                "step_variables": {
+                    "input": {
+                        "params": []
+                    }
+                },
+                "triggerOnSource": true,
+                "triggerOnReplicate": false
+            },
+            "status": null,
+            "top": "40",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/b348f017-9a94-471f-87f8-ce88b6a7ad62",
+            "group": null,
+            "uuid": "b6043226-59ec-4b5b-b636-528b643f701b"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "update record",
+            "description": null,
+            "arguments": {
+                "resource": {
+                    "firmware": "{{vars.firmware}}",
+                    "platform": "{{vars.platform}}",
+                    "configStatus": "{{vars.conf_status}}",
+                    "configDBStatus": "{{vars.db_status}}",
+                    "managementMode": "{{vars.mgmt_mode}}",
+                    "connectionStatus": "{{vars.conn_status}}"
+                },
+                "operation": "Append",
+                "collection": "{{vars.record_fqid}}",
+                "__recommend": [],
+                "collectionType": "\/api\/3\/ztpf_devices",
+                "fieldOperation": {
+                    "recordTags": "Append"
+                },
+                "step_variables": []
+            },
+            "status": null,
+            "top": "120",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928722",
+            "group": null,
+            "uuid": "ed5a6b2d-0df1-4b62-a688-b5bc431c5ad3"
+        }
+    ],
+    "routes": [
+        {
+            "@type": "WorkflowRoute",
+            "name": "create firmware -> update record",
+            "targetStep": "\/api\/3\/workflow_steps\/ed5a6b2d-0df1-4b62-a688-b5bc431c5ad3",
+            "sourceStep": "\/api\/3\/workflow_steps\/bf6c8042-4aa2-43b4-8418-d890ae1edef9",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "89b27297-918b-41b3-bdda-52ce6a718fd4"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "find record -> setup vars",
+            "targetStep": "\/api\/3\/workflow_steps\/6ada7a1a-d280-4cdc-b83e-02f63454dfc2",
+            "sourceStep": "\/api\/3\/workflow_steps\/77f54f86-0034-4ac9-bc79-7203fd978f3c",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "1cc0d908-0bdc-4414-ab7d-9ed69374face"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "setup inital vars -> create firmware",
+            "targetStep": "\/api\/3\/workflow_steps\/bf6c8042-4aa2-43b4-8418-d890ae1edef9",
+            "sourceStep": "\/api\/3\/workflow_steps\/6ada7a1a-d280-4cdc-b83e-02f63454dfc2",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "65b778f9-a8dd-426e-aece-77e83794f1a8"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Start -> find record",
+            "targetStep": "\/api\/3\/workflow_steps\/77f54f86-0034-4ac9-bc79-7203fd978f3c",
+            "sourceStep": "\/api\/3\/workflow_steps\/b6043226-59ec-4b5b-b636-528b643f701b",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "f47d9869-2169-463d-ab0e-3edc5077320d"
+        }
+    ],
+    "groups": [
+        {
+            "@type": "WorkflowGroup",
+            "name": "Details",
+            "description": "Parse source_data and populate fields:\nSerial, Platform, Firmware, License Status, Timezone, VDOM Mode, Config Status",
+            "type": "note",
+            "isCollapsed": false,
+            "hasTriggerStep": false,
+            "hideInLogs": false,
+            "metadata": [],
+            "reusable": false,
+            "top": "200",
+            "left": "340",
+            "height": "132",
+            "width": "323",
+            "uuid": "9363af9d-df70-4365-8073-8b0e47c1eb17",
+            "recordTags": []
+        }
+    ],
+    "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+    "playbookOrigin": "\/api\/3\/picklists\/b6d710a9-a8ec-41ec-8817-fe9fa062fcdd",
+    "isEditable": false,
+    "uuid": "fd80d9b5-087f-43c9-8bc4-1d9457acfe4c",
+    "owners": [],
+    "isPrivate": false,
+    "deletedAt": null,
+    "recordTags": [
+        "ztpfManager"
+    ]
+}

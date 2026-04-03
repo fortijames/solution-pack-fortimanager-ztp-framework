@@ -48,7 +48,7 @@
                 "step_variables": []
             },
             "status": null,
-            "top": "240",
+            "top": "280",
             "left": "40",
             "stepType": "\/api\/3\/workflow_step_types\/2597053c-e718-44b4-8394-4d40fe26d357",
             "group": null,
@@ -62,7 +62,7 @@
                 "fmg_devices": "{{vars.steps.get_fmg_devices.output['get_response']}}"
             },
             "status": null,
-            "top": "340",
+            "top": "360",
             "left": "40",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
@@ -146,7 +146,7 @@
                 "step_variables": []
             },
             "status": null,
-            "top": "140",
+            "top": "200",
             "left": "40",
             "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928722",
             "group": null,
@@ -190,6 +190,27 @@
             "stepType": "\/api\/3\/workflow_step_types\/b348f017-9a94-471f-87f8-ce88b6a7ad62",
             "group": null,
             "uuid": "d6f21dcd-21da-4d8e-9044-c27424b4cce8"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "synch source data",
+            "description": "Synch source data of the new data.",
+            "arguments": {
+                "arguments": {
+                    "record_ids": "{{vars.steps.create_device_records|json_query('[].id')}}"
+                },
+                "apply_async": false,
+                "step_variables": [],
+                "pass_parent_env": false,
+                "pass_input_record": false,
+                "workflowReference": "\/api\/3\/workflows\/379c3a43-af7e-4a27-bdbf-1207d2697378"
+            },
+            "status": null,
+            "top": "120",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
+            "group": null,
+            "uuid": "6ad83b05-e0ca-45b6-b4d6-9b0b99ac72c4"
         }
     ],
     "routes": [
@@ -232,6 +253,16 @@
             "isExecuted": false,
             "group": null,
             "uuid": "8e8abbcc-d629-4ab9-8513-ed1541124a6e"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "manager record done -> synch source data",
+            "targetStep": "\/api\/3\/workflow_steps\/6ad83b05-e0ca-45b6-b4d6-9b0b99ac72c4",
+            "sourceStep": "\/api\/3\/workflow_steps\/8aef611a-5f71-44e2-a899-6dafe5f113fc",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "7601899e-4782-466f-948e-5e18b4661f55"
         },
         {
             "@type": "WorkflowRoute",

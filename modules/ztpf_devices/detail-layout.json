@@ -55,6 +55,19 @@
                                                                 {
                                                                     "widgets": [
                                                                         {
+                                                                            "type": "sectionHeader",
+                                                                            "config": {
+                                                                                "wid": "0c554c91-332e-4816-8dfd-882b9ad8ac2e",
+                                                                                "query": {
+                                                                                    "filters": [],
+                                                                                    "sort": [],
+                                                                                    "limit": 10
+                                                                                },
+                                                                                "editorType": "html",
+                                                                                "sectionText": "<p style=\"text-align: center;\"><strong>Device Settings and Description<\/strong><\/p>"
+                                                                            }
+                                                                        },
+                                                                        {
                                                                             "type": "editableFormGroup",
                                                                             "config": {
                                                                                 "wid": "39fbc862-35be-4f53-ae9b-7a0f22adf4de",
@@ -63,6 +76,12 @@
                                                                                         "columns": [
                                                                                             {
                                                                                                 "fields": [
+                                                                                                    {
+                                                                                                        "name": "adminStatus",
+                                                                                                        "highlightMode": true,
+                                                                                                        "linky": true,
+                                                                                                        "readOnly": true
+                                                                                                    },
                                                                                                     {
                                                                                                         "name": "ztpfManagers",
                                                                                                         "highlightMode": true,
@@ -74,14 +93,20 @@
                                                                                                         "highlightMode": true,
                                                                                                         "linky": true,
                                                                                                         "readOnly": true
-                                                                                                    },
+                                                                                                    }
+                                                                                                ],
+                                                                                                "style": "col-lg-6"
+                                                                                            },
+                                                                                            {
+                                                                                                "fields": [
                                                                                                     {
                                                                                                         "name": "description",
                                                                                                         "highlightMode": true,
                                                                                                         "linky": true,
                                                                                                         "readOnly": false
                                                                                                     }
-                                                                                                ]
+                                                                                                ],
+                                                                                                "style": "col-lg-6"
                                                                                             }
                                                                                         ]
                                                                                     }
@@ -94,6 +119,19 @@
                                                                 {
                                                                     "widgets": [
                                                                         {
+                                                                            "type": "sectionHeader",
+                                                                            "config": {
+                                                                                "wid": "e71a6597-dee8-4a2a-9580-a4c1f9c8e7ab",
+                                                                                "query": {
+                                                                                    "filters": [],
+                                                                                    "sort": [],
+                                                                                    "limit": 10
+                                                                                },
+                                                                                "editorType": "html",
+                                                                                "sectionText": "<p style=\"text-align: center;\"><strong>Device Details from Source Data<\/strong><\/p>"
+                                                                            }
+                                                                        },
+                                                                        {
                                                                             "type": "editableFormGroup",
                                                                             "config": {
                                                                                 "wid": "d1b3914b-0a58-4410-81a7-f1bc3d6489b0",
@@ -101,11 +139,61 @@
                                                                                     {
                                                                                         "columns": [
                                                                                             {
-                                                                                                "fields": [],
+                                                                                                "fields": [
+                                                                                                    {
+                                                                                                        "name": "platform",
+                                                                                                        "highlightMode": true,
+                                                                                                        "linky": true,
+                                                                                                        "readOnly": true
+                                                                                                    },
+                                                                                                    {
+                                                                                                        "name": "firmware",
+                                                                                                        "highlightMode": true,
+                                                                                                        "linky": true,
+                                                                                                        "readOnly": true
+                                                                                                    }
+                                                                                                ],
                                                                                                 "style": "col-lg-4"
                                                                                             },
                                                                                             {
-                                                                                                "fields": [],
+                                                                                                "fields": [
+                                                                                                    {
+                                                                                                        "name": "managementMode",
+                                                                                                        "highlightMode": true,
+                                                                                                        "linky": true,
+                                                                                                        "readOnly": true
+                                                                                                    },
+                                                                                                    {
+                                                                                                        "name": "connectionStatus",
+                                                                                                        "highlightMode": true,
+                                                                                                        "linky": true,
+                                                                                                        "readOnly": true
+                                                                                                    },
+                                                                                                    {
+                                                                                                        "name": "configStatus",
+                                                                                                        "highlightMode": true,
+                                                                                                        "linky": true,
+                                                                                                        "readOnly": true
+                                                                                                    },
+                                                                                                    {
+                                                                                                        "name": "configDBStatus",
+                                                                                                        "highlightMode": true,
+                                                                                                        "linky": true,
+                                                                                                        "readOnly": true
+                                                                                                    },
+                                                                                                    {
+                                                                                                        "name": "policyPackage",
+                                                                                                        "highlightMode": true,
+                                                                                                        "linky": true,
+                                                                                                        "readOnly": true
+                                                                                                    },
+                                                                                                    {
+                                                                                                        "name": "provisioningTemplates",
+                                                                                                        "highlightMode": true,
+                                                                                                        "linky": true,
+                                                                                                        "readOnly": true
+                                                                                                    }
+                                                                                                ],
                                                                                                 "style": "col-lg-4"
                                                                                             },
                                                                                             {
@@ -114,25 +202,25 @@
                                                                                                         "name": "createDate",
                                                                                                         "highlightMode": true,
                                                                                                         "linky": true,
-                                                                                                        "readOnly": false
+                                                                                                        "readOnly": true
                                                                                                     },
                                                                                                     {
                                                                                                         "name": "createUser",
                                                                                                         "highlightMode": true,
                                                                                                         "linky": true,
-                                                                                                        "readOnly": false
+                                                                                                        "readOnly": true
                                                                                                     },
                                                                                                     {
                                                                                                         "name": "modifyDate",
                                                                                                         "highlightMode": true,
                                                                                                         "linky": true,
-                                                                                                        "readOnly": false
+                                                                                                        "readOnly": true
                                                                                                     },
                                                                                                     {
                                                                                                         "name": "modifyUser",
                                                                                                         "highlightMode": true,
                                                                                                         "linky": true,
-                                                                                                        "readOnly": false
+                                                                                                        "readOnly": true
                                                                                                     }
                                                                                                 ],
                                                                                                 "style": "col-lg-4"
@@ -156,7 +244,7 @@
                                                 "visible": true
                                             },
                                             "icon": "icon icon-details",
-                                            "show": false,
+                                            "show": true,
                                             "visible": true
                                         },
                                         {
@@ -406,10 +494,11 @@
                                                             "wid": "25275344-0fa7-44fc-8913-6a1bb0f16299"
                                                         }
                                                     ]
-                                                }
+                                                },
+                                                "visible": true
                                             },
                                             "icon": "icon icon-source-data",
-                                            "show": true,
+                                            "show": false,
                                             "visible": true
                                         },
                                         {
