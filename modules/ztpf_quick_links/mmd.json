@@ -1,9 +1,27 @@
 {
-    "descriptions": {
-        "singular": "ztpfAutomationStep",
-        "plural": "ztpfAutomationSteps"
-    },
-    "type": "ztpf_automation_steps",
+    "@context": "\/api\/3\/contexts\/StagingModelMetadata",
+    "@type": "StagingModelMetadata",
+    "type": "ztpf_quick_links",
+    "parentType": null,
+    "tableName": "ztpf_quick_link",
+    "ownable": false,
+    "userOwnable": false,
+    "queueable": false,
+    "trackable": true,
+    "taggable": true,
+    "peerReplicable": false,
+    "defaultSort": [],
+    "uniqueConstraint": [
+        {
+            "ztpf_quick_links_unique": {
+                "columns": [
+                    "name"
+                ]
+            }
+        }
+    ],
+    "indexable": true,
+    "writable": true,
     "attributes": [
         {
             "@type": "AttributeMetadata",
@@ -21,7 +39,7 @@
             "inversedField": null,
             "ownsRelationship": false,
             "validation": {
-                "required": true,
+                "required": false,
                 "minlength": 0,
                 "maxlength": 10485761,
                 "_enableRange": false
@@ -52,9 +70,9 @@
         {
             "@type": "AttributeMetadata",
             "type": "string",
-            "name": "description",
+            "name": "quickLinks",
             "length": null,
-            "formType": "richtext",
+            "formType": "html",
             "dataSource": null,
             "searchable": true,
             "peerReplicable": true,
@@ -76,7 +94,7 @@
                 "buttonClass": "btn btn-default btn-sm"
             },
             "dataSourceFilters": null,
-            "defaultValue": null,
+            "defaultValue": "",
             "tooltip": null,
             "visibility": true,
             "htmlEscape": false,
@@ -87,12 +105,28 @@
             "unique": false,
             "recommend": false,
             "skipSerialization": false,
-            "displayName": "{{ description }}",
+            "displayName": "{{ quickLinks }}",
             "descriptions": {
-                "singular": "Description"
+                "singular": "Quick Links"
             }
         }
     ],
-    "tableName": "ztpf_automation_step",
-    "displayName": "{{ name }}"
+    "system": false,
+    "module": "ztpf_quick_links",
+    "softDeleteable": false,
+    "archivable": false,
+    "paused": false,
+    "partitionBy": "modifyDate",
+    "archivalCriteria": {
+        "keep_primary_data_for": 24,
+        "delete_primary_data_after": 60
+    },
+    "archivalFilters": [],
+    "replicationFilters": [],
+    "enableReplication": true,
+    "displayName": "{{ name }}",
+    "descriptions": {
+        "singular": "ztpfQuickLink",
+        "plural": "ztpfQuickLinks"
+    }
 }

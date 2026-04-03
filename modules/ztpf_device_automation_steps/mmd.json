@@ -1,9 +1,9 @@
 {
     "@context": "\/api\/3\/contexts\/StagingModelMetadata",
     "@type": "StagingModelMetadata",
-    "type": "ztpf_templates",
+    "type": "ztpf_device_automation_steps",
     "parentType": null,
-    "tableName": "ztpf_template",
+    "tableName": "ztpf_device_automation_step",
     "ownable": false,
     "userOwnable": false,
     "queueable": false,
@@ -11,30 +11,24 @@
     "taggable": true,
     "peerReplicable": false,
     "defaultSort": [],
-    "uniqueConstraint": [
-        {
-            "ztpf_templates_unique": {
-                "columns": [
-                    "name"
-                ]
-            }
-        }
-    ],
+    "uniqueConstraint": [],
     "indexable": true,
     "writable": true,
     "attributes": [
         {
             "@type": "AttributeMetadata",
-            "type": "string",
-            "name": "name",
+            "type": "ztpf_devices",
+            "name": "ztpfDevices",
             "length": null,
-            "formType": "text",
-            "dataSource": null,
-            "searchable": true,
+            "formType": "lookup",
+            "dataSource": {
+                "model": "ztpf_devices"
+            },
+            "searchable": false,
             "peerReplicable": true,
             "system": false,
             "encrypted": false,
-            "gridColumn": true,
+            "gridColumn": false,
             "collection": false,
             "inversedField": null,
             "ownsRelationship": false,
@@ -51,8 +45,51 @@
                 "buttonClass": "btn btn-default btn-sm"
             },
             "dataSourceFilters": null,
+            "defaultValue": null,
+            "tooltip": null,
+            "visibility": true,
+            "htmlEscape": false,
+            "orphanRemoval": null,
+            "readable": true,
+            "writeable": true,
+            "identifier": null,
+            "unique": false,
+            "recommend": false,
+            "skipSerialization": false,
+            "displayName": "{{ ztpfDevices }}",
+            "descriptions": {
+                "singular": "ztpfDevices"
+            }
+        },
+        {
+            "@type": "AttributeMetadata",
+            "type": "string",
+            "name": "name",
+            "length": null,
+            "formType": "text",
+            "dataSource": null,
+            "searchable": false,
+            "peerReplicable": true,
+            "system": false,
+            "encrypted": false,
+            "gridColumn": false,
+            "collection": false,
+            "inversedField": null,
+            "ownsRelationship": false,
+            "validation": {
+                "required": false,
+                "minlength": 0,
+                "maxlength": 10485761
+            },
+            "bulkAction": {
+                "allow": false,
+                "buttonText": "",
+                "buttonIcon": "",
+                "buttonClass": "btn btn-default btn-sm"
+            },
+            "dataSourceFilters": null,
             "defaultValue": "",
-            "tooltip": "Name of Template",
+            "tooltip": null,
             "visibility": true,
             "htmlEscape": false,
             "orphanRemoval": null,
@@ -69,10 +106,10 @@
         },
         {
             "@type": "AttributeMetadata",
-            "type": "string",
-            "name": "description",
+            "type": "integer",
+            "name": "stepStartTimestamp",
             "length": null,
-            "formType": "richtext",
+            "formType": "datetime",
             "dataSource": null,
             "searchable": true,
             "peerReplicable": true,
@@ -85,8 +122,7 @@
             "validation": {
                 "required": false,
                 "minlength": 0,
-                "maxlength": 10485761,
-                "_enableRange": false
+                "maxlength": 10485761
             },
             "bulkAction": {
                 "allow": false,
@@ -106,17 +142,17 @@
             "unique": false,
             "recommend": false,
             "skipSerialization": false,
-            "displayName": "{{ description }}",
+            "displayName": "{{ stepStartTimestamp }}",
             "descriptions": {
-                "singular": "Description"
+                "singular": "Step Start Timestamp"
             }
         },
         {
             "@type": "AttributeMetadata",
-            "type": "string",
-            "name": "script",
+            "type": "integer",
+            "name": "stepStopTimestamp",
             "length": null,
-            "formType": "textarea",
+            "formType": "datetime",
             "dataSource": null,
             "searchable": true,
             "peerReplicable": true,
@@ -129,8 +165,7 @@
             "validation": {
                 "required": false,
                 "minlength": 0,
-                "maxlength": 10485761,
-                "_enableRange": false
+                "maxlength": 10485761
             },
             "bulkAction": {
                 "allow": false,
@@ -138,47 +173,6 @@
                 "buttonIcon": "",
                 "buttonClass": "btn btn-default btn-sm"
             },
-            "dataSourceFilters": null,
-            "defaultValue": null,
-            "tooltip": "Script in the form of a Jinja Template",
-            "visibility": true,
-            "htmlEscape": false,
-            "orphanRemoval": null,
-            "readable": true,
-            "writeable": true,
-            "identifier": null,
-            "unique": false,
-            "recommend": false,
-            "skipSerialization": false,
-            "displayName": "{{ script }}",
-            "descriptions": {
-                "singular": "Script"
-            }
-        },
-        {
-            "@type": "AttributeMetadata",
-            "type": "ztpf_metadata_sources",
-            "name": "ztpfMetadataSources",
-            "length": null,
-            "formType": "manyToMany",
-            "dataSource": {
-                "model": "ztpf_metadata_sources"
-            },
-            "searchable": false,
-            "peerReplicable": true,
-            "system": false,
-            "encrypted": false,
-            "gridColumn": false,
-            "collection": true,
-            "inversedField": "ztpfTemplates",
-            "ownsRelationship": true,
-            "validation": {
-                "required": false,
-                "minlength": 0,
-                "maxlength": 10485761,
-                "_enableRange": false
-            },
-            "bulkAction": [],
             "dataSourceFilters": null,
             "defaultValue": null,
             "tooltip": null,
@@ -191,9 +185,9 @@
             "unique": false,
             "recommend": false,
             "skipSerialization": false,
-            "displayName": "{{ ztpfMetadataSources }}",
+            "displayName": "{{ stepStopTimestamp }}",
             "descriptions": {
-                "singular": "Metadata Sources"
+                "singular": "Step Stop Timestamp"
             }
         },
         {
@@ -201,7 +195,7 @@
             "type": "ztpf_automation_actions",
             "name": "ztpfAutomationActions",
             "length": null,
-            "formType": "oneToMany",
+            "formType": "lookup",
             "dataSource": {
                 "model": "ztpf_automation_actions"
             },
@@ -210,16 +204,21 @@
             "system": false,
             "encrypted": false,
             "gridColumn": false,
-            "collection": true,
-            "inversedField": "ztpfTemplates",
-            "ownsRelationship": true,
+            "collection": false,
+            "inversedField": null,
+            "ownsRelationship": false,
             "validation": {
                 "required": false,
                 "minlength": 0,
                 "maxlength": 10485761,
                 "_enableRange": false
             },
-            "bulkAction": [],
+            "bulkAction": {
+                "allow": false,
+                "buttonText": "",
+                "buttonIcon": "",
+                "buttonClass": "btn btn-default btn-sm"
+            },
             "dataSourceFilters": null,
             "defaultValue": null,
             "tooltip": null,
@@ -239,7 +238,7 @@
         }
     ],
     "system": false,
-    "module": "ztpf_templates",
+    "module": "ztpf_device_automation_steps",
     "softDeleteable": false,
     "archivable": false,
     "paused": false,
@@ -253,7 +252,7 @@
     "enableReplication": true,
     "displayName": "{{ name }}",
     "descriptions": {
-        "singular": "ztpfTemplate",
-        "plural": "ztpfTemplates"
+        "singular": "ztpfDeviceAutomationStep",
+        "plural": "ztpfDeviceAutomationSteps"
     }
 }

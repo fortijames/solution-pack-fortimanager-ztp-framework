@@ -11,7 +11,8 @@
     "singleRecordExecution": false,
     "remoteExecutableFlag": false,
     "parameters": [
-        "record_id"
+        "record_id",
+        "api_filter"
     ],
     "synchronous": false,
     "collection": "\/api\/3\/workflow_collections\/517fb52d-36f5-4bac-a344-7d4599d7dec6",
@@ -47,7 +48,7 @@
                 "step_variables": []
             },
             "status": null,
-            "top": "260",
+            "top": "240",
             "left": "40",
             "stepType": "\/api\/3\/workflow_step_types\/2597053c-e718-44b4-8394-4d40fe26d357",
             "group": null,
@@ -61,7 +62,7 @@
                 "fmg_devices": "{{vars.steps.get_fmg_devices.output['get_response']}}"
             },
             "status": null,
-            "top": "180",
+            "top": "340",
             "left": "40",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
@@ -110,7 +111,7 @@
                 "arguments": {
                     "api_adom": "",
                     "api_fields": "{{vars.api_fields}}",
-                    "api_filter": "",
+                    "api_filter": "{{vars.api_filter}}",
                     "api_loadsub": "0",
                     "connector_config": "{{vars.connector_config}}"
                 },
@@ -129,11 +130,36 @@
         },
         {
             "@type": "WorkflowStep",
+            "name": "manager record done",
+            "description": null,
+            "arguments": {
+                "resource": {
+                    "status": "\/api\/3\/picklists\/2a2f34dc-4f3b-4434-aa58-ba995b2bf7c6"
+                },
+                "operation": "Append",
+                "collection": "{{vars.steps.find_manager[0]['@id']}}",
+                "__recommend": [],
+                "collectionType": "\/api\/3\/ztpf_managers",
+                "fieldOperation": {
+                    "recordTags": "Append"
+                },
+                "step_variables": []
+            },
+            "status": null,
+            "top": "140",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928722",
+            "group": null,
+            "uuid": "8aef611a-5f71-44e2-a899-6dafe5f113fc"
+        },
+        {
+            "@type": "WorkflowStep",
             "name": "setup vars",
             "description": null,
             "arguments": {
                 "record_id": "{{vars.steps.find_manager[0].id}}",
                 "api_fields": "[\"name\"]",
+                "api_filter": "{{vars.input.params['api_filter']}}",
                 "manager_fqid": "{{vars.steps.find_manager[0]['@id']}}",
                 "connector_config": "{{vars.steps.find_manager[0].connectorConfig}}"
             },
@@ -167,6 +193,16 @@
         }
     ],
     "routes": [
+        {
+            "@type": "WorkflowRoute",
+            "name": "create device records -> manager record done",
+            "targetStep": "\/api\/3\/workflow_steps\/8aef611a-5f71-44e2-a899-6dafe5f113fc",
+            "sourceStep": "\/api\/3\/workflow_steps\/84d3f818-2b66-40fe-99a1-0921a7816ac9",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "ae902121-d1f8-41e2-b3a3-d3385a6e583e"
+        },
         {
             "@type": "WorkflowRoute",
             "name": "create fmg devices vars -> create device records",
@@ -222,7 +258,7 @@
         {
             "@type": "WorkflowGroup",
             "name": "Details",
-            "description": "Query FMG for devices that might be new. By default we will query for all devices and only create new device records for devices we do not yet know about. This can be limited by changing the setting of the ZTPF Manager record.",
+            "description": "Query FMG for devices that might be new and create a record focusing on the device name and manager.\n\nBy default we will query for all devices and only create new device records for devices we do not yet know about. This can be limited by changing the settings of the ZTPF Manager record.",
             "type": "note",
             "isCollapsed": false,
             "hasTriggerStep": false,
@@ -231,8 +267,8 @@
             "reusable": false,
             "top": "200",
             "left": "360",
-            "height": "207",
-            "width": "264",
+            "height": "188",
+            "width": "498",
             "uuid": "790f2f45-38c0-41f0-b785-81edaa48d3dc",
             "recordTags": []
         }
@@ -245,8 +281,7 @@
     "isPrivate": false,
     "deletedAt": null,
     "recordTags": [
-        "record_management",
-        "ztpfDevice",
+        "synch",
         "ztpfManager"
     ]
 }

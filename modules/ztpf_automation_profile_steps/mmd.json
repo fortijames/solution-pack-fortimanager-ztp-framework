@@ -1,9 +1,9 @@
 {
     "@context": "\/api\/3\/contexts\/StagingModelMetadata",
     "@type": "StagingModelMetadata",
-    "type": "ztpf_automation_profiles",
+    "type": "ztpf_automation_profile_steps",
     "parentType": null,
-    "tableName": "ztpf_automation_profile",
+    "tableName": "ztpf_automation_profile_step",
     "ownable": false,
     "userOwnable": false,
     "queueable": false,
@@ -13,9 +13,10 @@
     "defaultSort": [],
     "uniqueConstraint": [
         {
-            "ztpf_automation_profiles_unique": {
+            "ztpf_automation_profile_steps_unique": {
                 "columns": [
-                    "name"
+                    "ztpfAutomationProfiles",
+                    "stepSequence"
                 ]
             }
         }
@@ -30,11 +31,11 @@
             "length": null,
             "formType": "text",
             "dataSource": null,
-            "searchable": true,
+            "searchable": false,
             "peerReplicable": true,
             "system": false,
             "encrypted": false,
-            "gridColumn": true,
+            "gridColumn": false,
             "collection": false,
             "inversedField": null,
             "ownsRelationship": false,
@@ -69,12 +70,14 @@
         },
         {
             "@type": "AttributeMetadata",
-            "type": "string",
-            "name": "description",
+            "type": "ztpf_automation_profiles",
+            "name": "ztpfAutomationProfiles",
             "length": null,
-            "formType": "richtext",
-            "dataSource": null,
-            "searchable": true,
+            "formType": "lookup",
+            "dataSource": {
+                "model": "ztpf_automation_profiles"
+            },
+            "searchable": false,
             "peerReplicable": true,
             "system": false,
             "encrypted": false,
@@ -83,9 +86,10 @@
             "inversedField": null,
             "ownsRelationship": false,
             "validation": {
-                "required": false,
+                "required": true,
                 "minlength": 0,
-                "maxlength": 10485761
+                "maxlength": 10485761,
+                "_enableRange": false
             },
             "bulkAction": {
                 "allow": false,
@@ -105,34 +109,83 @@
             "unique": false,
             "recommend": false,
             "skipSerialization": false,
-            "displayName": "{{ description }}",
+            "displayName": "{{ ztpfAutomationProfiles }}",
             "descriptions": {
-                "singular": "Description"
+                "singular": "ztpfAutomationProfiles"
             }
         },
         {
             "@type": "AttributeMetadata",
-            "type": "ztpf_automation_profile_steps",
-            "name": "ztpfAutomationProfileSteps",
+            "type": "integer",
+            "name": "stepSequence",
             "length": null,
-            "formType": "oneToMany",
+            "formType": "integer",
+            "dataSource": null,
+            "searchable": true,
+            "peerReplicable": true,
+            "system": false,
+            "encrypted": false,
+            "gridColumn": false,
+            "collection": false,
+            "inversedField": null,
+            "ownsRelationship": false,
+            "validation": {
+                "required": true,
+                "minlength": -2147483648,
+                "maxlength": 10485761
+            },
+            "bulkAction": {
+                "allow": false,
+                "buttonText": "",
+                "buttonIcon": "",
+                "buttonClass": "btn btn-default btn-sm"
+            },
+            "dataSourceFilters": null,
+            "defaultValue": null,
+            "tooltip": "Step # for this profile.",
+            "visibility": true,
+            "htmlEscape": false,
+            "orphanRemoval": null,
+            "readable": true,
+            "writeable": true,
+            "identifier": null,
+            "unique": false,
+            "recommend": false,
+            "skipSerialization": false,
+            "displayName": "{{ stepSequence }}",
+            "descriptions": {
+                "singular": "Step Sequence"
+            }
+        },
+        {
+            "@type": "AttributeMetadata",
+            "type": "ztpf_automation_actions",
+            "name": "ztpfAutomationActions",
+            "length": null,
+            "formType": "lookup",
             "dataSource": {
-                "model": "ztpf_automation_profile_steps"
+                "model": "ztpf_automation_actions"
             },
             "searchable": false,
             "peerReplicable": true,
             "system": false,
             "encrypted": false,
             "gridColumn": false,
-            "collection": true,
-            "inversedField": "ztpfAutomationProfiles",
+            "collection": false,
+            "inversedField": null,
             "ownsRelationship": false,
             "validation": {
                 "required": false,
                 "minlength": 0,
-                "maxlength": 10485761
+                "maxlength": 10485761,
+                "_enableRange": false
             },
-            "bulkAction": [],
+            "bulkAction": {
+                "allow": false,
+                "buttonText": "",
+                "buttonIcon": "",
+                "buttonClass": "btn btn-default btn-sm"
+            },
             "dataSourceFilters": null,
             "defaultValue": null,
             "tooltip": null,
@@ -145,14 +198,14 @@
             "unique": false,
             "recommend": false,
             "skipSerialization": false,
-            "displayName": "{{ ztpfAutomationProfileSteps }}",
+            "displayName": "{{ ztpfAutomationActions }}",
             "descriptions": {
-                "singular": "ztpfAutomationProfileSteps"
+                "singular": "ztpfAutomationActions"
             }
         }
     ],
     "system": false,
-    "module": "ztpf_automation_profiles",
+    "module": "ztpf_automation_profile_steps",
     "softDeleteable": false,
     "archivable": false,
     "paused": false,
@@ -164,9 +217,9 @@
     "archivalFilters": [],
     "replicationFilters": [],
     "enableReplication": true,
-    "displayName": "{{ name }}",
+    "displayName": "{{ stepSequence }} {{ name }}",
     "descriptions": {
-        "singular": "ztpfAutomationProfile",
-        "plural": "ztpfAutomationProfiles"
+        "singular": "ztpfAutomationProfileStep",
+        "plural": "ztpfAutomationProfileSteps"
     }
 }

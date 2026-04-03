@@ -5,7 +5,7 @@
     "name": "> update fortimanager-json-rpc connector config",
     "aliasName": null,
     "tag": null,
-    "description": "Rebuild the FMG JSON-RPC Connector.",
+    "description": "Rebuild the FMG JSON-RPC Connector from the Manager record.",
     "isActive": true,
     "debug": false,
     "singleRecordExecution": false,
@@ -42,8 +42,8 @@
                 "connector_nameip_list": "{{vars.connector_configs|json_query('[][name,config.address,id]')}}"
             },
             "status": null,
-            "top": "200",
-            "left": "940",
+            "top": "240",
+            "left": "640",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
             "uuid": "742dc0ba-cd91-4a53-bda1-ab41a0c38012"
@@ -56,8 +56,8 @@
                 "config_api_url": "{{vars.connector_api_url}}{{vars.existing_config['id']}}\/?format=json"
             },
             "status": null,
-            "top": "320",
-            "left": "1240",
+            "top": "360",
+            "left": "960",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
             "uuid": "5c67aa46-1f34-4ed1-bdeb-323b6ac566d8"
@@ -70,8 +70,8 @@
                 "new_connector_config": "{\n\"connector\": \"{{vars.connector_id}}\",\n\"name\": \"{{vars.connector_config}}\",\n\"default\": false,\n\"config\": {\n  \"address\": \"{{vars.fmg_ip}}\",\n  \"port\":\"{{vars.fmg_port}}\",\n  \"auth_method\": \"Username\/Password\",\n  \"username\":\"{{vars.fmg_user}}\",\n  \"password\":\"{{vars.fmg_pass}}\",\n  \"verify_ssl\" : false,\n  \"verbose_json\": true\n  }\n}"
             },
             "status": null,
-            "top": "320",
-            "left": "640",
+            "top": "360",
+            "left": "340",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
             "uuid": "decb8527-e10a-47a0-9694-aa6aa02f5538"
@@ -93,8 +93,8 @@
                 "step_variables": []
             },
             "status": null,
-            "top": "240",
-            "left": "640",
+            "top": "200",
+            "left": "340",
             "stepType": "\/api\/3\/workflow_step_types\/0109f35d-090b-4a2b-bd8a-94cbc3508562",
             "group": null,
             "uuid": "7a18eacc-19b7-4f13-92b3-c70486bc887d"
@@ -107,8 +107,8 @@
                 "playbook_status": "{%- set apiret = vars.steps.create_connector_config -%}\n\n{# Default status is ok #}\n{%- set s = {\n  \"error\":false,\n  \"status\":\"Ok\",\n  \"message\":\"Connector Built without Error.\"\n} -%}\n\n{# Catch Any issues below #}\n{%- if apiret.data.status.status is not defined -%}\n  {%-do s.update({\n    \"error\":true,\n    \"status\":\"Failed\",\n    \"message\":\"Connector Config Status Missing.\"\n  }) -%}\n{%- elif apiret.data.status.status != \"finished\" -%}\n  {%-do s.update({\n    \"error\":true,\n    \"status\":\"Failed\",\n    \"message\":\"Connector Config Failed.\\n\" + apiret.data.status.message\n  }) -%}\n{%- else -%}\n  {%-do s.update({\n    \"message\": apiret.data.status.message\n  }) -%}\n{%- endif -%}\n\n{{s}}"
             },
             "status": null,
-            "top": "120",
-            "left": "340",
+            "top": "280",
+            "left": "40",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
             "uuid": "9717b6a3-2c41-4b86-a9ac-fbf462d53bc6"
@@ -130,8 +130,8 @@
                 "step_variables": []
             },
             "status": null,
-            "top": "360",
-            "left": "940",
+            "top": "400",
+            "left": "640",
             "stepType": "\/api\/3\/workflow_step_types\/0109f35d-090b-4a2b-bd8a-94cbc3508562",
             "group": null,
             "uuid": "4c557c0b-befd-474d-aa71-9cf9d70f43ca"
@@ -158,8 +158,8 @@
                 "step_variables": []
             },
             "status": null,
-            "top": "280",
-            "left": "940",
+            "top": "320",
+            "left": "640",
             "stepType": "\/api\/3\/workflow_step_types\/12254cf5-5db7-4b1a-8cb1-3af081924b28",
             "group": null,
             "uuid": "1d5e981b-9469-4311-9045-80270087e7d8"
@@ -174,8 +174,8 @@
                 "connector_data_test": "{{vars.steps.get_connector_details}}"
             },
             "status": null,
-            "top": "120",
-            "left": "940",
+            "top": "160",
+            "left": "640",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
             "uuid": "72464ce4-f6f9-4221-a8ee-6b7ee9313263"
@@ -232,7 +232,7 @@
             },
             "status": null,
             "top": "120",
-            "left": "640",
+            "left": "340",
             "stepType": "\/api\/3\/workflow_step_types\/0109f35d-090b-4a2b-bd8a-94cbc3508562",
             "group": null,
             "uuid": "27483ee8-69c5-4f8c-95ea-0b362fe91467"
@@ -267,7 +267,7 @@
                 "connector_api_url": "\/api\/integration\/configuration\/"
             },
             "status": null,
-            "top": "40",
+            "top": "80",
             "left": "640",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
@@ -296,7 +296,7 @@
         },
         {
             "@type": "WorkflowStep",
-            "name": "update manager connector info",
+            "name": "update manager status and info",
             "description": null,
             "arguments": {
                 "resource": {
@@ -318,7 +318,7 @@
             },
             "status": null,
             "top": "200",
-            "left": "340",
+            "left": "40",
             "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928722",
             "group": null,
             "uuid": "c4d630b9-3ef6-4ad7-af72-79090e594713"
@@ -466,7 +466,25 @@
             "uuid": "6340dc54-59bc-4604-9700-8585437b5f5e"
         }
     ],
-    "groups": [],
+    "groups": [
+        {
+            "@type": "WorkflowGroup",
+            "name": "Details",
+            "description": "Taking input of connection information as arguments this playbook this \nplaybook does the following:\n - Get the connector_config from the record_id or creates a value. \n - Delete the connector config if it exists. \n - Rebuilds the connector config with the details passed as arguments.\n - Updates the manager record with:\n  - connector config name\n  - connector config details\n  - status of the update",
+            "type": "note",
+            "isCollapsed": false,
+            "hasTriggerStep": false,
+            "hideInLogs": false,
+            "metadata": [],
+            "reusable": false,
+            "top": "80",
+            "left": "900",
+            "height": "234",
+            "width": "493",
+            "uuid": "66c0cec7-4018-4293-af78-1d7b4a5c18c9",
+            "recordTags": []
+        }
+    ],
     "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
     "playbookOrigin": "\/api\/3\/picklists\/b6d710a9-a8ec-41ec-8817-fe9fa062fcdd",
     "isEditable": false,

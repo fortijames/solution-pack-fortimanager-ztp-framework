@@ -1,0 +1,404 @@
+{
+    "@context": "\/api\/3\/contexts\/Workflow",
+    "@type": "Workflow",
+    "triggerLimit": null,
+    "name": "Synch FMG Devices (New)",
+    "aliasName": null,
+    "tag": null,
+    "description": "Button to synch new devices from FMG using a manager record.",
+    "isActive": true,
+    "debug": false,
+    "singleRecordExecution": false,
+    "remoteExecutableFlag": false,
+    "parameters": [],
+    "synchronous": false,
+    "collection": "\/api\/3\/workflow_collections\/f0b56dc0-6c1e-4f5b-9199-c807800f028a",
+    "versions": [],
+    "triggerStep": "\/api\/3\/workflow_steps\/7c3f1ed6-7c43-436d-872e-b0d3bf4be131",
+    "steps": [
+        {
+            "@type": "WorkflowStep",
+            "name": "create managers",
+            "description": null,
+            "arguments": {
+                "managers": "{%- set gtype = vars.steps.prompt_get_device_type.input.getDeviceType|lower -%}\n{%- set cfilter = vars.steps.prompt_get_device_type.input.customFilter -%}\n{%- set ret = '' -%}\n{%- set table = [] -%}\n\n{%- for m in vars.input.records -%}\n  {%- set r = {\"id\":m.id} -%}\n\n  {%- if \"custom\" in gtype -%}\n    {%- do r.update({\"filter\":cfilter}) -%}\n  {%- elif \"default\" in gtype -%}\n    {%- do r.update({\"filter\":m.newDeviceFilter|default('')}) -%}\n  {%- else -%}\n    {%- do r.update({\"filter\":gtype}) -%}\n  {%- endif -%}\n  \n  {%- do table.append(r) -%}\n\n{%- endfor -%}\n\n{{table}}"
+            },
+            "status": null,
+            "top": "360",
+            "left": "360",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "e8b9fb21-c2b7-4384-8182-5169fc54c3c5"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "get new devices",
+            "description": null,
+            "arguments": {
+                "for_each": {
+                    "item": "{{vars.managers}}",
+                    "__bulk": false,
+                    "parallel": true,
+                    "condition": ""
+                },
+                "arguments": {
+                    "record_id": "{{vars.item['id']}}",
+                    "api_filter": "{{vars.item['filter']}}"
+                },
+                "apply_async": false,
+                "step_variables": [],
+                "pass_parent_env": false,
+                "pass_input_record": false,
+                "workflowReference": "\/api\/3\/workflows\/fa5eea78-898f-4d08-8d39-f30736803467"
+            },
+            "status": null,
+            "top": "120",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
+            "group": null,
+            "uuid": "6a752ea4-0c19-4cb0-8296-68523789512b"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "prompt get device type",
+            "description": null,
+            "arguments": {
+                "type": "InputBased",
+                "input": {
+                    "schema": {
+                        "title": "What type of devices should we find?",
+                        "description": "\n| Type              |  Description                                             |\n| ----------------- | ----------------------------------------------------- |\n| Default | Use the predefined filter in the Manager record settings.  |\n| All | Look at the entire table and add any new devices.  |\n| Unauthorized | Only look for Unauthorized.  |\n| Custom Filter | Enter a custom filter. |",
+                        "inputVariables": [
+                            {
+                                "name": "getDeviceType",
+                                "type": "array",
+                                "label": "Get Device Type",
+                                "title": "Dynamic List",
+                                "usable": true,
+                                "options": "{{vars.gettype}}",
+                                "tooltip": "Select a Get Device Type.",
+                                "dataType": "dynamicList",
+                                "formType": "dynamicList",
+                                "required": false,
+                                "_expanded": true,
+                                "mmdUpdate": true,
+                                "collection": false,
+                                "searchable": false,
+                                "templateUrl": "app\/components\/form\/fields\/dynamicList.html",
+                                "defaultValue": "Default",
+                                "_previousName": "",
+                                "playbookField": true,
+                                "lengthConstraint": true,
+                                "allowedGridColumn": false,
+                                "requiredCondition": "notrequired",
+                                "jinjaExpressionView": true,
+                                "useRecordFieldDefault": false,
+                                "_addRequiredConditions": false
+                            },
+                            {
+                                "name": "customFilter",
+                                "type": "object",
+                                "label": "Custom Filter",
+                                "title": "JSON",
+                                "usable": true,
+                                "tooltip": "Add custom filter in the format of FMG JSON-RPC API.",
+                                "dataType": "object",
+                                "formType": "object",
+                                "required": false,
+                                "_expanded": true,
+                                "mmdUpdate": true,
+                                "collection": false,
+                                "searchable": false,
+                                "templateUrl": "app\/components\/form\/fields\/json.html",
+                                "defaultValue": "[\"name\",\"like\",\"FG%\"]",
+                                "_previousName": "customFilter",
+                                "playbookField": true,
+                                "visibilityQuery": {
+                                    "sort": [],
+                                    "limit": 30,
+                                    "logic": "AND",
+                                    "filters": [
+                                        {
+                                            "type": "array",
+                                            "field": "getDeviceType",
+                                            "value": [
+                                                "Custom Filter"
+                                            ],
+                                            "module": "getDeviceType",
+                                            "display": "",
+                                            "operator": "in",
+                                            "template": "tags",
+                                            "OPERATOR_KEY": "$",
+                                            "useInOperator": true,
+                                            "previousOperator": "in",
+                                            "previousTemplate": "tags"
+                                        }
+                                    ]
+                                },
+                                "lengthConstraint": false,
+                                "allowedGridColumn": false,
+                                "requiredCondition": "notrequired",
+                                "jinjaExpressionView": true,
+                                "useRecordFieldDefault": false,
+                                "_addRequiredConditions": false,
+                                "_addVisibilityConditions": true
+                            }
+                        ]
+                    }
+                },
+                "record": "",
+                "timeout": {
+                    "days": 0,
+                    "hours": 0,
+                    "minutes": 1,
+                    "step_iri": "\/api\/3\/workflow_steps\/370cb9f9-1c77-4fe1-b771-910dec7b2e7b"
+                },
+                "agent_id": null,
+                "resources": "ztpf_managers",
+                "is_approval": false,
+                "owner_detail": {
+                    "isAssigned": false,
+                    "emailRecipients": ""
+                },
+                "isRecordLinked": false,
+                "step_variables": [],
+                "response_mapping": {
+                    "options": [
+                        {
+                            "option": "Proceed",
+                            "step_iri": "\/api\/3\/workflow_steps\/e8b9fb21-c2b7-4384-8182-5169fc54c3c5"
+                        }
+                    ],
+                    "duplicateOption": false,
+                    "customSuccessMessage": "Awaiting Playbook resumed successfully."
+                },
+                "email_notification": {
+                    "enabled": false,
+                    "smtpParameters": []
+                },
+                "customEmailExternal": false,
+                "inline_channel_list": [],
+                "external_channel_list": [],
+                "unauthenticated_input": false,
+                "external_email_subject": null,
+                "internal_email_subject": "A FortiSOAR playbook is requesting your input",
+                "custom_email_body_external": null,
+                "external_email_attachments": null
+            },
+            "status": null,
+            "top": "240",
+            "left": "360",
+            "stepType": "\/api\/3\/workflow_step_types\/fc04082a-d7dc-4299-96fb-6837b1baa0fe",
+            "group": null,
+            "uuid": "78e3cf51-a835-4b2e-a44f-72aa9bd5fc68"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "prompt timeout",
+            "description": null,
+            "arguments": [],
+            "status": null,
+            "top": "300",
+            "left": "680",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "370cb9f9-1c77-4fe1-b771-910dec7b2e7b"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "set record updating",
+            "description": null,
+            "arguments": {
+                "for_each": {
+                    "item": "{{vars.input.records}}",
+                    "__bulk": true,
+                    "condition": "",
+                    "batch_size": 100
+                },
+                "resource": {
+                    "status": "\/api\/3\/picklists\/286ba1d0-2aa4-4919-a418-5363e59077dc"
+                },
+                "operation": "Append",
+                "collection": "{{vars.item['@id']}}",
+                "__recommend": [],
+                "collectionType": "\/api\/3\/ztpf_managers",
+                "fieldOperation": {
+                    "recordTags": "Append"
+                },
+                "step_variables": []
+            },
+            "status": null,
+            "top": "40",
+            "left": "360",
+            "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928722",
+            "group": null,
+            "uuid": "51fe7007-e23a-4ef6-bb1d-3e0651ec549f"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "setup vars",
+            "description": null,
+            "arguments": {
+                "gettype": "[\"Default\",\"All\",\"Unauthorized\",\"Custom Filter\"]"
+            },
+            "status": null,
+            "top": "140",
+            "left": "360",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "748944a0-3e1b-4c11-b0ce-adb3c2e7dd83"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Start",
+            "description": "Retrieve New Devices from FMG",
+            "arguments": {
+                "route": "a6fa8702-fcdd-43f0-97b4-c19a9cb615a8",
+                "title": "Synch Devices (New)",
+                "resources": [
+                    "ztpf_managers"
+                ],
+                "__triggerLimit": true,
+                "inputVariables": [],
+                "step_variables": {
+                    "input": {
+                        "params": [],
+                        "records": "{{vars.input.records}}"
+                    }
+                },
+                "_promptexpanded": false,
+                "triggerOnSource": true,
+                "displayConditions": {
+                    "ztpf_managers": {
+                        "sort": [],
+                        "limit": 30,
+                        "logic": "AND",
+                        "filters": [
+                            {
+                                "type": "array",
+                                "field": "status",
+                                "value": [
+                                    "\/api\/3\/picklists\/2a2f34dc-4f3b-4434-aa58-ba995b2bf7c6",
+                                    "\/api\/3\/picklists\/ccb22d23-bdab-425c-960a-66b9bf59a0b2"
+                                ],
+                                "module": "status",
+                                "display": "",
+                                "operator": "in",
+                                "template": "multiselectpicklist",
+                                "OPERATOR_KEY": "$",
+                                "useInOperator": true,
+                                "previousOperator": "in",
+                                "previousTemplate": "multiselectpicklist"
+                            }
+                        ]
+                    }
+                },
+                "executeButtonText": "Execute",
+                "noRecordExecution": false,
+                "showToasterMessage": {
+                    "visible": false,
+                    "messageVisible": true
+                },
+                "triggerOnReplicate": false,
+                "singleRecordExecution": false
+            },
+            "status": null,
+            "top": "40",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/f414d039-bb0d-4e59-9c39-a8f1e880b18a",
+            "group": null,
+            "uuid": "7c3f1ed6-7c43-436d-872e-b0d3bf4be131"
+        }
+    ],
+    "routes": [
+        {
+            "@type": "WorkflowRoute",
+            "name": "create managers -> get new devices",
+            "targetStep": "\/api\/3\/workflow_steps\/6a752ea4-0c19-4cb0-8296-68523789512b",
+            "sourceStep": "\/api\/3\/workflow_steps\/e8b9fb21-c2b7-4384-8182-5169fc54c3c5",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "390c4e44-462e-4c02-b0e3-66a2eb13b63c"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "prompt get device type -> create api_filter",
+            "targetStep": "\/api\/3\/workflow_steps\/e8b9fb21-c2b7-4384-8182-5169fc54c3c5",
+            "sourceStep": "\/api\/3\/workflow_steps\/78e3cf51-a835-4b2e-a44f-72aa9bd5fc68",
+            "label": "Proceed",
+            "isExecuted": false,
+            "group": null,
+            "uuid": "b3a14f96-242e-4da8-851e-f64b17092397"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "prompt get device type -> prompt timeout",
+            "targetStep": "\/api\/3\/workflow_steps\/370cb9f9-1c77-4fe1-b771-910dec7b2e7b",
+            "sourceStep": "\/api\/3\/workflow_steps\/78e3cf51-a835-4b2e-a44f-72aa9bd5fc68",
+            "label": "",
+            "isExecuted": false,
+            "group": null,
+            "uuid": "3bbd9a83-7689-41ad-acaa-80cab0e528d8"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "set record updating -> setup vars",
+            "targetStep": "\/api\/3\/workflow_steps\/748944a0-3e1b-4c11-b0ce-adb3c2e7dd83",
+            "sourceStep": "\/api\/3\/workflow_steps\/51fe7007-e23a-4ef6-bb1d-3e0651ec549f",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "9b5548fe-fe34-448a-acd2-edbb2993a8af"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "setup vars -> prompt get device type",
+            "targetStep": "\/api\/3\/workflow_steps\/78e3cf51-a835-4b2e-a44f-72aa9bd5fc68",
+            "sourceStep": "\/api\/3\/workflow_steps\/748944a0-3e1b-4c11-b0ce-adb3c2e7dd83",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "8cf99401-e885-4324-acbc-8a68d9ffbc2e"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Start -> set record updating",
+            "targetStep": "\/api\/3\/workflow_steps\/51fe7007-e23a-4ef6-bb1d-3e0651ec549f",
+            "sourceStep": "\/api\/3\/workflow_steps\/7c3f1ed6-7c43-436d-872e-b0d3bf4be131",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "b86df7fe-efb6-4a3c-b16c-41688beff8a3"
+        }
+    ],
+    "groups": [
+        {
+            "@type": "WorkflowGroup",
+            "name": "Details",
+            "description": "Retrieve new FGs from the FMG.",
+            "type": "note",
+            "isCollapsed": false,
+            "hasTriggerStep": false,
+            "hideInLogs": false,
+            "metadata": [],
+            "reusable": false,
+            "top": "120",
+            "left": "640",
+            "height": "117",
+            "width": "402",
+            "uuid": "dc8e1637-108c-4d77-a953-86af3cc7304b",
+            "recordTags": []
+        }
+    ],
+    "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+    "playbookOrigin": "\/api\/3\/picklists\/b6d710a9-a8ec-41ec-8817-fe9fa062fcdd",
+    "isEditable": false,
+    "uuid": "7f0f8d4e-6446-4343-8289-48b62322bfcd",
+    "owners": [],
+    "isPrivate": false,
+    "deletedAt": null,
+    "recordTags": [
+        "ztpfManager"
+    ]
+}

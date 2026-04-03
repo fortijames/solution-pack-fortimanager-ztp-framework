@@ -2,7 +2,7 @@
     "@context": "\/api\/3\/contexts\/Workflow",
     "@type": "Workflow",
     "triggerLimit": null,
-    "name": "> synch manager source data - by record_id",
+    "name": "> synch source data - manager - by record_id",
     "aliasName": null,
     "tag": null,
     "description": "Retrieve source data of a manager record.",
@@ -276,17 +276,17 @@
         {
             "@type": "WorkflowGroup",
             "name": "Details",
-            "description": "1. Run get system status playbook.\n2. Update manager source data fields.\n3. Update status of manager record. \n3. Run Parse source data into fields playbook if no errors.",
+            "description": "This playbooks updates the manager source data field with these steps:\n - Run get system status playbook\n - Update manager source data field\n - Update status of manager record from API call\n - Run Parse source data into fields playbook if no errors",
             "type": "note",
             "isCollapsed": false,
             "hasTriggerStep": false,
             "hideInLogs": false,
             "metadata": [],
             "reusable": false,
-            "top": "180",
-            "left": "600",
-            "height": "142",
-            "width": "472",
+            "top": "160",
+            "left": "620",
+            "height": "175",
+            "width": "478",
             "uuid": "117f0f26-3c5f-45e5-9312-fa45d7ec19d5",
             "recordTags": []
         }
@@ -299,9 +299,7 @@
     "isPrivate": false,
     "deletedAt": null,
     "recordTags": [
-        "record_management",
-        "source_data",
-        "update_status",
+        "synch",
         "ztpfManager"
     ]
 }

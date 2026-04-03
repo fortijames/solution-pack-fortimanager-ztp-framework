@@ -21,11 +21,23 @@
     "postInstallConfig": {
         "enabled": false
     },
-    "date": "2026-03-27T19:51:24+00:00",
+    "date": "2026-04-03T18:39:57+00:00",
     "contents": {
         "picklistNames": [
             {
+                "name": "ztpfActionCategory"
+            },
+            {
+                "name": "ztpfActionType"
+            },
+            {
                 "name": "ztpfAdminStatus"
+            },
+            {
+                "name": "ztpfManagerGetNewDeviceType"
+            },
+            {
+                "name": "ztpfMetadataSourceType"
             },
             {
                 "name": "ztpfMetadataType"
@@ -35,12 +47,57 @@
             }
         ],
         "modules": {
-            "": {
+            "ztpf_automation_actions": {
+                "name": "ztpfAutomationActions",
+                "apiName": "ztpf_automation_actions"
+            },
+            "ztpf_automation_profiles": {
+                "name": "ztpfAutomationProfiles",
+                "apiName": "ztpf_automation_profiles"
+            },
+            "ztpf_automation_profile_steps": {
+                "name": "ztpfAutomationProfileSteps",
+                "apiName": "ztpf_automation_profile_steps"
+            },
+            "ztpf_device_automation_steps": {
+                "name": "ztpfDeviceAutomationSteps",
+                "apiName": "ztpf_device_automation_steps"
+            },
+            "ztpf_devices": {
+                "name": "ztpfDevices",
+                "apiName": "ztpf_devices"
+            },
+            "ztpf_managers": {
+                "name": "ztpfManagers",
+                "apiName": "ztpf_managers"
+            },
+            "ztpf_metadata_devices": {
+                "name": "ztpfMetadataDevices",
+                "apiName": "ztpf_metadata_devices"
+            },
+            "ztpf_metadata_sources": {
+                "name": "ztpfMetadataSources",
+                "apiName": "ztpf_metadata_sources"
+            },
+            "ztpf_quick_links": {
+                "name": "ztpfQuickLinks",
+                "apiName": "ztpf_quick_links"
+            },
+            "ztpf_templates": {
                 "name": "ztpfTemplates",
                 "apiName": "ztpf_templates"
             }
         },
         "viewTemplates": {
+            "ztpf_automation_actions": {
+                "name": "ztpfAutomationActions",
+                "apiName": "ztpf_automation_actions",
+                "views": [
+                    "detail",
+                    "form",
+                    "list"
+                ]
+            },
             "ztpf_automation_profiles": {
                 "name": "ztpfAutomationProfiles",
                 "apiName": "ztpf_automation_profiles",
@@ -50,12 +107,21 @@
                     "detail"
                 ]
             },
-            "ztpf_automation_steps": {
-                "name": "ztpfAutomationSteps",
-                "apiName": "ztpf_automation_steps",
+            "ztpf_automation_profile_steps": {
+                "name": "ztpfAutomationProfileSteps",
+                "apiName": "ztpf_automation_profile_steps",
                 "views": [
+                    "list",
                     "detail",
+                    "form"
+                ]
+            },
+            "ztpf_device_automation_steps": {
+                "name": "ztpfDeviceAutomationSteps",
+                "apiName": "ztpf_device_automation_steps",
+                "views": [
                     "form",
+                    "detail",
                     "list"
                 ]
             },
@@ -84,6 +150,24 @@
                     "form",
                     "list",
                     "detail"
+                ]
+            },
+            "ztpf_metadata_sources": {
+                "name": "ztpfMetadataSources",
+                "apiName": "ztpf_metadata_sources",
+                "views": [
+                    "list",
+                    "detail",
+                    "form"
+                ]
+            },
+            "ztpf_quick_links": {
+                "name": "ztpfQuickLinks",
+                "apiName": "ztpf_quick_links",
+                "views": [
+                    "detail",
+                    "list",
+                    "form"
                 ]
             },
             "ztpf_templates": {
@@ -134,6 +218,13 @@
             {
                 "apiName": "playbookButtons",
                 "name": "Playbook Buttons"
+            }
+        ],
+        "recordSets": [
+            {
+                "name": "ztpfQuickLinks",
+                "apiName": "ztpf_quick_links",
+                "count": 1
             }
         ]
     }

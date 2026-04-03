@@ -1,0 +1,396 @@
+{
+    "@context": "\/api\/3\/contexts\/Workflow",
+    "@type": "Workflow",
+    "triggerLimit": null,
+    "name": "> synch source data - devices - by record_ids",
+    "aliasName": null,
+    "tag": null,
+    "description": "Retrieve source data of a device records.",
+    "isActive": true,
+    "debug": false,
+    "singleRecordExecution": false,
+    "remoteExecutableFlag": false,
+    "parameters": [
+        "record_ids"
+    ],
+    "synchronous": false,
+    "collection": "\/api\/3\/workflow_collections\/517fb52d-36f5-4bac-a344-7d4599d7dec6",
+    "versions": [],
+    "triggerStep": "\/api\/3\/workflow_steps\/9a06b266-fbc2-4b2b-9df4-5d7441d163c8",
+    "steps": [
+        {
+            "@type": "WorkflowStep",
+            "name": "create device_data",
+            "description": "Merge device record and api data.",
+            "arguments": {
+                "device_data": "{%- set api_query_results = vars.steps.query_devices -%}\n{%- set find_device_records = vars.steps.find_device_records -%}\n\n{%- set table = [] -%}\n\n{%- for api in api_query_results -%}\n  {%- set concfg = api.params.connector_config -%}\n  {%- for dev in api.output.get_response -%}\n    {%- set sd = {\"record\":{},\"apidata\":{}} -%}\n    {%- set devname = dev.name -%}\n    {%- set recdata = find_device_records \n      | json_query('[?ztpfManagers.connectorConfig==`{}`]'\n          .format(concfg))\n      | json_query('[?name==`{}`]'\n          .format(devname))\n    -%}\n   {%- do sd.update({\"record\":recdata[0],\"apidata\":{\"dvmdb\":dev}}) -%}\n   {%- do table.append(sd) -%}    \n  {% endfor -%}\n{%- endfor -%}\n\n{{table}}"
+            },
+            "status": null,
+            "top": "200",
+            "left": "960",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "a4d551d6-71a3-4e56-8dd0-7556423a31bf"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "find device records",
+            "description": null,
+            "arguments": {
+                "query": {
+                    "sort": [],
+                    "limit": 30,
+                    "logic": "AND",
+                    "filters": [
+                        {
+                            "type": "primitive",
+                            "field": "id",
+                            "value": "{{vars.record_ids}}",
+                            "operator": "in",
+                            "_operator": "in"
+                        }
+                    ],
+                    "__selectFields": [
+                        "name",
+                        "sourceData",
+                        "ztpfManagers"
+                    ]
+                },
+                "module": "ztpf_devices?$limit=5000",
+                "checkboxFields": true,
+                "step_variables": []
+            },
+            "status": null,
+            "top": "40",
+            "left": "660",
+            "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928770",
+            "group": null,
+            "uuid": "2e223604-371a-4e1b-ae5b-792db44554f7"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "find devices missing",
+            "description": null,
+            "arguments": {
+                "query": {
+                    "sort": [],
+                    "limit": 30,
+                    "logic": "AND",
+                    "filters": [
+                        {
+                            "type": "object",
+                            "field": "status",
+                            "value": "\/api\/3\/picklists\/2a2f34dc-4f3b-4434-aa58-ba995b2bf7c6",
+                            "_value": {
+                                "@id": "\/api\/3\/picklists\/2a2f34dc-4f3b-4434-aa58-ba995b2bf7c6",
+                                "display": "Ok",
+                                "itemValue": "Ok"
+                            },
+                            "operator": "neq"
+                        },
+                        {
+                            "type": "primitive",
+                            "field": "id",
+                            "value": "{{vars.record_ids}}",
+                            "operator": "in",
+                            "_operator": "in"
+                        }
+                    ],
+                    "__selectFields": [
+                        "id"
+                    ]
+                },
+                "module": "ztpf_devices?$limit=5000",
+                "checkboxFields": true,
+                "step_variables": []
+            },
+            "status": null,
+            "top": "160",
+            "left": "340",
+            "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928770",
+            "group": null,
+            "uuid": "3dbcaf27-d2ea-4398-a56e-af8e2a64a54a"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "handle input",
+            "description": null,
+            "arguments": {
+                "record_ids": "{%- set in_field = vars.input.params['record_ids'] -%}\n{%- set ret = '' -%}\n\n{%- if in_field not in ['',None] -%}\n  {%- if in_field is sequence and in_field is not string -%}\n    {% set ret = in_field %}\n  {%- else -%}\n    {% set cmt = in_field | regex_replace('[,\\n]+', ',') %}\n    {% set ret = cmt.split(',') | list %}\n  {%- endif -%}\n{%- endif -%}\n\n{{ret}}"
+            },
+            "status": null,
+            "top": "40",
+            "left": "340",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "7897e11f-70ae-43c2-8725-5b66a91d89dd"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "query devices",
+            "description": null,
+            "arguments": {
+                "for_each": {
+                    "item": "{{vars.api_queries}}",
+                    "parallel": false,
+                    "condition": ""
+                },
+                "arguments": {
+                    "api_adom": "",
+                    "api_fields": "",
+                    "api_filter": "{{vars.item[\"filter\"]}}",
+                    "api_loadsub": "",
+                    "connector_config": "{{vars.item[\"connector_config\"]}}"
+                },
+                "apply_async": false,
+                "step_variables": [],
+                "pass_parent_env": false,
+                "pass_input_record": false,
+                "workflowReference": "\/api\/3\/workflows\/000fef7b-5d40-4010-beb2-c6144d0bd12e"
+            },
+            "status": null,
+            "top": "120",
+            "left": "960",
+            "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
+            "group": null,
+            "uuid": "0a81a376-367a-4519-add0-ea466af86f02"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "return",
+            "description": null,
+            "arguments": {
+                "output": "{{vars.device_data}}",
+                "params": "{{vars.input.params}}",
+                "status": "ok"
+            },
+            "status": null,
+            "top": "120",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "08261d50-cf04-46b5-9363-cc6150f36d13"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "setup query",
+            "description": null,
+            "arguments": {
+                "api_queries": "{%- set fdev = vars.steps.find_device_records -%}\n{%- set idx = {} -%}\n{%- set table = [] -%}\n{%- for d in fdev -%}\n  {%- set cf = d.ztpfManagers.connectorConfig -%}\n  {%- set f = [\"name\",\"==\",d.name] -%}\n  {%- set cf = d.ztpfManagers.connectorConfig -%}\n\n  {%- if cf not in idx -%}\n    {%- do idx.update({cf:{\"connector_config\":cf,\"filter\":[]}}) -%}    \n  {%- endif -%}\n\n  {%- set updf = idx[cf].filter -%}\n  {%- if updf|length > 0 -%}\n    {%- do updf.append('||') -%}\n  {%- endif -%}\n  {%- do updf.append(f) -%}\n  {%- do idx[cf].update({\"filter\":updf}) -%}\n\n{%- endfor -%}\n\n{%- for m in idx -%}\n  {%- do table.append(idx[m]) -%}\n{%- endfor -%}\n{{table}}"
+            },
+            "status": null,
+            "top": "40",
+            "left": "960",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "82b47041-f584-40e3-bf1b-0ce1d727d784"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Start",
+            "description": null,
+            "arguments": {
+                "__triggerLimit": true,
+                "step_variables": {
+                    "input": {
+                        "params": []
+                    }
+                },
+                "triggerOnSource": true,
+                "triggerOnReplicate": false
+            },
+            "status": null,
+            "top": "40",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/b348f017-9a94-471f-87f8-ce88b6a7ad62",
+            "group": null,
+            "uuid": "9a06b266-fbc2-4b2b-9df4-5d7441d163c8"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "update deleted devices",
+            "description": null,
+            "arguments": {
+                "when": "{{vars.steps.find_devices_missing|length > 0}}",
+                "for_each": {
+                    "item": "{{vars.steps.find_devices_missing}}",
+                    "__bulk": true,
+                    "parallel": false,
+                    "condition": "",
+                    "batch_size": 100
+                },
+                "resource": {
+                    "status": "\/api\/3\/picklists\/fb778ac2-a7ab-4fff-ba44-fe95b22ddc62"
+                },
+                "operation": "Append",
+                "collection": "{{vars.item['@id']}}",
+                "__recommend": [],
+                "collectionType": "\/api\/3\/ztpf_devices",
+                "fieldOperation": {
+                    "recordTags": "Append"
+                },
+                "step_variables": []
+            },
+            "status": null,
+            "top": "240",
+            "left": "340",
+            "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928722",
+            "group": null,
+            "uuid": "b2f3c5da-062a-4c12-b20f-7a4c27d0df36"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "update device source data and status",
+            "description": null,
+            "arguments": {
+                "for_each": {
+                    "item": "{{vars.device_data}}",
+                    "__bulk": true,
+                    "parallel": false,
+                    "condition": "",
+                    "batch_size": 100
+                },
+                "resource": {
+                    "status": "{{\"ztpfStatus\" | picklist(\"Ok\", \"@id\")}}",
+                    "sourceData": "{{vars.item.apidata}}"
+                },
+                "operation": "Append",
+                "collection": "{{vars.item.record['@id']}}",
+                "__recommend": [],
+                "collectionType": "\/api\/3\/ztpf_devices",
+                "fieldOperation": {
+                    "recordTags": "Append"
+                },
+                "step_variables": []
+            },
+            "status": null,
+            "top": "120",
+            "left": "660",
+            "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928722",
+            "group": null,
+            "uuid": "38f6447c-0f72-4022-9a09-9741821cd127"
+        }
+    ],
+    "routes": [
+        {
+            "@type": "WorkflowRoute",
+            "name": "create device_data -> update device source data and status",
+            "targetStep": "\/api\/3\/workflow_steps\/38f6447c-0f72-4022-9a09-9741821cd127",
+            "sourceStep": "\/api\/3\/workflow_steps\/a4d551d6-71a3-4e56-8dd0-7556423a31bf",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "7320986d-bb4c-4c26-a713-96816c959100"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "find device records -> setup query",
+            "targetStep": "\/api\/3\/workflow_steps\/82b47041-f584-40e3-bf1b-0ce1d727d784",
+            "sourceStep": "\/api\/3\/workflow_steps\/2e223604-371a-4e1b-ae5b-792db44554f7",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "15c89ef0-125a-491f-b011-6025476ecffa"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "find devices failed -> return",
+            "targetStep": "\/api\/3\/workflow_steps\/08261d50-cf04-46b5-9363-cc6150f36d13",
+            "sourceStep": "\/api\/3\/workflow_steps\/3dbcaf27-d2ea-4398-a56e-af8e2a64a54a",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "4230b6e1-4cbf-4a61-be11-86184794225e"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "find devices failed -> update failed devices",
+            "targetStep": "\/api\/3\/workflow_steps\/b2f3c5da-062a-4c12-b20f-7a4c27d0df36",
+            "sourceStep": "\/api\/3\/workflow_steps\/3dbcaf27-d2ea-4398-a56e-af8e2a64a54a",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "f49cc2eb-8d42-4c1f-b7e0-4ebab1268be1"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "handle input -> find device records",
+            "targetStep": "\/api\/3\/workflow_steps\/2e223604-371a-4e1b-ae5b-792db44554f7",
+            "sourceStep": "\/api\/3\/workflow_steps\/7897e11f-70ae-43c2-8725-5b66a91d89dd",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "04878564-8cdd-41cd-9d1e-99ea7a64b960"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "query devices -> create device_data",
+            "targetStep": "\/api\/3\/workflow_steps\/a4d551d6-71a3-4e56-8dd0-7556423a31bf",
+            "sourceStep": "\/api\/3\/workflow_steps\/0a81a376-367a-4519-add0-ea466af86f02",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "38cef098-5179-4fcb-91d8-5dd34ef42422"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "setup query -> query devices",
+            "targetStep": "\/api\/3\/workflow_steps\/0a81a376-367a-4519-add0-ea466af86f02",
+            "sourceStep": "\/api\/3\/workflow_steps\/82b47041-f584-40e3-bf1b-0ce1d727d784",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "832202cd-01b8-48e0-ad9a-a2d14f972bee"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Start -> handle input",
+            "targetStep": "\/api\/3\/workflow_steps\/7897e11f-70ae-43c2-8725-5b66a91d89dd",
+            "sourceStep": "\/api\/3\/workflow_steps\/9a06b266-fbc2-4b2b-9df4-5d7441d163c8",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "5903e3ba-58cc-4753-b697-7046d2429e45"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "update device source data and status -> find devices failed",
+            "targetStep": "\/api\/3\/workflow_steps\/3dbcaf27-d2ea-4398-a56e-af8e2a64a54a",
+            "sourceStep": "\/api\/3\/workflow_steps\/38f6447c-0f72-4022-9a09-9741821cd127",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "9509b130-9b29-4757-a592-0e5df34dbf31"
+        }
+    ],
+    "groups": [
+        {
+            "@type": "WorkflowGroup",
+            "name": "Details",
+            "description": "This playbook focuses on device record_ids and consolidates API calls to get device source data into one API call per Manager. \n\nDevices found will be updated and set to the status *Ok* and Devices not found in FMG will be flagged as *Deleted*.",
+            "type": "note",
+            "isCollapsed": false,
+            "hasTriggerStep": false,
+            "hideInLogs": false,
+            "metadata": [],
+            "reusable": false,
+            "top": "280",
+            "left": "600",
+            "height": "160",
+            "width": "498",
+            "uuid": "fbe783b1-73ba-4f4f-aea5-0a82b96c29ed",
+            "recordTags": []
+        }
+    ],
+    "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+    "playbookOrigin": "\/api\/3\/picklists\/b6d710a9-a8ec-41ec-8817-fe9fa062fcdd",
+    "isEditable": false,
+    "uuid": "379c3a43-af7e-4a27-bdbf-1207d2697378",
+    "owners": [],
+    "isPrivate": false,
+    "deletedAt": null,
+    "recordTags": [
+        "synch",
+        "ztpfDevice"
+    ]
+}

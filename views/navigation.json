@@ -55,33 +55,18 @@
                     },
                     {
                         "editMode": false,
-                        "icon": "fa fa-file-text-o",
+                        "icon": "icon icon-set-variables",
                         "require": {
                             "action": "read",
-                            "module": "ztpf_automation_profiles"
+                            "module": "ztpf_metadata_sources"
                         },
                         "state": {
                             "name": "main.modules.list",
                             "parameters": {
-                                "module": "ztpf_automation_profiles"
+                                "module": "ztpf_metadata_sources"
                             }
                         },
-                        "title": "Automation Profiles"
-                    },
-                    {
-                        "editMode": false,
-                        "icon": "icon icon-chart",
-                        "require": {
-                            "action": "read",
-                            "module": "ztpf_automation_steps"
-                        },
-                        "state": {
-                            "name": "main.modules.list",
-                            "parameters": {
-                                "module": "ztpf_automation_steps"
-                            }
-                        },
-                        "title": "Automation Steps"
+                        "title": "Metadata Sources"
                     },
                     {
                         "editMode": false,
@@ -100,18 +85,63 @@
                     },
                     {
                         "editMode": false,
-                        "icon": "icon icon-set-variables",
+                        "icon": "fa fa-bolt",
                         "require": {
                             "action": "read",
-                            "module": "ztpf_metadata_sources"
+                            "module": "ztpf_automation_actions"
                         },
                         "state": {
                             "name": "main.modules.list",
                             "parameters": {
-                                "module": "ztpf_metadata_sources"
+                                "module": "ztpf_automation_actions"
                             }
                         },
-                        "title": "Metadata Sources"
+                        "title": "ZTPF Actions"
+                    },
+                    {
+                        "editMode": false,
+                        "icon": "fa fa-file-text-o",
+                        "require": {
+                            "action": "read",
+                            "module": "ztpf_automation_profiles"
+                        },
+                        "state": {
+                            "name": "main.modules.list",
+                            "parameters": {
+                                "module": "ztpf_automation_profiles"
+                            }
+                        },
+                        "title": "ZTPF Profiles"
+                    },
+                    {
+                        "editMode": false,
+                        "icon": "fa fa-sticky-note-o",
+                        "require": {
+                            "action": "read",
+                            "module": "ztpf_automation_profile_steps"
+                        },
+                        "state": {
+                            "name": "main.modules.list",
+                            "parameters": {
+                                "module": "ztpf_automation_profile_steps"
+                            }
+                        },
+                        "title": "ZTPF Profile Steps"
+                    },
+                    {
+                        "editMode": false,
+                        "icon": "icon icon-audit-log",
+                        "require": {
+                            "action": "read",
+                            "module": "ztpf_device_automation_steps"
+                        },
+                        "state": {
+                            "name": "main.modules.list",
+                            "parameters": {
+                                "module": "ztpf_device_automation_steps"
+                            }
+                        },
+                        "title": "ZTPF Device Steps"
                     }
                 ],
                 "title": "ZTP Flow"

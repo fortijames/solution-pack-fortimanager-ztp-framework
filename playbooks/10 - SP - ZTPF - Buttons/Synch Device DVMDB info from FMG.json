@@ -2,10 +2,10 @@
     "@context": "\/api\/3\/contexts\/Workflow",
     "@type": "Workflow",
     "triggerLimit": null,
-    "name": "Synchronize FMG System Info from Record",
+    "name": "Synch Device DVMDB info from FMG",
     "aliasName": null,
     "tag": null,
-    "description": "Synchronize System info from Manager Record.",
+    "description": "Button to update devices by record ID.",
     "isActive": true,
     "debug": false,
     "singleRecordExecution": false,
@@ -14,41 +14,61 @@
     "synchronous": false,
     "collection": "\/api\/3\/workflow_collections\/f0b56dc0-6c1e-4f5b-9199-c807800f028a",
     "versions": [],
-    "triggerStep": "\/api\/3\/workflow_steps\/758e5b10-1c91-4980-94da-7d33f4424743",
+    "triggerStep": "\/api\/3\/workflow_steps\/e507e4f2-4f73-49bf-bca7-51e15919aabc",
     "steps": [
         {
             "@type": "WorkflowStep",
             "name": "set record updating",
             "description": null,
             "arguments": {
+                "for_each": {
+                    "item": "{{vars.input.records}}",
+                    "__bulk": true,
+                    "condition": "",
+                    "batch_size": 100
+                },
                 "resource": {
                     "status": "\/api\/3\/picklists\/286ba1d0-2aa4-4919-a418-5363e59077dc"
                 },
                 "operation": "Append",
-                "collection": "{{vars.input.records[0]['@id']}}",
+                "collection": "{{vars.item['@id']}}",
                 "__recommend": [],
-                "collectionType": "\/api\/3\/ztpf_managers",
+                "collectionType": "\/api\/3\/ztpf_devices",
                 "fieldOperation": {
                     "recordTags": "Append"
                 },
                 "step_variables": []
             },
             "status": null,
-            "top": "40",
-            "left": "340",
+            "top": "140",
+            "left": "360",
             "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928722",
             "group": null,
-            "uuid": "3b582475-ad8a-4a85-8f0f-4ff1eb9a5f14"
+            "uuid": "ede7f187-049b-42ec-9ffe-9e6f502612de"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "setup vars",
+            "description": null,
+            "arguments": {
+                "device_ids": "{{vars.input.records|json_query('[].id')}}"
+            },
+            "status": null,
+            "top": "40",
+            "left": "360",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "dd72e1ba-4eb6-4f1e-866b-ecb47b56fa7d"
         },
         {
             "@type": "WorkflowStep",
             "name": "Start",
             "description": null,
             "arguments": {
-                "route": "39e9350d-41b4-4745-af31-3825817d8582",
-                "title": "Synchronize System Info",
+                "route": "de8067dd-abc0-4f51-9481-82e554673328",
+                "title": "Synch DVMDB Data",
                 "resources": [
-                    "ztpf_managers"
+                    "ztpf_devices"
                 ],
                 "__triggerLimit": true,
                 "inputVariables": [],
@@ -60,7 +80,7 @@
                 },
                 "triggerOnSource": true,
                 "displayConditions": {
-                    "ztpf_managers": {
+                    "ztpf_devices": {
                         "sort": [],
                         "limit": 30,
                         "logic": "AND",
@@ -74,87 +94,96 @@
                     "messageVisible": true
                 },
                 "triggerOnReplicate": false,
-                "singleRecordExecution": true
+                "singleRecordExecution": false
             },
             "status": null,
             "top": "40",
             "left": "40",
             "stepType": "\/api\/3\/workflow_step_types\/f414d039-bb0d-4e59-9c39-a8f1e880b18a",
             "group": null,
-            "uuid": "758e5b10-1c91-4980-94da-7d33f4424743"
+            "uuid": "e507e4f2-4f73-49bf-bca7-51e15919aabc"
         },
         {
             "@type": "WorkflowStep",
-            "name": "synch manager info",
+            "name": "update source data",
             "description": null,
             "arguments": {
                 "arguments": {
-                    "record_id": "{{vars.input.records[0].id}}"
+                    "record_ids": "{{vars.device_ids}}"
                 },
                 "apply_async": false,
-                "ignore_errors": true,
                 "step_variables": [],
                 "pass_parent_env": false,
                 "pass_input_record": false,
-                "workflowReference": "\/api\/3\/workflows\/d653b755-cf23-4935-93e4-474acc7534d8"
+                "workflowReference": "\/api\/3\/workflows\/379c3a43-af7e-4a27-bdbf-1207d2697378"
             },
             "status": null,
-            "top": "260",
-            "left": "340",
+            "top": "140",
+            "left": "40",
             "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
             "group": null,
-            "uuid": "1ecbdf64-a1ac-4722-8e3d-a129a8ea3258"
+            "uuid": "514c8751-00ff-4e9a-a0b2-1f31781dca16"
         }
     ],
     "routes": [
         {
             "@type": "WorkflowRoute",
-            "name": "set record updating -> synch manager info",
-            "targetStep": "\/api\/3\/workflow_steps\/1ecbdf64-a1ac-4722-8e3d-a129a8ea3258",
-            "sourceStep": "\/api\/3\/workflow_steps\/3b582475-ad8a-4a85-8f0f-4ff1eb9a5f14",
+            "name": "set record updating -> update source data",
+            "targetStep": "\/api\/3\/workflow_steps\/514c8751-00ff-4e9a-a0b2-1f31781dca16",
+            "sourceStep": "\/api\/3\/workflow_steps\/ede7f187-049b-42ec-9ffe-9e6f502612de",
             "label": null,
             "isExecuted": false,
             "group": null,
-            "uuid": "76d539d5-7b2f-4823-8d84-cee629d72bfc"
+            "uuid": "1f6593b8-aa51-4f8b-ac71-a7232400c27e"
         },
         {
             "@type": "WorkflowRoute",
-            "name": "Start -> record updating",
-            "targetStep": "\/api\/3\/workflow_steps\/3b582475-ad8a-4a85-8f0f-4ff1eb9a5f14",
-            "sourceStep": "\/api\/3\/workflow_steps\/758e5b10-1c91-4980-94da-7d33f4424743",
+            "name": "setup vars -> set record updating",
+            "targetStep": "\/api\/3\/workflow_steps\/ede7f187-049b-42ec-9ffe-9e6f502612de",
+            "sourceStep": "\/api\/3\/workflow_steps\/dd72e1ba-4eb6-4f1e-866b-ecb47b56fa7d",
             "label": null,
             "isExecuted": false,
             "group": null,
-            "uuid": "fb52c9a6-1ed6-48cd-8acb-9ba4e70bd8c9"
+            "uuid": "2785c340-393e-4560-a1f6-fec91d399dc6"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Start -> setup vars",
+            "targetStep": "\/api\/3\/workflow_steps\/dd72e1ba-4eb6-4f1e-866b-ecb47b56fa7d",
+            "sourceStep": "\/api\/3\/workflow_steps\/e507e4f2-4f73-49bf-bca7-51e15919aabc",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "b8587353-af07-4d97-bdce-65deacf428b0"
         }
     ],
     "groups": [
         {
             "@type": "WorkflowGroup",
             "name": "Details",
-            "description": "1. Set record status to updating. \n2. Run playbook to handle system info and source data.",
+            "description": "Set Device records to *Updating* and call the playbook that consolidates the API per manager and updates the source data and sets the status back based on findings.",
             "type": "note",
             "isCollapsed": false,
             "hasTriggerStep": false,
             "hideInLogs": false,
             "metadata": [],
             "reusable": false,
-            "top": "120",
-            "left": "480",
-            "height": "117",
-            "width": "402",
-            "uuid": "577e9ed6-3b57-4765-bf83-eceb8b8d8829",
+            "top": "220",
+            "left": "120",
+            "height": "131",
+            "width": "371",
+            "uuid": "9a3256f7-982f-4a78-9ca6-1552155134a8",
             "recordTags": []
         }
     ],
     "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
     "playbookOrigin": "\/api\/3\/picklists\/b6d710a9-a8ec-41ec-8817-fe9fa062fcdd",
     "isEditable": false,
-    "uuid": "6afb35d4-b6c1-442e-97b7-b7c5e2113a30",
+    "uuid": "9d1a83d1-e9a6-4d6d-986f-173edf129617",
     "owners": [],
     "isPrivate": false,
     "deletedAt": null,
     "recordTags": [
-        "Manager"
+        "ztpfDevice"
     ]
 }

@@ -69,7 +69,7 @@
             "arguments": {
                 "api_url": "{%- if vars.input.params['api_adom'] not in ['',None] -%}\n\/dvmdb\/adom\/{{vars.input.params['api_adom']}}\/device\n{%- else -%}\n\/dvmdb\/device\n{%- endif -%}",
                 "api_fields": "{{vars.input.params['api_fields']}}",
-                "api_filter": "{%- set inf = vars.input.params['api_filter'] -%}\n{%- set kws = vars.filter_db.keys() | list -%}\n\n{%- if inf in ['',None] -%}\n  {%- set inf = vars.filter_db[\"default\"] -%}\n{%- elif inf in kws -%}\n  {%- set inf = vars.filter_db[inf] -%}\n{%- endif -%}\n\n{{inf}}",
+                "api_filter": "{%- set inf = vars.input.params['api_filter'] -%}\n{%- set kws = vars.filter_db.keys() | list -%}\n\n{%- if inf in ['',None] -%}\n  {%- set inf = vars.filter_db[\"default\"] -%}\n{%- elif inf|lower in kws -%}\n  {%- set inf = vars.filter_db[inf|lower] -%}\n{%- endif -%}\n\n{{inf}}",
                 "api_loadsub": "{%- set d = vars.input.params['api_loadsub'] -%} \n{%- if d in ['',None] -%}\n1\n{%- else -%}\n{{d}}\n{%- endif -%}"
             },
             "status": null,
