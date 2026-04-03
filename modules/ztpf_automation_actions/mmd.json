@@ -384,11 +384,12 @@
             "gridColumn": false,
             "collection": true,
             "inversedField": "ztpfAutomationActions",
-            "ownsRelationship": false,
+            "ownsRelationship": true,
             "validation": {
                 "required": false,
                 "minlength": 0,
-                "maxlength": 10485761
+                "maxlength": 10485761,
+                "_enableRange": false
             },
             "bulkAction": [],
             "dataSourceFilters": null,
@@ -405,7 +406,7 @@
             "skipSerialization": false,
             "displayName": "{{ ztpfAutomationProfileSteps }}",
             "descriptions": {
-                "singular": "ztpfAutomationProfileSteps"
+                "singular": "Automation Profile Steps"
             }
         },
         {
@@ -446,7 +447,7 @@
             "skipSerialization": false,
             "displayName": "{{ ztpfDeviceAutomationSteps }}",
             "descriptions": {
-                "singular": "ztpfDeviceAutomationSteps"
+                "singular": "Device Automation Steps"
             }
         }
     ],

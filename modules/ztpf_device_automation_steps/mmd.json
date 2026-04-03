@@ -18,7 +18,7 @@
         {
             "@type": "AttributeMetadata",
             "type": "ztpf_devices",
-            "name": "ztpfDevices",
+            "name": "device",
             "length": null,
             "formType": "lookup",
             "dataSource": {
@@ -56,9 +56,9 @@
             "unique": false,
             "recommend": false,
             "skipSerialization": false,
-            "displayName": "{{ ztpfDevices }}",
+            "displayName": "{{ device }}",
             "descriptions": {
-                "singular": "ztpfDevices"
+                "singular": "Device"
             }
         },
         {
@@ -122,7 +122,8 @@
             "validation": {
                 "required": false,
                 "minlength": 0,
-                "maxlength": 10485761
+                "maxlength": 10485761,
+                "_enableRange": false
             },
             "bulkAction": {
                 "allow": false,
@@ -144,7 +145,7 @@
             "skipSerialization": false,
             "displayName": "{{ stepStartTimestamp }}",
             "descriptions": {
-                "singular": "Step Start Timestamp"
+                "singular": "Start Timestamp"
             }
         },
         {
@@ -165,7 +166,8 @@
             "validation": {
                 "required": false,
                 "minlength": 0,
-                "maxlength": 10485761
+                "maxlength": 10485761,
+                "_enableRange": false
             },
             "bulkAction": {
                 "allow": false,
@@ -187,7 +189,7 @@
             "skipSerialization": false,
             "displayName": "{{ stepStopTimestamp }}",
             "descriptions": {
-                "singular": "Step Stop Timestamp"
+                "singular": "Stop Timestamp"
             }
         },
         {
@@ -233,7 +235,7 @@
             "skipSerialization": false,
             "displayName": "{{ ztpfAutomationActions }}",
             "descriptions": {
-                "singular": "ztpfAutomationActions"
+                "singular": "Automation Action"
             }
         }
     ],

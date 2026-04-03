@@ -26,50 +26,6 @@
     "attributes": [
         {
             "@type": "AttributeMetadata",
-            "type": "string",
-            "name": "name",
-            "length": null,
-            "formType": "text",
-            "dataSource": null,
-            "searchable": false,
-            "peerReplicable": true,
-            "system": false,
-            "encrypted": false,
-            "gridColumn": false,
-            "collection": false,
-            "inversedField": null,
-            "ownsRelationship": false,
-            "validation": {
-                "required": true,
-                "minlength": 0,
-                "maxlength": 10485761,
-                "_enableRange": false
-            },
-            "bulkAction": {
-                "allow": false,
-                "buttonText": "",
-                "buttonIcon": "",
-                "buttonClass": "btn btn-default btn-sm"
-            },
-            "dataSourceFilters": null,
-            "defaultValue": "",
-            "tooltip": null,
-            "visibility": true,
-            "htmlEscape": false,
-            "orphanRemoval": null,
-            "readable": true,
-            "writeable": true,
-            "identifier": null,
-            "unique": false,
-            "recommend": false,
-            "skipSerialization": false,
-            "displayName": "{{ name }}",
-            "descriptions": {
-                "singular": "Name"
-            }
-        },
-        {
-            "@type": "AttributeMetadata",
             "type": "ztpf_automation_profiles",
             "name": "ztpfAutomationProfiles",
             "length": null,
@@ -81,7 +37,7 @@
             "peerReplicable": true,
             "system": false,
             "encrypted": false,
-            "gridColumn": false,
+            "gridColumn": true,
             "collection": false,
             "inversedField": null,
             "ownsRelationship": false,
@@ -111,7 +67,7 @@
             "skipSerialization": false,
             "displayName": "{{ ztpfAutomationProfiles }}",
             "descriptions": {
-                "singular": "ztpfAutomationProfiles"
+                "singular": "Automation Profile"
             }
         },
         {
@@ -125,7 +81,7 @@
             "peerReplicable": true,
             "system": false,
             "encrypted": false,
-            "gridColumn": false,
+            "gridColumn": true,
             "collection": false,
             "inversedField": null,
             "ownsRelationship": false,
@@ -170,12 +126,12 @@
             "peerReplicable": true,
             "system": false,
             "encrypted": false,
-            "gridColumn": false,
+            "gridColumn": true,
             "collection": false,
             "inversedField": null,
             "ownsRelationship": false,
             "validation": {
-                "required": false,
+                "required": true,
                 "minlength": 0,
                 "maxlength": 10485761,
                 "_enableRange": false
@@ -200,7 +156,7 @@
             "skipSerialization": false,
             "displayName": "{{ ztpfAutomationActions }}",
             "descriptions": {
-                "singular": "ztpfAutomationActions"
+                "singular": "Automation Action"
             }
         }
     ],
@@ -217,7 +173,7 @@
     "archivalFilters": [],
     "replicationFilters": [],
     "enableReplication": true,
-    "displayName": "{{ stepSequence }} {{ name }}",
+    "displayName": "{{ stepSequence }}",
     "descriptions": {
         "singular": "ztpfAutomationProfileStep",
         "plural": "ztpfAutomationProfileSteps"
