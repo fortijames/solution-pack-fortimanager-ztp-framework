@@ -9,12 +9,29 @@
                     {
                         "widgets": [
                             {
-                                "type": "editableForm",
-                                "config": []
+                                "type": "primaryDetail",
+                                "config": {
+                                    "wid": "f6ca423e-9054-4683-ac43-b8bf492b8f72",
+                                    "idField": "id",
+                                    "picklistFieldReadOnly": true,
+                                    "titleFieldReadOnly": true,
+                                    "featuredRelationship": {
+                                        "field": null,
+                                        "preText": "Under Investigation In",
+                                        "query": null,
+                                        "statusField": null,
+                                        "sort": []
+                                    },
+                                    "picklistField": "category",
+                                    "titleField": "name"
+                                }
                             }
-                        ]
+                        ],
+                        "style": "col-lg-12"
                     }
-                ]
+                ],
+                "wid": "4f56132b-6083-4c59-952b-d145fcb5fdb9",
+                "_collapsed": false
             },
             {
                 "columns": [
@@ -23,22 +40,309 @@
                             {
                                 "type": "tabs",
                                 "config": {
+                                    "wid": "de01a30d-5f27-423b-b870-831cc44c4711",
                                     "tabs": [
                                         {
-                                            "title": "Related Records",
+                                            "title": "Details",
+                                            "active": 0,
                                             "widget": {
-                                                "type": "relationship.subtab",
-                                                "config": []
-                                            }
+                                                "type": "rows",
+                                                "config": {
+                                                    "wid": "29d150d9-0e91-4f32-b94b-39decb0f6d26",
+                                                    "rows": [
+                                                        {
+                                                            "columns": [
+                                                                {
+                                                                    "widgets": [
+                                                                        {
+                                                                            "type": "sectionHeader",
+                                                                            "config": {
+                                                                                "wid": "61d0638f-35f7-4cb6-aff7-d654038a8e47",
+                                                                                "query": {
+                                                                                    "filters": [],
+                                                                                    "sort": [],
+                                                                                    "limit": 10
+                                                                                },
+                                                                                "editorType": "html",
+                                                                                "sectionText": "<p style=\"text-align: center;\"><span style=\"font-size: 14pt;\"><strong>Action Details<\/strong><\/span><\/p>"
+                                                                            }
+                                                                        },
+                                                                        {
+                                                                            "type": "editableFormGroup",
+                                                                            "config": {
+                                                                                "wid": "dbca730c-ab6c-4dc9-a28a-69ee58da6dfd",
+                                                                                "rows": [
+                                                                                    {
+                                                                                        "columns": [
+                                                                                            {
+                                                                                                "fields": [
+                                                                                                    {
+                                                                                                        "name": "type",
+                                                                                                        "highlightMode": true,
+                                                                                                        "linky": true,
+                                                                                                        "readOnly": true
+                                                                                                    },
+                                                                                                    {
+                                                                                                        "name": "name",
+                                                                                                        "highlightMode": true,
+                                                                                                        "linky": true,
+                                                                                                        "readOnly": true
+                                                                                                    }
+                                                                                                ],
+                                                                                                "style": "col-lg-6"
+                                                                                            },
+                                                                                            {
+                                                                                                "fields": [
+                                                                                                    {
+                                                                                                        "name": "createDate",
+                                                                                                        "highlightMode": true,
+                                                                                                        "linky": true,
+                                                                                                        "readOnly": true
+                                                                                                    },
+                                                                                                    {
+                                                                                                        "name": "createUser",
+                                                                                                        "highlightMode": true,
+                                                                                                        "linky": true,
+                                                                                                        "readOnly": true
+                                                                                                    },
+                                                                                                    {
+                                                                                                        "name": "modifyDate",
+                                                                                                        "highlightMode": true,
+                                                                                                        "linky": true,
+                                                                                                        "readOnly": true
+                                                                                                    },
+                                                                                                    {
+                                                                                                        "name": "modifyUser",
+                                                                                                        "highlightMode": true,
+                                                                                                        "linky": true,
+                                                                                                        "readOnly": true
+                                                                                                    }
+                                                                                                ],
+                                                                                                "style": "col-lg-6"
+                                                                                            }
+                                                                                        ]
+                                                                                    }
+                                                                                ]
+                                                                            }
+                                                                        },
+                                                                        {
+                                                                            "type": "editableFormGroup",
+                                                                            "config": {
+                                                                                "wid": "77e2a226-fcf0-42a2-974b-2235a5a1d215",
+                                                                                "rows": [
+                                                                                    {
+                                                                                        "columns": [
+                                                                                            {
+                                                                                                "fields": [
+                                                                                                    {
+                                                                                                        "name": "description",
+                                                                                                        "highlightMode": true,
+                                                                                                        "linky": true,
+                                                                                                        "readOnly": false
+                                                                                                    }
+                                                                                                ],
+                                                                                                "style": "col-lg-12"
+                                                                                            }
+                                                                                        ]
+                                                                                    }
+                                                                                ]
+                                                                            }
+                                                                        }
+                                                                    ],
+                                                                    "style": "col-lg-3",
+                                                                    "collapsedText": "Details"
+                                                                },
+                                                                {
+                                                                    "widgets": [
+                                                                        {
+                                                                            "type": "sectionHeader",
+                                                                            "config": {
+                                                                                "wid": "4c792c59-d999-469f-9e85-50de3f3b6b4f",
+                                                                                "query": {
+                                                                                    "filters": [],
+                                                                                    "sort": [],
+                                                                                    "limit": 10
+                                                                                },
+                                                                                "editorType": "html",
+                                                                                "sectionText": "<p style=\"text-align: center;\"><strong>Jinja Script<\/strong><\/p>"
+                                                                            }
+                                                                        },
+                                                                        {
+                                                                            "type": "editableFormGroup",
+                                                                            "config": {
+                                                                                "wid": "97e08db3-693e-43d0-a939-c870315821ce",
+                                                                                "rows": [
+                                                                                    {
+                                                                                        "columns": [
+                                                                                            {
+                                                                                                "fields": [
+                                                                                                    {
+                                                                                                        "name": "ztpfTemplates",
+                                                                                                        "highlightMode": true,
+                                                                                                        "linky": true,
+                                                                                                        "readOnly": true
+                                                                                                    }
+                                                                                                ],
+                                                                                                "style": "col-lg-12"
+                                                                                            }
+                                                                                        ]
+                                                                                    }
+                                                                                ],
+                                                                                "visibility": {
+                                                                                    "conditionalVisibility": true,
+                                                                                    "filter": {
+                                                                                        "sort": [],
+                                                                                        "limit": 30,
+                                                                                        "logic": "AND",
+                                                                                        "filters": [
+                                                                                            {
+                                                                                                "field": "ztpfTemplates",
+                                                                                                "operator": "isnull",
+                                                                                                "value": "false",
+                                                                                                "_value": {
+                                                                                                    "display": "{{template}}",
+                                                                                                    "itemValue": "",
+                                                                                                    "@id": "false"
+                                                                                                },
+                                                                                                "type": "object"
+                                                                                            }
+                                                                                        ]
+                                                                                    }
+                                                                                }
+                                                                            }
+                                                                        },
+                                                                        {
+                                                                            "type": "editableFormGroup",
+                                                                            "config": {
+                                                                                "wid": "dd79dcbe-16f9-436a-8a20-e4fa9c92dd1d",
+                                                                                "rows": [
+                                                                                    {
+                                                                                        "columns": [
+                                                                                            {
+                                                                                                "fields": [
+                                                                                                    {
+                                                                                                        "name": "script",
+                                                                                                        "highlightMode": true,
+                                                                                                        "linky": true,
+                                                                                                        "readOnly": false,
+                                                                                                        "renderWidgetHeight": 800
+                                                                                                    }
+                                                                                                ],
+                                                                                                "style": "col-lg-12"
+                                                                                            }
+                                                                                        ]
+                                                                                    }
+                                                                                ]
+                                                                            }
+                                                                        }
+                                                                    ],
+                                                                    "style": "col-lg-9"
+                                                                }
+                                                            ],
+                                                            "wid": "af338968-4d97-4728-b2e5-7255ffa795b6",
+                                                            "_collapsed": false,
+                                                            "collapsible": true,
+                                                            "collapsibleIndex": 0
+                                                        }
+                                                    ]
+                                                },
+                                                "visible": true
+                                            },
+                                            "icon": "icon icon-details",
+                                            "show": true,
+                                            "visible": true
+                                        },
+                                        {
+                                            "title": "Metadata",
+                                            "active": 0,
+                                            "widget": {
+                                                "type": "rows",
+                                                "config": {
+                                                    "wid": "03a3d85a-0d44-4878-b8e2-d59b0e4f53cc",
+                                                    "rows": [
+                                                        {
+                                                            "columns": [
+                                                                {
+                                                                    "widgets": [
+                                                                        {
+                                                                            "type": "sectionHeader",
+                                                                            "config": {
+                                                                                "wid": "8afd15a7-dc05-458e-8ce0-e0bb7a27a9bd",
+                                                                                "query": {
+                                                                                    "filters": [],
+                                                                                    "sort": [],
+                                                                                    "limit": 10
+                                                                                },
+                                                                                "editorType": "html",
+                                                                                "sectionText": "<p style=\"text-align: center;\"><strong>Action Record Metadata<\/strong><\/p>"
+                                                                            }
+                                                                        },
+                                                                        {
+                                                                            "type": "editableFormGroup",
+                                                                            "config": {
+                                                                                "wid": "e69f8c1d-5687-4e69-b265-5f3e9d4b70a9",
+                                                                                "rows": [
+                                                                                    {
+                                                                                        "columns": [
+                                                                                            {
+                                                                                                "fields": [
+                                                                                                    {
+                                                                                                        "name": "metatadata",
+                                                                                                        "highlightMode": true,
+                                                                                                        "linky": true,
+                                                                                                        "readOnly": false,
+                                                                                                        "renderWidgetHeight": 800
+                                                                                                    }
+                                                                                                ]
+                                                                                            }
+                                                                                        ]
+                                                                                    }
+                                                                                ]
+                                                                            }
+                                                                        }
+                                                                    ],
+                                                                    "style": "col-lg-12"
+                                                                }
+                                                            ],
+                                                            "wid": "f038748d-5808-4e43-93e7-7d3f7694a14f",
+                                                            "_collapsed": false
+                                                        }
+                                                    ]
+                                                },
+                                                "visible": true
+                                            },
+                                            "icon": "fa fa-none",
+                                            "show": false,
+                                            "visible": true
+                                        },
+                                        {
+                                            "title": "TEST",
+                                            "active": 0,
+                                            "widget": {
+                                                "type": "editableForm",
+                                                "config": {
+                                                    "wid": "1c7fee01-802f-4c50-bfdd-26e2e6bf04d2"
+                                                },
+                                                "visible": true
+                                            },
+                                            "icon": "fa fa-none",
+                                            "show": false,
+                                            "visible": true
                                         }
                                     ]
                                 }
                             }
-                        ]
+                        ],
+                        "style": "col-lg-12"
                     }
-                ]
+                ],
+                "wid": "97a85f09-0c25-4779-975a-532467bc861e",
+                "_collapsed": false
             }
-        ]
+        ],
+        "wid": "8d080fdb-4b94-44fa-b543-c2d7c8b78902",
+        "actionButtons": [],
+        "metadata": []
     },
     "module": "ztpf_automation_actions",
     "filters": [],

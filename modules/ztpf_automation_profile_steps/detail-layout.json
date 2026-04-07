@@ -9,36 +9,196 @@
                     {
                         "widgets": [
                             {
-                                "type": "editableForm",
-                                "config": []
-                            }
-                        ]
-                    }
-                ]
-            },
-            {
-                "columns": [
-                    {
-                        "widgets": [
-                            {
                                 "type": "tabs",
                                 "config": {
+                                    "wid": "c6ce08cc-cf80-4f5b-9338-0624d26b994e",
                                     "tabs": [
                                         {
-                                            "title": "Related Records",
+                                            "title": "Details",
+                                            "active": 0,
                                             "widget": {
-                                                "type": "relationship.subtab",
-                                                "config": []
-                                            }
+                                                "type": "rows",
+                                                "config": {
+                                                    "wid": "571f88fe-545b-46cd-a00c-6f845cfce401",
+                                                    "rows": [
+                                                        {
+                                                            "columns": [
+                                                                {
+                                                                    "widgets": [
+                                                                        {
+                                                                            "type": "sectionHeader",
+                                                                            "config": {
+                                                                                "wid": "1d487858-70c0-48a6-be93-533c306da4cd",
+                                                                                "query": {
+                                                                                    "filters": [],
+                                                                                    "sort": [],
+                                                                                    "limit": 10
+                                                                                },
+                                                                                "editorType": "html",
+                                                                                "sectionText": "<p style=\"text-align: center;\"><strong>Automation Step Detail<\/strong><\/p>"
+                                                                            }
+                                                                        },
+                                                                        {
+                                                                            "type": "editableFormGroup",
+                                                                            "config": {
+                                                                                "wid": "fcc0156a-cbb9-44ac-a4ef-a6c2b1f99320",
+                                                                                "rows": [
+                                                                                    {
+                                                                                        "columns": [
+                                                                                            {
+                                                                                                "fields": [
+                                                                                                    {
+                                                                                                        "name": "id",
+                                                                                                        "highlightMode": true,
+                                                                                                        "linky": true,
+                                                                                                        "readOnly": true
+                                                                                                    }
+                                                                                                ],
+                                                                                                "style": "col-lg-6"
+                                                                                            },
+                                                                                            {
+                                                                                                "fields": [
+                                                                                                    {
+                                                                                                        "name": "createDate",
+                                                                                                        "highlightMode": true,
+                                                                                                        "linky": true,
+                                                                                                        "readOnly": true
+                                                                                                    },
+                                                                                                    {
+                                                                                                        "name": "createUser",
+                                                                                                        "highlightMode": true,
+                                                                                                        "linky": true,
+                                                                                                        "readOnly": true
+                                                                                                    },
+                                                                                                    {
+                                                                                                        "name": "modifyDate",
+                                                                                                        "highlightMode": true,
+                                                                                                        "linky": true,
+                                                                                                        "readOnly": true
+                                                                                                    },
+                                                                                                    {
+                                                                                                        "name": "modifyUser",
+                                                                                                        "highlightMode": true,
+                                                                                                        "linky": true,
+                                                                                                        "readOnly": true
+                                                                                                    }
+                                                                                                ],
+                                                                                                "style": "col-lg-6"
+                                                                                            }
+                                                                                        ]
+                                                                                    }
+                                                                                ]
+                                                                            }
+                                                                        }
+                                                                    ],
+                                                                    "style": "col-lg-3",
+                                                                    "collapsedText": "Details"
+                                                                },
+                                                                {
+                                                                    "widgets": [
+                                                                        {
+                                                                            "type": "sectionHeader",
+                                                                            "config": {
+                                                                                "wid": "1a353570-1858-4377-a87d-239515d67d2f",
+                                                                                "query": {
+                                                                                    "filters": [],
+                                                                                    "sort": [],
+                                                                                    "limit": 10
+                                                                                },
+                                                                                "editorType": "html",
+                                                                                "sectionText": "<p style=\"text-align: center;\"><strong>Automation Step Assignment<\/strong><\/p>"
+                                                                            }
+                                                                        },
+                                                                        {
+                                                                            "type": "editableFormGroup",
+                                                                            "config": {
+                                                                                "wid": "dda8d361-9e88-4a02-83ca-1a4f42621e9a",
+                                                                                "rows": [
+                                                                                    {
+                                                                                        "columns": [
+                                                                                            {
+                                                                                                "fields": [
+                                                                                                    {
+                                                                                                        "name": "ztpfAutomationProfiles",
+                                                                                                        "highlightMode": true,
+                                                                                                        "linky": true,
+                                                                                                        "readOnly": true
+                                                                                                    }
+                                                                                                ],
+                                                                                                "style": "col-lg-4"
+                                                                                            },
+                                                                                            {
+                                                                                                "fields": [
+                                                                                                    {
+                                                                                                        "name": "stepSequence",
+                                                                                                        "highlightMode": true,
+                                                                                                        "linky": true,
+                                                                                                        "readOnly": true
+                                                                                                    }
+                                                                                                ],
+                                                                                                "style": "col-lg-4"
+                                                                                            },
+                                                                                            {
+                                                                                                "fields": [
+                                                                                                    {
+                                                                                                        "name": "ztpfAutomationActions",
+                                                                                                        "highlightMode": true,
+                                                                                                        "linky": true,
+                                                                                                        "readOnly": true
+                                                                                                    }
+                                                                                                ],
+                                                                                                "style": "col-lg-4"
+                                                                                            }
+                                                                                        ]
+                                                                                    }
+                                                                                ]
+                                                                            }
+                                                                        }
+                                                                    ],
+                                                                    "style": "col-lg-9"
+                                                                }
+                                                            ],
+                                                            "wid": "a7f03109-da1b-4f38-ab7c-ec5cf5a7ebfe",
+                                                            "collapsible": true,
+                                                            "collapsibleIndex": 0,
+                                                            "_collapsed": false
+                                                        }
+                                                    ]
+                                                },
+                                                "visible": true
+                                            },
+                                            "icon": "fa fa-none",
+                                            "show": true,
+                                            "visible": true
+                                        },
+                                        {
+                                            "title": "TEST",
+                                            "active": 0,
+                                            "widget": {
+                                                "type": "editableForm",
+                                                "config": {
+                                                    "wid": "94cffb82-3cf3-4e4d-8fdd-4772ce7cdcc9"
+                                                },
+                                                "visible": true
+                                            },
+                                            "icon": "fa fa-none",
+                                            "show": false,
+                                            "visible": true
                                         }
                                     ]
                                 }
                             }
-                        ]
+                        ],
+                        "style": "col-lg-12"
                     }
-                ]
+                ],
+                "wid": "fa178078-efc7-4afd-bbac-6e8201d0748d",
+                "_collapsed": false
             }
-        ]
+        ],
+        "wid": "49004afe-5d69-4ff3-b864-9fdc724c1778",
+        "actionButtons": [],
+        "metadata": []
     },
     "module": "ztpf_automation_profile_steps",
     "filters": [],

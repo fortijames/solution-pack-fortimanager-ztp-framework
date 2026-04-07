@@ -1,0 +1,211 @@
+{
+    "@context": "\/api\/3\/contexts\/Workflow",
+    "@type": "Workflow",
+    "triggerLimit": null,
+    "name": "> create metadata source data - fmg api",
+    "aliasName": null,
+    "tag": null,
+    "description": "Create the standard payload for this metadata source type.",
+    "isActive": true,
+    "debug": false,
+    "singleRecordExecution": false,
+    "remoteExecutableFlag": false,
+    "parameters": [
+        "api_resource",
+        "api_filter",
+        "api_options",
+        "api_fields",
+        "record_id",
+        "api_method"
+    ],
+    "synchronous": false,
+    "collection": "\/api\/3\/workflow_collections\/517fb52d-36f5-4bac-a344-7d4599d7dec6",
+    "versions": [],
+    "triggerStep": "\/api\/3\/workflow_steps\/8526b557-e7ff-43ea-bb55-b356fd7ade16",
+    "steps": [
+        {
+            "@type": "WorkflowStep",
+            "name": "find record",
+            "description": null,
+            "arguments": {
+                "query": {
+                    "sort": [],
+                    "limit": 30,
+                    "logic": "AND",
+                    "filters": [
+                        {
+                            "type": "primitive",
+                            "field": "id",
+                            "value": "{{vars.input.params['record_id']}}",
+                            "operator": "eq",
+                            "_operator": "eq"
+                        }
+                    ],
+                    "__selectFields": [
+                        "name",
+                        "data"
+                    ]
+                },
+                "module": "ztpf_metadata_sources?$limit=1",
+                "checkboxFields": true,
+                "step_variables": []
+            },
+            "status": null,
+            "top": "40",
+            "left": "360",
+            "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928770",
+            "group": null,
+            "uuid": "aec4ad05-3860-4806-bb1d-f8b8bad44c8f"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "setup data_payload",
+            "description": null,
+            "arguments": {
+                "data_payload": "{%- set ret = { \n  \"url\":vars.api_resource,\n  \"method\":vars.api_method\n} -%}\n\n{%- if vars.api_fields -%}\n  {%- do ret.update({\"api_fields\":vars.api_fields}) -%}\n{%- endif -%}\n\n{{ret}}"
+            },
+            "status": null,
+            "top": "120",
+            "left": "360",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "8a35bad2-38e9-4037-bf71-631fac0a2a65"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "setup variables",
+            "description": null,
+            "arguments": {
+                "api_fields": "{{vars.input.params['api_fields']}}",
+                "api_filter": "{{vars.input.params['api_filter']}}",
+                "api_method": "{%- set ret = vars.input.params['api_method'] -%}\n{%- if ret in vars.empty -%}\n  {%- set ret = 'get' -%}\n{%- endif -%}\n{{ret}}",
+                "api_options": "{{vars.input.params['api_options']}}",
+                "record_fqid": "{{vars.steps.find_record[0]['@id']}}",
+                "api_resource": "{%- set ret = vars.input.params['api_resource'] -%}\n{%- if ret in vars.empty -%}\n  {%- set ret = '<Enter API URL>' -%}\n{%- endif -%}\n{{ret}}"
+            },
+            "status": null,
+            "top": "80",
+            "left": "700",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "4141d7fd-994d-4da3-a7bf-b1423d10064f"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Start",
+            "description": null,
+            "arguments": {
+                "__triggerLimit": true,
+                "step_variables": {
+                    "empty": "['',None]",
+                    "input": {
+                        "params": []
+                    }
+                },
+                "triggerOnSource": true,
+                "triggerOnReplicate": false
+            },
+            "status": null,
+            "top": "40",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/b348f017-9a94-471f-87f8-ce88b6a7ad62",
+            "group": null,
+            "uuid": "8526b557-e7ff-43ea-bb55-b356fd7ade16"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "update record",
+            "description": null,
+            "arguments": {
+                "resource": {
+                    "data": "{{vars.data_payload}}"
+                },
+                "operation": "Append",
+                "collection": "{{vars.record_fqid}}",
+                "__recommend": [],
+                "collectionType": "\/api\/3\/ztpf_metadata_sources",
+                "fieldOperation": {
+                    "recordTags": "Append"
+                },
+                "step_variables": []
+            },
+            "status": null,
+            "top": "120",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928722",
+            "group": null,
+            "uuid": "a44afca8-af0a-44ea-a74d-6dacce1eca2c"
+        }
+    ],
+    "routes": [
+        {
+            "@type": "WorkflowRoute",
+            "name": "find record -> setup variables",
+            "targetStep": "\/api\/3\/workflow_steps\/4141d7fd-994d-4da3-a7bf-b1423d10064f",
+            "sourceStep": "\/api\/3\/workflow_steps\/aec4ad05-3860-4806-bb1d-f8b8bad44c8f",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "392860ee-869d-4c87-af6e-e17698ea7916"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "setup data_payload -> update record",
+            "targetStep": "\/api\/3\/workflow_steps\/a44afca8-af0a-44ea-a74d-6dacce1eca2c",
+            "sourceStep": "\/api\/3\/workflow_steps\/8a35bad2-38e9-4037-bf71-631fac0a2a65",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "5f63108d-73f5-43e7-a356-80e90355e24c"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "setup variables -> setup data_payload",
+            "targetStep": "\/api\/3\/workflow_steps\/8a35bad2-38e9-4037-bf71-631fac0a2a65",
+            "sourceStep": "\/api\/3\/workflow_steps\/4141d7fd-994d-4da3-a7bf-b1423d10064f",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "1cd1b6f2-77bd-4ea1-905c-e5208f041c40"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Start -> find record",
+            "targetStep": "\/api\/3\/workflow_steps\/aec4ad05-3860-4806-bb1d-f8b8bad44c8f",
+            "sourceStep": "\/api\/3\/workflow_steps\/8526b557-e7ff-43ea-bb55-b356fd7ade16",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "5919b7be-426c-470a-a3af-39fd502c6fb7"
+        }
+    ],
+    "groups": [
+        {
+            "@type": "WorkflowGroup",
+            "name": "Details",
+            "description": "Create the proper payload for a metadata source that needs to call the API of FMG for getting a table or object.",
+            "type": "note",
+            "isCollapsed": false,
+            "hasTriggerStep": false,
+            "hideInLogs": false,
+            "metadata": [],
+            "reusable": false,
+            "top": "200",
+            "left": "140",
+            "height": "120",
+            "width": "354",
+            "uuid": "5cba6c2b-76fe-44a6-9853-d90832547738",
+            "recordTags": []
+        }
+    ],
+    "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+    "playbookOrigin": "\/api\/3\/picklists\/b6d710a9-a8ec-41ec-8817-fe9fa062fcdd",
+    "isEditable": false,
+    "uuid": "68acc0ea-5fda-4267-8305-ebab47c46161",
+    "owners": [],
+    "isPrivate": false,
+    "deletedAt": null,
+    "recordTags": [
+        "ztpfMetadataSource"
+    ]
+}

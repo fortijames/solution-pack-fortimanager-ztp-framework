@@ -1,27 +1,9 @@
 {
-    "@context": "\/api\/3\/contexts\/StagingModelMetadata",
-    "@type": "StagingModelMetadata",
+    "descriptions": {
+        "singular": "ztpfAutomationAction",
+        "plural": "ztpfAutomationActions"
+    },
     "type": "ztpf_automation_actions",
-    "parentType": null,
-    "tableName": "ztpf_automation_action",
-    "ownable": false,
-    "userOwnable": false,
-    "queueable": false,
-    "trackable": true,
-    "taggable": true,
-    "peerReplicable": false,
-    "defaultSort": [],
-    "uniqueConstraint": [
-        {
-            "ztpf_automation_actions_unique": {
-                "columns": [
-                    "name"
-                ]
-            }
-        }
-    ],
-    "indexable": true,
-    "writable": true,
     "attributes": [
         {
             "@type": "AttributeMetadata",
@@ -30,18 +12,19 @@
             "length": null,
             "formType": "text",
             "dataSource": null,
-            "searchable": false,
+            "searchable": true,
             "peerReplicable": true,
             "system": false,
             "encrypted": false,
-            "gridColumn": false,
+            "gridColumn": true,
             "collection": false,
             "inversedField": null,
             "ownsRelationship": false,
             "validation": {
                 "required": false,
                 "minlength": 0,
-                "maxlength": 10485761
+                "maxlength": 10485761,
+                "_enableRange": false
             },
             "bulkAction": {
                 "allow": false,
@@ -51,7 +34,7 @@
             },
             "dataSourceFilters": null,
             "defaultValue": "",
-            "tooltip": null,
+            "tooltip": "Name of this action must be unique.",
             "visibility": true,
             "htmlEscape": false,
             "orphanRemoval": null,
@@ -109,7 +92,7 @@
             "peerReplicable": true,
             "system": false,
             "encrypted": false,
-            "gridColumn": false,
+            "gridColumn": true,
             "collection": false,
             "inversedField": null,
             "ownsRelationship": false,
@@ -127,7 +110,7 @@
             },
             "dataSourceFilters": null,
             "defaultValue": null,
-            "tooltip": null,
+            "tooltip": "Simply filter available action types by the selected category.",
             "visibility": true,
             "htmlEscape": false,
             "orphanRemoval": null,
@@ -246,7 +229,7 @@
             "peerReplicable": true,
             "system": false,
             "encrypted": false,
-            "gridColumn": false,
+            "gridColumn": true,
             "collection": false,
             "inversedField": null,
             "ownsRelationship": false,
@@ -264,7 +247,7 @@
             },
             "dataSourceFilters": null,
             "defaultValue": null,
-            "tooltip": null,
+            "tooltip": "Supported actions are identified by the type. Types potentially have script format options and should be updated using the available Script generating buttons.",
             "visibility": true,
             "htmlEscape": false,
             "orphanRemoval": null,
@@ -297,7 +280,8 @@
             "validation": {
                 "required": false,
                 "minlength": 0,
-                "maxlength": 10485761
+                "maxlength": 10485761,
+                "_enableRange": false
             },
             "bulkAction": {
                 "allow": false,
@@ -307,7 +291,7 @@
             },
             "dataSourceFilters": null,
             "defaultValue": null,
-            "tooltip": null,
+            "tooltip": "Describe what this Action should perform and why.",
             "visibility": true,
             "htmlEscape": false,
             "orphanRemoval": null,
@@ -353,7 +337,7 @@
             },
             "dataSourceFilters": null,
             "defaultValue": null,
-            "tooltip": null,
+            "tooltip": "When assigned populates the jinja variable {{template}} to be used in the action script.",
             "visibility": true,
             "htmlEscape": false,
             "orphanRemoval": null,
@@ -365,7 +349,7 @@
             "skipSerialization": false,
             "displayName": "{{ ztpfTemplates }}",
             "descriptions": {
-                "singular": "Templates"
+                "singular": "Template"
             }
         },
         {
@@ -451,22 +435,6 @@
             }
         }
     ],
-    "system": false,
-    "module": "ztpf_automation_actions",
-    "softDeleteable": false,
-    "archivable": false,
-    "paused": false,
-    "partitionBy": "modifyDate",
-    "archivalCriteria": {
-        "keep_primary_data_for": 24,
-        "delete_primary_data_after": 60
-    },
-    "archivalFilters": [],
-    "replicationFilters": [],
-    "enableReplication": true,
-    "displayName": "{{ name }}",
-    "descriptions": {
-        "singular": "ztpfAutomationAction",
-        "plural": "ztpfAutomationActions"
-    }
+    "tableName": "ztpf_automation_action",
+    "displayName": "{{ name }}"
 }

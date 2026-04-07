@@ -1,19 +1,9 @@
 {
-    "@context": "\/api\/3\/contexts\/StagingModelMetadata",
-    "@type": "StagingModelMetadata",
+    "descriptions": {
+        "singular": "ztpfDeviceAutomationStep",
+        "plural": "ztpfDeviceAutomationSteps"
+    },
     "type": "ztpf_device_automation_steps",
-    "parentType": null,
-    "tableName": "ztpf_device_automation_step",
-    "ownable": false,
-    "userOwnable": false,
-    "queueable": false,
-    "trackable": true,
-    "taggable": true,
-    "peerReplicable": false,
-    "defaultSort": [],
-    "uniqueConstraint": [],
-    "indexable": true,
-    "writable": true,
     "attributes": [
         {
             "@type": "AttributeMetadata",
@@ -239,22 +229,6 @@
             }
         }
     ],
-    "system": false,
-    "module": "ztpf_device_automation_steps",
-    "softDeleteable": false,
-    "archivable": false,
-    "paused": false,
-    "partitionBy": "modifyDate",
-    "archivalCriteria": {
-        "keep_primary_data_for": 24,
-        "delete_primary_data_after": 60
-    },
-    "archivalFilters": [],
-    "replicationFilters": [],
-    "enableReplication": true,
-    "displayName": "{{ name }}",
-    "descriptions": {
-        "singular": "ztpfDeviceAutomationStep",
-        "plural": "ztpfDeviceAutomationSteps"
-    }
+    "tableName": "ztpf_device_automation_step",
+    "displayName": "{{ name }}"
 }

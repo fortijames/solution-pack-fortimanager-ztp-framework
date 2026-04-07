@@ -9,16 +9,148 @@
                     {
                         "widgets": [
                             {
+                                "type": "chart",
+                                "config": {
+                                    "wid": "34f63d66-9911-445e-8235-8c14b38a9ce1",
+                                    "widgetAlwaysDisplay": true,
+                                    "showTabularData": false,
+                                    "query": {
+                                        "sort": [],
+                                        "limit": 2147483647,
+                                        "logic": "AND",
+                                        "filters": [],
+                                        "aggregates": [
+                                            {
+                                                "operator": "countdistinct",
+                                                "field": "*",
+                                                "alias": "total"
+                                            },
+                                            {
+                                                "operator": "groupby",
+                                                "alias": "uuid",
+                                                "field": "ztpfManagers.uuid"
+                                            },
+                                            {
+                                                "operator": "groupby",
+                                                "alias": "name",
+                                                "field": "ztpfManagers.name"
+                                            }
+                                        ]
+                                    },
+                                    "mapping": {
+                                        "fieldName": "ztpfManagers",
+                                        "displayValues": [
+                                            "name"
+                                        ]
+                                    },
+                                    "assignedToSetting": "all",
+                                    "aggregate": true,
+                                    "viewType": "chart",
+                                    "title": "Device Count by Manager",
+                                    "resource": "ztpf_devices",
+                                    "chart": "donut",
+                                    "showCount": true,
+                                    "widgetAlwaysExpanded": true
+                                }
+                            },
+                            {
+                                "type": "chart",
+                                "config": {
+                                    "wid": "4ac2c82f-79ae-44d5-997c-99b9e3928228",
+                                    "widgetAlwaysDisplay": true,
+                                    "showTabularData": false,
+                                    "query": {
+                                        "sort": [],
+                                        "limit": 2147483647,
+                                        "logic": "AND",
+                                        "filters": [],
+                                        "aggregates": [
+                                            {
+                                                "operator": "countdistinct",
+                                                "field": "*",
+                                                "alias": "total"
+                                            },
+                                            {
+                                                "operator": "groupby",
+                                                "alias": "productFamily",
+                                                "field": "productFamily"
+                                            }
+                                        ]
+                                    },
+                                    "mapping": {
+                                        "fieldName": "productFamily"
+                                    },
+                                    "assignedToSetting": "all",
+                                    "aggregate": true,
+                                    "viewType": "chart",
+                                    "title": "Count of Device Product Families",
+                                    "resource": "ztpf_devices",
+                                    "chart": "pie",
+                                    "showCount": true,
+                                    "widgetAlwaysExpanded": false
+                                }
+                            },
+                            {
+                                "type": "chart",
+                                "config": {
+                                    "wid": "ec2b241d-0300-4466-988f-4946bfecebde",
+                                    "widgetAlwaysDisplay": true,
+                                    "showTabularData": false,
+                                    "query": {
+                                        "sort": [],
+                                        "limit": 2147483647,
+                                        "logic": "AND",
+                                        "filters": [],
+                                        "aggregates": [
+                                            {
+                                                "operator": "countdistinct",
+                                                "field": "*",
+                                                "alias": "total"
+                                            },
+                                            {
+                                                "operator": "groupby",
+                                                "alias": "firmware",
+                                                "field": "firmware"
+                                            }
+                                        ]
+                                    },
+                                    "mapping": {
+                                        "fieldName": "firmware"
+                                    },
+                                    "assignedToSetting": "all",
+                                    "aggregate": true,
+                                    "viewType": "chart",
+                                    "title": "Count of Device Firmware",
+                                    "resource": "ztpf_devices",
+                                    "chart": "donut",
+                                    "showCount": true,
+                                    "widgetAlwaysExpanded": false
+                                }
+                            }
+                        ],
+                        "style": "col-lg-12"
+                    }
+                ],
+                "wid": "ae44543c-1706-46dc-b66e-06869f783bae",
+                "_collapsed": false
+            },
+            {
+                "columns": [
+                    {
+                        "widgets": [
+                            {
                                 "type": "grid",
                                 "config": {
                                     "wid": "0aabeb6b-3911-43e1-8a17-b0f974fc3773",
                                     "module": "ztpf_devices",
                                     "columns": [
+                                        "id",
                                         "ztpfManagers",
                                         "adminStatus",
                                         "name",
-                                        "status",
-                                        "id"
+                                        "platform",
+                                        "firmware",
+                                        "status"
                                     ],
                                     "expandableCol": [],
                                     "relationshipField": [],

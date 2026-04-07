@@ -51,7 +51,22 @@
                                 "module": "ztpf_metadata_devices"
                             }
                         },
-                        "title": "Metadata Devices"
+                        "title": "Device Metadata"
+                    },
+                    {
+                        "editMode": false,
+                        "icon": "icon icon-audit-log",
+                        "require": {
+                            "action": "read",
+                            "module": "ztpf_device_automation_steps"
+                        },
+                        "state": {
+                            "name": "main.modules.list",
+                            "parameters": {
+                                "module": "ztpf_device_automation_steps"
+                            }
+                        },
+                        "title": "Device Steps"
                     },
                     {
                         "editMode": false,
@@ -96,7 +111,7 @@
                                 "module": "ztpf_automation_actions"
                             }
                         },
-                        "title": "ZTPF Actions"
+                        "title": "Actions"
                     },
                     {
                         "editMode": false,
@@ -127,21 +142,6 @@
                             }
                         },
                         "title": "ZTPF Profile Steps"
-                    },
-                    {
-                        "editMode": false,
-                        "icon": "icon icon-audit-log",
-                        "require": {
-                            "action": "read",
-                            "module": "ztpf_device_automation_steps"
-                        },
-                        "state": {
-                            "name": "main.modules.list",
-                            "parameters": {
-                                "module": "ztpf_device_automation_steps"
-                            }
-                        },
-                        "title": "ZTPF Device Steps"
                     }
                 ],
                 "title": "ZTP Flow"

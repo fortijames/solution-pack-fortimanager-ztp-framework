@@ -1,0 +1,205 @@
+{
+    "@context": "\/api\/3\/contexts\/Workflow",
+    "@type": "Workflow",
+    "triggerLimit": null,
+    "name": "> create metadata source data - playbook",
+    "aliasName": null,
+    "tag": null,
+    "description": "Create the standard payload for this metadata source type.",
+    "isActive": true,
+    "debug": false,
+    "singleRecordExecution": false,
+    "remoteExecutableFlag": false,
+    "parameters": [
+        "record_id",
+        "playbook_id",
+        "playbook_args"
+    ],
+    "synchronous": false,
+    "collection": "\/api\/3\/workflow_collections\/517fb52d-36f5-4bac-a344-7d4599d7dec6",
+    "versions": [],
+    "triggerStep": "\/api\/3\/workflow_steps\/972bb9de-bf01-4614-9725-4373ee316d3f",
+    "steps": [
+        {
+            "@type": "WorkflowStep",
+            "name": "find record",
+            "description": null,
+            "arguments": {
+                "query": {
+                    "sort": [],
+                    "limit": 30,
+                    "logic": "AND",
+                    "filters": [
+                        {
+                            "type": "primitive",
+                            "field": "id",
+                            "value": "{{vars.input.params['record_id']}}",
+                            "operator": "eq",
+                            "_operator": "eq"
+                        }
+                    ],
+                    "__selectFields": [
+                        "name",
+                        "data"
+                    ]
+                },
+                "module": "ztpf_metadata_sources?$limit=1",
+                "checkboxFields": true,
+                "step_variables": []
+            },
+            "status": null,
+            "top": "40",
+            "left": "360",
+            "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928770",
+            "group": null,
+            "uuid": "78dc7d13-4aa4-48b5-aaf4-e2ea75ea753e"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "setup data_payload",
+            "description": null,
+            "arguments": {
+                "data_payload": "{%- set ret = { \n  \"id\":vars.playbook_id,\n  \"args\":vars.playbook_args\n} -%}\n{{ret}}"
+            },
+            "status": null,
+            "top": "120",
+            "left": "360",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "32a1f1fb-daff-4987-97c4-dae14601a966"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "setup variables",
+            "description": null,
+            "arguments": {
+                "playbook_id": "{%- set ret = vars.input.params['playbook_id'] -%}\n{%- if ret in vars.empty -%}\n  {%- set ret = '<Enter Playbook ID>' -%}\n{%- endif -%}\n{{ret}}",
+                "record_fqid": "{{vars.steps.find_record[0]['@id']}}",
+                "playbook_args": "{%- set ret = vars.input.params['playbook_args'] -%}\n{%- if ret in vars.empty -%}\n  {%- set ret = '<Enter Playbook Args as a string or a json block>' -%}\n{%- endif -%}\n{{ret}}"
+            },
+            "status": null,
+            "top": "80",
+            "left": "700",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "bbd6c239-27d3-4f9e-a6c4-40c08f402d90"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Start",
+            "description": null,
+            "arguments": {
+                "__triggerLimit": true,
+                "step_variables": {
+                    "empty": "['',None]",
+                    "input": {
+                        "params": []
+                    }
+                },
+                "triggerOnSource": true,
+                "triggerOnReplicate": false
+            },
+            "status": null,
+            "top": "40",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/b348f017-9a94-471f-87f8-ce88b6a7ad62",
+            "group": null,
+            "uuid": "972bb9de-bf01-4614-9725-4373ee316d3f"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "update record",
+            "description": null,
+            "arguments": {
+                "resource": {
+                    "data": "{{vars.data_payload}}"
+                },
+                "operation": "Append",
+                "collection": "{{vars.record_fqid}}",
+                "__recommend": [],
+                "collectionType": "\/api\/3\/ztpf_metadata_sources",
+                "fieldOperation": {
+                    "recordTags": "Append"
+                },
+                "step_variables": []
+            },
+            "status": null,
+            "top": "120",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928722",
+            "group": null,
+            "uuid": "765a5cde-81f9-47ad-a719-f50717b574a4"
+        }
+    ],
+    "routes": [
+        {
+            "@type": "WorkflowRoute",
+            "name": "find record -> setup variables",
+            "targetStep": "\/api\/3\/workflow_steps\/bbd6c239-27d3-4f9e-a6c4-40c08f402d90",
+            "sourceStep": "\/api\/3\/workflow_steps\/78dc7d13-4aa4-48b5-aaf4-e2ea75ea753e",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "f414a878-ef6f-4840-aeff-fb4afd810800"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "setup data_payload -> update record",
+            "targetStep": "\/api\/3\/workflow_steps\/765a5cde-81f9-47ad-a719-f50717b574a4",
+            "sourceStep": "\/api\/3\/workflow_steps\/32a1f1fb-daff-4987-97c4-dae14601a966",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "bde416fd-5853-4e00-aaaf-aca1002d64b2"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "setup variables -> setup data_payload",
+            "targetStep": "\/api\/3\/workflow_steps\/32a1f1fb-daff-4987-97c4-dae14601a966",
+            "sourceStep": "\/api\/3\/workflow_steps\/bbd6c239-27d3-4f9e-a6c4-40c08f402d90",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "92637537-fbb1-4904-b1e5-f2d2ca8a5bcc"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Start -> find record",
+            "targetStep": "\/api\/3\/workflow_steps\/78dc7d13-4aa4-48b5-aaf4-e2ea75ea753e",
+            "sourceStep": "\/api\/3\/workflow_steps\/972bb9de-bf01-4614-9725-4373ee316d3f",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "205da540-bb8e-4390-82c1-5ea1c3ab5470"
+        }
+    ],
+    "groups": [
+        {
+            "@type": "WorkflowGroup",
+            "name": "Details",
+            "description": "Create the proper payload for a metadata source that needs to call the API of FMG for getting a table or object.",
+            "type": "note",
+            "isCollapsed": false,
+            "hasTriggerStep": false,
+            "hideInLogs": false,
+            "metadata": [],
+            "reusable": false,
+            "top": "200",
+            "left": "140",
+            "height": "120",
+            "width": "354",
+            "uuid": "d4a8afa5-bdf8-41ee-8597-dfa26d89f112",
+            "recordTags": []
+        }
+    ],
+    "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+    "playbookOrigin": "\/api\/3\/picklists\/b6d710a9-a8ec-41ec-8817-fe9fa062fcdd",
+    "isEditable": false,
+    "uuid": "43e4995d-a486-448a-84e9-460afdc46830",
+    "owners": [],
+    "isPrivate": false,
+    "deletedAt": null,
+    "recordTags": [
+        "ztpfMetadataSource"
+    ]
+}

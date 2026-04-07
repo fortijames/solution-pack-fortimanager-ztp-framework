@@ -26,11 +26,25 @@
                 "firmware": "{%- set ret = \n   vars.os_ver|int|string\n + \".\" + vars.mr|string\n + \".\" + vars.patch|string\n + \"-build\" + vars.build|string\n-%}\n\n{{ret}}"
             },
             "status": null,
-            "top": "120",
-            "left": "760",
+            "top": "280",
+            "left": "660",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
             "uuid": "bf6c8042-4aa2-43b4-8418-d890ae1edef9"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "create product_family",
+            "description": null,
+            "arguments": {
+                "product_family": "{%- set platform = vars.platform  -%}\n\n{# Testing Platform Strings\n{%- set platform = 'FortiGate-81F' -%}\n{%- set platform = 'FortiGate-3601E' -%}\n{%- set platform = 'FortiGate-1101E' -%}\n{%- set platform = 'FortiWiFi-50G-DSL' -%}\n{%- set platform = 'FortiGate-602F' -%}\n{%- set platform = 'FortiGateRugged-70F-3G4G' -%}\n{%- set platform = 'FortiGate-VM64-ALI' -%}\n#}\n\n{%- set ret = '' -%}\n\n{%- set prefix_idx = {\n  \"fortigate\":\"FG\",\n  \"fortiwifi\":\"FWF\",\n  \"fortigaterugged\":\"FGR\"\n} -%}\n\n{%- set parts = platform.split('-') -%}\n{%- set prefix = parts[0]|lower -%}\n{%- set fam_number = parts[1]|regex_replace('[A-Z]','') -%}\n{%- set fam_letter = parts[1]|regex_replace('[0-9]','') -%}\n\n{%- if \"VM64\" in platform -%}\n  {%- set fam_base = \"\" -%}\n{%- elif fam_number|length == 2 -%}\n  {%- set fam_base = fam_number[0] + \"0\" -%}\n{%- elif fam_number|length == 3 -%}\n  {%- set fam_base = fam_number[0] + \"00\" -%}\n{%- elif fam_number|length == 4 -%}\n  {%- set fam_base = fam_number[0] + fam_number[1] + \"00\" -%}\n{%- else -%}\n  {%- set fam_base = fam_number -%}\n{%- endif -%}\n\n{%- if prefix in prefix_idx -%}\n  {%- set ret = prefix_idx[prefix] -%}\n{%- else -%}\n  {%- set ret = parts[0] -%}\n{%- endif -%}\n\n{%- if fam_number and fam_letter -%}\n  {%- set ret = ret \n        + ' ' + fam_base + fam_letter \n        + ' series' \n  -%}\n{%- endif -%}\n\n{{ret}}"
+            },
+            "status": null,
+            "top": "280",
+            "left": "380",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "d55351f1-0084-4702-a2b9-1c2711585c27"
         },
         {
             "@type": "WorkflowStep",
@@ -57,7 +71,7 @@
             },
             "status": null,
             "top": "40",
-            "left": "320",
+            "left": "380",
             "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928770",
             "group": null,
             "uuid": "77f54f86-0034-4ac9-bc79-7203fd978f3c"
@@ -85,7 +99,7 @@
             },
             "status": null,
             "top": "40",
-            "left": "600",
+            "left": "660",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
             "uuid": "6ada7a1a-d280-4cdc-b83e-02f63454dfc2"
@@ -120,6 +134,7 @@
                     "firmware": "{{vars.firmware}}",
                     "platform": "{{vars.platform}}",
                     "configStatus": "{{vars.conf_status}}",
+                    "productFamily": "{{vars.product_family}}",
                     "configDBStatus": "{{vars.db_status}}",
                     "managementMode": "{{vars.mgmt_mode}}",
                     "connectionStatus": "{{vars.conn_status}}"
@@ -144,13 +159,23 @@
     "routes": [
         {
             "@type": "WorkflowRoute",
-            "name": "create firmware -> update record",
-            "targetStep": "\/api\/3\/workflow_steps\/ed5a6b2d-0df1-4b62-a688-b5bc431c5ad3",
+            "name": "create firmware -> create product_family",
+            "targetStep": "\/api\/3\/workflow_steps\/d55351f1-0084-4702-a2b9-1c2711585c27",
             "sourceStep": "\/api\/3\/workflow_steps\/bf6c8042-4aa2-43b4-8418-d890ae1edef9",
             "label": null,
             "isExecuted": false,
             "group": null,
-            "uuid": "89b27297-918b-41b3-bdda-52ce6a718fd4"
+            "uuid": "4bab47de-5766-4092-ac38-cd2cf0e59857"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "create product_family -> update record",
+            "targetStep": "\/api\/3\/workflow_steps\/ed5a6b2d-0df1-4b62-a688-b5bc431c5ad3",
+            "sourceStep": "\/api\/3\/workflow_steps\/d55351f1-0084-4702-a2b9-1c2711585c27",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "82a36a3c-b4a4-44c6-8bd4-d1463e1bf314"
         },
         {
             "@type": "WorkflowRoute",
@@ -187,17 +212,17 @@
         {
             "@type": "WorkflowGroup",
             "name": "Details",
-            "description": "Parse source_data and populate fields:\nSerial, Platform, Firmware, License Status, Timezone, VDOM Mode, Config Status",
+            "description": "Parse source_data and populate fields such as:\nserial, platform, firmware, license status, timezone, vdom mode, config status, product family, etc...",
             "type": "note",
             "isCollapsed": false,
             "hasTriggerStep": false,
             "hideInLogs": false,
             "metadata": [],
             "reusable": false,
-            "top": "200",
-            "left": "340",
-            "height": "132",
-            "width": "323",
+            "top": "140",
+            "left": "360",
+            "height": "115",
+            "width": "409",
             "uuid": "9363af9d-df70-4365-8073-8b0e47c1eb17",
             "recordTags": []
         }
