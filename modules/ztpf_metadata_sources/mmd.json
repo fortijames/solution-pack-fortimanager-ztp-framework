@@ -1,9 +1,27 @@
 {
-    "descriptions": {
-        "singular": "ztpfMetadataSource",
-        "plural": "ztpfMetadataSources"
-    },
+    "@context": "\/api\/3\/contexts\/StagingModelMetadata",
+    "@type": "StagingModelMetadata",
     "type": "ztpf_metadata_sources",
+    "parentType": null,
+    "tableName": "ztpf_metadata_source",
+    "ownable": false,
+    "userOwnable": false,
+    "queueable": false,
+    "trackable": true,
+    "taggable": true,
+    "peerReplicable": false,
+    "defaultSort": [],
+    "uniqueConstraint": [
+        {
+            "ztpf_metadata_sources_unique": {
+                "columns": [
+                    "name"
+                ]
+            }
+        }
+    ],
+    "indexable": true,
+    "writable": true,
     "attributes": [
         {
             "@type": "AttributeMetadata",
@@ -47,6 +65,49 @@
             "displayName": "{{ name }}",
             "descriptions": {
                 "singular": "Name"
+            }
+        },
+        {
+            "@type": "AttributeMetadata",
+            "type": "integer",
+            "name": "orderPriority",
+            "length": null,
+            "formType": "integer",
+            "dataSource": null,
+            "searchable": true,
+            "peerReplicable": true,
+            "system": false,
+            "encrypted": false,
+            "gridColumn": false,
+            "collection": false,
+            "inversedField": null,
+            "ownsRelationship": false,
+            "validation": {
+                "required": false,
+                "minlength": -2147483648,
+                "maxlength": 10485761
+            },
+            "bulkAction": {
+                "allow": false,
+                "buttonText": "",
+                "buttonIcon": "",
+                "buttonClass": "btn btn-default btn-sm"
+            },
+            "dataSourceFilters": null,
+            "defaultValue": "100",
+            "tooltip": "The order metadata sources are run. Higher numbers are run last and will overwrite data from lower numbers.",
+            "visibility": true,
+            "htmlEscape": false,
+            "orphanRemoval": null,
+            "readable": true,
+            "writeable": true,
+            "identifier": null,
+            "unique": false,
+            "recommend": false,
+            "skipSerialization": false,
+            "displayName": "{{ orderPriority }}",
+            "descriptions": {
+                "singular": "Order Priority"
             }
         },
         {
@@ -132,6 +193,50 @@
         {
             "@type": "AttributeMetadata",
             "type": "string",
+            "name": "datakey",
+            "length": null,
+            "formType": "text",
+            "dataSource": null,
+            "searchable": false,
+            "peerReplicable": true,
+            "system": false,
+            "encrypted": false,
+            "gridColumn": true,
+            "collection": false,
+            "inversedField": null,
+            "ownsRelationship": false,
+            "validation": {
+                "required": true,
+                "minlength": 0,
+                "maxlength": 10485761,
+                "_enableRange": false
+            },
+            "bulkAction": {
+                "allow": false,
+                "buttonText": "",
+                "buttonIcon": "",
+                "buttonClass": "btn btn-default btn-sm"
+            },
+            "dataSourceFilters": null,
+            "defaultValue": "mds",
+            "tooltip": "The key where data from this record will be stored at runtime. If keys are duplicated then data will be merged where the last source overwrites the previous source with the same key.",
+            "visibility": true,
+            "htmlEscape": false,
+            "orphanRemoval": null,
+            "readable": true,
+            "writeable": true,
+            "identifier": null,
+            "unique": false,
+            "recommend": false,
+            "skipSerialization": false,
+            "displayName": "{{ datakey }}",
+            "descriptions": {
+                "singular": "Data Key"
+            }
+        },
+        {
+            "@type": "AttributeMetadata",
+            "type": "string",
             "name": "description",
             "length": null,
             "formType": "richtext",
@@ -175,6 +280,50 @@
         },
         {
             "@type": "AttributeMetadata",
+            "type": "object",
+            "name": "data",
+            "length": null,
+            "formType": "object",
+            "dataSource": null,
+            "searchable": false,
+            "peerReplicable": true,
+            "system": false,
+            "encrypted": false,
+            "gridColumn": false,
+            "collection": false,
+            "inversedField": null,
+            "ownsRelationship": false,
+            "validation": {
+                "required": false,
+                "minlength": 0,
+                "maxlength": 10485761,
+                "_enableRange": false
+            },
+            "bulkAction": {
+                "allow": false,
+                "buttonText": "",
+                "buttonIcon": "",
+                "buttonClass": "btn btn-default btn-sm"
+            },
+            "dataSourceFilters": null,
+            "defaultValue": null,
+            "tooltip": "Data used as arguments for the respective source types. It is recommended to use the buttons available to populate the data where possible to match the proper expected format.",
+            "visibility": true,
+            "htmlEscape": false,
+            "orphanRemoval": null,
+            "readable": true,
+            "writeable": true,
+            "identifier": null,
+            "unique": false,
+            "recommend": false,
+            "skipSerialization": false,
+            "displayName": "{{ data }}",
+            "descriptions": {
+                "singular": "Data"
+            }
+        },
+        {
+            "@type": "AttributeMetadata",
             "type": "ztpf_templates",
             "name": "ztpfTemplates",
             "length": null,
@@ -208,8 +357,60 @@
             "descriptions": {
                 "singular": "Templates"
             }
+        },
+        {
+            "@type": "AttributeMetadata",
+            "type": "ztpf_automation_actions",
+            "name": "ztpfAutomationActions",
+            "length": null,
+            "formType": "manyToMany",
+            "dataSource": {
+                "model": "ztpf_automation_actions"
+            },
+            "searchable": false,
+            "peerReplicable": true,
+            "system": false,
+            "encrypted": false,
+            "gridColumn": false,
+            "collection": true,
+            "inversedField": "ztpfMetadataSources",
+            "ownsRelationship": false,
+            "validation": null,
+            "bulkAction": null,
+            "dataSourceFilters": null,
+            "defaultValue": null,
+            "tooltip": null,
+            "visibility": true,
+            "htmlEscape": false,
+            "orphanRemoval": null,
+            "readable": true,
+            "writeable": true,
+            "identifier": null,
+            "unique": false,
+            "recommend": false,
+            "skipSerialization": false,
+            "displayName": "{{ ztpfAutomationActions }}",
+            "descriptions": {
+                "singular": "Automation Actions"
+            }
         }
     ],
-    "tableName": "ztpf_metadata_source",
-    "displayName": "{{ name }}"
+    "system": false,
+    "module": "ztpf_metadata_sources",
+    "softDeleteable": false,
+    "archivable": false,
+    "paused": false,
+    "partitionBy": "modifyDate",
+    "archivalCriteria": {
+        "keep_primary_data_for": 24,
+        "delete_primary_data_after": 60
+    },
+    "archivalFilters": [],
+    "replicationFilters": [],
+    "enableReplication": true,
+    "displayName": "{{ name }}",
+    "descriptions": {
+        "singular": "ztpfMetadataSource",
+        "plural": "ztpfMetadataSources"
+    }
 }

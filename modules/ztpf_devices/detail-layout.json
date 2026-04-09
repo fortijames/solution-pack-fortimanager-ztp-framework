@@ -244,6 +244,138 @@
                                                 "visible": true
                                             },
                                             "icon": "icon icon-details",
+                                            "show": false,
+                                            "visible": true
+                                        },
+                                        {
+                                            "title": "Automation Steps",
+                                            "active": 0,
+                                            "widget": {
+                                                "type": "rows",
+                                                "config": {
+                                                    "wid": "cd79ea1d-a671-4142-8f47-e9fbfa40d934",
+                                                    "rows": [
+                                                        {
+                                                            "columns": [
+                                                                {
+                                                                    "widgets": [
+                                                                        {
+                                                                            "type": "sectionHeader",
+                                                                            "config": {
+                                                                                "wid": "47a833c4-4a18-4da0-bfad-c17c3368747a",
+                                                                                "query": {
+                                                                                    "filters": [],
+                                                                                    "sort": [],
+                                                                                    "limit": 10
+                                                                                },
+                                                                                "editorType": "html",
+                                                                                "sectionText": "<p style=\"text-align: center;\"><span style=\"font-size: 14pt;\">Active Steps<\/span><\/p>"
+                                                                            }
+                                                                        },
+                                                                        {
+                                                                            "type": "relationship.subtab",
+                                                                            "config": {
+                                                                                "wid": "081a7d09-8a96-4f5c-bff9-f55272992ac1",
+                                                                                "excludes": [],
+                                                                                "selectionType": "include",
+                                                                                "actionButtons": [],
+                                                                                "expandableCol": {
+                                                                                    "ztpfDeviceAutomationSteps": {
+                                                                                        "columns": [],
+                                                                                        "checkBox": false
+                                                                                    }
+                                                                                },
+                                                                                "enableHorizontalScroll": [],
+                                                                                "includes": [
+                                                                                    "ztpfDeviceAutomationSteps"
+                                                                                ],
+                                                                                "queryFilters": {
+                                                                                    "ztpf_device_automation_steps": {
+                                                                                        "sort": [
+                                                                                            {
+                                                                                                "direction": "ASC",
+                                                                                                "field": "stepNumber",
+                                                                                                "sort": {
+                                                                                                    "direction": "ASC"
+                                                                                                }
+                                                                                            }
+                                                                                        ],
+                                                                                        "limit": 30,
+                                                                                        "logic": "AND",
+                                                                                        "filters": []
+                                                                                    }
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                    ],
+                                                                    "style": "col-lg-12"
+                                                                }
+                                                            ],
+                                                            "wid": "16ac4954-4953-4983-806c-bdee8aef61c9",
+                                                            "_collapsed": false
+                                                        },
+                                                        {
+                                                            "columns": [
+                                                                {
+                                                                    "widgets": [
+                                                                        {
+                                                                            "type": "sectionHeader",
+                                                                            "config": {
+                                                                                "wid": "eb968254-8060-45ca-8fce-2a7e5ee5e000",
+                                                                                "query": {
+                                                                                    "filters": [],
+                                                                                    "sort": [],
+                                                                                    "limit": 10
+                                                                                },
+                                                                                "editorType": "html",
+                                                                                "sectionText": "<p style=\"text-align: center;\"><span style=\"font-size: 14pt;\">Step History<\/span><\/p>"
+                                                                            }
+                                                                        },
+                                                                        {
+                                                                            "type": "relationship.subtab",
+                                                                            "config": {
+                                                                                "wid": "47f81fe2-c279-4896-b253-188728292e46",
+                                                                                "excludes": [],
+                                                                                "selectionType": "include",
+                                                                                "actionButtons": [],
+                                                                                "expandableCol": {
+                                                                                    "ztpfDeviceAutomationSteps": {
+                                                                                        "columns": [],
+                                                                                        "checkBox": false
+                                                                                    }
+                                                                                },
+                                                                                "enableHorizontalScroll": [],
+                                                                                "includes": [
+                                                                                    "ztpfDeviceAutomationSteps"
+                                                                                ],
+                                                                                "queryFilters": {
+                                                                                    "ztpf_device_automation_steps": {
+                                                                                        "sort": [
+                                                                                            {
+                                                                                                "direction": "ASC",
+                                                                                                "field": "stepNumber",
+                                                                                                "sort": {
+                                                                                                    "direction": "ASC"
+                                                                                                }
+                                                                                            }
+                                                                                        ],
+                                                                                        "limit": 30,
+                                                                                        "logic": "AND",
+                                                                                        "filters": []
+                                                                                    }
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                    ]
+                                                                }
+                                                            ],
+                                                            "wid": "3c9eb103-80c8-4031-9fb2-8d9dc4b293c5"
+                                                        }
+                                                    ]
+                                                },
+                                                "visible": true
+                                            },
+                                            "icon": "icon icon-library",
                                             "show": true,
                                             "visible": true
                                         },
@@ -307,7 +439,8 @@
                                                                                                                             "itemValue": "Text",
                                                                                                                             "@id": "\/api\/3\/picklists\/36b18f9c-fd7b-4022-b00f-9525101a6317"
                                                                                                                         },
-                                                                                                                        "type": "object"
+                                                                                                                        "type": "object",
+                                                                                                                        "display": "Text"
                                                                                                                     }
                                                                                                                 ]
                                                                                                             },
@@ -488,10 +621,12 @@
                                                                                 ]
                                                                             }
                                                                         }
-                                                                    ]
+                                                                    ],
+                                                                    "style": "col-lg-12"
                                                                 }
                                                             ],
-                                                            "wid": "25275344-0fa7-44fc-8913-6a1bb0f16299"
+                                                            "wid": "25275344-0fa7-44fc-8913-6a1bb0f16299",
+                                                            "_collapsed": false
                                                         }
                                                     ]
                                                 },

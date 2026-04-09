@@ -1,9 +1,32 @@
 {
-    "descriptions": {
-        "singular": "ztpfAutomationAction",
-        "plural": "ztpfAutomationActions"
-    },
+    "@context": "\/api\/3\/contexts\/StagingModelMetadata",
+    "@type": "StagingModelMetadata",
     "type": "ztpf_automation_actions",
+    "parentType": null,
+    "tableName": "ztpf_automation_action",
+    "ownable": false,
+    "userOwnable": false,
+    "queueable": false,
+    "trackable": true,
+    "taggable": true,
+    "peerReplicable": false,
+    "defaultSort": [
+        {
+            "direction": "ASC",
+            "field": "name"
+        }
+    ],
+    "uniqueConstraint": [
+        {
+            "ztpf_automation_actions_unique": {
+                "columns": [
+                    "name"
+                ]
+            }
+        }
+    ],
+    "indexable": true,
+    "writable": true,
     "attributes": [
         {
             "@type": "AttributeMetadata",
@@ -354,6 +377,50 @@
         },
         {
             "@type": "AttributeMetadata",
+            "type": "string",
+            "name": "script",
+            "length": null,
+            "formType": "textarea",
+            "dataSource": null,
+            "searchable": true,
+            "peerReplicable": true,
+            "system": false,
+            "encrypted": false,
+            "gridColumn": false,
+            "collection": false,
+            "inversedField": null,
+            "ownsRelationship": false,
+            "validation": {
+                "required": false,
+                "minlength": 0,
+                "maxlength": 10485761,
+                "_enableRange": false
+            },
+            "bulkAction": {
+                "allow": false,
+                "buttonText": "",
+                "buttonIcon": "",
+                "buttonClass": "btn btn-default btn-sm"
+            },
+            "dataSourceFilters": null,
+            "defaultValue": "{{template}}",
+            "tooltip": "Jinja Template Script used for the action. Action types maybe have specific format expectations which can be found in the documentation.",
+            "visibility": true,
+            "htmlEscape": false,
+            "orphanRemoval": null,
+            "readable": true,
+            "writeable": true,
+            "identifier": null,
+            "unique": false,
+            "recommend": false,
+            "skipSerialization": false,
+            "displayName": "{{ script }}",
+            "descriptions": {
+                "singular": "Script"
+            }
+        },
+        {
+            "@type": "AttributeMetadata",
             "type": "ztpf_automation_profile_steps",
             "name": "ztpfAutomationProfileSteps",
             "length": null,
@@ -433,8 +500,65 @@
             "descriptions": {
                 "singular": "Device Automation Steps"
             }
+        },
+        {
+            "@type": "AttributeMetadata",
+            "type": "ztpf_metadata_sources",
+            "name": "ztpfMetadataSources",
+            "length": null,
+            "formType": "manyToMany",
+            "dataSource": {
+                "model": "ztpf_metadata_sources"
+            },
+            "searchable": false,
+            "peerReplicable": true,
+            "system": false,
+            "encrypted": false,
+            "gridColumn": false,
+            "collection": true,
+            "inversedField": "ztpfAutomationActions",
+            "ownsRelationship": true,
+            "validation": {
+                "required": false,
+                "minlength": 0,
+                "maxlength": 10485761,
+                "_enableRange": false
+            },
+            "bulkAction": [],
+            "dataSourceFilters": null,
+            "defaultValue": null,
+            "tooltip": null,
+            "visibility": true,
+            "htmlEscape": false,
+            "orphanRemoval": null,
+            "readable": true,
+            "writeable": true,
+            "identifier": null,
+            "unique": false,
+            "recommend": false,
+            "skipSerialization": false,
+            "displayName": "{{ ztpfMetadataSources }}",
+            "descriptions": {
+                "singular": "Metadata Sources"
+            }
         }
     ],
-    "tableName": "ztpf_automation_action",
-    "displayName": "{{ name }}"
+    "system": false,
+    "module": "ztpf_automation_actions",
+    "softDeleteable": false,
+    "archivable": false,
+    "paused": false,
+    "partitionBy": "modifyDate",
+    "archivalCriteria": {
+        "keep_primary_data_for": 24,
+        "delete_primary_data_after": 60
+    },
+    "archivalFilters": [],
+    "replicationFilters": [],
+    "enableReplication": true,
+    "displayName": "{{ name }}",
+    "descriptions": {
+        "singular": "ztpfAutomationAction",
+        "plural": "ztpfAutomationActions"
+    }
 }

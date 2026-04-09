@@ -1,0 +1,222 @@
+{
+    "@context": "\/api\/3\/contexts\/Workflow",
+    "@type": "Workflow",
+    "triggerLimit": null,
+    "name": "> render jinja template",
+    "aliasName": null,
+    "tag": null,
+    "description": "Leverage the FortiSOAR API \/api\/wf\/api\/jinja-editor\/ to render jinja.",
+    "isActive": true,
+    "debug": false,
+    "singleRecordExecution": false,
+    "remoteExecutableFlag": false,
+    "parameters": [
+        "script_vars",
+        "script_template"
+    ],
+    "synchronous": false,
+    "collection": "\/api\/3\/workflow_collections\/517fb52d-36f5-4bac-a344-7d4599d7dec6",
+    "versions": [],
+    "triggerStep": "\/api\/3\/workflow_steps\/5091a4b4-20d6-459b-b709-11b312fddc87",
+    "steps": [
+        {
+            "@type": "WorkflowStep",
+            "name": "Check if Error present",
+            "description": null,
+            "arguments": {
+                "conditions": [
+                    {
+                        "option": "Error",
+                        "step_iri": "\/api\/3\/workflow_steps\/eea3d0a1-10cd-4594-bb26-2e9cbab4dba1",
+                        "condition": "{{ \"data\" not in vars.steps.Convert_Jinja_to_String }}",
+                        "step_name": "return_error"
+                    },
+                    {
+                        "option": "Success",
+                        "default": true,
+                        "step_iri": "\/api\/3\/workflow_steps\/7a018d89-216f-4bab-82df-6abf200ab803",
+                        "step_name": "extract_results"
+                    }
+                ],
+                "step_variables": []
+            },
+            "status": null,
+            "top": "240",
+            "left": "440",
+            "stepType": "\/api\/3\/workflow_step_types\/12254cf5-5db7-4b1a-8cb1-3af081924b28",
+            "group": null,
+            "uuid": "b3e774e4-4be6-4384-abca-213694d77383"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Convert Jinja to String",
+            "description": null,
+            "arguments": {
+                "params": {
+                    "iri": "\/api\/wf\/api\/jinja-editor\/?format=json",
+                    "body": "{{vars.post_data}}",
+                    "method": "POST"
+                },
+                "version": "3.5.0",
+                "connector": "cyops_utilities",
+                "operation": "make_cyops_request",
+                "ignore_errors": true,
+                "operationTitle": "FSR: Make FortiSOAR API Call",
+                "step_variables": []
+            },
+            "status": null,
+            "top": "140",
+            "left": "440",
+            "stepType": "\/api\/3\/workflow_step_types\/0109f35d-090b-4a2b-bd8a-94cbc3508562",
+            "group": null,
+            "uuid": "e6347f1a-29fb-4060-9edf-40b5a3d6c5a6"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "create_post_data",
+            "description": null,
+            "arguments": {
+                "post_data": "{\n  \"template\": '{{vars.input.params[\"script_template\"]|tojson}}', \n  \"values\": {{vars.input.params['script_vars']}}\n}"
+            },
+            "status": null,
+            "top": "40",
+            "left": "440",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "607a1b50-5be9-46f9-b515-eceb68c82527"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "extract_results",
+            "description": null,
+            "arguments": {
+                "error": "False",
+                "output": "{%- set output = vars.steps.Convert_Jinja_to_String.data.result -%}\n\n{%- if output is not defined or output is none -%}\n  {{ \"Error: No output found\" }}\n{%- elif (output | type_debug == \"dict\") or (output | type_debug == \"list\") -%}\n  {{ output }}\n{%- elif output | type_debug == \"str\" -%}\n  {%- if output.strip().startswith('\"{\"') or output.strip().startswith('\"{') -%}\n    {%- set cleaned_str = output.strip('\"').replace('\\\\n', ' ').replace('\\\\\"', '\"') -%}\n    {%- if cleaned_str.strip().startswith('{') and cleaned_str.strip().endswith('}') -%}\n      {{ cleaned_str | toDict }}\n    {%- else -%}\n      {{ output }}\n    {%- endif -%}\n  {%- else -%}\n    {{ output }}\n  {%- endif -%}\n{%- else -%}\n  {{ \"Error: Unexpected data type: \" + (output | type_debug) }}\n{%- endif -%}"
+            },
+            "status": null,
+            "top": "320",
+            "left": "100",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "7a018d89-216f-4bab-82df-6abf200ab803"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "return_error",
+            "description": null,
+            "arguments": {
+                "error": "True",
+                "output": "{}",
+                "error_details": "ERROR: Tried to render Jinja Template:\n\n```\n{{vars.input.params['script_template']}}\n```\n\nwith variables:\n```\n{{vars.input.params['script_vars']| to_nice_json}}\n```\n\nbut got Error: \n{% set matches = vars.steps.Convert_Jinja_to_String[\"Error message\"] | regex_findall(\"'message': \\\"(.*?)\\\"\") -%}\n{{ matches[0] if matches else 'Unable to parse clean error message. {}'.format(vars.steps.Convert_Jinja_to_String[\"Error message\"]) }}"
+            },
+            "status": null,
+            "top": "320",
+            "left": "780",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "eea3d0a1-10cd-4594-bb26-2e9cbab4dba1"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Start",
+            "description": null,
+            "arguments": {
+                "__triggerLimit": true,
+                "step_variables": {
+                    "input": {
+                        "params": []
+                    }
+                },
+                "triggerOnSource": true,
+                "triggerOnReplicate": false
+            },
+            "status": null,
+            "top": "40",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/b348f017-9a94-471f-87f8-ce88b6a7ad62",
+            "group": null,
+            "uuid": "5091a4b4-20d6-459b-b709-11b312fddc87"
+        }
+    ],
+    "routes": [
+        {
+            "@type": "WorkflowRoute",
+            "name": "Check if Error present -> extract_results",
+            "targetStep": "\/api\/3\/workflow_steps\/7a018d89-216f-4bab-82df-6abf200ab803",
+            "sourceStep": "\/api\/3\/workflow_steps\/b3e774e4-4be6-4384-abca-213694d77383",
+            "label": "Success",
+            "isExecuted": false,
+            "group": null,
+            "uuid": "07f7a25f-1abc-4a9a-9ea9-a5ea30d43669"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Check if Error present -> return_error",
+            "targetStep": "\/api\/3\/workflow_steps\/eea3d0a1-10cd-4594-bb26-2e9cbab4dba1",
+            "sourceStep": "\/api\/3\/workflow_steps\/b3e774e4-4be6-4384-abca-213694d77383",
+            "label": "Error",
+            "isExecuted": false,
+            "group": null,
+            "uuid": "fdc3a6b7-3233-47cf-900d-950ff465ed45"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Convert Jinja to String -> Check if Error present",
+            "targetStep": "\/api\/3\/workflow_steps\/b3e774e4-4be6-4384-abca-213694d77383",
+            "sourceStep": "\/api\/3\/workflow_steps\/e6347f1a-29fb-4060-9edf-40b5a3d6c5a6",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "62502fa8-15ee-4fad-899d-75c9a6c35b77"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "create_post_data -> Convert Jinja to String",
+            "targetStep": "\/api\/3\/workflow_steps\/e6347f1a-29fb-4060-9edf-40b5a3d6c5a6",
+            "sourceStep": "\/api\/3\/workflow_steps\/607a1b50-5be9-46f9-b515-eceb68c82527",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "b0a29a42-6ebc-452e-b058-de43aedcc23c"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Start -> create_post_data",
+            "targetStep": "\/api\/3\/workflow_steps\/607a1b50-5be9-46f9-b515-eceb68c82527",
+            "sourceStep": "\/api\/3\/workflow_steps\/5091a4b4-20d6-459b-b709-11b312fddc87",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "3a23eddb-b5a4-45c2-beac-ab054bff0692"
+        }
+    ],
+    "groups": [
+        {
+            "@type": "WorkflowGroup",
+            "name": "Details",
+            "description": "Taking an input of a jinja template with jinja_vars use the FortiSOAR API ( \/api\/wf\/api\/jinja-editor\/ ) to render the results.\n\nReturns:\nerror: Boolean\noutput: Text\nerror_msg: Text",
+            "type": "note",
+            "isCollapsed": false,
+            "hasTriggerStep": false,
+            "hideInLogs": false,
+            "metadata": [],
+            "reusable": false,
+            "top": "420",
+            "left": "360",
+            "height": "214",
+            "width": "400",
+            "uuid": "dbcd0b78-1b3b-4112-899d-50312c6a8349",
+            "recordTags": []
+        }
+    ],
+    "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+    "playbookOrigin": "\/api\/3\/picklists\/b6d710a9-a8ec-41ec-8817-fe9fa062fcdd",
+    "isEditable": false,
+    "uuid": "b9e9fe1a-4964-4631-ba81-97987676884d",
+    "owners": [],
+    "isPrivate": false,
+    "deletedAt": null,
+    "recordTags": [
+        "FortiSOAR-API"
+    ]
+}

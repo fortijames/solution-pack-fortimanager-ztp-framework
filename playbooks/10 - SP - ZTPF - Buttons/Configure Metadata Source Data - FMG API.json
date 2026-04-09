@@ -1,0 +1,369 @@
+{
+    "@context": "\/api\/3\/contexts\/Workflow",
+    "@type": "Workflow",
+    "triggerLimit": null,
+    "name": "Configure Metadata Source Data - FMG API",
+    "aliasName": null,
+    "tag": null,
+    "description": "Help user manage the Metadata Source Data field based on the type.",
+    "isActive": true,
+    "debug": false,
+    "singleRecordExecution": false,
+    "remoteExecutableFlag": false,
+    "parameters": [],
+    "synchronous": false,
+    "collection": "\/api\/3\/workflow_collections\/f0b56dc0-6c1e-4f5b-9199-c807800f028a",
+    "versions": [],
+    "triggerStep": "\/api\/3\/workflow_steps\/f7412cb9-a978-42f3-bce3-3e1a23a733d9",
+    "steps": [
+        {
+            "@type": "WorkflowStep",
+            "name": "cancel or timeout",
+            "description": null,
+            "arguments": [],
+            "status": null,
+            "top": "220",
+            "left": "840",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "67959665-5fc3-420e-a376-f0da8b0a5688"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "configure data",
+            "description": null,
+            "arguments": {
+                "arguments": {
+                    "record_id": "{{vars.record_id}}",
+                    "api_fields": "",
+                    "api_filter": "",
+                    "api_method": "{{vars.method}}",
+                    "api_options": "",
+                    "api_resource": "{{vars.url}}"
+                },
+                "apply_async": false,
+                "step_variables": [],
+                "pass_parent_env": false,
+                "pass_input_record": false,
+                "workflowReference": "\/api\/3\/workflows\/68acc0ea-5fda-4267-8305-ebab47c46161"
+            },
+            "status": null,
+            "top": "300",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
+            "group": null,
+            "uuid": "334c8d59-7a88-4c5c-b062-160532a89cba"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "config vars",
+            "description": null,
+            "arguments": {
+                "url": "{{vars.record_data['url']}}",
+                "method": "{{vars.record_data['method']}}"
+            },
+            "status": null,
+            "top": "80",
+            "left": "760",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "40cc96e5-9209-468f-aab0-313260aca153"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "enhance vars",
+            "description": null,
+            "arguments": {
+                "url": "{{vars.steps.Prompt_User.input.url}}",
+                "method": "{{vars.steps.Prompt_User.input.method}}"
+            },
+            "status": null,
+            "top": "120",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "7836d172-375c-4c63-b5f0-8e7565a2cdcd"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "initial vars",
+            "description": null,
+            "arguments": {
+                "record_id": "{{vars.input.records[0].id}}",
+                "data_fields": "[\"url\",\"method\"]",
+                "record_data": "{{vars.input.records[0].data}}",
+                "record_datakey": "{{vars.input.records[0].datakey}}"
+            },
+            "status": null,
+            "top": "40",
+            "left": "360",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "b66e1429-9c2d-40e9-835b-61425c02f6c3"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Prompt User",
+            "description": null,
+            "arguments": {
+                "type": "InputBased",
+                "input": {
+                    "schema": {
+                        "title": "Configure Data for FMG JSON-RPC API",
+                        "description": "**Summary**\nUpdate the following fields to collect data from the FMG JSON-RPC API. You can use Jinja within the payload of the data. \n<hr>\n\n**Example URLs**\n\n{% raw -%}\n - `\/pm\/config\/device\/{{record.device.name}}\/global\/system\/interface`\n{% endraw -%}",
+                        "inputVariables": [
+                            {
+                                "name": "method",
+                                "type": "string",
+                                "label": "Method",
+                                "tooltip": "JSON-RPC Methods such as get,set,exec,set,delete",
+                                "dataType": "text",
+                                "formType": "text",
+                                "required": false,
+                                "_expanded": true,
+                                "defaultValue": "{{vars.method}}",
+                                "_previousName": "",
+                                "requiredCondition": "notrequired",
+                                "jinjaExpressionView": true,
+                                "useRecordFieldDefault": false,
+                                "_addRequiredConditions": false
+                            },
+                            {
+                                "name": "url",
+                                "type": "string",
+                                "label": "URL",
+                                "tooltip": "The API Resource",
+                                "dataType": "text",
+                                "formType": "text",
+                                "required": false,
+                                "_expanded": true,
+                                "_nameTouched": true,
+                                "defaultValue": "{{vars.url}}",
+                                "_previousName": "uRL",
+                                "requiredCondition": "notrequired",
+                                "jinjaExpressionView": true,
+                                "useRecordFieldDefault": false,
+                                "_addRequiredConditions": false
+                            }
+                        ]
+                    }
+                },
+                "record": "",
+                "timeout": {
+                    "days": 0,
+                    "hours": 0,
+                    "minutes": 1,
+                    "step_iri": "\/api\/3\/workflow_steps\/67959665-5fc3-420e-a376-f0da8b0a5688"
+                },
+                "agent_id": null,
+                "resources": "ztpf_metadata_sources",
+                "is_approval": false,
+                "owner_detail": {
+                    "isAssigned": false,
+                    "emailRecipients": ""
+                },
+                "isRecordLinked": false,
+                "step_variables": [],
+                "response_mapping": {
+                    "options": [
+                        {
+                            "option": "Update",
+                            "step_iri": "\/api\/3\/workflow_steps\/7836d172-375c-4c63-b5f0-8e7565a2cdcd"
+                        },
+                        {
+                            "option": "Reset Config",
+                            "step_iri": "\/api\/3\/workflow_steps\/23e555b6-bb2d-4e61-8550-0bc6df8464f4"
+                        },
+                        {
+                            "option": "Cancel Changes",
+                            "step_iri": "\/api\/3\/workflow_steps\/67959665-5fc3-420e-a376-f0da8b0a5688"
+                        }
+                    ],
+                    "duplicateOption": false,
+                    "customSuccessMessage": "Awaiting Playbook resumed successfully."
+                },
+                "email_notification": {
+                    "enabled": false,
+                    "smtpParameters": []
+                },
+                "customEmailExternal": false,
+                "inline_channel_list": [],
+                "external_channel_list": [],
+                "unauthenticated_input": false,
+                "external_email_subject": null,
+                "internal_email_subject": "A FortiSOAR playbook is requesting your input",
+                "custom_email_body_external": null,
+                "external_email_attachments": null
+            },
+            "status": null,
+            "top": "220",
+            "left": "380",
+            "stepType": "\/api\/3\/workflow_step_types\/fc04082a-d7dc-4299-96fb-6837b1baa0fe",
+            "group": null,
+            "uuid": "028e5768-0030-4ad4-b1c8-27725cf06d7b"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "reset vars",
+            "description": null,
+            "arguments": {
+                "url": "''",
+                "method": "''"
+            },
+            "status": null,
+            "top": "300",
+            "left": "380",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "23e555b6-bb2d-4e61-8550-0bc6df8464f4"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Start",
+            "description": "Configure Data Payload required for the FMG API.",
+            "arguments": {
+                "route": "2ccbcd57-52ca-4885-aaad-317ed843e20c",
+                "title": "Configure Data",
+                "resources": [
+                    "ztpf_metadata_sources"
+                ],
+                "__triggerLimit": true,
+                "inputVariables": [],
+                "step_variables": {
+                    "input": {
+                        "params": [],
+                        "records": "{{vars.input.records}}"
+                    }
+                },
+                "triggerOnSource": true,
+                "displayConditions": {
+                    "ztpf_metadata_sources": {
+                        "sort": [],
+                        "limit": 30,
+                        "logic": "AND",
+                        "filters": [
+                            {
+                                "type": "object",
+                                "field": "type",
+                                "value": "\/api\/3\/picklists\/de4cab3c-5bcf-40be-accf-7c420f348569",
+                                "_value": {
+                                    "@id": "\/api\/3\/picklists\/de4cab3c-5bcf-40be-accf-7c420f348569",
+                                    "display": "FortiManager API",
+                                    "itemValue": "FortiManager API"
+                                },
+                                "operator": "eq"
+                            }
+                        ]
+                    }
+                },
+                "executeButtonText": "Execute",
+                "noRecordExecution": false,
+                "showToasterMessage": {
+                    "visible": false,
+                    "messageVisible": true
+                },
+                "triggerOnReplicate": false,
+                "singleRecordExecution": false
+            },
+            "status": null,
+            "top": "40",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/f414d039-bb0d-4e59-9c39-a8f1e880b18a",
+            "group": null,
+            "uuid": "f7412cb9-a978-42f3-bce3-3e1a23a733d9"
+        }
+    ],
+    "routes": [
+        {
+            "@type": "WorkflowRoute",
+            "name": "config vars -> Prompt User",
+            "targetStep": "\/api\/3\/workflow_steps\/028e5768-0030-4ad4-b1c8-27725cf06d7b",
+            "sourceStep": "\/api\/3\/workflow_steps\/40cc96e5-9209-468f-aab0-313260aca153",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "f167539e-edb7-412f-b1f0-65dab6a93e4c"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "enhance vars -> configure data",
+            "targetStep": "\/api\/3\/workflow_steps\/334c8d59-7a88-4c5c-b062-160532a89cba",
+            "sourceStep": "\/api\/3\/workflow_steps\/7836d172-375c-4c63-b5f0-8e7565a2cdcd",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "936d8342-0609-4537-b7ac-f7d76e1b32d9"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "initial vars -> user vars",
+            "targetStep": "\/api\/3\/workflow_steps\/40cc96e5-9209-468f-aab0-313260aca153",
+            "sourceStep": "\/api\/3\/workflow_steps\/b66e1429-9c2d-40e9-835b-61425c02f6c3",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "d7964a2c-9e03-4855-bf4f-99294fc1137c"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Prompt User -> enhance vars",
+            "targetStep": "\/api\/3\/workflow_steps\/7836d172-375c-4c63-b5f0-8e7565a2cdcd",
+            "sourceStep": "\/api\/3\/workflow_steps\/028e5768-0030-4ad4-b1c8-27725cf06d7b",
+            "label": "Update",
+            "isExecuted": false,
+            "group": null,
+            "uuid": "98b38c92-f859-4263-b549-f2a59b3ae308"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Prompt User -> reset vars",
+            "targetStep": "\/api\/3\/workflow_steps\/23e555b6-bb2d-4e61-8550-0bc6df8464f4",
+            "sourceStep": "\/api\/3\/workflow_steps\/028e5768-0030-4ad4-b1c8-27725cf06d7b",
+            "label": "Reset Config",
+            "isExecuted": false,
+            "group": null,
+            "uuid": "c355d6c6-64c1-494c-89f8-11a367679fda"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Prompt User -> timeout",
+            "targetStep": "\/api\/3\/workflow_steps\/67959665-5fc3-420e-a376-f0da8b0a5688",
+            "sourceStep": "\/api\/3\/workflow_steps\/028e5768-0030-4ad4-b1c8-27725cf06d7b",
+            "label": "Cancel Changes",
+            "isExecuted": false,
+            "group": null,
+            "uuid": "ebb12df5-8003-4ea1-8c02-99055d881196"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "reset vars -> configure data",
+            "targetStep": "\/api\/3\/workflow_steps\/334c8d59-7a88-4c5c-b062-160532a89cba",
+            "sourceStep": "\/api\/3\/workflow_steps\/23e555b6-bb2d-4e61-8550-0bc6df8464f4",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "bdd9e7d5-a5b5-47a8-a53a-b644a6a7e446"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Start -> setup vars",
+            "targetStep": "\/api\/3\/workflow_steps\/b66e1429-9c2d-40e9-835b-61425c02f6c3",
+            "sourceStep": "\/api\/3\/workflow_steps\/f7412cb9-a978-42f3-bce3-3e1a23a733d9",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "2fd04e2e-0cfc-4d29-9db4-a129f5216bf5"
+        }
+    ],
+    "groups": [],
+    "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+    "playbookOrigin": "\/api\/3\/picklists\/b6d710a9-a8ec-41ec-8817-fe9fa062fcdd",
+    "isEditable": false,
+    "uuid": "76c51068-3965-489e-a947-779b77fd2826",
+    "owners": [],
+    "isPrivate": false,
+    "deletedAt": null,
+    "recordTags": [
+        "ztpfMetadataSource"
+    ]
+}

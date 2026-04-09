@@ -1,10 +1,77 @@
 {
-    "descriptions": {
-        "singular": "ztpfDeviceAutomationStep",
-        "plural": "ztpfDeviceAutomationSteps"
-    },
+    "@context": "\/api\/3\/contexts\/StagingModelMetadata",
+    "@type": "StagingModelMetadata",
     "type": "ztpf_device_automation_steps",
+    "parentType": null,
+    "tableName": "ztpf_device_automation_step",
+    "ownable": false,
+    "userOwnable": false,
+    "queueable": false,
+    "trackable": true,
+    "taggable": true,
+    "peerReplicable": false,
+    "defaultSort": [
+        {
+            "direction": "ASC",
+            "field": "stepNumber"
+        }
+    ],
+    "uniqueConstraint": [
+        {
+            "ztpf_device_automation_steps_unique": {
+                "columns": [
+                    "device",
+                    "stepNumber"
+                ]
+            }
+        }
+    ],
+    "indexable": true,
+    "writable": true,
     "attributes": [
+        {
+            "@type": "AttributeMetadata",
+            "type": "integer",
+            "name": "stepNumber",
+            "length": null,
+            "formType": "integer",
+            "dataSource": null,
+            "searchable": true,
+            "peerReplicable": true,
+            "system": false,
+            "encrypted": false,
+            "gridColumn": true,
+            "collection": false,
+            "inversedField": null,
+            "ownsRelationship": false,
+            "validation": {
+                "required": false,
+                "minlength": -2147483648,
+                "maxlength": 10485761
+            },
+            "bulkAction": {
+                "allow": false,
+                "buttonText": "",
+                "buttonIcon": "",
+                "buttonClass": "btn btn-default btn-sm"
+            },
+            "dataSourceFilters": null,
+            "defaultValue": null,
+            "tooltip": null,
+            "visibility": true,
+            "htmlEscape": false,
+            "orphanRemoval": null,
+            "readable": true,
+            "writeable": true,
+            "identifier": null,
+            "unique": false,
+            "recommend": false,
+            "skipSerialization": false,
+            "displayName": "{{ stepNumber }}",
+            "descriptions": {
+                "singular": "Step Number"
+            }
+        },
         {
             "@type": "AttributeMetadata",
             "type": "ztpf_devices",
@@ -18,7 +85,7 @@
             "peerReplicable": true,
             "system": false,
             "encrypted": false,
-            "gridColumn": false,
+            "gridColumn": true,
             "collection": false,
             "inversedField": null,
             "ownsRelationship": false,
@@ -62,14 +129,15 @@
             "peerReplicable": true,
             "system": false,
             "encrypted": false,
-            "gridColumn": false,
+            "gridColumn": true,
             "collection": false,
             "inversedField": null,
             "ownsRelationship": false,
             "validation": {
                 "required": false,
                 "minlength": 0,
-                "maxlength": 10485761
+                "maxlength": 10485761,
+                "_enableRange": false
             },
             "bulkAction": {
                 "allow": false,
@@ -96,16 +164,18 @@
         },
         {
             "@type": "AttributeMetadata",
-            "type": "integer",
-            "name": "stepStartTimestamp",
+            "type": "ztpf_automation_actions",
+            "name": "ztpfAutomationActions",
             "length": null,
-            "formType": "datetime",
-            "dataSource": null,
-            "searchable": true,
+            "formType": "lookup",
+            "dataSource": {
+                "model": "ztpf_automation_actions"
+            },
+            "searchable": false,
             "peerReplicable": true,
             "system": false,
             "encrypted": false,
-            "gridColumn": false,
+            "gridColumn": true,
             "collection": false,
             "inversedField": null,
             "ownsRelationship": false,
@@ -133,9 +203,9 @@
             "unique": false,
             "recommend": false,
             "skipSerialization": false,
-            "displayName": "{{ stepStartTimestamp }}",
+            "displayName": "{{ ztpfAutomationActions }}",
             "descriptions": {
-                "singular": "Start Timestamp"
+                "singular": "Automation Action"
             }
         },
         {
@@ -184,14 +254,12 @@
         },
         {
             "@type": "AttributeMetadata",
-            "type": "ztpf_automation_actions",
-            "name": "ztpfAutomationActions",
+            "type": "integer",
+            "name": "stepStartTimestamp",
             "length": null,
-            "formType": "lookup",
-            "dataSource": {
-                "model": "ztpf_automation_actions"
-            },
-            "searchable": false,
+            "formType": "datetime",
+            "dataSource": null,
+            "searchable": true,
             "peerReplicable": true,
             "system": false,
             "encrypted": false,
@@ -223,12 +291,28 @@
             "unique": false,
             "recommend": false,
             "skipSerialization": false,
-            "displayName": "{{ ztpfAutomationActions }}",
+            "displayName": "{{ stepStartTimestamp }}",
             "descriptions": {
-                "singular": "Automation Action"
+                "singular": "Start Timestamp"
             }
         }
     ],
-    "tableName": "ztpf_device_automation_step",
-    "displayName": "{{ name }}"
+    "system": false,
+    "module": "ztpf_device_automation_steps",
+    "softDeleteable": false,
+    "archivable": false,
+    "paused": false,
+    "partitionBy": "modifyDate",
+    "archivalCriteria": {
+        "keep_primary_data_for": 24,
+        "delete_primary_data_after": 60
+    },
+    "archivalFilters": [],
+    "replicationFilters": [],
+    "enableReplication": true,
+    "displayName": "{{ name }}",
+    "descriptions": {
+        "singular": "ztpfDeviceAutomationStep",
+        "plural": "ztpfDeviceAutomationSteps"
+    }
 }

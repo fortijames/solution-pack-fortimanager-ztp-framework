@@ -204,7 +204,8 @@
                                                                                                     "itemValue": "",
                                                                                                     "@id": "false"
                                                                                                 },
-                                                                                                "type": "object"
+                                                                                                "type": "object",
+                                                                                                "display": "{{template}}"
                                                                                             }
                                                                                         ]
                                                                                     }
@@ -253,12 +254,12 @@
                                             "visible": true
                                         },
                                         {
-                                            "title": "Metadata",
+                                            "title": "Linked Metadata Sources",
                                             "active": 0,
                                             "widget": {
                                                 "type": "rows",
                                                 "config": {
-                                                    "wid": "03a3d85a-0d44-4878-b8e2-d59b0e4f53cc",
+                                                    "wid": "2058f0b7-791c-422f-a60a-61c4bd0361b5",
                                                     "rows": [
                                                         {
                                                             "columns": [
@@ -267,36 +268,27 @@
                                                                         {
                                                                             "type": "sectionHeader",
                                                                             "config": {
-                                                                                "wid": "8afd15a7-dc05-458e-8ce0-e0bb7a27a9bd",
+                                                                                "wid": "3e7cfdbc-6e47-4a9c-a3f5-312d8ff205d9",
                                                                                 "query": {
                                                                                     "filters": [],
                                                                                     "sort": [],
                                                                                     "limit": 10
                                                                                 },
                                                                                 "editorType": "html",
-                                                                                "sectionText": "<p style=\"text-align: center;\"><strong>Action Record Metadata<\/strong><\/p>"
+                                                                                "sectionText": "<p style=\"text-align: center;\"><span style=\"font-size: 14pt;\"><strong>Linked Metadata Sources<\/strong><\/span><\/p>"
                                                                             }
                                                                         },
                                                                         {
-                                                                            "type": "editableFormGroup",
+                                                                            "type": "relationship.subtab",
                                                                             "config": {
-                                                                                "wid": "e69f8c1d-5687-4e69-b265-5f3e9d4b70a9",
-                                                                                "rows": [
-                                                                                    {
-                                                                                        "columns": [
-                                                                                            {
-                                                                                                "fields": [
-                                                                                                    {
-                                                                                                        "name": "metatadata",
-                                                                                                        "highlightMode": true,
-                                                                                                        "linky": true,
-                                                                                                        "readOnly": false,
-                                                                                                        "renderWidgetHeight": 800
-                                                                                                    }
-                                                                                                ]
-                                                                                            }
-                                                                                        ]
-                                                                                    }
+                                                                                "wid": "5f6a1d0a-8e59-473d-b35a-76b53d163155",
+                                                                                "excludes": [],
+                                                                                "selectionType": "include",
+                                                                                "actionButtons": [],
+                                                                                "expandableCol": [],
+                                                                                "enableHorizontalScroll": [],
+                                                                                "includes": [
+                                                                                    "ztpfMetadataSources"
                                                                                 ]
                                                                             }
                                                                         }
@@ -304,14 +296,14 @@
                                                                     "style": "col-lg-12"
                                                                 }
                                                             ],
-                                                            "wid": "f038748d-5808-4e43-93e7-7d3f7694a14f",
+                                                            "wid": "8091c430-b45d-42df-b42a-0a147a884eef",
                                                             "_collapsed": false
                                                         }
                                                     ]
                                                 },
                                                 "visible": true
                                             },
-                                            "icon": "fa fa-none",
+                                            "icon": "icon icon-code-snippet",
                                             "show": false,
                                             "visible": true
                                         },

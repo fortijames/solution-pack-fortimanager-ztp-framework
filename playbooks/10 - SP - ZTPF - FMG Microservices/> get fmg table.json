@@ -1,0 +1,195 @@
+{
+    "@context": "\/api\/3\/contexts\/Workflow",
+    "@type": "Workflow",
+    "triggerLimit": null,
+    "name": "> get fmg table",
+    "aliasName": null,
+    "tag": null,
+    "description": "Generic API call for a get table with options to filter and\/or select fields.",
+    "isActive": true,
+    "debug": false,
+    "singleRecordExecution": false,
+    "remoteExecutableFlag": false,
+    "parameters": [
+        "connector_config",
+        "api_filter",
+        "api_fields",
+        "api_loadsub",
+        "api_url",
+        "api_options"
+    ],
+    "synchronous": false,
+    "collection": "\/api\/3\/workflow_collections\/c15a8515-33ae-46d2-9166-fa6fa47ac762",
+    "versions": [],
+    "triggerStep": "\/api\/3\/workflow_steps\/f8358977-de49-4852-a524-c4bfd5095180",
+    "steps": [
+        {
+            "@type": "WorkflowStep",
+            "name": "fmg_api",
+            "description": null,
+            "arguments": {
+                "name": "Fortinet FortiManager JSON RPC",
+                "when": "{{vars.connector_config}}",
+                "config": "{{vars.connector_config}}",
+                "params": {
+                    "url": "{{vars.api_url}}",
+                    "data": "{{vars.api_data}}"
+                },
+                "version": "1.1.0",
+                "connector": "fortinet-fortimanager-json-rpc",
+                "operation": "json_rpc_get",
+                "operationTitle": "JSON RPC Get",
+                "pickFromTenant": false,
+                "step_variables": []
+            },
+            "status": null,
+            "top": "200",
+            "left": "360",
+            "stepType": "\/api\/3\/workflow_step_types\/0bfed618-0316-11e7-93ae-92361f002671",
+            "group": null,
+            "uuid": "94db1fd4-2b57-4689-bd77-adfc23a38de6"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "handle inputs",
+            "description": "overwrite the inputs if needed.",
+            "arguments": {
+                "api_url": "{{vars.input.params['api_url']}}",
+                "api_fields": "{{vars.input.params['api_fields']}}",
+                "api_filter": "{%- set inf = vars.input.params['api_filter'] -%}\n\n{%- if inf in ['',None] -%}\n  {%- set inf = [] -%}\n{%- endif -%}\n\n{{inf}}",
+                "api_loadsub": "{%- set d = vars.input.params['api_loadsub'] -%} \n{%- if d in ['',None] -%}\n1\n{%- else -%}\n{{d}}\n{%- endif -%}",
+                "api_options": "{%- set ino = vars.input.params['api_options'] -%}\n\n{%- if ino in ['',None] -%}\n  {%- set ino = [] -%}\n{%- endif -%}\n\n{{ino}}"
+            },
+            "status": null,
+            "top": "40",
+            "left": "360",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "fb009c2a-d524-40f8-9a04-784cd3dc3f90"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "return",
+            "description": null,
+            "arguments": {
+                "output": "{{vars.steps.fmg_api.data}}",
+                "params": "{{vars.input.params}}",
+                "status": "{%- set ret = vars.status -%}\n\n{%- if not vars.connector_config -%}\n  {%- do ret.update({\n    \"error\":true,\n    \"message\":\"Connector config missing.\"\n  }) -%}\n\n{%- elif not vars.api_url -%}\n  {%- do ret.update({\n    \"error\":true,\n    \"message\":\"API Url missing.\"\n  }) -%}\n  \n{%- elif vars.steps.fmg_api.data.status != 0 -%}\n  {%- do ret.update({\n    \"error\":true,\n    \"message\":vars.steps.fmg_api.data['get_response'].status.message\n  }) -%}\n\n{%- endif -%}\n\n{{ret}}"
+            },
+            "status": null,
+            "top": "120",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "86c38516-d28f-4a2e-a659-1172b09a6f2d"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "setup input vars",
+            "description": "Leverage input vars from user or the overriding step.",
+            "arguments": {
+                "status": "{# Set a default status #}\n{%- set ret = {} -%}\n{%- do ret.update({\n  \"error\":false,\n  \"message\":\"\"\n}) -%}\n{{ret}}",
+                "api_data": "{%- set apiopts = vars.api_options -%}\n{%- set apifilter = vars.api_filter -%}\n{%- set apifields = vars.api_fields -%}\n\n{%- set ret = {\n  \"loadsub\":vars.api_loadsub\n} -%}\n\n\n{%- if apiopts -%}\n{%- do ret.update({\"options\":apifilter}) -%}\n{%- endif -%}\n\n{%- if apifilter -%}\n{%- do ret.update({\"filter\":apifilter}) -%}\n{%- endif -%}\n\n{%- if apifields -%}\n{%- do ret.update({\"fields\":apifields}) -%}\n{%- endif -%}\n\n{{ret}}",
+                "connector_config": "{{vars.input.params['connector_config']}}"
+            },
+            "status": null,
+            "top": "120",
+            "left": "360",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "1a9a6d66-52b2-408f-9980-831d00359da7"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Start",
+            "description": null,
+            "arguments": {
+                "__triggerLimit": true,
+                "step_variables": {
+                    "input": {
+                        "params": []
+                    }
+                },
+                "triggerOnSource": true,
+                "triggerOnReplicate": false
+            },
+            "status": null,
+            "top": "40",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/b348f017-9a94-471f-87f8-ce88b6a7ad62",
+            "group": null,
+            "uuid": "f8358977-de49-4852-a524-c4bfd5095180"
+        }
+    ],
+    "routes": [
+        {
+            "@type": "WorkflowRoute",
+            "name": "fmg_api -> return",
+            "targetStep": "\/api\/3\/workflow_steps\/86c38516-d28f-4a2e-a659-1172b09a6f2d",
+            "sourceStep": "\/api\/3\/workflow_steps\/94db1fd4-2b57-4689-bd77-adfc23a38de6",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "5d3018ec-156a-4810-900b-39176f2a4e12"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "handle api_filter -> setup vars",
+            "targetStep": "\/api\/3\/workflow_steps\/1a9a6d66-52b2-408f-9980-831d00359da7",
+            "sourceStep": "\/api\/3\/workflow_steps\/fb009c2a-d524-40f8-9a04-784cd3dc3f90",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "a54a5354-ca19-427c-9155-16cc876fa9c3"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "setup vars -> fmg_api",
+            "targetStep": "\/api\/3\/workflow_steps\/94db1fd4-2b57-4689-bd77-adfc23a38de6",
+            "sourceStep": "\/api\/3\/workflow_steps\/1a9a6d66-52b2-408f-9980-831d00359da7",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "69507780-8c3f-43f8-922d-5943d3a970d3"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Start -> handle inputs",
+            "targetStep": "\/api\/3\/workflow_steps\/fb009c2a-d524-40f8-9a04-784cd3dc3f90",
+            "sourceStep": "\/api\/3\/workflow_steps\/f8358977-de49-4852-a524-c4bfd5095180",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "7eb4440f-a9ec-4c36-ac7f-f768593d21ca"
+        }
+    ],
+    "groups": [
+        {
+            "@type": "WorkflowGroup",
+            "name": "Details",
+            "description": "Call FMG for system info using any table resource.\n\nPlaybook Options:\n - you can pass options in the form of a list. \n - You can set loadsub to 0, the default is 1. \n - You can pass fields in the form of a list.",
+            "type": "note",
+            "isCollapsed": false,
+            "hasTriggerStep": false,
+            "hideInLogs": false,
+            "metadata": [],
+            "reusable": false,
+            "top": "40",
+            "left": "620",
+            "height": "195",
+            "width": "433",
+            "uuid": "8d9a91f5-c846-4bd9-9b32-192c820f15b5",
+            "recordTags": []
+        }
+    ],
+    "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+    "playbookOrigin": "\/api\/3\/picklists\/b6d710a9-a8ec-41ec-8817-fe9fa062fcdd",
+    "isEditable": false,
+    "uuid": "d49ed3d7-7452-48c8-b316-4b6362dfe9d6",
+    "owners": [],
+    "isPrivate": false,
+    "deletedAt": null,
+    "recordTags": [
+        "fmg_api"
+    ]
+}

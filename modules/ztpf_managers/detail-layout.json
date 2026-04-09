@@ -298,6 +298,78 @@
                                             "visible": true
                                         },
                                         {
+                                            "title": "Devices",
+                                            "active": 0,
+                                            "widget": {
+                                                "type": "rows",
+                                                "config": {
+                                                    "wid": "947ed1f3-350d-4835-af03-608b1283f9ca",
+                                                    "rows": [
+                                                        {
+                                                            "columns": [
+                                                                {
+                                                                    "widgets": [
+                                                                        {
+                                                                            "type": "sectionHeader",
+                                                                            "config": {
+                                                                                "wid": "dd4e0b69-585d-48be-b2d2-0be747f6d3ab",
+                                                                                "query": {
+                                                                                    "filters": [],
+                                                                                    "sort": [],
+                                                                                    "limit": 10
+                                                                                },
+                                                                                "editorType": "html",
+                                                                                "sectionText": "<p style=\"text-align: center;\"><span style=\"font-size: 14pt;\"><strong>Devices Found in FortiManager<\/strong><\/span><\/p>",
+                                                                                "fieldType": "",
+                                                                                "resource": "ztpf_managers"
+                                                                            }
+                                                                        },
+                                                                        {
+                                                                            "type": "playbookButtons-1.1.1",
+                                                                            "config": {
+                                                                                "wid": "a2063f3e-aecf-446a-a98b-27e52748ea9d",
+                                                                                "widgetName": "Playbook Execution Wizard",
+                                                                                "selectedPlaybooksWithRecord": [
+                                                                                    {
+                                                                                        "name": "Synch FMG Devices (New)",
+                                                                                        "uuid": "7f0f8d4e-6446-4343-8289-48b62322bfcd",
+                                                                                        "actionTriggerName": "Synch Devices (New)",
+                                                                                        "collectionName": "10 - SP - ZTPF - Buttons",
+                                                                                        "icon": "fa fa-retweet"
+                                                                                    }
+                                                                                ]
+                                                                            }
+                                                                        },
+                                                                        {
+                                                                            "type": "relationship.subtab",
+                                                                            "config": {
+                                                                                "wid": "21122c4d-3826-4c6c-a078-402dd38869e4",
+                                                                                "excludes": [],
+                                                                                "selectionType": "include",
+                                                                                "actionButtons": [],
+                                                                                "expandableCol": [],
+                                                                                "enableHorizontalScroll": [],
+                                                                                "includes": [
+                                                                                    "ztpfDevices"
+                                                                                ]
+                                                                            }
+                                                                        }
+                                                                    ],
+                                                                    "style": "col-lg-12"
+                                                                }
+                                                            ],
+                                                            "wid": "df571647-349a-46d8-94d7-126487688d76",
+                                                            "_collapsed": false
+                                                        }
+                                                    ]
+                                                },
+                                                "visible": true
+                                            },
+                                            "icon": "fa fa-hdd-o",
+                                            "show": true,
+                                            "visible": true
+                                        },
+                                        {
                                             "title": "Settings",
                                             "active": 0,
                                             "widget": {
@@ -370,62 +442,6 @@
                                                 "visible": true
                                             },
                                             "icon": "icon icon-settings",
-                                            "show": true,
-                                            "visible": true
-                                        },
-                                        {
-                                            "title": "Devices",
-                                            "active": 0,
-                                            "widget": {
-                                                "type": "rows",
-                                                "config": {
-                                                    "wid": "947ed1f3-350d-4835-af03-608b1283f9ca",
-                                                    "rows": [
-                                                        {
-                                                            "columns": [
-                                                                {
-                                                                    "widgets": [
-                                                                        {
-                                                                            "type": "sectionHeader",
-                                                                            "config": {
-                                                                                "wid": "dd4e0b69-585d-48be-b2d2-0be747f6d3ab",
-                                                                                "query": {
-                                                                                    "filters": [],
-                                                                                    "sort": [],
-                                                                                    "limit": 10
-                                                                                },
-                                                                                "editorType": "html",
-                                                                                "sectionText": "<p style=\"text-align: center;\"><span style=\"font-size: 14pt;\"><strong>Devices Found in FortiManager<\/strong><\/span><\/p>",
-                                                                                "fieldType": "",
-                                                                                "resource": "ztpf_managers"
-                                                                            }
-                                                                        },
-                                                                        {
-                                                                            "type": "relationship.subtab",
-                                                                            "config": {
-                                                                                "wid": "21122c4d-3826-4c6c-a078-402dd38869e4",
-                                                                                "excludes": [],
-                                                                                "selectionType": "include",
-                                                                                "actionButtons": [],
-                                                                                "expandableCol": [],
-                                                                                "enableHorizontalScroll": [],
-                                                                                "includes": [
-                                                                                    "ztpfDevices"
-                                                                                ]
-                                                                            }
-                                                                        }
-                                                                    ],
-                                                                    "style": "col-lg-12"
-                                                                }
-                                                            ],
-                                                            "wid": "df571647-349a-46d8-94d7-126487688d76",
-                                                            "_collapsed": false
-                                                        }
-                                                    ]
-                                                },
-                                                "visible": true
-                                            },
-                                            "icon": "fa fa-hdd-o",
                                             "show": false,
                                             "visible": true
                                         },

@@ -1,0 +1,248 @@
+{
+    "@context": "\/api\/3\/contexts\/Workflow",
+    "@type": "Workflow",
+    "triggerLimit": null,
+    "name": "> get jinja_vars for device_id",
+    "aliasName": null,
+    "tag": null,
+    "description": "Given a device_id build jinja_vars.",
+    "isActive": true,
+    "debug": false,
+    "singleRecordExecution": false,
+    "remoteExecutableFlag": false,
+    "parameters": [
+        "device_id"
+    ],
+    "synchronous": false,
+    "collection": "\/api\/3\/workflow_collections\/517fb52d-36f5-4bac-a344-7d4599d7dec6",
+    "versions": [],
+    "triggerStep": "\/api\/3\/workflow_steps\/246be270-94ff-40f3-be95-65832045faff",
+    "steps": [
+        {
+            "@type": "WorkflowStep",
+            "name": "create record_vars",
+            "description": "Create record vars to populate the jinja_vars.record section.",
+            "arguments": {
+                "record_dev_id": "{{vars.steps.find_device[0].id}}",
+                "record_dev_name": "{{vars.steps.find_device[0].name}}",
+                "record_mgr_name": "{{vars.steps.find_device[0].ztpfManagers.name}}",
+                "record_dev_firmware": "{{vars.steps.find_device[0].firmware}}",
+                "record_dev_platform": "{{vars.steps.find_device[0].platform}}",
+                "record_mgr_firmware": "{{vars.steps.find_device[0].ztpfManagers.firmware}}"
+            },
+            "status": null,
+            "top": "120",
+            "left": "340",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "6ba8d131-096e-4cea-a32a-012a07f6438b"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "find device",
+            "description": null,
+            "arguments": {
+                "query": {
+                    "sort": [],
+                    "limit": 30,
+                    "logic": "AND",
+                    "filters": [
+                        {
+                            "type": "primitive",
+                            "field": "id",
+                            "value": "{{vars.device_id}}",
+                            "operator": "eq",
+                            "_operator": "eq"
+                        }
+                    ],
+                    "__selectFields": [
+                        "name",
+                        "platform",
+                        "firmware",
+                        "id",
+                        "ztpfManagers"
+                    ]
+                },
+                "module": "ztpf_devices?$limit=1",
+                "checkboxFields": true,
+                "step_variables": []
+            },
+            "status": null,
+            "top": "80",
+            "left": "660",
+            "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928770",
+            "group": null,
+            "uuid": "82e76628-be51-44bc-bccd-769e34697d4c"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "jinja_vars for device",
+            "description": "Find vars matching record_dev_ and update jinja_vars.record.device.",
+            "arguments": {
+                "jinja_vars": "{%- set prefix = 'record_dev_' -%}\n{%- set ret = vars.jinja_vars -%}\n{%- for v in vars -%}\n  {%- if v.startswith(prefix) -%}\n    {%- set vp = v | regex_replace(prefix,'') -%}\n    {%- do ret.record.device.update({vp:vars[v]}) -%}\n  {%- endif -%}\n{%- endfor -%}\n{{ret}}"
+            },
+            "status": null,
+            "top": "200",
+            "left": "340",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "6a900200-6dd9-4428-b49a-757da6810789"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "jinja_vars for manager",
+            "description": "Find vars matching record_mgr_ and update jinja_vars.record.manager.",
+            "arguments": {
+                "jinja_vars": "{%- set prefix = 'record_mgr_' -%}\n{%- set ret = vars.jinja_vars -%}\n{%- for v in vars -%}\n  {%- if v.startswith(prefix) -%}\n    {%- set vp = v | regex_replace(prefix,'') -%}\n    {%- do ret.record.manager.update({vp:vars[v]}) -%}\n  {%- endif -%}\n{%- endfor -%}\n{{ret}}"
+            },
+            "status": null,
+            "top": "280",
+            "left": "340",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "15a7c092-d27f-44e2-a71a-b3a36173a450"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "return",
+            "description": null,
+            "arguments": {
+                "output": "{{vars.jinja_vars}}"
+            },
+            "status": null,
+            "top": "120",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "933b40a0-bef8-43e8-a8a4-5c8406c4b091"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "setup vars",
+            "description": null,
+            "arguments": {
+                "device_id": "{{vars.input.params['device_id']}}",
+                "jinja_vars": "{\n  \"record\":{\n    \"device\":{},\n    \"manager\":{}\n  }\n}"
+            },
+            "status": null,
+            "top": "40",
+            "left": "340",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "000671ab-97bd-4bf8-beb4-86cdf53792d0"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Start",
+            "description": null,
+            "arguments": {
+                "__triggerLimit": true,
+                "step_variables": {
+                    "input": {
+                        "params": []
+                    }
+                },
+                "triggerOnSource": true,
+                "triggerOnReplicate": false
+            },
+            "status": null,
+            "top": "40",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/b348f017-9a94-471f-87f8-ce88b6a7ad62",
+            "group": null,
+            "uuid": "246be270-94ff-40f3-be95-65832045faff"
+        }
+    ],
+    "routes": [
+        {
+            "@type": "WorkflowRoute",
+            "name": "create record_vars -> add record to jinja_vars",
+            "targetStep": "\/api\/3\/workflow_steps\/6a900200-6dd9-4428-b49a-757da6810789",
+            "sourceStep": "\/api\/3\/workflow_steps\/6ba8d131-096e-4cea-a32a-012a07f6438b",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "9e187d2d-7e57-49ed-94b1-1cf565e3cb5a"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "find device -> create record_vars",
+            "targetStep": "\/api\/3\/workflow_steps\/6ba8d131-096e-4cea-a32a-012a07f6438b",
+            "sourceStep": "\/api\/3\/workflow_steps\/82e76628-be51-44bc-bccd-769e34697d4c",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "32e9244b-c739-4f86-9801-09e04e9eaef1"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "jinja_vars for manager -> return",
+            "targetStep": "\/api\/3\/workflow_steps\/933b40a0-bef8-43e8-a8a4-5c8406c4b091",
+            "sourceStep": "\/api\/3\/workflow_steps\/15a7c092-d27f-44e2-a71a-b3a36173a450",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "3a786ec7-4b31-4690-bd0e-bce9e330dea7"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "jinja_vars record_dev -> Copy of jinja_vars record_dev",
+            "targetStep": "\/api\/3\/workflow_steps\/15a7c092-d27f-44e2-a71a-b3a36173a450",
+            "sourceStep": "\/api\/3\/workflow_steps\/6a900200-6dd9-4428-b49a-757da6810789",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "356d3e45-977b-4652-8b49-a8976525bcaf"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "setup vars -> find device",
+            "targetStep": "\/api\/3\/workflow_steps\/82e76628-be51-44bc-bccd-769e34697d4c",
+            "sourceStep": "\/api\/3\/workflow_steps\/000671ab-97bd-4bf8-beb4-86cdf53792d0",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "7e618f57-e81d-40c0-8cb3-403fd7059892"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Start -> setup vars",
+            "targetStep": "\/api\/3\/workflow_steps\/000671ab-97bd-4bf8-beb4-86cdf53792d0",
+            "sourceStep": "\/api\/3\/workflow_steps\/246be270-94ff-40f3-be95-65832045faff",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "335272fd-bb26-4204-ad7e-f2aeda53de9c"
+        }
+    ],
+    "groups": [
+        {
+            "@type": "WorkflowGroup",
+            "name": "Record Data",
+            "description": "Populate jinja_vars by extracting record data and populate .record.device and .record.manager attributes using a *prefix_* pattern match created in the record_vars step.",
+            "type": "note",
+            "isCollapsed": false,
+            "hasTriggerStep": false,
+            "hideInLogs": false,
+            "metadata": [],
+            "reusable": false,
+            "top": "160",
+            "left": "660",
+            "height": "185",
+            "width": "261",
+            "uuid": "5e969ab1-c123-49bc-b102-136a6dc78046",
+            "recordTags": []
+        }
+    ],
+    "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+    "playbookOrigin": "\/api\/3\/picklists\/b6d710a9-a8ec-41ec-8817-fe9fa062fcdd",
+    "isEditable": false,
+    "uuid": "7b1c12a7-a422-45f4-87e4-96f01a4c03f2",
+    "owners": [],
+    "isPrivate": false,
+    "deletedAt": null,
+    "recordTags": [
+        "jinja_vars",
+        "ztpfDevice"
+    ]
+}

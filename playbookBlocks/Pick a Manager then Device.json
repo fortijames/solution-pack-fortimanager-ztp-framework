@@ -1,0 +1,306 @@
+{
+    "@context": "\/api\/3\/contexts\/WorkflowGroup",
+    "@type": "WorkflowGroup",
+    "name": "Pick a Manager then Device",
+    "description": "Pick a Manager and then Pick a Device from that Manager.",
+    "type": "custom",
+    "isCollapsed": false,
+    "hasTriggerStep": false,
+    "hideInLogs": false,
+    "workflowSteps": [
+        {
+            "@type": "WorkflowStep",
+            "name": "find devices",
+            "description": null,
+            "arguments": {
+                "query": {
+                    "sort": [],
+                    "limit": 30,
+                    "logic": "AND",
+                    "filters": [
+                        {
+                            "type": "object",
+                            "field": "ztpfManagers",
+                            "value": "{{vars.steps.Pick_Manager.input.manager['@id']}}",
+                            "_value": {
+                                "@id": "{{vars.steps.Pick_Manager.input.manager['@id']}}",
+                                "display": "FMGBP",
+                                "itemValue": ""
+                            },
+                            "operator": "eq"
+                        }
+                    ],
+                    "__selectFields": [
+                        "id",
+                        "name",
+                        "platform"
+                    ]
+                },
+                "module": "ztpf_devices?$limit=5000",
+                "checkboxFields": true,
+                "step_variables": {
+                    "device_list": "{%- set table = [] -%}\n{%- for d in vars.steps.find_devices -%}\n  {%- set rec = d -%}\n  {%- do rec.update(\n    {\"pick_option\":d.name + \" (\" + d.platform + \")\"}\n  )-%}\n  {%- do table.append(rec) -%}\n{%- endfor -%}\n{{table}}"
+                }
+            },
+            "status": null,
+            "top": "51",
+            "left": "348",
+            "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928770",
+            "group": "\/api\/3\/workflow_groups\/09df1bda-3d26-4164-a72d-b7c12649f4c8",
+            "uuid": "b5cbf87e-6745-4c66-911e-e0dc40cd6b16"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Pick Device",
+            "description": null,
+            "arguments": {
+                "type": "InputBased",
+                "input": {
+                    "schema": {
+                        "title": "Pick a Device",
+                        "description": "Choose a Device from below:",
+                        "inputVariables": [
+                            {
+                                "name": "device",
+                                "type": "array",
+                                "label": "Device",
+                                "title": "Dynamic List",
+                                "usable": true,
+                                "options": "{{vars.device_list|json_query('[].pick_option')}}",
+                                "tooltip": "Select a Device to Render",
+                                "dataType": "dynamicList",
+                                "formType": "dynamicList",
+                                "required": false,
+                                "_expanded": true,
+                                "mmdUpdate": true,
+                                "collection": false,
+                                "dataSource": [],
+                                "isMultiple": false,
+                                "searchable": false,
+                                "templateUrl": "app\/components\/form\/fields\/dynamicList.html",
+                                "defaultValue": null,
+                                "_previousName": "device",
+                                "playbookField": true,
+                                "displayTemplate": "%7B%7B%20name%20%7D%7D",
+                                "lengthConstraint": true,
+                                "allowedEncryption": false,
+                                "allowedGridColumn": false,
+                                "requiredCondition": "notrequired",
+                                "jinjaExpressionView": true,
+                                "useRecordFieldDefault": false,
+                                "_addRequiredConditions": false
+                            }
+                        ]
+                    }
+                },
+                "record": "",
+                "timeout": {
+                    "minutes": 1,
+                    "step_iri": "\/api\/3\/workflow_steps\/8cd6a27f-87c4-406e-ade9-7d670468d107"
+                },
+                "agent_id": null,
+                "resources": "ztpf_metadata_sources",
+                "is_approval": false,
+                "owner_detail": {
+                    "isAssigned": false,
+                    "emailRecipients": ""
+                },
+                "isRecordLinked": false,
+                "step_variables": {
+                    "device_picked": "{{  vars.device_list\n  |json_query('[?pick_option==`{}`]'\n    .format(vars.steps.Pick_Device.input.device)\n  )\n}}"
+                },
+                "response_mapping": {
+                    "options": [
+                        {
+                            "option": "Ok",
+                            "step_iri": null
+                        },
+                        {
+                            "option": "Cancel",
+                            "step_iri": "\/api\/3\/workflow_steps\/cc93b6d3-2239-4668-bea3-21964b60013c"
+                        }
+                    ],
+                    "duplicateOption": false,
+                    "customSuccessMessage": "Awaiting Playbook resumed successfully."
+                },
+                "email_notification": {
+                    "enabled": false,
+                    "smtpParameters": []
+                },
+                "customEmailExternal": false,
+                "inline_channel_list": [],
+                "external_channel_list": [],
+                "unauthenticated_input": false,
+                "external_email_subject": null,
+                "internal_email_subject": "A FortiSOAR playbook is requesting your input",
+                "custom_email_body_external": null,
+                "external_email_attachments": null
+            },
+            "status": null,
+            "top": "131",
+            "left": "668",
+            "stepType": "\/api\/3\/workflow_step_types\/fc04082a-d7dc-4299-96fb-6837b1baa0fe",
+            "group": "\/api\/3\/workflow_groups\/09df1bda-3d26-4164-a72d-b7c12649f4c8",
+            "uuid": "814fad78-12dc-4e78-a3dc-9e7dc2e93ce5"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Pick Manager",
+            "description": null,
+            "arguments": {
+                "type": "InputBased",
+                "input": {
+                    "schema": {
+                        "title": "Pick a Manager",
+                        "description": "Choose a Manager to then pick a Device from below:",
+                        "inputVariables": [
+                            {
+                                "name": "manager",
+                                "type": "ztpf_managers",
+                                "label": "Manager",
+                                "title": "Lookup (One to Many or One to One)",
+                                "usable": true,
+                                "tooltip": "Select Manager",
+                                "dataType": "lookup",
+                                "formType": "lookup",
+                                "required": false,
+                                "_expanded": true,
+                                "mmdUpdate": true,
+                                "collection": false,
+                                "dataSource": {
+                                    "model": "ztpf_managers"
+                                },
+                                "searchable": false,
+                                "templateUrl": "app\/components\/form\/fields\/typeahead.html",
+                                "defaultValue": null,
+                                "_previousName": "device",
+                                "playbookField": true,
+                                "displayTemplate": "%7B%7B%20name%20%7D%7D",
+                                "lengthConstraint": false,
+                                "allowedEncryption": false,
+                                "allowedGridColumn": true,
+                                "requiredCondition": "notrequired",
+                                "jinjaExpressionView": true,
+                                "useRecordFieldDefault": false,
+                                "_addRequiredConditions": false
+                            }
+                        ]
+                    }
+                },
+                "record": "",
+                "timeout": {
+                    "days": 0,
+                    "hours": 1,
+                    "step_iri": "\/api\/3\/workflow_steps\/8cd6a27f-87c4-406e-ade9-7d670468d107"
+                },
+                "agent_id": null,
+                "resources": "ztpf_metadata_sources",
+                "is_approval": false,
+                "owner_detail": {
+                    "isAssigned": false,
+                    "emailRecipients": ""
+                },
+                "isRecordLinked": false,
+                "step_variables": [],
+                "response_mapping": {
+                    "options": [
+                        {
+                            "option": "Ok",
+                            "step_iri": "\/api\/3\/workflow_steps\/b5cbf87e-6745-4c66-911e-e0dc40cd6b16"
+                        },
+                        {
+                            "option": "Cancel",
+                            "step_iri": "\/api\/3\/workflow_steps\/cc93b6d3-2239-4668-bea3-21964b60013c"
+                        }
+                    ],
+                    "duplicateOption": false,
+                    "customSuccessMessage": "Awaiting Playbook resumed successfully."
+                },
+                "email_notification": {
+                    "enabled": false,
+                    "smtpParameters": []
+                },
+                "customEmailExternal": false,
+                "inline_channel_list": [],
+                "external_channel_list": [],
+                "unauthenticated_input": false,
+                "external_email_subject": null,
+                "internal_email_subject": "A FortiSOAR playbook is requesting your input",
+                "custom_email_body_external": null,
+                "external_email_attachments": null
+            },
+            "status": null,
+            "top": "131",
+            "left": "28",
+            "stepType": "\/api\/3\/workflow_step_types\/fc04082a-d7dc-4299-96fb-6837b1baa0fe",
+            "group": "\/api\/3\/workflow_groups\/09df1bda-3d26-4164-a72d-b7c12649f4c8",
+            "uuid": "45031109-80d0-49e4-9c91-b20b9311cdf4"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "timeout or cancel",
+            "description": null,
+            "arguments": [],
+            "status": null,
+            "top": "211",
+            "left": "348",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": "\/api\/3\/workflow_groups\/09df1bda-3d26-4164-a72d-b7c12649f4c8",
+            "uuid": "cc93b6d3-2239-4668-bea3-21964b60013c"
+        }
+    ],
+    "workflowRoutes": [
+        {
+            "@type": "WorkflowRoute",
+            "name": "find devices -> Get Device",
+            "targetStep": "\/api\/3\/workflow_steps\/814fad78-12dc-4e78-a3dc-9e7dc2e93ce5",
+            "sourceStep": "\/api\/3\/workflow_steps\/b5cbf87e-6745-4c66-911e-e0dc40cd6b16",
+            "label": null,
+            "isExecuted": false,
+            "group": "\/api\/3\/workflow_groups\/09df1bda-3d26-4164-a72d-b7c12649f4c8",
+            "uuid": "135f3c0c-8f0b-4e17-b2ed-0b72936eb8ab"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Get Device -> timeout or cancel",
+            "targetStep": "\/api\/3\/workflow_steps\/cc93b6d3-2239-4668-bea3-21964b60013c",
+            "sourceStep": "\/api\/3\/workflow_steps\/814fad78-12dc-4e78-a3dc-9e7dc2e93ce5",
+            "label": "Cancel",
+            "isExecuted": false,
+            "group": "\/api\/3\/workflow_groups\/09df1bda-3d26-4164-a72d-b7c12649f4c8",
+            "uuid": "78411975-d658-487f-ab6b-106e6ab89935"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Get Manager -> find devices",
+            "targetStep": "\/api\/3\/workflow_steps\/b5cbf87e-6745-4c66-911e-e0dc40cd6b16",
+            "sourceStep": "\/api\/3\/workflow_steps\/45031109-80d0-49e4-9c91-b20b9311cdf4",
+            "label": "Ok",
+            "isExecuted": false,
+            "group": "\/api\/3\/workflow_groups\/09df1bda-3d26-4164-a72d-b7c12649f4c8",
+            "uuid": "f418174a-a512-4ec5-b61a-1c1f85eab514"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Get Manager -> timeout or cancel",
+            "targetStep": "\/api\/3\/workflow_steps\/cc93b6d3-2239-4668-bea3-21964b60013c",
+            "sourceStep": "\/api\/3\/workflow_steps\/45031109-80d0-49e4-9c91-b20b9311cdf4",
+            "label": "Cancel",
+            "isExecuted": false,
+            "group": "\/api\/3\/workflow_groups\/09df1bda-3d26-4164-a72d-b7c12649f4c8",
+            "uuid": "de4fef64-0b77-41d5-bc1c-d51ec175a169"
+        }
+    ],
+    "metadata": [],
+    "reusable": true,
+    "top": "0",
+    "left": "0",
+    "height": "306",
+    "width": "987",
+    "uuid": "09df1bda-3d26-4164-a72d-b7c12649f4c8",
+    "recordTags": [
+        "ZTPF",
+        "ztpfDevice",
+        "ztpfManager"
+    ]
+}

@@ -10,7 +10,12 @@
     "trackable": true,
     "taggable": true,
     "peerReplicable": false,
-    "defaultSort": [],
+    "defaultSort": [
+        {
+            "direction": "ASC",
+            "field": "stepSequence"
+        }
+    ],
     "uniqueConstraint": [
         {
             "ztpf_automation_profile_steps_unique": {
@@ -24,6 +29,50 @@
     "indexable": true,
     "writable": true,
     "attributes": [
+        {
+            "@type": "AttributeMetadata",
+            "type": "integer",
+            "name": "stepSequence",
+            "length": null,
+            "formType": "integer",
+            "dataSource": null,
+            "searchable": true,
+            "peerReplicable": true,
+            "system": false,
+            "encrypted": false,
+            "gridColumn": true,
+            "collection": false,
+            "inversedField": null,
+            "ownsRelationship": false,
+            "validation": {
+                "required": true,
+                "minlength": -2147483648,
+                "maxlength": 10485761,
+                "_enableRange": false
+            },
+            "bulkAction": {
+                "allow": false,
+                "buttonText": "",
+                "buttonIcon": "",
+                "buttonClass": "btn btn-default btn-sm"
+            },
+            "dataSourceFilters": null,
+            "defaultValue": null,
+            "tooltip": "Step # for this profile.",
+            "visibility": true,
+            "htmlEscape": false,
+            "orphanRemoval": null,
+            "readable": true,
+            "writeable": true,
+            "identifier": null,
+            "unique": false,
+            "recommend": false,
+            "skipSerialization": false,
+            "displayName": "{{ stepSequence }}",
+            "descriptions": {
+                "singular": "Step Number"
+            }
+        },
         {
             "@type": "AttributeMetadata",
             "type": "ztpf_automation_profiles",
@@ -68,50 +117,6 @@
             "displayName": "{{ ztpfAutomationProfiles }}",
             "descriptions": {
                 "singular": "Automation Profile"
-            }
-        },
-        {
-            "@type": "AttributeMetadata",
-            "type": "integer",
-            "name": "stepSequence",
-            "length": null,
-            "formType": "integer",
-            "dataSource": null,
-            "searchable": true,
-            "peerReplicable": true,
-            "system": false,
-            "encrypted": false,
-            "gridColumn": true,
-            "collection": false,
-            "inversedField": null,
-            "ownsRelationship": false,
-            "validation": {
-                "required": true,
-                "minlength": -2147483648,
-                "maxlength": 10485761,
-                "_enableRange": false
-            },
-            "bulkAction": {
-                "allow": false,
-                "buttonText": "",
-                "buttonIcon": "",
-                "buttonClass": "btn btn-default btn-sm"
-            },
-            "dataSourceFilters": null,
-            "defaultValue": null,
-            "tooltip": "Step # for this profile.",
-            "visibility": true,
-            "htmlEscape": false,
-            "orphanRemoval": null,
-            "readable": true,
-            "writeable": true,
-            "identifier": null,
-            "unique": false,
-            "recommend": false,
-            "skipSerialization": false,
-            "displayName": "{{ stepSequence }}",
-            "descriptions": {
-                "singular": "Step Number"
             }
         },
         {
