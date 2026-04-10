@@ -16,62 +16,10 @@
             "field": "stepNumber"
         }
     ],
-    "uniqueConstraint": [
-        {
-            "ztpf_device_automation_steps_unique": {
-                "columns": [
-                    "device",
-                    "stepNumber"
-                ]
-            }
-        }
-    ],
+    "uniqueConstraint": [],
     "indexable": true,
     "writable": true,
     "attributes": [
-        {
-            "@type": "AttributeMetadata",
-            "type": "integer",
-            "name": "stepNumber",
-            "length": null,
-            "formType": "integer",
-            "dataSource": null,
-            "searchable": true,
-            "peerReplicable": true,
-            "system": false,
-            "encrypted": false,
-            "gridColumn": true,
-            "collection": false,
-            "inversedField": null,
-            "ownsRelationship": false,
-            "validation": {
-                "required": false,
-                "minlength": -2147483648,
-                "maxlength": 10485761
-            },
-            "bulkAction": {
-                "allow": false,
-                "buttonText": "",
-                "buttonIcon": "",
-                "buttonClass": "btn btn-default btn-sm"
-            },
-            "dataSourceFilters": null,
-            "defaultValue": null,
-            "tooltip": null,
-            "visibility": true,
-            "htmlEscape": false,
-            "orphanRemoval": null,
-            "readable": true,
-            "writeable": true,
-            "identifier": null,
-            "unique": false,
-            "recommend": false,
-            "skipSerialization": false,
-            "displayName": "{{ stepNumber }}",
-            "descriptions": {
-                "singular": "Step Number"
-            }
-        },
         {
             "@type": "AttributeMetadata",
             "type": "ztpf_devices",
@@ -116,6 +64,49 @@
             "displayName": "{{ device }}",
             "descriptions": {
                 "singular": "Device"
+            }
+        },
+        {
+            "@type": "AttributeMetadata",
+            "type": "integer",
+            "name": "stepNumber",
+            "length": null,
+            "formType": "integer",
+            "dataSource": null,
+            "searchable": true,
+            "peerReplicable": true,
+            "system": false,
+            "encrypted": false,
+            "gridColumn": true,
+            "collection": false,
+            "inversedField": null,
+            "ownsRelationship": false,
+            "validation": {
+                "required": true,
+                "minlength": -2147483648,
+                "maxlength": 10485761
+            },
+            "bulkAction": {
+                "allow": false,
+                "buttonText": "",
+                "buttonIcon": "",
+                "buttonClass": "btn btn-default btn-sm"
+            },
+            "dataSourceFilters": null,
+            "defaultValue": "0",
+            "tooltip": "The step number and order of operation when steps are loaded into the queue. If the same then the order falls to the name.",
+            "visibility": true,
+            "htmlEscape": false,
+            "orphanRemoval": null,
+            "readable": true,
+            "writeable": true,
+            "identifier": null,
+            "unique": false,
+            "recommend": false,
+            "skipSerialization": false,
+            "displayName": "{{ stepNumber }}",
+            "descriptions": {
+                "singular": "Step Number"
             }
         },
         {
@@ -211,50 +202,6 @@
         {
             "@type": "AttributeMetadata",
             "type": "integer",
-            "name": "stepStopTimestamp",
-            "length": null,
-            "formType": "datetime",
-            "dataSource": null,
-            "searchable": true,
-            "peerReplicable": true,
-            "system": false,
-            "encrypted": false,
-            "gridColumn": false,
-            "collection": false,
-            "inversedField": null,
-            "ownsRelationship": false,
-            "validation": {
-                "required": false,
-                "minlength": 0,
-                "maxlength": 10485761,
-                "_enableRange": false
-            },
-            "bulkAction": {
-                "allow": false,
-                "buttonText": "",
-                "buttonIcon": "",
-                "buttonClass": "btn btn-default btn-sm"
-            },
-            "dataSourceFilters": null,
-            "defaultValue": null,
-            "tooltip": null,
-            "visibility": true,
-            "htmlEscape": false,
-            "orphanRemoval": null,
-            "readable": true,
-            "writeable": true,
-            "identifier": null,
-            "unique": false,
-            "recommend": false,
-            "skipSerialization": false,
-            "displayName": "{{ stepStopTimestamp }}",
-            "descriptions": {
-                "singular": "Stop Timestamp"
-            }
-        },
-        {
-            "@type": "AttributeMetadata",
-            "type": "integer",
             "name": "stepStartTimestamp",
             "length": null,
             "formType": "datetime",
@@ -294,6 +241,50 @@
             "displayName": "{{ stepStartTimestamp }}",
             "descriptions": {
                 "singular": "Start Timestamp"
+            }
+        },
+        {
+            "@type": "AttributeMetadata",
+            "type": "integer",
+            "name": "stepStopTimestamp",
+            "length": null,
+            "formType": "datetime",
+            "dataSource": null,
+            "searchable": true,
+            "peerReplicable": true,
+            "system": false,
+            "encrypted": false,
+            "gridColumn": false,
+            "collection": false,
+            "inversedField": null,
+            "ownsRelationship": false,
+            "validation": {
+                "required": false,
+                "minlength": 0,
+                "maxlength": 10485761,
+                "_enableRange": false
+            },
+            "bulkAction": {
+                "allow": false,
+                "buttonText": "",
+                "buttonIcon": "",
+                "buttonClass": "btn btn-default btn-sm"
+            },
+            "dataSourceFilters": null,
+            "defaultValue": null,
+            "tooltip": null,
+            "visibility": true,
+            "htmlEscape": false,
+            "orphanRemoval": null,
+            "readable": true,
+            "writeable": true,
+            "identifier": null,
+            "unique": false,
+            "recommend": false,
+            "skipSerialization": false,
+            "displayName": "{{ stepStopTimestamp }}",
+            "descriptions": {
+                "singular": "Stop Timestamp"
             }
         }
     ],

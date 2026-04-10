@@ -10,7 +10,16 @@
     "trackable": true,
     "taggable": true,
     "peerReplicable": false,
-    "defaultSort": [],
+    "defaultSort": [
+        {
+            "direction": "ASC",
+            "field": "ztpfDevices"
+        },
+        {
+            "direction": "ASC",
+            "field": "name"
+        }
+    ],
     "uniqueConstraint": [
         {
             "ztpf_metadata_devices_unique": {
@@ -361,7 +370,6 @@
                             "operator": "eq",
                             "value": "\/api\/3\/picklists\/c373cd17-df08-428c-b042-b07b5fad9038",
                             "_value": {
-                                "display": "Secret",
                                 "itemValue": "Secret",
                                 "@id": "\/api\/3\/picklists\/c373cd17-df08-428c-b042-b07b5fad9038"
                             },

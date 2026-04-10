@@ -20,15 +20,37 @@
     "steps": [
         {
             "@type": "WorkflowStep",
+            "name": "created jinja_vars fields",
+            "description": null,
+            "arguments": {
+                "record_device_fields": "{{vars.jinja_vars.record.device.keys() | list }}",
+                "record_manager_fields": "{{vars.jinja_vars.record.manager.keys() | list }}"
+            },
+            "status": null,
+            "top": "380",
+            "left": "660",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "fa410632-0f44-44a6-9100-2ac714306012"
+        },
+        {
+            "@type": "WorkflowStep",
             "name": "create record_vars",
             "description": "Create record vars to populate the jinja_vars.record section.",
             "arguments": {
                 "record_dev_id": "{{vars.steps.find_device[0].id}}",
+                "record_mgr_id": "{{vars.steps.find_device[0].ztpfManagers.id}}",
+                "record_dev_adom": "{{vars.steps.find_device[0].adom}}",
                 "record_dev_name": "{{vars.steps.find_device[0].name}}",
+                "record_dev_tags": "{{vars.steps.find_device[0].recordTags}}",
+                "record_dev_vdom": "{{vars.steps.find_device[0].vdom}}",
                 "record_mgr_name": "{{vars.steps.find_device[0].ztpfManagers.name}}",
+                "record_dev_mgmt_ip": "{{vars.steps.find_device[0].managementIP}}",
                 "record_dev_firmware": "{{vars.steps.find_device[0].firmware}}",
                 "record_dev_platform": "{{vars.steps.find_device[0].platform}}",
-                "record_mgr_firmware": "{{vars.steps.find_device[0].ztpfManagers.firmware}}"
+                "record_mgr_firmware": "{{vars.steps.find_device[0].ztpfManagers.firmware}}",
+                "record_mgr_platform": "{{vars.steps.find_device[0].ztpfManagers.platform}}",
+                "record_mgr_connector_config": "{{vars.steps.find_device[0].ztpfManagers.connectorConfig}}"
             },
             "status": null,
             "top": "120",
@@ -56,11 +78,17 @@
                         }
                     ],
                     "__selectFields": [
+                        "ztpfManagers",
                         "name",
+                        "managementMode",
                         "platform",
                         "firmware",
+                        "policyPackage",
                         "id",
-                        "ztpfManagers"
+                        "recordTags",
+                        "vdom",
+                        "adom",
+                        "managementIP"
                     ]
                 },
                 "module": "ztpf_devices?$limit=1",
@@ -219,7 +247,7 @@
         {
             "@type": "WorkflowGroup",
             "name": "Record Data",
-            "description": "Populate jinja_vars by extracting record data and populate .record.device and .record.manager attributes using a *prefix_* pattern match created in the record_vars step.",
+            "description": "Populate jinja_vars by extracting record data and populate .record.device and .record.manager attributes using a *prefix_* pattern match created in the record_vars step.\n\nCreates jinja_vars fields:\nrecord.device: id, name, firmware, platform, tags\nrecord.manager: id, name, firmware, platform, connector_config\n\n(latest seen in step below if joined to SECOND TO LAST step)",
             "type": "note",
             "isCollapsed": false,
             "hasTriggerStep": false,
@@ -228,8 +256,8 @@
             "reusable": false,
             "top": "160",
             "left": "660",
-            "height": "185",
-            "width": "261",
+            "height": "228",
+            "width": "495",
             "uuid": "5e969ab1-c123-49bc-b102-136a6dc78046",
             "recordTags": []
         }

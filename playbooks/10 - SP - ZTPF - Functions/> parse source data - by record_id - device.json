@@ -84,7 +84,7 @@
                 "mr": "{{vars.steps.find_record[0].sourceData.dvmdb['mr']}}",
                 "sn": "{{vars.steps.find_record[0].sourceData.dvmdb.sn}}",
                 "adom": "{{vars.steps.find_record[0].sourceData.dvmdb['extra info'].adom}}",
-                "vdom": "{{vars.steps.find_record[0].sourceData.dvmdb.vdom}}",
+                "vdom": "{{vars.steps.find_record[0].sourceData.dvmdb['mgt_vdom']}}",
                 "build": "{{vars.steps.find_record[0].sourceData.dvmdb['build']}}",
                 "patch": "{{vars.steps.find_record[0].sourceData.dvmdb['patch']}}",
                 "os_ver": "{{vars.steps.find_record[0].sourceData.dvmdb['os_ver']}}",
@@ -95,7 +95,8 @@
                 "conf_status": "{{vars.steps.find_record[0].sourceData.dvmdb['conf_status']}}",
                 "conn_status": "{{vars.steps.find_record[0].sourceData.dvmdb['conn_status']}}",
                 "meta_fields": "{{vars.steps.find_record[0].sourceData.dvmdb['meta fields']}}",
-                "record_fqid": "{{vars.steps.find_record[0]['@id']}}"
+                "record_fqid": "{{vars.steps.find_record[0]['@id']}}",
+                "management_ip": "{{vars.steps.find_record[0].sourceData.dvmdb.ip}}"
             },
             "status": null,
             "top": "40",
@@ -131,9 +132,12 @@
             "description": null,
             "arguments": {
                 "resource": {
+                    "adom": "{{vars.adom}}",
+                    "vdom": "{{vars.vdom}}",
                     "firmware": "{{vars.firmware}}",
                     "platform": "{{vars.platform}}",
                     "configStatus": "{{vars.conf_status}}",
+                    "managementIP": "{{vars.management_ip}}",
                     "productFamily": "{{vars.product_family}}",
                     "configDBStatus": "{{vars.db_status}}",
                     "managementMode": "{{vars.mgmt_mode}}",

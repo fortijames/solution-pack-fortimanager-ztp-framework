@@ -46,13 +46,86 @@
                                     "assignedToSetting": "all",
                                     "aggregate": true,
                                     "viewType": "chart",
-                                    "title": "Device Count by Manager",
+                                    "title": "Managers",
                                     "resource": "ztpf_devices",
                                     "chart": "donut",
                                     "showCount": true,
                                     "widgetAlwaysExpanded": true
                                 }
-                            },
+                            }
+                        ],
+                        "style": "col-lg-6"
+                    },
+                    {
+                        "widgets": [
+                            {
+                                "type": "chart",
+                                "config": {
+                                    "wid": "dbb1dace-b642-45fd-9613-ce3add15e44c",
+                                    "widgetAlwaysDisplay": true,
+                                    "showTabularData": false,
+                                    "query": {
+                                        "sort": [
+                                            {
+                                                "field": "status.orderIndex",
+                                                "direction": "ASC"
+                                            }
+                                        ],
+                                        "limit": 2147483647,
+                                        "logic": "AND",
+                                        "filters": [],
+                                        "aggregates": [
+                                            {
+                                                "operator": "countdistinct",
+                                                "field": "*",
+                                                "alias": "total"
+                                            },
+                                            {
+                                                "operator": "groupby",
+                                                "alias": "status",
+                                                "field": "status.itemValue"
+                                            },
+                                            {
+                                                "operator": "groupby",
+                                                "alias": "color",
+                                                "field": "status.color"
+                                            },
+                                            {
+                                                "operator": "groupby",
+                                                "alias": "orderIndex",
+                                                "field": "status.orderIndex"
+                                            }
+                                        ]
+                                    },
+                                    "mapping": {
+                                        "fieldName": "status",
+                                        "displayValues": [
+                                            "name"
+                                        ]
+                                    },
+                                    "assignedToSetting": "all",
+                                    "aggregate": true,
+                                    "viewType": "chart",
+                                    "title": "Status",
+                                    "resource": "ztpf_devices",
+                                    "chart": "donut",
+                                    "showCount": true,
+                                    "widgetAlwaysExpanded": true
+                                }
+                            }
+                        ],
+                        "style": "col-lg-6"
+                    }
+                ],
+                "wid": "ae44543c-1706-46dc-b66e-06869f783bae",
+                "_collapsed": false,
+                "collapsible": false,
+                "collapsibleIndex": 0
+            },
+            {
+                "columns": [
+                    {
+                        "widgets": [
                             {
                                 "type": "chart",
                                 "config": {
@@ -83,7 +156,7 @@
                                     "assignedToSetting": "all",
                                     "aggregate": true,
                                     "viewType": "chart",
-                                    "title": "Count of Device Product Families",
+                                    "title": "Product Families",
                                     "resource": "ztpf_devices",
                                     "chart": "pie",
                                     "showCount": true,
@@ -120,7 +193,7 @@
                                     "assignedToSetting": "all",
                                     "aggregate": true,
                                     "viewType": "chart",
-                                    "title": "Count of Device Firmware",
+                                    "title": "Firmware",
                                     "resource": "ztpf_devices",
                                     "chart": "donut",
                                     "showCount": true,
@@ -131,7 +204,9 @@
                         "style": "col-lg-12"
                     }
                 ],
-                "wid": "ae44543c-1706-46dc-b66e-06869f783bae",
+                "wid": "a89af2a6-1ccd-4f75-bc86-508daa33836d",
+                "collapsible": false,
+                "collapsibleIndex": 0,
                 "_collapsed": false
             },
             {

@@ -59,7 +59,66 @@
                                                         {
                                                             "type": "chart",
                                                             "config": {
-                                                                "wid": "b1333cb7-4d40-4953-94e6-d96616e75a37",
+                                                                "wid": "15af361e-7a81-474a-8c9d-6636858e5bac",
+                                                                "widgetAlwaysDisplay": true,
+                                                                "showTabularData": false,
+                                                                "query": {
+                                                                    "sort": [
+                                                                        {
+                                                                            "field": "adminStatus.orderIndex",
+                                                                            "direction": "ASC"
+                                                                        }
+                                                                    ],
+                                                                    "limit": 2147483647,
+                                                                    "logic": "AND",
+                                                                    "filters": [],
+                                                                    "aggregates": [
+                                                                        {
+                                                                            "operator": "countdistinct",
+                                                                            "field": "*",
+                                                                            "alias": "total"
+                                                                        },
+                                                                        {
+                                                                            "operator": "groupby",
+                                                                            "alias": "adminStatus",
+                                                                            "field": "adminStatus.itemValue"
+                                                                        },
+                                                                        {
+                                                                            "operator": "groupby",
+                                                                            "alias": "color",
+                                                                            "field": "adminStatus.color"
+                                                                        },
+                                                                        {
+                                                                            "operator": "groupby",
+                                                                            "alias": "orderIndex",
+                                                                            "field": "adminStatus.orderIndex"
+                                                                        }
+                                                                    ]
+                                                                },
+                                                                "mapping": {
+                                                                    "fieldName": "adminStatus"
+                                                                },
+                                                                "assignedToSetting": "all",
+                                                                "aggregate": true,
+                                                                "viewType": "chart",
+                                                                "title": "Managers",
+                                                                "widgetAlwaysExpanded": true,
+                                                                "resource": "ztpf_managers",
+                                                                "chart": "donut",
+                                                                "barStyle": "horizontal",
+                                                                "showCount": true
+                                                            }
+                                                        }
+                                                    ],
+                                                    "style": "col-lg-4",
+                                                    "collapsedText": "Devices"
+                                                },
+                                                {
+                                                    "widgets": [
+                                                        {
+                                                            "type": "chart",
+                                                            "config": {
+                                                                "wid": "1e412699-0b46-439f-8b32-b10096e1a694",
                                                                 "widgetAlwaysDisplay": true,
                                                                 "showTabularData": false,
                                                                 "query": {
@@ -75,29 +134,21 @@
                                                                         },
                                                                         {
                                                                             "operator": "groupby",
-                                                                            "alias": "uuid",
-                                                                            "field": "ztpfManagers.uuid"
-                                                                        },
-                                                                        {
-                                                                            "operator": "groupby",
-                                                                            "alias": "name",
-                                                                            "field": "ztpfManagers.name"
+                                                                            "alias": "firmware",
+                                                                            "field": "firmware"
                                                                         }
                                                                     ]
                                                                 },
                                                                 "mapping": {
-                                                                    "fieldName": "ztpfManagers",
-                                                                    "displayValues": [
-                                                                        "name"
-                                                                    ]
+                                                                    "fieldName": "firmware"
                                                                 },
                                                                 "assignedToSetting": "all",
                                                                 "aggregate": true,
                                                                 "viewType": "chart",
-                                                                "title": "Devices",
+                                                                "title": "Manager Firmware",
                                                                 "widgetAlwaysExpanded": true,
-                                                                "resource": "ztpf_devices",
-                                                                "chart": "donut",
+                                                                "resource": "ztpf_managers",
+                                                                "chart": "pie",
                                                                 "barStyle": "horizontal",
                                                                 "showCount": true
                                                             }
@@ -105,6 +156,81 @@
                                                     ],
                                                     "style": "col-lg-4"
                                                 },
+                                                {
+                                                    "widgets": [
+                                                        {
+                                                            "type": "chart",
+                                                            "config": {
+                                                                "wid": "0f8555b0-f1f4-47ef-9b56-8fb1c30f8be4",
+                                                                "widgetAlwaysDisplay": true,
+                                                                "showTabularData": false,
+                                                                "query": {
+                                                                    "sort": [
+                                                                        {
+                                                                            "field": "adminStatus.orderIndex",
+                                                                            "direction": "ASC"
+                                                                        },
+                                                                        {
+                                                                            "field": "ztpfManagers.name",
+                                                                            "direction": "ASC"
+                                                                        }
+                                                                    ],
+                                                                    "limit": 2147483647,
+                                                                    "logic": "AND",
+                                                                    "filters": [],
+                                                                    "aggregates": [
+                                                                        {
+                                                                            "operator": "countdistinct",
+                                                                            "field": "*",
+                                                                            "alias": "total"
+                                                                        },
+                                                                        {
+                                                                            "operator": "groupby",
+                                                                            "alias": "adminStatus",
+                                                                            "field": "adminStatus.itemValue"
+                                                                        },
+                                                                        {
+                                                                            "operator": "groupby",
+                                                                            "alias": "firstOrderIndex",
+                                                                            "field": "adminStatus.orderIndex"
+                                                                        },
+                                                                        {
+                                                                            "operator": "select",
+                                                                            "alias": "ztpfManagers__name",
+                                                                            "field": "ztpfManagers.name"
+                                                                        },
+                                                                        {
+                                                                            "operator": "groupby",
+                                                                            "alias": "ztpfManagers__uuid",
+                                                                            "field": "ztpfManagers.uuid"
+                                                                        }
+                                                                    ]
+                                                                },
+                                                                "mapping": {
+                                                                    "firstGrouping": "adminStatus",
+                                                                    "secondGrouping": "ztpfManagers"
+                                                                },
+                                                                "assignedToSetting": "onlyMe",
+                                                                "aggregate": true,
+                                                                "viewType": "chart",
+                                                                "title": "Devices",
+                                                                "widgetAlwaysExpanded": true,
+                                                                "resource": "ztpf_devices",
+                                                                "chart": "bar",
+                                                                "barStyle": "horizontal"
+                                                            }
+                                                        }
+                                                    ],
+                                                    "style": "col-lg-4"
+                                                }
+                                            ],
+                                            "wid": "530147b9-6a30-4ce6-8b7c-24b053d4a60d",
+                                            "collapsible": false,
+                                            "collapsibleIndex": 0,
+                                            "_collapsed": false
+                                        },
+                                        {
+                                            "columns": [
                                                 {
                                                     "widgets": [
                                                         {
@@ -157,19 +283,14 @@
                                                                 "assignedToSetting": "all",
                                                                 "aggregate": true,
                                                                 "viewType": "chart",
-                                                                "title": "Product Families",
-                                                                "widgetAlwaysExpanded": true,
+                                                                "title": "Manager Device Product Families",
+                                                                "widgetAlwaysExpanded": false,
                                                                 "resource": "ztpf_devices",
                                                                 "chart": "bar",
                                                                 "barStyle": "horizontal",
                                                                 "showCount": true
                                                             }
-                                                        }
-                                                    ],
-                                                    "style": "col-lg-4"
-                                                },
-                                                {
-                                                    "widgets": [
+                                                        },
                                                         {
                                                             "type": "chart",
                                                             "config": {
@@ -220,8 +341,8 @@
                                                                 "assignedToSetting": "all",
                                                                 "aggregate": true,
                                                                 "viewType": "chart",
-                                                                "title": "Firmware",
-                                                                "widgetAlwaysExpanded": true,
+                                                                "title": "Manager Device Firmware",
+                                                                "widgetAlwaysExpanded": false,
                                                                 "resource": "ztpf_devices",
                                                                 "chart": "bar",
                                                                 "barStyle": "horizontal",
@@ -229,12 +350,10 @@
                                                             }
                                                         }
                                                     ],
-                                                    "style": "col-lg-4"
+                                                    "style": "col-lg-12"
                                                 }
                                             ],
-                                            "wid": "530147b9-6a30-4ce6-8b7c-24b053d4a60d",
-                                            "collapsible": false,
-                                            "collapsibleIndex": 0,
+                                            "wid": "8cd30a8f-0129-48c2-a3f1-e8d9c66e8a03",
                                             "_collapsed": false
                                         }
                                     ]
@@ -247,7 +366,7 @@
                 "wid": "27dcaed4-6bf7-485e-beaa-122e692b1677",
                 "collapsible": true,
                 "collapsibleIndex": 0,
-                "_collapsed": true
+                "_collapsed": false
             },
             {
                 "columns": [

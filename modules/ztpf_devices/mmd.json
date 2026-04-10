@@ -10,7 +10,16 @@
     "trackable": true,
     "taggable": true,
     "peerReplicable": false,
-    "defaultSort": [],
+    "defaultSort": [
+        {
+            "direction": "ASC",
+            "field": "ztpfManagers"
+        },
+        {
+            "direction": "ASC",
+            "field": "name"
+        }
+    ],
     "uniqueConstraint": [
         {
             "ztpf_devices_unique": {
@@ -24,78 +33,6 @@
     "indexable": true,
     "writable": true,
     "attributes": [
-        {
-            "@type": "AttributeMetadata",
-            "type": "picklists",
-            "name": "adminStatus",
-            "length": null,
-            "formType": "picklist",
-            "dataSource": {
-                "model": "picklists",
-                "query": {
-                    "logic": "AND",
-                    "filters": [
-                        {
-                            "field": "listName__name",
-                            "operator": "eq",
-                            "value": "ztpfAdminStatus"
-                        }
-                    ],
-                    "sort": [
-                        {
-                            "field": "orderIndex",
-                            "direction": "ASC"
-                        }
-                    ]
-                },
-                "displayConditions": {
-                    "03d3043d-5010-47bd-9176-3389facfea6b": {
-                        "visibility": "visible",
-                        "conditions": null
-                    },
-                    "70c1c8c7-3160-46f2-be63-e12a6381a6fc": {
-                        "visibility": "visible",
-                        "conditions": null
-                    }
-                }
-            },
-            "searchable": false,
-            "peerReplicable": true,
-            "system": false,
-            "encrypted": false,
-            "gridColumn": true,
-            "collection": false,
-            "inversedField": null,
-            "ownsRelationship": false,
-            "validation": {
-                "required": true,
-                "minlength": 0,
-                "maxlength": 10485761,
-                "_enableRange": false
-            },
-            "bulkAction": {
-                "allow": true,
-                "buttonText": "",
-                "buttonIcon": "",
-                "buttonClass": "btn btn-default btn-sm"
-            },
-            "dataSourceFilters": null,
-            "defaultValue": "\/api\/3\/picklists\/03d3043d-5010-47bd-9176-3389facfea6b",
-            "tooltip": "If set to disabled will be ignored in all actions.",
-            "visibility": true,
-            "htmlEscape": false,
-            "orphanRemoval": null,
-            "readable": true,
-            "writeable": true,
-            "identifier": null,
-            "unique": false,
-            "recommend": false,
-            "skipSerialization": false,
-            "displayName": "{{ adminStatus }}",
-            "descriptions": {
-                "singular": "Admin Status"
-            }
-        },
         {
             "@type": "AttributeMetadata",
             "type": "ztpf_managers",
@@ -188,6 +125,122 @@
         },
         {
             "@type": "AttributeMetadata",
+            "type": "string",
+            "name": "description",
+            "length": null,
+            "formType": "richtext",
+            "dataSource": null,
+            "searchable": true,
+            "peerReplicable": true,
+            "system": false,
+            "encrypted": false,
+            "gridColumn": false,
+            "collection": false,
+            "inversedField": null,
+            "ownsRelationship": false,
+            "validation": {
+                "required": false,
+                "minlength": 0,
+                "maxlength": 10485761,
+                "_enableRange": false
+            },
+            "bulkAction": {
+                "allow": false,
+                "buttonText": "",
+                "buttonIcon": "",
+                "buttonClass": "btn btn-default btn-sm"
+            },
+            "dataSourceFilters": null,
+            "defaultValue": null,
+            "tooltip": "Add a description or just some notes.",
+            "visibility": true,
+            "htmlEscape": false,
+            "orphanRemoval": null,
+            "readable": true,
+            "writeable": true,
+            "identifier": null,
+            "unique": false,
+            "recommend": false,
+            "skipSerialization": false,
+            "displayName": "{{ description }}",
+            "descriptions": {
+                "singular": "Description"
+            }
+        },
+        {
+            "@type": "AttributeMetadata",
+            "type": "picklists",
+            "name": "adminStatus",
+            "length": null,
+            "formType": "picklist",
+            "dataSource": {
+                "model": "picklists",
+                "query": {
+                    "logic": "AND",
+                    "filters": [
+                        {
+                            "field": "listName__name",
+                            "operator": "eq",
+                            "value": "ztpfAdminStatus"
+                        }
+                    ],
+                    "sort": [
+                        {
+                            "field": "orderIndex",
+                            "direction": "ASC"
+                        }
+                    ]
+                },
+                "displayConditions": {
+                    "03d3043d-5010-47bd-9176-3389facfea6b": {
+                        "visibility": "visible",
+                        "conditions": null
+                    },
+                    "70c1c8c7-3160-46f2-be63-e12a6381a6fc": {
+                        "visibility": "visible",
+                        "conditions": null
+                    }
+                }
+            },
+            "searchable": false,
+            "peerReplicable": true,
+            "system": false,
+            "encrypted": false,
+            "gridColumn": true,
+            "collection": false,
+            "inversedField": null,
+            "ownsRelationship": false,
+            "validation": {
+                "required": true,
+                "minlength": 0,
+                "maxlength": 10485761,
+                "_enableRange": false
+            },
+            "bulkAction": {
+                "allow": true,
+                "buttonText": "",
+                "buttonIcon": "",
+                "buttonClass": "btn btn-default btn-sm"
+            },
+            "dataSourceFilters": null,
+            "defaultValue": "\/api\/3\/picklists\/03d3043d-5010-47bd-9176-3389facfea6b",
+            "tooltip": "If set to disabled will be ignored in all actions.",
+            "visibility": true,
+            "htmlEscape": false,
+            "orphanRemoval": null,
+            "readable": true,
+            "writeable": true,
+            "identifier": null,
+            "unique": false,
+            "recommend": false,
+            "skipSerialization": false,
+            "displayName": "{{ adminStatus }}",
+            "descriptions": {
+                "singular": "Admin Status"
+            }
+        },
+        {
+            "@type": "AttributeMetadata",
             "type": "picklists",
             "name": "status",
             "length": null,
@@ -276,50 +329,6 @@
         },
         {
             "@type": "AttributeMetadata",
-            "type": "string",
-            "name": "description",
-            "length": null,
-            "formType": "richtext",
-            "dataSource": null,
-            "searchable": true,
-            "peerReplicable": true,
-            "system": false,
-            "encrypted": false,
-            "gridColumn": false,
-            "collection": false,
-            "inversedField": null,
-            "ownsRelationship": false,
-            "validation": {
-                "required": false,
-                "minlength": 0,
-                "maxlength": 10485761,
-                "_enableRange": false
-            },
-            "bulkAction": {
-                "allow": false,
-                "buttonText": "",
-                "buttonIcon": "",
-                "buttonClass": "btn btn-default btn-sm"
-            },
-            "dataSourceFilters": null,
-            "defaultValue": null,
-            "tooltip": "Add a description or just some notes.",
-            "visibility": true,
-            "htmlEscape": false,
-            "orphanRemoval": null,
-            "readable": true,
-            "writeable": true,
-            "identifier": null,
-            "unique": false,
-            "recommend": false,
-            "skipSerialization": false,
-            "displayName": "{{ description }}",
-            "descriptions": {
-                "singular": "Description"
-            }
-        },
-        {
-            "@type": "AttributeMetadata",
             "type": "object",
             "name": "sourceData",
             "length": null,
@@ -347,7 +356,7 @@
             },
             "dataSourceFilters": null,
             "defaultValue": null,
-            "tooltip": null,
+            "tooltip": "Source Data contains raw data collected from API calls about the device from the Manager.",
             "visibility": true,
             "htmlEscape": false,
             "orphanRemoval": null,
@@ -360,6 +369,269 @@
             "displayName": "{{ sourceData }}",
             "descriptions": {
                 "singular": "Source Data"
+            }
+        },
+        {
+            "@type": "AttributeMetadata",
+            "type": "string",
+            "name": "adom",
+            "length": null,
+            "formType": "text",
+            "dataSource": null,
+            "searchable": false,
+            "peerReplicable": true,
+            "system": false,
+            "encrypted": false,
+            "gridColumn": false,
+            "collection": false,
+            "inversedField": null,
+            "ownsRelationship": false,
+            "validation": {
+                "required": false,
+                "minlength": 0,
+                "maxlength": 10485761,
+                "_enableRange": false
+            },
+            "bulkAction": {
+                "allow": false,
+                "buttonText": "",
+                "buttonIcon": "",
+                "buttonClass": "btn btn-default btn-sm"
+            },
+            "dataSourceFilters": null,
+            "defaultValue": "",
+            "tooltip": null,
+            "visibility": true,
+            "htmlEscape": false,
+            "orphanRemoval": null,
+            "readable": true,
+            "writeable": true,
+            "identifier": null,
+            "unique": false,
+            "recommend": false,
+            "skipSerialization": false,
+            "displayName": "{{ adom }}",
+            "descriptions": {
+                "singular": "ADOM"
+            }
+        },
+        {
+            "@type": "AttributeMetadata",
+            "type": "string",
+            "name": "vdom",
+            "length": null,
+            "formType": "text",
+            "dataSource": null,
+            "searchable": false,
+            "peerReplicable": true,
+            "system": false,
+            "encrypted": false,
+            "gridColumn": false,
+            "collection": false,
+            "inversedField": null,
+            "ownsRelationship": false,
+            "validation": {
+                "required": false,
+                "minlength": 0,
+                "maxlength": 10485761,
+                "_enableRange": false
+            },
+            "bulkAction": {
+                "allow": false,
+                "buttonText": "",
+                "buttonIcon": "",
+                "buttonClass": "btn btn-default btn-sm"
+            },
+            "dataSourceFilters": null,
+            "defaultValue": "",
+            "tooltip": null,
+            "visibility": true,
+            "htmlEscape": false,
+            "orphanRemoval": null,
+            "readable": true,
+            "writeable": true,
+            "identifier": null,
+            "unique": false,
+            "recommend": false,
+            "skipSerialization": false,
+            "displayName": "{{ vdom }}",
+            "descriptions": {
+                "singular": "VDOM"
+            }
+        },
+        {
+            "@type": "AttributeMetadata",
+            "type": "string",
+            "name": "managementMode",
+            "length": null,
+            "formType": "text",
+            "dataSource": null,
+            "searchable": false,
+            "peerReplicable": true,
+            "system": false,
+            "encrypted": false,
+            "gridColumn": false,
+            "collection": false,
+            "inversedField": null,
+            "ownsRelationship": false,
+            "validation": {
+                "required": false,
+                "minlength": 0,
+                "maxlength": 10485761,
+                "_enableRange": false
+            },
+            "bulkAction": {
+                "allow": false,
+                "buttonText": "",
+                "buttonIcon": "",
+                "buttonClass": "btn btn-default btn-sm"
+            },
+            "dataSourceFilters": null,
+            "defaultValue": "",
+            "tooltip": null,
+            "visibility": true,
+            "htmlEscape": false,
+            "orphanRemoval": null,
+            "readable": true,
+            "writeable": true,
+            "identifier": null,
+            "unique": false,
+            "recommend": false,
+            "skipSerialization": false,
+            "displayName": "{{ managementMode }}",
+            "descriptions": {
+                "singular": "Management Mode"
+            }
+        },
+        {
+            "@type": "AttributeMetadata",
+            "type": "string",
+            "name": "managementIP",
+            "length": null,
+            "formType": "text",
+            "dataSource": null,
+            "searchable": false,
+            "peerReplicable": true,
+            "system": false,
+            "encrypted": false,
+            "gridColumn": false,
+            "collection": false,
+            "inversedField": null,
+            "ownsRelationship": false,
+            "validation": {
+                "required": false,
+                "minlength": 0,
+                "maxlength": 10485761
+            },
+            "bulkAction": {
+                "allow": false,
+                "buttonText": "",
+                "buttonIcon": "",
+                "buttonClass": "btn btn-default btn-sm"
+            },
+            "dataSourceFilters": null,
+            "defaultValue": "",
+            "tooltip": null,
+            "visibility": true,
+            "htmlEscape": false,
+            "orphanRemoval": null,
+            "readable": true,
+            "writeable": true,
+            "identifier": null,
+            "unique": false,
+            "recommend": false,
+            "skipSerialization": false,
+            "displayName": "{{ managementIP }}",
+            "descriptions": {
+                "singular": "Management IP"
+            }
+        },
+        {
+            "@type": "AttributeMetadata",
+            "type": "string",
+            "name": "connectionStatus",
+            "length": null,
+            "formType": "text",
+            "dataSource": null,
+            "searchable": false,
+            "peerReplicable": true,
+            "system": false,
+            "encrypted": false,
+            "gridColumn": false,
+            "collection": false,
+            "inversedField": null,
+            "ownsRelationship": false,
+            "validation": {
+                "required": false,
+                "minlength": 0,
+                "maxlength": 10485761,
+                "_enableRange": false
+            },
+            "bulkAction": {
+                "allow": false,
+                "buttonText": "",
+                "buttonIcon": "",
+                "buttonClass": "btn btn-default btn-sm"
+            },
+            "dataSourceFilters": null,
+            "defaultValue": "",
+            "tooltip": null,
+            "visibility": true,
+            "htmlEscape": false,
+            "orphanRemoval": null,
+            "readable": true,
+            "writeable": true,
+            "identifier": null,
+            "unique": false,
+            "recommend": false,
+            "skipSerialization": false,
+            "displayName": "{{ connectionStatus }}",
+            "descriptions": {
+                "singular": "Connection Status"
+            }
+        },
+        {
+            "@type": "AttributeMetadata",
+            "type": "string",
+            "name": "productFamily",
+            "length": null,
+            "formType": "text",
+            "dataSource": null,
+            "searchable": false,
+            "peerReplicable": true,
+            "system": false,
+            "encrypted": false,
+            "gridColumn": false,
+            "collection": false,
+            "inversedField": null,
+            "ownsRelationship": false,
+            "validation": {
+                "required": false,
+                "minlength": 0,
+                "maxlength": 10485761,
+                "_enableRange": false
+            },
+            "bulkAction": {
+                "allow": false,
+                "buttonText": "",
+                "buttonIcon": "",
+                "buttonClass": "btn btn-default btn-sm"
+            },
+            "dataSourceFilters": null,
+            "defaultValue": "",
+            "tooltip": "The product family is derived by reading the platform.",
+            "visibility": true,
+            "htmlEscape": false,
+            "orphanRemoval": null,
+            "readable": true,
+            "writeable": true,
+            "identifier": null,
+            "unique": false,
+            "recommend": false,
+            "skipSerialization": false,
+            "displayName": "{{ productFamily }}",
+            "descriptions": {
+                "singular": "Product Family"
             }
         },
         {
@@ -380,7 +652,8 @@
             "validation": {
                 "required": false,
                 "minlength": 0,
-                "maxlength": 10485761
+                "maxlength": 10485761,
+                "_enableRange": false
             },
             "bulkAction": {
                 "allow": false,
@@ -423,7 +696,8 @@
             "validation": {
                 "required": false,
                 "minlength": 0,
-                "maxlength": 10485761
+                "maxlength": 10485761,
+                "_enableRange": false
             },
             "bulkAction": {
                 "allow": false,
@@ -451,92 +725,6 @@
         {
             "@type": "AttributeMetadata",
             "type": "string",
-            "name": "managementMode",
-            "length": null,
-            "formType": "text",
-            "dataSource": null,
-            "searchable": false,
-            "peerReplicable": true,
-            "system": false,
-            "encrypted": false,
-            "gridColumn": false,
-            "collection": false,
-            "inversedField": null,
-            "ownsRelationship": false,
-            "validation": {
-                "required": false,
-                "minlength": 0,
-                "maxlength": 10485761
-            },
-            "bulkAction": {
-                "allow": false,
-                "buttonText": "",
-                "buttonIcon": "",
-                "buttonClass": "btn btn-default btn-sm"
-            },
-            "dataSourceFilters": null,
-            "defaultValue": "",
-            "tooltip": null,
-            "visibility": true,
-            "htmlEscape": false,
-            "orphanRemoval": null,
-            "readable": true,
-            "writeable": true,
-            "identifier": null,
-            "unique": false,
-            "recommend": false,
-            "skipSerialization": false,
-            "displayName": "{{ managementMode }}",
-            "descriptions": {
-                "singular": "Management Mode"
-            }
-        },
-        {
-            "@type": "AttributeMetadata",
-            "type": "string",
-            "name": "connectionStatus",
-            "length": null,
-            "formType": "text",
-            "dataSource": null,
-            "searchable": false,
-            "peerReplicable": true,
-            "system": false,
-            "encrypted": false,
-            "gridColumn": false,
-            "collection": false,
-            "inversedField": null,
-            "ownsRelationship": false,
-            "validation": {
-                "required": false,
-                "minlength": 0,
-                "maxlength": 10485761
-            },
-            "bulkAction": {
-                "allow": false,
-                "buttonText": "",
-                "buttonIcon": "",
-                "buttonClass": "btn btn-default btn-sm"
-            },
-            "dataSourceFilters": null,
-            "defaultValue": "",
-            "tooltip": null,
-            "visibility": true,
-            "htmlEscape": false,
-            "orphanRemoval": null,
-            "readable": true,
-            "writeable": true,
-            "identifier": null,
-            "unique": false,
-            "recommend": false,
-            "skipSerialization": false,
-            "displayName": "{{ connectionStatus }}",
-            "descriptions": {
-                "singular": "Connection Status"
-            }
-        },
-        {
-            "@type": "AttributeMetadata",
-            "type": "string",
             "name": "configStatus",
             "length": null,
             "formType": "text",
@@ -552,7 +740,8 @@
             "validation": {
                 "required": false,
                 "minlength": 0,
-                "maxlength": 10485761
+                "maxlength": 10485761,
+                "_enableRange": false
             },
             "bulkAction": {
                 "allow": false,
@@ -595,7 +784,8 @@
             "validation": {
                 "required": false,
                 "minlength": 0,
-                "maxlength": 10485761
+                "maxlength": 10485761,
+                "_enableRange": false
             },
             "bulkAction": {
                 "allow": false,
@@ -638,7 +828,8 @@
             "validation": {
                 "required": false,
                 "minlength": 0,
-                "maxlength": 10485761
+                "maxlength": 10485761,
+                "_enableRange": false
             },
             "bulkAction": {
                 "allow": false,
@@ -648,7 +839,7 @@
             },
             "dataSourceFilters": null,
             "defaultValue": "",
-            "tooltip": null,
+            "tooltip": "The Device Templates assigned to the FG in the Manager.",
             "visibility": true,
             "htmlEscape": false,
             "orphanRemoval": null,
@@ -681,7 +872,8 @@
             "validation": {
                 "required": false,
                 "minlength": 0,
-                "maxlength": 10485761
+                "maxlength": 10485761,
+                "_enableRange": false
             },
             "bulkAction": {
                 "allow": false,
@@ -691,7 +883,7 @@
             },
             "dataSourceFilters": null,
             "defaultValue": "",
-            "tooltip": null,
+            "tooltip": "The Policy Package assigned to the FG in the Manager.",
             "visibility": true,
             "htmlEscape": false,
             "orphanRemoval": null,
@@ -722,7 +914,7 @@
             "gridColumn": false,
             "collection": true,
             "inversedField": "ztpfDevices",
-            "ownsRelationship": false,
+            "ownsRelationship": true,
             "validation": {
                 "required": false,
                 "minlength": 0,
@@ -745,6 +937,50 @@
             "displayName": "{{ ztpfMetadataDevices }}",
             "descriptions": {
                 "singular": "Metadata Records"
+            }
+        },
+        {
+            "@type": "AttributeMetadata",
+            "type": "object",
+            "name": "metadata",
+            "length": null,
+            "formType": "object",
+            "dataSource": null,
+            "searchable": false,
+            "peerReplicable": true,
+            "system": false,
+            "encrypted": false,
+            "gridColumn": false,
+            "collection": false,
+            "inversedField": null,
+            "ownsRelationship": false,
+            "validation": {
+                "required": false,
+                "minlength": 0,
+                "maxlength": 10485761,
+                "_enableRange": false
+            },
+            "bulkAction": {
+                "allow": false,
+                "buttonText": "",
+                "buttonIcon": "",
+                "buttonClass": "btn btn-default btn-sm"
+            },
+            "dataSourceFilters": null,
+            "defaultValue": null,
+            "tooltip": "Metadata on a device can be used in jinja scripts and be synchronized to fmg variables. Metadata can come from metadata records or updates from playbooks but should not be updated directly as the flow of data can be impacted.",
+            "visibility": true,
+            "htmlEscape": false,
+            "orphanRemoval": null,
+            "readable": true,
+            "writeable": true,
+            "identifier": null,
+            "unique": false,
+            "recommend": false,
+            "skipSerialization": false,
+            "displayName": "{{ metadata }}",
+            "descriptions": {
+                "singular": "Metadata"
             }
         },
         {
@@ -873,50 +1109,6 @@
             "displayName": "{{ comments }}",
             "descriptions": {
                 "singular": "Comments"
-            }
-        },
-        {
-            "@type": "AttributeMetadata",
-            "type": "string",
-            "name": "productFamily",
-            "length": null,
-            "formType": "text",
-            "dataSource": null,
-            "searchable": false,
-            "peerReplicable": true,
-            "system": false,
-            "encrypted": false,
-            "gridColumn": false,
-            "collection": false,
-            "inversedField": null,
-            "ownsRelationship": false,
-            "validation": {
-                "required": false,
-                "minlength": 0,
-                "maxlength": 10485761,
-                "_enableRange": false
-            },
-            "bulkAction": {
-                "allow": false,
-                "buttonText": "",
-                "buttonIcon": "",
-                "buttonClass": "btn btn-default btn-sm"
-            },
-            "dataSourceFilters": null,
-            "defaultValue": "",
-            "tooltip": null,
-            "visibility": true,
-            "htmlEscape": false,
-            "orphanRemoval": null,
-            "readable": true,
-            "writeable": true,
-            "identifier": null,
-            "unique": false,
-            "recommend": false,
-            "skipSerialization": false,
-            "displayName": "{{ productFamily }}",
-            "descriptions": {
-                "singular": "Product Family"
             }
         }
     ],

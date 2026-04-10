@@ -10,7 +10,12 @@
     "trackable": true,
     "taggable": true,
     "peerReplicable": false,
-    "defaultSort": [],
+    "defaultSort": [
+        {
+            "direction": "ASC",
+            "field": "name"
+        }
+    ],
     "uniqueConstraint": [
         {
             "ztpf_managers_unique": {
@@ -23,6 +28,50 @@
     "indexable": true,
     "writable": true,
     "attributes": [
+        {
+            "@type": "AttributeMetadata",
+            "type": "string",
+            "name": "name",
+            "length": null,
+            "formType": "text",
+            "dataSource": null,
+            "searchable": true,
+            "peerReplicable": true,
+            "system": false,
+            "encrypted": false,
+            "gridColumn": true,
+            "collection": false,
+            "inversedField": null,
+            "ownsRelationship": false,
+            "validation": {
+                "required": true,
+                "minlength": 0,
+                "maxlength": 10485761,
+                "_enableRange": false
+            },
+            "bulkAction": {
+                "allow": false,
+                "buttonText": "",
+                "buttonIcon": "",
+                "buttonClass": "btn btn-default btn-sm"
+            },
+            "dataSourceFilters": null,
+            "defaultValue": "",
+            "tooltip": "Name of Manager.",
+            "visibility": true,
+            "htmlEscape": false,
+            "orphanRemoval": null,
+            "readable": true,
+            "writeable": true,
+            "identifier": null,
+            "unique": false,
+            "recommend": false,
+            "skipSerialization": false,
+            "displayName": "{{ name }}",
+            "descriptions": {
+                "singular": "Name"
+            }
+        },
         {
             "@type": "AttributeMetadata",
             "type": "picklists",
@@ -93,50 +142,6 @@
             "displayName": "{{ adminStatus }}",
             "descriptions": {
                 "singular": "Admin Status"
-            }
-        },
-        {
-            "@type": "AttributeMetadata",
-            "type": "string",
-            "name": "name",
-            "length": null,
-            "formType": "text",
-            "dataSource": null,
-            "searchable": true,
-            "peerReplicable": true,
-            "system": false,
-            "encrypted": false,
-            "gridColumn": true,
-            "collection": false,
-            "inversedField": null,
-            "ownsRelationship": false,
-            "validation": {
-                "required": true,
-                "minlength": 0,
-                "maxlength": 10485761,
-                "_enableRange": false
-            },
-            "bulkAction": {
-                "allow": false,
-                "buttonText": "",
-                "buttonIcon": "",
-                "buttonClass": "btn btn-default btn-sm"
-            },
-            "dataSourceFilters": null,
-            "defaultValue": "",
-            "tooltip": "Name of Manager.",
-            "visibility": true,
-            "htmlEscape": false,
-            "orphanRemoval": null,
-            "readable": true,
-            "writeable": true,
-            "identifier": null,
-            "unique": false,
-            "recommend": false,
-            "skipSerialization": false,
-            "displayName": "{{ name }}",
-            "descriptions": {
-                "singular": "Name"
             }
         },
         {
@@ -229,50 +234,6 @@
         },
         {
             "@type": "AttributeMetadata",
-            "type": "object",
-            "name": "sourceData",
-            "length": null,
-            "formType": "object",
-            "dataSource": null,
-            "searchable": false,
-            "peerReplicable": true,
-            "system": false,
-            "encrypted": false,
-            "gridColumn": false,
-            "collection": false,
-            "inversedField": null,
-            "ownsRelationship": false,
-            "validation": {
-                "required": false,
-                "minlength": 0,
-                "maxlength": 10485761,
-                "_enableRange": false
-            },
-            "bulkAction": {
-                "allow": false,
-                "buttonText": "",
-                "buttonIcon": "",
-                "buttonClass": "btn btn-default btn-sm"
-            },
-            "dataSourceFilters": null,
-            "defaultValue": null,
-            "tooltip": null,
-            "visibility": true,
-            "htmlEscape": false,
-            "orphanRemoval": null,
-            "readable": true,
-            "writeable": true,
-            "identifier": null,
-            "unique": false,
-            "recommend": false,
-            "skipSerialization": false,
-            "displayName": "{{ sourceData }}",
-            "descriptions": {
-                "singular": "Source Data"
-            }
-        },
-        {
-            "@type": "AttributeMetadata",
             "type": "string",
             "name": "description",
             "length": null,
@@ -313,47 +274,6 @@
             "displayName": "{{ description }}",
             "descriptions": {
                 "singular": "Description"
-            }
-        },
-        {
-            "@type": "AttributeMetadata",
-            "type": "ztpf_devices",
-            "name": "ztpfDevices",
-            "length": null,
-            "formType": "oneToMany",
-            "dataSource": {
-                "model": "ztpf_devices"
-            },
-            "searchable": false,
-            "peerReplicable": true,
-            "system": false,
-            "encrypted": false,
-            "gridColumn": false,
-            "collection": true,
-            "inversedField": "ztpfManagers",
-            "ownsRelationship": true,
-            "validation": {
-                "required": false,
-                "minlength": 0,
-                "maxlength": 10485761,
-                "_enableRange": false
-            },
-            "bulkAction": [],
-            "dataSourceFilters": null,
-            "defaultValue": null,
-            "tooltip": null,
-            "visibility": true,
-            "htmlEscape": false,
-            "orphanRemoval": null,
-            "readable": true,
-            "writeable": true,
-            "identifier": null,
-            "unique": false,
-            "recommend": false,
-            "skipSerialization": false,
-            "displayName": "{{ ztpfDevices }}",
-            "descriptions": {
-                "singular": "Devices"
             }
         },
         {
@@ -534,9 +454,52 @@
         {
             "@type": "AttributeMetadata",
             "type": "string",
-            "name": "firmware",
+            "name": "connectorConfig",
             "length": null,
             "formType": "text",
+            "dataSource": null,
+            "searchable": false,
+            "peerReplicable": true,
+            "system": false,
+            "encrypted": false,
+            "gridColumn": false,
+            "collection": false,
+            "inversedField": null,
+            "ownsRelationship": false,
+            "validation": {
+                "required": false,
+                "minlength": 0,
+                "maxlength": 10485761
+            },
+            "bulkAction": {
+                "allow": false,
+                "buttonText": "",
+                "buttonIcon": "",
+                "buttonClass": "btn btn-default btn-sm"
+            },
+            "dataSourceFilters": null,
+            "defaultValue": "",
+            "tooltip": "The connector configuration name for this connector.",
+            "visibility": true,
+            "htmlEscape": false,
+            "orphanRemoval": null,
+            "readable": true,
+            "writeable": true,
+            "identifier": null,
+            "unique": false,
+            "recommend": false,
+            "skipSerialization": false,
+            "displayName": "{{ connectorConfig }}",
+            "descriptions": {
+                "singular": "Connector Config"
+            }
+        },
+        {
+            "@type": "AttributeMetadata",
+            "type": "object",
+            "name": "sourceData",
+            "length": null,
+            "formType": "object",
             "dataSource": null,
             "searchable": false,
             "peerReplicable": true,
@@ -559,8 +522,8 @@
                 "buttonClass": "btn btn-default btn-sm"
             },
             "dataSourceFilters": null,
-            "defaultValue": "",
-            "tooltip": "Firmware\/Version of the Manager from Source Data.",
+            "defaultValue": null,
+            "tooltip": null,
             "visibility": true,
             "htmlEscape": false,
             "orphanRemoval": null,
@@ -570,9 +533,9 @@
             "unique": false,
             "recommend": false,
             "skipSerialization": false,
-            "displayName": "{{ firmware }}",
+            "displayName": "{{ sourceData }}",
             "descriptions": {
-                "singular": "Firmware"
+                "singular": "Source Data"
             }
         },
         {
@@ -622,6 +585,50 @@
         {
             "@type": "AttributeMetadata",
             "type": "string",
+            "name": "firmware",
+            "length": null,
+            "formType": "text",
+            "dataSource": null,
+            "searchable": false,
+            "peerReplicable": true,
+            "system": false,
+            "encrypted": false,
+            "gridColumn": true,
+            "collection": false,
+            "inversedField": null,
+            "ownsRelationship": false,
+            "validation": {
+                "required": false,
+                "minlength": 0,
+                "maxlength": 10485761,
+                "_enableRange": false
+            },
+            "bulkAction": {
+                "allow": false,
+                "buttonText": "",
+                "buttonIcon": "",
+                "buttonClass": "btn btn-default btn-sm"
+            },
+            "dataSourceFilters": null,
+            "defaultValue": "",
+            "tooltip": "Firmware\/Version of the Manager from Source Data.",
+            "visibility": true,
+            "htmlEscape": false,
+            "orphanRemoval": null,
+            "readable": true,
+            "writeable": true,
+            "identifier": null,
+            "unique": false,
+            "recommend": false,
+            "skipSerialization": false,
+            "displayName": "{{ firmware }}",
+            "descriptions": {
+                "singular": "Firmware"
+            }
+        },
+        {
+            "@type": "AttributeMetadata",
+            "type": "string",
             "name": "serialNumber",
             "length": null,
             "formType": "text",
@@ -630,7 +637,7 @@
             "peerReplicable": true,
             "system": false,
             "encrypted": false,
-            "gridColumn": false,
+            "gridColumn": true,
             "collection": false,
             "inversedField": null,
             "ownsRelationship": false,
@@ -661,50 +668,6 @@
             "displayName": "{{ serialNumber }}",
             "descriptions": {
                 "singular": "Serial Number"
-            }
-        },
-        {
-            "@type": "AttributeMetadata",
-            "type": "string",
-            "name": "timeZone",
-            "length": null,
-            "formType": "text",
-            "dataSource": null,
-            "searchable": false,
-            "peerReplicable": true,
-            "system": false,
-            "encrypted": false,
-            "gridColumn": false,
-            "collection": false,
-            "inversedField": null,
-            "ownsRelationship": false,
-            "validation": {
-                "required": false,
-                "minlength": 0,
-                "maxlength": 10485761,
-                "_enableRange": false
-            },
-            "bulkAction": {
-                "allow": false,
-                "buttonText": "",
-                "buttonIcon": "",
-                "buttonClass": "btn btn-default btn-sm"
-            },
-            "dataSourceFilters": null,
-            "defaultValue": "",
-            "tooltip": "Time Zone of the Manager from Source Data.",
-            "visibility": true,
-            "htmlEscape": false,
-            "orphanRemoval": null,
-            "readable": true,
-            "writeable": true,
-            "identifier": null,
-            "unique": false,
-            "recommend": false,
-            "skipSerialization": false,
-            "displayName": "{{ timeZone }}",
-            "descriptions": {
-                "singular": "Time Zone"
             }
         },
         {
@@ -754,6 +717,50 @@
         {
             "@type": "AttributeMetadata",
             "type": "string",
+            "name": "timeZone",
+            "length": null,
+            "formType": "text",
+            "dataSource": null,
+            "searchable": false,
+            "peerReplicable": true,
+            "system": false,
+            "encrypted": false,
+            "gridColumn": false,
+            "collection": false,
+            "inversedField": null,
+            "ownsRelationship": false,
+            "validation": {
+                "required": false,
+                "minlength": 0,
+                "maxlength": 10485761,
+                "_enableRange": false
+            },
+            "bulkAction": {
+                "allow": false,
+                "buttonText": "",
+                "buttonIcon": "",
+                "buttonClass": "btn btn-default btn-sm"
+            },
+            "dataSourceFilters": null,
+            "defaultValue": "",
+            "tooltip": "Time Zone of the Manager from Source Data.",
+            "visibility": true,
+            "htmlEscape": false,
+            "orphanRemoval": null,
+            "readable": true,
+            "writeable": true,
+            "identifier": null,
+            "unique": false,
+            "recommend": false,
+            "skipSerialization": false,
+            "displayName": "{{ timeZone }}",
+            "descriptions": {
+                "singular": "Time Zone"
+            }
+        },
+        {
+            "@type": "AttributeMetadata",
+            "type": "string",
             "name": "aDOMMode",
             "length": null,
             "formType": "text",
@@ -793,49 +800,6 @@
             "displayName": "{{ aDOMMode }}",
             "descriptions": {
                 "singular": "ADOM Mode"
-            }
-        },
-        {
-            "@type": "AttributeMetadata",
-            "type": "integer",
-            "name": "maxDevices",
-            "length": null,
-            "formType": "integer",
-            "dataSource": null,
-            "searchable": true,
-            "peerReplicable": true,
-            "system": false,
-            "encrypted": false,
-            "gridColumn": false,
-            "collection": false,
-            "inversedField": null,
-            "ownsRelationship": false,
-            "validation": {
-                "required": false,
-                "minlength": -2147483648,
-                "maxlength": 10485761
-            },
-            "bulkAction": {
-                "allow": false,
-                "buttonText": "",
-                "buttonIcon": "",
-                "buttonClass": "btn btn-default btn-sm"
-            },
-            "dataSourceFilters": null,
-            "defaultValue": null,
-            "tooltip": "Max Devices of the Manager from Source Data.",
-            "visibility": true,
-            "htmlEscape": false,
-            "orphanRemoval": null,
-            "readable": true,
-            "writeable": true,
-            "identifier": null,
-            "unique": false,
-            "recommend": false,
-            "skipSerialization": false,
-            "displayName": "{{ maxDevices }}",
-            "descriptions": {
-                "singular": "Max Devices"
             }
         },
         {
@@ -883,6 +847,49 @@
         },
         {
             "@type": "AttributeMetadata",
+            "type": "integer",
+            "name": "maxDevices",
+            "length": null,
+            "formType": "integer",
+            "dataSource": null,
+            "searchable": true,
+            "peerReplicable": true,
+            "system": false,
+            "encrypted": false,
+            "gridColumn": false,
+            "collection": false,
+            "inversedField": null,
+            "ownsRelationship": false,
+            "validation": {
+                "required": false,
+                "minlength": -2147483648,
+                "maxlength": 10485761
+            },
+            "bulkAction": {
+                "allow": false,
+                "buttonText": "",
+                "buttonIcon": "",
+                "buttonClass": "btn btn-default btn-sm"
+            },
+            "dataSourceFilters": null,
+            "defaultValue": null,
+            "tooltip": "Max Devices of the Manager from Source Data.",
+            "visibility": true,
+            "htmlEscape": false,
+            "orphanRemoval": null,
+            "readable": true,
+            "writeable": true,
+            "identifier": null,
+            "unique": false,
+            "recommend": false,
+            "skipSerialization": false,
+            "displayName": "{{ maxDevices }}",
+            "descriptions": {
+                "singular": "Max Devices"
+            }
+        },
+        {
+            "@type": "AttributeMetadata",
             "type": "comments",
             "name": "comments",
             "length": null,
@@ -920,49 +927,6 @@
             "displayName": "{{ comments }}",
             "descriptions": {
                 "singular": "Comments"
-            }
-        },
-        {
-            "@type": "AttributeMetadata",
-            "type": "string",
-            "name": "connectorConfig",
-            "length": null,
-            "formType": "text",
-            "dataSource": null,
-            "searchable": false,
-            "peerReplicable": true,
-            "system": false,
-            "encrypted": false,
-            "gridColumn": false,
-            "collection": false,
-            "inversedField": null,
-            "ownsRelationship": false,
-            "validation": {
-                "required": false,
-                "minlength": 0,
-                "maxlength": 10485761
-            },
-            "bulkAction": {
-                "allow": false,
-                "buttonText": "",
-                "buttonIcon": "",
-                "buttonClass": "btn btn-default btn-sm"
-            },
-            "dataSourceFilters": null,
-            "defaultValue": "",
-            "tooltip": "The connector configuration name for this connector.",
-            "visibility": true,
-            "htmlEscape": false,
-            "orphanRemoval": null,
-            "readable": true,
-            "writeable": true,
-            "identifier": null,
-            "unique": false,
-            "recommend": false,
-            "skipSerialization": false,
-            "displayName": "{{ connectorConfig }}",
-            "descriptions": {
-                "singular": "Connector Config"
             }
         },
         {
@@ -1102,6 +1066,47 @@
             "displayName": "{{ getNewDeviceFilter }}",
             "descriptions": {
                 "singular": "Get New Device Filter"
+            }
+        },
+        {
+            "@type": "AttributeMetadata",
+            "type": "ztpf_devices",
+            "name": "ztpfDevices",
+            "length": null,
+            "formType": "oneToMany",
+            "dataSource": {
+                "model": "ztpf_devices"
+            },
+            "searchable": false,
+            "peerReplicable": true,
+            "system": false,
+            "encrypted": false,
+            "gridColumn": false,
+            "collection": true,
+            "inversedField": "ztpfManagers",
+            "ownsRelationship": true,
+            "validation": {
+                "required": false,
+                "minlength": 0,
+                "maxlength": 10485761,
+                "_enableRange": false
+            },
+            "bulkAction": [],
+            "dataSourceFilters": null,
+            "defaultValue": null,
+            "tooltip": null,
+            "visibility": true,
+            "htmlEscape": false,
+            "orphanRemoval": null,
+            "readable": true,
+            "writeable": true,
+            "identifier": null,
+            "unique": false,
+            "recommend": false,
+            "skipSerialization": false,
+            "displayName": "{{ ztpfDevices }}",
+            "descriptions": {
+                "singular": "Devices"
             }
         }
     ],

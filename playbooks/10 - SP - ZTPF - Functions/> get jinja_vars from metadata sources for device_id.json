@@ -21,6 +21,20 @@
     "steps": [
         {
             "@type": "WorkflowStep",
+            "name": "create jinja_vars device",
+            "description": null,
+            "arguments": {
+                "jinja_vars": "{%- set ret = {\n  \"record\":{}\n} -%}\n{%- do ret.update( vars.steps.get_device_jinja_vars.output ) -%}\n{{ret}}"
+            },
+            "status": null,
+            "top": "360",
+            "left": "500",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "6e593b5c-7700-42b5-9327-ba12ad29678b"
+        },
+        {
+            "@type": "WorkflowStep",
             "name": "create source_types",
             "description": null,
             "arguments": {
@@ -61,9 +75,10 @@
                     "__selectFields": [
                         "name",
                         "orderPriority",
+                        "type",
                         "datakey",
                         "id",
-                        "type"
+                        "data"
                     ]
                 },
                 "module": "ztpf_metadata_sources?$limit=5000",
@@ -100,11 +115,55 @@
         },
         {
             "@type": "WorkflowStep",
+            "name": "return",
+            "description": null,
+            "arguments": {
+                "output": "{{vars.jinja_vars}}",
+                "params": "{{vars.input.params}}",
+                "status": "{\"error\":false}"
+            },
+            "status": null,
+            "top": "120",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "eb490ce4-517a-4dc8-9e49-94d4b899e868"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "run metadata source",
+            "description": null,
+            "arguments": {
+                "for_each": {
+                    "item": "{{vars.steps.find_mdsources}}",
+                    "parallel": false,
+                    "condition": ""
+                },
+                "arguments": {
+                    "type": "{{vars.item.type.itemValue}}",
+                    "datakey": "{{vars.item.datakey}}",
+                    "jinja_vars": "{{vars.jinja_vars}}",
+                    "source_data": "{{vars.item.data}}"
+                },
+                "apply_async": false,
+                "step_variables": [],
+                "pass_parent_env": false,
+                "pass_input_record": false,
+                "workflowReference": "\/api\/3\/workflows\/18d2347a-2e96-4f78-909c-dbfbd7c861f1"
+            },
+            "status": null,
+            "top": "440",
+            "left": "500",
+            "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
+            "group": null,
+            "uuid": "3865239b-4cfa-4a4a-893f-baf19ee0cff6"
+        },
+        {
+            "@type": "WorkflowStep",
             "name": "setup vars",
             "description": null,
             "arguments": {
                 "device_id": "{{vars.input.params['device_id']}}",
-                "jinja_vars": "{\"data\":{}}",
                 "metadata_source_ids": "{%- set in_field = vars.input.params['metadata_source_ids'] -%}\n{%- set ret = \"\" -%}\n\n{%- if in_field not in ['',None] -%}\n  {%- if in_field is sequence \n        and in_field is not string \n        and in_field is not integer -%}\n    {%- set ret = in_field -%}\n  {%- else -%}\n    {%- set cmt = in_field | regex_replace('[,\\n]+', ',') -%}\n    {%- set ret = cmt.split(',') -%}\n  {%- endif -%}\n{%- endif -%}\n{{ret|unique}}"
             },
             "status": null,
@@ -137,17 +196,17 @@
         },
         {
             "@type": "WorkflowStep",
-            "name": "update jinja_vars device",
+            "name": "update jinja_vars data",
             "description": null,
             "arguments": {
-                "jinja_vars": "{%- set ret = vars.jinja_vars -%}\n{%- do ret.update( vars.steps.get_device_jinja_vars.output ) -%}\n{{ret}}"
+                "jinja_vars": "{%- set jv = vars.jinja_vars -%}\n{%- do jv.update({\"data\":{}}) -%}\n\n{%- for d in vars.steps.run_metadata_source -%}\n  {%- set dk = d.params.datakey -%}\n  {%- set data = d.output[dk] -%}\n  {%- do jv.data.update({dk:data}) -%}\n{%- endfor -%}\n\n{{jv}}"
             },
             "status": null,
-            "top": "360",
+            "top": "520",
             "left": "500",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
-            "uuid": "6e593b5c-7700-42b5-9327-ba12ad29678b"
+            "uuid": "77e471b5-8eb2-4c88-b6f3-255e36d7bc38"
         }
     ],
     "routes": [
@@ -183,6 +242,16 @@
         },
         {
             "@type": "WorkflowRoute",
+            "name": "run metadata source -> update jinja_vars data",
+            "targetStep": "\/api\/3\/workflow_steps\/77e471b5-8eb2-4c88-b6f3-255e36d7bc38",
+            "sourceStep": "\/api\/3\/workflow_steps\/3865239b-4cfa-4a4a-893f-baf19ee0cff6",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "7ce6079e-f69c-4f80-bcf9-e2e17bb80d1f"
+        },
+        {
+            "@type": "WorkflowRoute",
             "name": "setup vars -> find mdsources",
             "targetStep": "\/api\/3\/workflow_steps\/ccea1e5d-b37a-4942-99bc-feaf49e63049",
             "sourceStep": "\/api\/3\/workflow_steps\/d182d2ee-b9c9-49c3-a998-0d58b75131f8",
@@ -200,23 +269,43 @@
             "isExecuted": false,
             "group": null,
             "uuid": "c9e30d26-b00b-46db-a63d-931fc5f18e21"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "update jinja_vars data -> return",
+            "targetStep": "\/api\/3\/workflow_steps\/eb490ce4-517a-4dc8-9e49-94d4b899e868",
+            "sourceStep": "\/api\/3\/workflow_steps\/77e471b5-8eb2-4c88-b6f3-255e36d7bc38",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "f6918290-6ee7-4126-ba8d-1b3832ef9977"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "update jinja_vars device -> run metadata source",
+            "targetStep": "\/api\/3\/workflow_steps\/3865239b-4cfa-4a4a-893f-baf19ee0cff6",
+            "sourceStep": "\/api\/3\/workflow_steps\/6e593b5c-7700-42b5-9327-ba12ad29678b",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "5f266aeb-fc76-4fae-b7e7-f7a602b22ff5"
         }
     ],
     "groups": [
         {
             "@type": "WorkflowGroup",
             "name": "Details",
-            "description": "1",
+            "description": "Find all Metadata Source records in order of priority and run each record with the jinja_vars to merge results into jinja_vars.",
             "type": "note",
             "isCollapsed": false,
             "hasTriggerStep": false,
             "hideInLogs": false,
             "metadata": [],
             "reusable": false,
-            "top": "100",
-            "left": "1180",
-            "height": "185",
-            "width": "261",
+            "top": "120",
+            "left": "760",
+            "height": "151",
+            "width": "240",
             "uuid": "0ef4ab25-ac1a-42a0-acea-92c391d399da",
             "recordTags": []
         }

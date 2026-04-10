@@ -1,8 +1,8 @@
 {
     "@context": "\/api\/3\/contexts\/WorkflowGroup",
     "@type": "WorkflowGroup",
-    "name": "Pick a Manager then Device",
-    "description": "Pick a Manager and then Pick a Device from that Manager.",
+    "name": "ztpf: Pick a Manager then Device",
+    "description": "<p>In the ZTPF Solution Pack, pick a Manager record and then Pick a Device from that Manager<\/p>",
     "type": "custom",
     "isCollapsed": false,
     "hasTriggerStep": false,
@@ -14,7 +14,14 @@
             "description": null,
             "arguments": {
                 "query": {
-                    "sort": [],
+                    "sort": [
+                        {
+                            "field": "name",
+                            "direction": "ASC",
+                            "_fieldName": "name",
+                            "_fieldTitle": "Name"
+                        }
+                    ],
                     "limit": 30,
                     "logic": "AND",
                     "filters": [
@@ -39,15 +46,15 @@
                 "module": "ztpf_devices?$limit=5000",
                 "checkboxFields": true,
                 "step_variables": {
-                    "device_list": "{%- set table = [] -%}\n{%- for d in vars.steps.find_devices -%}\n  {%- set rec = d -%}\n  {%- do rec.update(\n    {\"pick_option\":d.name + \" (\" + d.platform + \")\"}\n  )-%}\n  {%- do table.append(rec) -%}\n{%- endfor -%}\n{{table}}"
+                    "device_list": "{%- set table = [] -%}\n{%- for d in vars.steps.find_devices -%}\n  {%- if d.name and d.platform -%}\n    {%- set rec = d -%}\n    {%- do rec.update(\n      {\"pick_option\":d.name + \" (\" + d.platform + \")\"}\n    )-%}\n    {%- do table.append(rec) -%}\n  {%- endif -%}\n{%- endfor -%}\n{{table}}"
                 }
             },
             "status": null,
             "top": "51",
             "left": "348",
             "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928770",
-            "group": "\/api\/3\/workflow_groups\/09df1bda-3d26-4164-a72d-b7c12649f4c8",
-            "uuid": "b5cbf87e-6745-4c66-911e-e0dc40cd6b16"
+            "group": "\/api\/3\/workflow_groups\/91711399-232d-450e-b853-df7f5c5e1c43",
+            "uuid": "b83e061e-b559-4687-9c75-4acba5fc8a98"
         },
         {
             "@type": "WorkflowStep",
@@ -70,7 +77,7 @@
                                 "tooltip": "Select a Device to Render",
                                 "dataType": "dynamicList",
                                 "formType": "dynamicList",
-                                "required": false,
+                                "required": true,
                                 "_expanded": true,
                                 "mmdUpdate": true,
                                 "collection": false,
@@ -81,14 +88,16 @@
                                 "defaultValue": null,
                                 "_previousName": "device",
                                 "playbookField": true,
+                                "requiredQuery": [],
                                 "displayTemplate": "%7B%7B%20name%20%7D%7D",
                                 "lengthConstraint": true,
+                                "responseSelected": [],
                                 "allowedEncryption": false,
                                 "allowedGridColumn": false,
-                                "requiredCondition": "notrequired",
+                                "requiredCondition": "required",
                                 "jinjaExpressionView": true,
                                 "useRecordFieldDefault": false,
-                                "_addRequiredConditions": false
+                                "_addRequiredConditions": true
                             }
                         ]
                     }
@@ -117,7 +126,7 @@
                         },
                         {
                             "option": "Cancel",
-                            "step_iri": "\/api\/3\/workflow_steps\/cc93b6d3-2239-4668-bea3-21964b60013c"
+                            "step_iri": "\/api\/3\/workflow_steps\/ca7c9bd0-2f71-40c7-9421-32ec0c5added"
                         }
                     ],
                     "duplicateOption": false,
@@ -140,8 +149,8 @@
             "top": "131",
             "left": "668",
             "stepType": "\/api\/3\/workflow_step_types\/fc04082a-d7dc-4299-96fb-6837b1baa0fe",
-            "group": "\/api\/3\/workflow_groups\/09df1bda-3d26-4164-a72d-b7c12649f4c8",
-            "uuid": "814fad78-12dc-4e78-a3dc-9e7dc2e93ce5"
+            "group": "\/api\/3\/workflow_groups\/91711399-232d-450e-b853-df7f5c5e1c43",
+            "uuid": "adfd4ce4-a870-45ae-acc0-f3327ba91943"
         },
         {
             "@type": "WorkflowStep",
@@ -206,11 +215,11 @@
                     "options": [
                         {
                             "option": "Ok",
-                            "step_iri": "\/api\/3\/workflow_steps\/b5cbf87e-6745-4c66-911e-e0dc40cd6b16"
+                            "step_iri": "\/api\/3\/workflow_steps\/b83e061e-b559-4687-9c75-4acba5fc8a98"
                         },
                         {
                             "option": "Cancel",
-                            "step_iri": "\/api\/3\/workflow_steps\/cc93b6d3-2239-4668-bea3-21964b60013c"
+                            "step_iri": "\/api\/3\/workflow_steps\/ca7c9bd0-2f71-40c7-9421-32ec0c5added"
                         }
                     ],
                     "duplicateOption": false,
@@ -233,8 +242,8 @@
             "top": "131",
             "left": "28",
             "stepType": "\/api\/3\/workflow_step_types\/fc04082a-d7dc-4299-96fb-6837b1baa0fe",
-            "group": "\/api\/3\/workflow_groups\/09df1bda-3d26-4164-a72d-b7c12649f4c8",
-            "uuid": "45031109-80d0-49e4-9c91-b20b9311cdf4"
+            "group": "\/api\/3\/workflow_groups\/91711399-232d-450e-b853-df7f5c5e1c43",
+            "uuid": "eeeda6a8-e313-4133-8fee-68a39323cdad"
         },
         {
             "@type": "WorkflowStep",
@@ -242,53 +251,53 @@
             "description": null,
             "arguments": [],
             "status": null,
-            "top": "211",
-            "left": "348",
+            "top": "220",
+            "left": "340",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
-            "group": "\/api\/3\/workflow_groups\/09df1bda-3d26-4164-a72d-b7c12649f4c8",
-            "uuid": "cc93b6d3-2239-4668-bea3-21964b60013c"
+            "group": "\/api\/3\/workflow_groups\/91711399-232d-450e-b853-df7f5c5e1c43",
+            "uuid": "ca7c9bd0-2f71-40c7-9421-32ec0c5added"
         }
     ],
     "workflowRoutes": [
         {
             "@type": "WorkflowRoute",
             "name": "find devices -> Get Device",
-            "targetStep": "\/api\/3\/workflow_steps\/814fad78-12dc-4e78-a3dc-9e7dc2e93ce5",
-            "sourceStep": "\/api\/3\/workflow_steps\/b5cbf87e-6745-4c66-911e-e0dc40cd6b16",
+            "targetStep": "\/api\/3\/workflow_steps\/adfd4ce4-a870-45ae-acc0-f3327ba91943",
+            "sourceStep": "\/api\/3\/workflow_steps\/b83e061e-b559-4687-9c75-4acba5fc8a98",
             "label": null,
             "isExecuted": false,
-            "group": "\/api\/3\/workflow_groups\/09df1bda-3d26-4164-a72d-b7c12649f4c8",
-            "uuid": "135f3c0c-8f0b-4e17-b2ed-0b72936eb8ab"
+            "group": "\/api\/3\/workflow_groups\/91711399-232d-450e-b853-df7f5c5e1c43",
+            "uuid": "26573355-ad0b-4d3b-9a47-80941092f56f"
         },
         {
             "@type": "WorkflowRoute",
             "name": "Get Device -> timeout or cancel",
-            "targetStep": "\/api\/3\/workflow_steps\/cc93b6d3-2239-4668-bea3-21964b60013c",
-            "sourceStep": "\/api\/3\/workflow_steps\/814fad78-12dc-4e78-a3dc-9e7dc2e93ce5",
+            "targetStep": "\/api\/3\/workflow_steps\/ca7c9bd0-2f71-40c7-9421-32ec0c5added",
+            "sourceStep": "\/api\/3\/workflow_steps\/adfd4ce4-a870-45ae-acc0-f3327ba91943",
             "label": "Cancel",
             "isExecuted": false,
-            "group": "\/api\/3\/workflow_groups\/09df1bda-3d26-4164-a72d-b7c12649f4c8",
-            "uuid": "78411975-d658-487f-ab6b-106e6ab89935"
+            "group": "\/api\/3\/workflow_groups\/91711399-232d-450e-b853-df7f5c5e1c43",
+            "uuid": "059ba138-7e05-4288-bc35-ca6087d5c29c"
         },
         {
             "@type": "WorkflowRoute",
             "name": "Get Manager -> find devices",
-            "targetStep": "\/api\/3\/workflow_steps\/b5cbf87e-6745-4c66-911e-e0dc40cd6b16",
-            "sourceStep": "\/api\/3\/workflow_steps\/45031109-80d0-49e4-9c91-b20b9311cdf4",
+            "targetStep": "\/api\/3\/workflow_steps\/b83e061e-b559-4687-9c75-4acba5fc8a98",
+            "sourceStep": "\/api\/3\/workflow_steps\/eeeda6a8-e313-4133-8fee-68a39323cdad",
             "label": "Ok",
             "isExecuted": false,
-            "group": "\/api\/3\/workflow_groups\/09df1bda-3d26-4164-a72d-b7c12649f4c8",
-            "uuid": "f418174a-a512-4ec5-b61a-1c1f85eab514"
+            "group": "\/api\/3\/workflow_groups\/91711399-232d-450e-b853-df7f5c5e1c43",
+            "uuid": "5cd1a48b-0d8a-4bf5-bb03-8ac8da1b66e5"
         },
         {
             "@type": "WorkflowRoute",
             "name": "Get Manager -> timeout or cancel",
-            "targetStep": "\/api\/3\/workflow_steps\/cc93b6d3-2239-4668-bea3-21964b60013c",
-            "sourceStep": "\/api\/3\/workflow_steps\/45031109-80d0-49e4-9c91-b20b9311cdf4",
+            "targetStep": "\/api\/3\/workflow_steps\/ca7c9bd0-2f71-40c7-9421-32ec0c5added",
+            "sourceStep": "\/api\/3\/workflow_steps\/eeeda6a8-e313-4133-8fee-68a39323cdad",
             "label": "Cancel",
             "isExecuted": false,
-            "group": "\/api\/3\/workflow_groups\/09df1bda-3d26-4164-a72d-b7c12649f4c8",
-            "uuid": "de4fef64-0b77-41d5-bc1c-d51ec175a169"
+            "group": "\/api\/3\/workflow_groups\/91711399-232d-450e-b853-df7f5c5e1c43",
+            "uuid": "aa8f2717-eebd-442a-b2fd-e3cc33a7001d"
         }
     ],
     "metadata": [],
@@ -297,7 +306,7 @@
     "left": "0",
     "height": "306",
     "width": "987",
-    "uuid": "09df1bda-3d26-4164-a72d-b7c12649f4c8",
+    "uuid": "91711399-232d-450e-b853-df7f5c5e1c43",
     "recordTags": [
         "ZTPF",
         "ztpfDevice",

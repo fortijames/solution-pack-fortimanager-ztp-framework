@@ -288,6 +288,96 @@
         {
             "@type": "AttributeMetadata",
             "type": "string",
+            "name": "script",
+            "length": null,
+            "formType": "textarea",
+            "dataSource": null,
+            "searchable": true,
+            "peerReplicable": true,
+            "system": false,
+            "encrypted": false,
+            "gridColumn": true,
+            "collection": false,
+            "inversedField": null,
+            "ownsRelationship": false,
+            "validation": {
+                "required": false,
+                "minlength": 0,
+                "maxlength": 10485761,
+                "_enableRange": false
+            },
+            "bulkAction": {
+                "allow": false,
+                "buttonText": "",
+                "buttonIcon": "",
+                "buttonClass": "btn btn-default btn-sm"
+            },
+            "dataSourceFilters": null,
+            "defaultValue": "{{template}}",
+            "tooltip": "Jinja Template Script used for the action. Action types maybe have specific format expectations which can be found in the documentation.",
+            "visibility": true,
+            "htmlEscape": false,
+            "orphanRemoval": null,
+            "readable": true,
+            "writeable": true,
+            "identifier": null,
+            "unique": false,
+            "recommend": false,
+            "skipSerialization": false,
+            "displayName": "{{ script }}",
+            "descriptions": {
+                "singular": "Script"
+            }
+        },
+        {
+            "@type": "AttributeMetadata",
+            "type": "ztpf_templates",
+            "name": "ztpfTemplates",
+            "length": null,
+            "formType": "lookup",
+            "dataSource": {
+                "model": "ztpf_templates"
+            },
+            "searchable": false,
+            "peerReplicable": true,
+            "system": false,
+            "encrypted": false,
+            "gridColumn": true,
+            "collection": false,
+            "inversedField": null,
+            "ownsRelationship": false,
+            "validation": {
+                "required": false,
+                "minlength": 0,
+                "maxlength": 10485761,
+                "_enableRange": false
+            },
+            "bulkAction": {
+                "allow": false,
+                "buttonText": "",
+                "buttonIcon": "",
+                "buttonClass": "btn btn-default btn-sm"
+            },
+            "dataSourceFilters": null,
+            "defaultValue": null,
+            "tooltip": "When assigned populates the jinja variable {{template}} to be used in the action script.",
+            "visibility": true,
+            "htmlEscape": false,
+            "orphanRemoval": null,
+            "readable": true,
+            "writeable": true,
+            "identifier": null,
+            "unique": false,
+            "recommend": false,
+            "skipSerialization": false,
+            "displayName": "{{ ztpfTemplates }}",
+            "descriptions": {
+                "singular": "Template"
+            }
+        },
+        {
+            "@type": "AttributeMetadata",
+            "type": "string",
             "name": "description",
             "length": null,
             "formType": "richtext",
@@ -331,36 +421,31 @@
         },
         {
             "@type": "AttributeMetadata",
-            "type": "ztpf_templates",
-            "name": "ztpfTemplates",
+            "type": "ztpf_metadata_sources",
+            "name": "ztpfMetadataSources",
             "length": null,
-            "formType": "lookup",
+            "formType": "manyToMany",
             "dataSource": {
-                "model": "ztpf_templates"
+                "model": "ztpf_metadata_sources"
             },
             "searchable": false,
             "peerReplicable": true,
             "system": false,
             "encrypted": false,
             "gridColumn": false,
-            "collection": false,
-            "inversedField": null,
-            "ownsRelationship": false,
+            "collection": true,
+            "inversedField": "ztpfAutomationActions",
+            "ownsRelationship": true,
             "validation": {
                 "required": false,
                 "minlength": 0,
                 "maxlength": 10485761,
                 "_enableRange": false
             },
-            "bulkAction": {
-                "allow": false,
-                "buttonText": "",
-                "buttonIcon": "",
-                "buttonClass": "btn btn-default btn-sm"
-            },
+            "bulkAction": [],
             "dataSourceFilters": null,
             "defaultValue": null,
-            "tooltip": "When assigned populates the jinja variable {{template}} to be used in the action script.",
+            "tooltip": null,
             "visibility": true,
             "htmlEscape": false,
             "orphanRemoval": null,
@@ -370,53 +455,9 @@
             "unique": false,
             "recommend": false,
             "skipSerialization": false,
-            "displayName": "{{ ztpfTemplates }}",
+            "displayName": "{{ ztpfMetadataSources }}",
             "descriptions": {
-                "singular": "Template"
-            }
-        },
-        {
-            "@type": "AttributeMetadata",
-            "type": "string",
-            "name": "script",
-            "length": null,
-            "formType": "textarea",
-            "dataSource": null,
-            "searchable": true,
-            "peerReplicable": true,
-            "system": false,
-            "encrypted": false,
-            "gridColumn": false,
-            "collection": false,
-            "inversedField": null,
-            "ownsRelationship": false,
-            "validation": {
-                "required": false,
-                "minlength": 0,
-                "maxlength": 10485761,
-                "_enableRange": false
-            },
-            "bulkAction": {
-                "allow": false,
-                "buttonText": "",
-                "buttonIcon": "",
-                "buttonClass": "btn btn-default btn-sm"
-            },
-            "dataSourceFilters": null,
-            "defaultValue": "{{template}}",
-            "tooltip": "Jinja Template Script used for the action. Action types maybe have specific format expectations which can be found in the documentation.",
-            "visibility": true,
-            "htmlEscape": false,
-            "orphanRemoval": null,
-            "readable": true,
-            "writeable": true,
-            "identifier": null,
-            "unique": false,
-            "recommend": false,
-            "skipSerialization": false,
-            "displayName": "{{ script }}",
-            "descriptions": {
-                "singular": "Script"
+                "singular": "Metadata Sources"
             }
         },
         {
@@ -499,47 +540,6 @@
             "displayName": "{{ ztpfDeviceAutomationSteps }}",
             "descriptions": {
                 "singular": "Device Automation Steps"
-            }
-        },
-        {
-            "@type": "AttributeMetadata",
-            "type": "ztpf_metadata_sources",
-            "name": "ztpfMetadataSources",
-            "length": null,
-            "formType": "manyToMany",
-            "dataSource": {
-                "model": "ztpf_metadata_sources"
-            },
-            "searchable": false,
-            "peerReplicable": true,
-            "system": false,
-            "encrypted": false,
-            "gridColumn": false,
-            "collection": true,
-            "inversedField": "ztpfAutomationActions",
-            "ownsRelationship": true,
-            "validation": {
-                "required": false,
-                "minlength": 0,
-                "maxlength": 10485761,
-                "_enableRange": false
-            },
-            "bulkAction": [],
-            "dataSourceFilters": null,
-            "defaultValue": null,
-            "tooltip": null,
-            "visibility": true,
-            "htmlEscape": false,
-            "orphanRemoval": null,
-            "readable": true,
-            "writeable": true,
-            "identifier": null,
-            "unique": false,
-            "recommend": false,
-            "skipSerialization": false,
-            "displayName": "{{ ztpfMetadataSources }}",
-            "descriptions": {
-                "singular": "Metadata Sources"
             }
         }
     ],
