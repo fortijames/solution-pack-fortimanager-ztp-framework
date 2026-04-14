@@ -83,7 +83,7 @@
             "peerReplicable": true,
             "system": false,
             "encrypted": false,
-            "gridColumn": false,
+            "gridColumn": true,
             "collection": false,
             "inversedField": null,
             "ownsRelationship": false,
@@ -114,6 +114,47 @@
             "displayName": "{{ description }}",
             "descriptions": {
                 "singular": "Description"
+            }
+        },
+        {
+            "@type": "AttributeMetadata",
+            "type": "ztpf_metadata_sources",
+            "name": "ztpfMetadataSources",
+            "length": null,
+            "formType": "manyToMany",
+            "dataSource": {
+                "model": "ztpf_metadata_sources"
+            },
+            "searchable": false,
+            "peerReplicable": true,
+            "system": false,
+            "encrypted": false,
+            "gridColumn": false,
+            "collection": true,
+            "inversedField": "ztpfTemplates",
+            "ownsRelationship": true,
+            "validation": {
+                "required": false,
+                "minlength": 0,
+                "maxlength": 10485761,
+                "_enableRange": false
+            },
+            "bulkAction": [],
+            "dataSourceFilters": null,
+            "defaultValue": null,
+            "tooltip": null,
+            "visibility": true,
+            "htmlEscape": false,
+            "orphanRemoval": null,
+            "readable": true,
+            "writeable": true,
+            "identifier": null,
+            "unique": false,
+            "recommend": false,
+            "skipSerialization": false,
+            "displayName": "{{ ztpfMetadataSources }}",
+            "descriptions": {
+                "singular": "Metadata Sources"
             }
         },
         {
@@ -162,28 +203,31 @@
         },
         {
             "@type": "AttributeMetadata",
-            "type": "ztpf_metadata_sources",
-            "name": "ztpfMetadataSources",
+            "type": "object",
+            "name": "exampleJinjaVars",
             "length": null,
-            "formType": "manyToMany",
-            "dataSource": {
-                "model": "ztpf_metadata_sources"
-            },
+            "formType": "object",
+            "dataSource": null,
             "searchable": false,
             "peerReplicable": true,
             "system": false,
             "encrypted": false,
             "gridColumn": false,
-            "collection": true,
-            "inversedField": "ztpfTemplates",
-            "ownsRelationship": true,
+            "collection": false,
+            "inversedField": null,
+            "ownsRelationship": false,
             "validation": {
                 "required": false,
                 "minlength": 0,
                 "maxlength": 10485761,
                 "_enableRange": false
             },
-            "bulkAction": [],
+            "bulkAction": {
+                "allow": false,
+                "buttonText": "",
+                "buttonIcon": "",
+                "buttonClass": "btn btn-default btn-sm"
+            },
             "dataSourceFilters": null,
             "defaultValue": null,
             "tooltip": null,
@@ -196,9 +240,262 @@
             "unique": false,
             "recommend": false,
             "skipSerialization": false,
-            "displayName": "{{ ztpfMetadataSources }}",
+            "displayName": "{{ exampleJinjaVars }}",
             "descriptions": {
-                "singular": "Metadata Sources"
+                "singular": "Example Jinja Vars"
+            }
+        },
+        {
+            "@type": "AttributeMetadata",
+            "type": "string",
+            "name": "exampleOutputText",
+            "length": null,
+            "formType": "textarea",
+            "dataSource": null,
+            "searchable": true,
+            "peerReplicable": true,
+            "system": false,
+            "encrypted": false,
+            "gridColumn": false,
+            "collection": false,
+            "inversedField": null,
+            "ownsRelationship": false,
+            "validation": {
+                "required": false,
+                "minlength": 0,
+                "maxlength": 10485761
+            },
+            "bulkAction": {
+                "allow": false,
+                "buttonText": "",
+                "buttonIcon": "",
+                "buttonClass": "btn btn-default btn-sm"
+            },
+            "dataSourceFilters": null,
+            "defaultValue": null,
+            "tooltip": null,
+            "visibility": true,
+            "htmlEscape": false,
+            "orphanRemoval": null,
+            "readable": true,
+            "writeable": true,
+            "identifier": null,
+            "unique": false,
+            "recommend": false,
+            "skipSerialization": false,
+            "displayName": "{{ exampleOutputText }}",
+            "descriptions": {
+                "singular": "Example Output Text"
+            }
+        },
+        {
+            "@type": "AttributeMetadata",
+            "type": "object",
+            "name": "exampleOutputJSON",
+            "length": null,
+            "formType": "object",
+            "dataSource": null,
+            "searchable": false,
+            "peerReplicable": true,
+            "system": false,
+            "encrypted": false,
+            "gridColumn": false,
+            "collection": false,
+            "inversedField": null,
+            "ownsRelationship": false,
+            "validation": {
+                "required": false,
+                "minlength": 0,
+                "maxlength": 10485761,
+                "_enableRange": false
+            },
+            "bulkAction": {
+                "allow": false,
+                "buttonText": "",
+                "buttonIcon": "",
+                "buttonClass": "btn btn-default btn-sm"
+            },
+            "dataSourceFilters": null,
+            "defaultValue": null,
+            "tooltip": null,
+            "visibility": true,
+            "htmlEscape": false,
+            "orphanRemoval": null,
+            "readable": true,
+            "writeable": true,
+            "identifier": null,
+            "unique": false,
+            "recommend": false,
+            "skipSerialization": false,
+            "displayName": "{{ exampleOutputJSON }}",
+            "descriptions": {
+                "singular": "Example Output JSON"
+            }
+        },
+        {
+            "@type": "AttributeMetadata",
+            "type": "string",
+            "name": "exampleOutputTextMarkdown",
+            "length": null,
+            "formType": "richtext",
+            "dataSource": null,
+            "searchable": true,
+            "peerReplicable": true,
+            "system": false,
+            "encrypted": false,
+            "gridColumn": false,
+            "collection": false,
+            "inversedField": null,
+            "ownsRelationship": false,
+            "validation": {
+                "required": false,
+                "minlength": 0,
+                "maxlength": 10485761
+            },
+            "bulkAction": {
+                "allow": false,
+                "buttonText": "",
+                "buttonIcon": "",
+                "buttonClass": "btn btn-default btn-sm"
+            },
+            "dataSourceFilters": null,
+            "defaultValue": null,
+            "tooltip": null,
+            "visibility": true,
+            "htmlEscape": false,
+            "orphanRemoval": null,
+            "readable": true,
+            "writeable": true,
+            "identifier": null,
+            "unique": false,
+            "recommend": false,
+            "skipSerialization": false,
+            "displayName": "{{ exampleOutputTextMarkdown }}",
+            "descriptions": {
+                "singular": "Example Output Text Markdown"
+            }
+        },
+        {
+            "@type": "AttributeMetadata",
+            "type": "string",
+            "name": "exampleOutputTextHTML",
+            "length": null,
+            "formType": "html",
+            "dataSource": null,
+            "searchable": true,
+            "peerReplicable": true,
+            "system": false,
+            "encrypted": false,
+            "gridColumn": false,
+            "collection": false,
+            "inversedField": null,
+            "ownsRelationship": false,
+            "validation": {
+                "required": false,
+                "minlength": 0,
+                "maxlength": 10485761
+            },
+            "bulkAction": {
+                "allow": false,
+                "buttonText": "",
+                "buttonIcon": "",
+                "buttonClass": "btn btn-default btn-sm"
+            },
+            "dataSourceFilters": null,
+            "defaultValue": "",
+            "tooltip": null,
+            "visibility": true,
+            "htmlEscape": false,
+            "orphanRemoval": null,
+            "readable": true,
+            "writeable": true,
+            "identifier": null,
+            "unique": false,
+            "recommend": false,
+            "skipSerialization": false,
+            "displayName": "{{ exampleOutputTextHTML }}",
+            "descriptions": {
+                "singular": "Example Output Text HTML"
+            }
+        },
+        {
+            "@type": "AttributeMetadata",
+            "type": "picklists",
+            "name": "outputType",
+            "length": null,
+            "formType": "picklist",
+            "dataSource": {
+                "model": "picklists",
+                "query": {
+                    "logic": "AND",
+                    "filters": [
+                        {
+                            "field": "listName__name",
+                            "operator": "eq",
+                            "value": "ztpfOutputType"
+                        }
+                    ],
+                    "sort": [
+                        {
+                            "field": "orderIndex",
+                            "direction": "ASC"
+                        }
+                    ]
+                },
+                "displayConditions": {
+                    "d859d6fd-cef6-431a-b4f6-fbcd90c9a654": {
+                        "visibility": "visible",
+                        "conditions": null
+                    },
+                    "9c5462d7-049f-4853-90a8-6fa9ff5d3dab": {
+                        "visibility": "visible",
+                        "conditions": null
+                    },
+                    "a8bba5aa-e243-4f61-9b9e-c222fc368be6": {
+                        "visibility": "visible",
+                        "conditions": null
+                    },
+                    "93f7971d-50c3-4e9b-9c86-d1cf2aa41256": {
+                        "visibility": "visible",
+                        "conditions": null
+                    }
+                }
+            },
+            "searchable": false,
+            "peerReplicable": true,
+            "system": false,
+            "encrypted": false,
+            "gridColumn": true,
+            "collection": false,
+            "inversedField": null,
+            "ownsRelationship": false,
+            "validation": {
+                "required": true,
+                "minlength": 0,
+                "maxlength": 10485761,
+                "_enableRange": false
+            },
+            "bulkAction": {
+                "allow": false,
+                "buttonText": "",
+                "buttonIcon": "",
+                "buttonClass": "btn btn-default btn-sm"
+            },
+            "dataSourceFilters": null,
+            "defaultValue": "\/api\/3\/picklists\/d859d6fd-cef6-431a-b4f6-fbcd90c9a654",
+            "tooltip": "The desired output that this Jinja Script will produce.",
+            "visibility": true,
+            "htmlEscape": false,
+            "orphanRemoval": null,
+            "readable": true,
+            "writeable": true,
+            "identifier": null,
+            "unique": false,
+            "recommend": false,
+            "skipSerialization": false,
+            "displayName": "{{ outputType }}",
+            "descriptions": {
+                "singular": "Output Type"
             }
         },
         {

@@ -9,6 +9,113 @@
                     {
                         "widgets": [
                             {
+                                "type": "chart",
+                                "config": {
+                                    "wid": "0251182a-0722-436b-9ed5-32336a95108c",
+                                    "widgetAlwaysDisplay": true,
+                                    "showTabularData": false,
+                                    "query": {
+                                        "sort": [
+                                            {
+                                                "field": "type.orderIndex",
+                                                "direction": "ASC"
+                                            }
+                                        ],
+                                        "limit": 2147483647,
+                                        "logic": "AND",
+                                        "filters": [],
+                                        "aggregates": [
+                                            {
+                                                "operator": "countdistinct",
+                                                "field": "*",
+                                                "alias": "total"
+                                            },
+                                            {
+                                                "operator": "groupby",
+                                                "alias": "type",
+                                                "field": "type.itemValue"
+                                            },
+                                            {
+                                                "operator": "groupby",
+                                                "alias": "color",
+                                                "field": "type.color"
+                                            },
+                                            {
+                                                "operator": "groupby",
+                                                "alias": "orderIndex",
+                                                "field": "type.orderIndex"
+                                            }
+                                        ]
+                                    },
+                                    "mapping": {
+                                        "fieldName": "type"
+                                    },
+                                    "assignedToSetting": "all",
+                                    "aggregate": true,
+                                    "viewType": "chart",
+                                    "title": "Types",
+                                    "resource": "ztpf_metadata_sources",
+                                    "chart": "donut",
+                                    "showCount": true,
+                                    "widgetAlwaysExpanded": true
+                                }
+                            }
+                        ],
+                        "style": "col-lg-6"
+                    },
+                    {
+                        "widgets": [
+                            {
+                                "type": "chart",
+                                "config": {
+                                    "wid": "3d947aa5-ce71-4dc8-b71d-a8260efed36b",
+                                    "widgetAlwaysDisplay": true,
+                                    "showTabularData": false,
+                                    "query": {
+                                        "sort": [],
+                                        "limit": 2147483647,
+                                        "logic": "AND",
+                                        "filters": [],
+                                        "aggregates": [
+                                            {
+                                                "operator": "countdistinct",
+                                                "field": "*",
+                                                "alias": "total"
+                                            },
+                                            {
+                                                "operator": "groupby",
+                                                "alias": "recordTags",
+                                                "field": "recordTags.uuid"
+                                            }
+                                        ]
+                                    },
+                                    "mapping": {
+                                        "fieldName": "recordTags"
+                                    },
+                                    "assignedToSetting": "all",
+                                    "aggregate": true,
+                                    "viewType": "chart",
+                                    "title": "Tags",
+                                    "resource": "ztpf_metadata_sources",
+                                    "chart": "donut",
+                                    "showCount": true,
+                                    "widgetAlwaysExpanded": true
+                                }
+                            }
+                        ],
+                        "style": "col-lg-6"
+                    }
+                ],
+                "wid": "618d73db-342b-4234-a2a8-4370c842b3b6",
+                "_collapsed": false,
+                "collapsible": false,
+                "collapsibleIndex": 0
+            },
+            {
+                "columns": [
+                    {
+                        "widgets": [
+                            {
                                 "type": "grid",
                                 "config": {
                                     "wid": "d0b771be-9ea6-4630-81fe-af094f983428",

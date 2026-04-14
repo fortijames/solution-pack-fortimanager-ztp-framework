@@ -2,7 +2,7 @@
     "@context": "\/api\/3\/contexts\/Workflow",
     "@type": "Workflow",
     "triggerLimit": null,
-    "name": "Configure Metadata Source Data - FMG API",
+    "name": "Configure Metadata Source Data - Step Output",
     "aliasName": null,
     "tag": null,
     "description": "Help user manage the Metadata Source Data field based on the type.",
@@ -14,7 +14,7 @@
     "synchronous": false,
     "collection": "\/api\/3\/workflow_collections\/f0b56dc0-6c1e-4f5b-9199-c807800f028a",
     "versions": [],
-    "triggerStep": "\/api\/3\/workflow_steps\/f7412cb9-a978-42f3-bce3-3e1a23a733d9",
+    "triggerStep": "\/api\/3\/workflow_steps\/4e26b875-6b4a-4876-ae3c-d369eeaa1f6a",
     "steps": [
         {
             "@type": "WorkflowStep",
@@ -22,11 +22,11 @@
             "description": null,
             "arguments": [],
             "status": null,
-            "top": "220",
-            "left": "840",
+            "top": "180",
+            "left": "1100",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
-            "uuid": "67959665-5fc3-420e-a376-f0da8b0a5688"
+            "uuid": "25853c24-ff24-47c6-99fc-8f97db423243"
         },
         {
             "@type": "WorkflowStep",
@@ -35,71 +35,99 @@
             "arguments": {
                 "arguments": {
                     "record_id": "{{vars.record_id}}",
-                    "api_fields": "",
-                    "api_filter": "",
-                    "api_method": "{{vars.method}}",
-                    "api_options": "",
-                    "api_resource": "{{vars.url}}"
+                    "step_name": "{{vars.step_name}}",
+                    "step_uuid": "{{vars.step_uuid}}",
+                    "revisions_back": "{{vars.revisions_back}}"
                 },
                 "apply_async": false,
                 "step_variables": [],
                 "pass_parent_env": false,
                 "pass_input_record": false,
-                "workflowReference": "\/api\/3\/workflows\/68acc0ea-5fda-4267-8305-ebab47c46161"
+                "workflowReference": "\/api\/3\/workflows\/d0e1bf35-7bd5-41a0-8f02-576334f8c55c"
             },
             "status": null,
-            "top": "300",
+            "top": "240",
             "left": "40",
             "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
             "group": null,
-            "uuid": "334c8d59-7a88-4c5c-b062-160532a89cba"
+            "uuid": "ba7f2dc5-3075-425c-91a7-c62b8af28900"
         },
         {
             "@type": "WorkflowStep",
             "name": "config vars",
             "description": null,
             "arguments": {
-                "url": "{{vars.record_data['url']}}",
-                "method": "{{vars.record_data['method']}}"
+                "step_name": "{{vars.record_data['name']}}",
+                "step_uuid": "{{vars.record_data['uuid']}}",
+                "revisions_back": "{{vars.record_data['revisions_back']}}"
             },
             "status": null,
             "top": "80",
-            "left": "760",
+            "left": "1100",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
-            "uuid": "40cc96e5-9209-468f-aab0-313260aca153"
+            "uuid": "26d445e8-c3ea-4a79-9a6a-5c7fa13f752e"
         },
         {
             "@type": "WorkflowStep",
             "name": "enhance vars",
             "description": null,
             "arguments": {
-                "url": "{{vars.steps.Prompt_User.input.url}}",
-                "method": "{{vars.steps.Prompt_User.input.method}}"
+                "step_name": "{{vars.step_idx[vars.steps.Prompt_User.input.pickAStep].name}}",
+                "step_uuid": "{{vars.step_idx[vars.steps.Prompt_User.input.pickAStep].uuid}}",
+                "revisions_back": "{{vars.steps.Prompt_User.input['revisions_Back']}}"
             },
             "status": null,
-            "top": "120",
+            "top": "140",
             "left": "40",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
-            "uuid": "7836d172-375c-4c63-b5f0-8e7565a2cdcd"
+            "uuid": "106ea6a7-f957-4a7d-9c89-e1e3d00f5fbd"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "find actions",
+            "description": null,
+            "arguments": {
+                "query": {
+                    "sort": [],
+                    "limit": 30,
+                    "logic": "AND",
+                    "filters": [],
+                    "__selectFields": [
+                        "name",
+                        "type",
+                        "id"
+                    ]
+                },
+                "module": "ztpf_automation_actions?$limit=5000",
+                "checkboxFields": true,
+                "step_variables": []
+            },
+            "status": null,
+            "top": "40",
+            "left": "380",
+            "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928770",
+            "group": null,
+            "uuid": "6907c631-d043-48ef-aa8c-e6c7645195a6"
         },
         {
             "@type": "WorkflowStep",
             "name": "initial vars",
             "description": null,
             "arguments": {
+                "step_idx": "{%- set idx = {} -%}\n{%- for s in vars.steps.find_actions -%}\n  {%- set r = s -%}\n  {%- set o = s.name + ' (' + s.type.itemValue + ')' -%}\n  {%- do idx.update({o:s}) -%}\n{%- endfor -%}\n{{idx}}",
                 "record_id": "{{vars.input.records[0].id}}",
-                "data_fields": "[\"url\",\"method\"]",
+                "data_fields": "[\"uuid\",\"name\",\"revisions_back\"]",
                 "record_data": "{{vars.input.records[0].data}}",
                 "record_datakey": "{{vars.input.records[0].datakey}}"
             },
             "status": null,
             "top": "40",
-            "left": "360",
+            "left": "700",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
-            "uuid": "b66e1429-9c2d-40e9-835b-61425c02f6c3"
+            "uuid": "1440fcd2-a91d-4ac6-a74a-d23ff451807d"
         },
         {
             "@type": "WorkflowStep",
@@ -109,37 +137,50 @@
                 "type": "InputBased",
                 "input": {
                     "schema": {
-                        "title": "Configure Data for FMG JSON-RPC API",
-                        "description": "**Summary**\nUpdate the following fields to collect data from the FMG JSON-RPC API. You can use Jinja within the payload of the data. \n<hr>\n\n**Example URLs**\n\n{% raw -%}\n - `\/pm\/config\/device\/{{record.device.name}}\/global\/system\/interface`\n{% endraw -%}",
+                        "title": "Configure Data for a Playbook",
+                        "description": "**Summary**\n\nAdding the UUID for the Action Step we need data.",
                         "inputVariables": [
                             {
-                                "name": "method",
-                                "type": "string",
-                                "label": "Method",
-                                "tooltip": "JSON-RPC Methods such as get,set,exec,set,delete",
-                                "dataType": "text",
-                                "formType": "text",
+                                "name": "pickAStep",
+                                "type": "array",
+                                "label": "Pick a Step",
+                                "title": "Dynamic List",
+                                "usable": true,
+                                "options": "{{vars.step_idx.keys()|list|sort}}",
+                                "tooltip": "",
+                                "dataType": "dynamicList",
+                                "formType": "dynamicList",
                                 "required": false,
-                                "_expanded": true,
-                                "defaultValue": "{{vars.method}}",
-                                "_previousName": "",
+                                "_expanded": false,
+                                "mmdUpdate": true,
+                                "collection": false,
+                                "dataSource": [],
+                                "searchable": false,
+                                "templateUrl": "app\/components\/form\/fields\/dynamicList.html",
+                                "defaultValue": null,
+                                "_previousName": "pickAStep",
+                                "playbookField": true,
+                                "displayTemplate": "%7B%7B%20itemValue%20%7D%7D",
+                                "lengthConstraint": true,
+                                "allowedEncryption": false,
+                                "allowedGridColumn": false,
                                 "requiredCondition": "notrequired",
                                 "jinjaExpressionView": true,
                                 "useRecordFieldDefault": false,
                                 "_addRequiredConditions": false
                             },
                             {
-                                "name": "url",
+                                "name": "revisions_Back",
                                 "type": "string",
-                                "label": "URL",
-                                "tooltip": "The API Resource",
+                                "label": "Revisions Back",
+                                "tooltip": "Revisions back from the latest where 1 is the last run step for this action on the device.",
                                 "dataType": "text",
                                 "formType": "text",
                                 "required": false,
                                 "_expanded": true,
                                 "_nameTouched": true,
-                                "defaultValue": "{{vars.url}}",
-                                "_previousName": "uRL",
+                                "defaultValue": "{{vars.revisions_back}}",
+                                "_previousName": "playbookArgs",
                                 "requiredCondition": "notrequired",
                                 "jinjaExpressionView": true,
                                 "useRecordFieldDefault": false,
@@ -153,7 +194,7 @@
                     "days": 0,
                     "hours": 0,
                     "minutes": 1,
-                    "step_iri": "\/api\/3\/workflow_steps\/67959665-5fc3-420e-a376-f0da8b0a5688"
+                    "step_iri": "\/api\/3\/workflow_steps\/25853c24-ff24-47c6-99fc-8f97db423243"
                 },
                 "agent_id": null,
                 "resources": "ztpf_metadata_sources",
@@ -168,15 +209,15 @@
                     "options": [
                         {
                             "option": "Update",
-                            "step_iri": "\/api\/3\/workflow_steps\/7836d172-375c-4c63-b5f0-8e7565a2cdcd"
+                            "step_iri": "\/api\/3\/workflow_steps\/106ea6a7-f957-4a7d-9c89-e1e3d00f5fbd"
                         },
                         {
                             "option": "Reset Config",
-                            "step_iri": "\/api\/3\/workflow_steps\/23e555b6-bb2d-4e61-8550-0bc6df8464f4"
+                            "step_iri": "\/api\/3\/workflow_steps\/62122257-8af5-47c3-94d1-5b26e54e7bb5"
                         },
                         {
                             "option": "Cancel Changes",
-                            "step_iri": "\/api\/3\/workflow_steps\/67959665-5fc3-420e-a376-f0da8b0a5688"
+                            "step_iri": "\/api\/3\/workflow_steps\/25853c24-ff24-47c6-99fc-8f97db423243"
                         }
                     ],
                     "duplicateOption": false,
@@ -196,33 +237,34 @@
                 "external_email_attachments": null
             },
             "status": null,
-            "top": "220",
-            "left": "380",
+            "top": "120",
+            "left": "700",
             "stepType": "\/api\/3\/workflow_step_types\/fc04082a-d7dc-4299-96fb-6837b1baa0fe",
             "group": null,
-            "uuid": "028e5768-0030-4ad4-b1c8-27725cf06d7b"
+            "uuid": "0edc6c35-c081-4d5a-a1ce-ab35fa6a0b5a"
         },
         {
             "@type": "WorkflowStep",
             "name": "reset vars",
             "description": null,
             "arguments": {
-                "url": "''",
-                "method": "''"
+                "step_name": "''",
+                "step_uuid": "''",
+                "revisions_back": "''"
             },
             "status": null,
-            "top": "300",
-            "left": "380",
+            "top": "240",
+            "left": "340",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
-            "uuid": "23e555b6-bb2d-4e61-8550-0bc6df8464f4"
+            "uuid": "62122257-8af5-47c3-94d1-5b26e54e7bb5"
         },
         {
             "@type": "WorkflowStep",
             "name": "Start",
             "description": "Configure Data Payload required for the Metadata Source.",
             "arguments": {
-                "route": "2ccbcd57-52ca-4885-aaad-317ed843e20c",
+                "route": "840ed5c5-f765-4d4f-9a54-6cfcd59ce946",
                 "title": "Configure Data",
                 "resources": [
                     "ztpf_metadata_sources"
@@ -245,11 +287,11 @@
                             {
                                 "type": "object",
                                 "field": "type",
-                                "value": "\/api\/3\/picklists\/de4cab3c-5bcf-40be-accf-7c420f348569",
+                                "value": "\/api\/3\/picklists\/f3595833-7d82-4111-8c94-75a110eb464b",
                                 "_value": {
-                                    "@id": "\/api\/3\/picklists\/de4cab3c-5bcf-40be-accf-7c420f348569",
-                                    "display": "FortiManager API",
-                                    "itemValue": "FortiManager API"
+                                    "@id": "\/api\/3\/picklists\/f3595833-7d82-4111-8c94-75a110eb464b",
+                                    "display": "Step Output",
+                                    "itemValue": "Step Output"
                                 },
                                 "operator": "eq"
                             }
@@ -270,96 +312,106 @@
             "left": "40",
             "stepType": "\/api\/3\/workflow_step_types\/f414d039-bb0d-4e59-9c39-a8f1e880b18a",
             "group": null,
-            "uuid": "f7412cb9-a978-42f3-bce3-3e1a23a733d9"
+            "uuid": "4e26b875-6b4a-4876-ae3c-d369eeaa1f6a"
         }
     ],
     "routes": [
         {
             "@type": "WorkflowRoute",
             "name": "config vars -> Prompt User",
-            "targetStep": "\/api\/3\/workflow_steps\/028e5768-0030-4ad4-b1c8-27725cf06d7b",
-            "sourceStep": "\/api\/3\/workflow_steps\/40cc96e5-9209-468f-aab0-313260aca153",
+            "targetStep": "\/api\/3\/workflow_steps\/0edc6c35-c081-4d5a-a1ce-ab35fa6a0b5a",
+            "sourceStep": "\/api\/3\/workflow_steps\/26d445e8-c3ea-4a79-9a6a-5c7fa13f752e",
             "label": null,
             "isExecuted": false,
             "group": null,
-            "uuid": "f167539e-edb7-412f-b1f0-65dab6a93e4c"
+            "uuid": "4a2998c6-36e2-458b-b0c0-3b7e672327a7"
         },
         {
             "@type": "WorkflowRoute",
             "name": "enhance vars -> configure data",
-            "targetStep": "\/api\/3\/workflow_steps\/334c8d59-7a88-4c5c-b062-160532a89cba",
-            "sourceStep": "\/api\/3\/workflow_steps\/7836d172-375c-4c63-b5f0-8e7565a2cdcd",
+            "targetStep": "\/api\/3\/workflow_steps\/ba7f2dc5-3075-425c-91a7-c62b8af28900",
+            "sourceStep": "\/api\/3\/workflow_steps\/106ea6a7-f957-4a7d-9c89-e1e3d00f5fbd",
             "label": null,
             "isExecuted": false,
             "group": null,
-            "uuid": "936d8342-0609-4537-b7ac-f7d76e1b32d9"
+            "uuid": "43cef2d1-e737-46dc-bb7f-82c385353cac"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "find actions -> initial vars",
+            "targetStep": "\/api\/3\/workflow_steps\/1440fcd2-a91d-4ac6-a74a-d23ff451807d",
+            "sourceStep": "\/api\/3\/workflow_steps\/6907c631-d043-48ef-aa8c-e6c7645195a6",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "bef2be48-40bf-4b1e-b359-f4ced8a0355c"
         },
         {
             "@type": "WorkflowRoute",
             "name": "initial vars -> user vars",
-            "targetStep": "\/api\/3\/workflow_steps\/40cc96e5-9209-468f-aab0-313260aca153",
-            "sourceStep": "\/api\/3\/workflow_steps\/b66e1429-9c2d-40e9-835b-61425c02f6c3",
+            "targetStep": "\/api\/3\/workflow_steps\/26d445e8-c3ea-4a79-9a6a-5c7fa13f752e",
+            "sourceStep": "\/api\/3\/workflow_steps\/1440fcd2-a91d-4ac6-a74a-d23ff451807d",
             "label": null,
             "isExecuted": false,
             "group": null,
-            "uuid": "d7964a2c-9e03-4855-bf4f-99294fc1137c"
+            "uuid": "9a54fb39-0231-4508-8b8f-6238565aaa25"
         },
         {
             "@type": "WorkflowRoute",
             "name": "Prompt User -> enhance vars",
-            "targetStep": "\/api\/3\/workflow_steps\/7836d172-375c-4c63-b5f0-8e7565a2cdcd",
-            "sourceStep": "\/api\/3\/workflow_steps\/028e5768-0030-4ad4-b1c8-27725cf06d7b",
+            "targetStep": "\/api\/3\/workflow_steps\/106ea6a7-f957-4a7d-9c89-e1e3d00f5fbd",
+            "sourceStep": "\/api\/3\/workflow_steps\/0edc6c35-c081-4d5a-a1ce-ab35fa6a0b5a",
             "label": "Update",
             "isExecuted": false,
             "group": null,
-            "uuid": "98b38c92-f859-4263-b549-f2a59b3ae308"
+            "uuid": "78c6ca29-d07f-41ec-b4fc-aed12ca4dbef"
         },
         {
             "@type": "WorkflowRoute",
             "name": "Prompt User -> reset vars",
-            "targetStep": "\/api\/3\/workflow_steps\/23e555b6-bb2d-4e61-8550-0bc6df8464f4",
-            "sourceStep": "\/api\/3\/workflow_steps\/028e5768-0030-4ad4-b1c8-27725cf06d7b",
+            "targetStep": "\/api\/3\/workflow_steps\/62122257-8af5-47c3-94d1-5b26e54e7bb5",
+            "sourceStep": "\/api\/3\/workflow_steps\/0edc6c35-c081-4d5a-a1ce-ab35fa6a0b5a",
             "label": "Reset Config",
             "isExecuted": false,
             "group": null,
-            "uuid": "c355d6c6-64c1-494c-89f8-11a367679fda"
+            "uuid": "63ad55d0-22e3-4f6f-b8b9-9d43f22529d9"
         },
         {
             "@type": "WorkflowRoute",
             "name": "Prompt User -> timeout",
-            "targetStep": "\/api\/3\/workflow_steps\/67959665-5fc3-420e-a376-f0da8b0a5688",
-            "sourceStep": "\/api\/3\/workflow_steps\/028e5768-0030-4ad4-b1c8-27725cf06d7b",
+            "targetStep": "\/api\/3\/workflow_steps\/25853c24-ff24-47c6-99fc-8f97db423243",
+            "sourceStep": "\/api\/3\/workflow_steps\/0edc6c35-c081-4d5a-a1ce-ab35fa6a0b5a",
             "label": "Cancel Changes",
             "isExecuted": false,
             "group": null,
-            "uuid": "ebb12df5-8003-4ea1-8c02-99055d881196"
+            "uuid": "a08f3468-793e-40d0-97ef-ba3b13641dd9"
         },
         {
             "@type": "WorkflowRoute",
             "name": "reset vars -> configure data",
-            "targetStep": "\/api\/3\/workflow_steps\/334c8d59-7a88-4c5c-b062-160532a89cba",
-            "sourceStep": "\/api\/3\/workflow_steps\/23e555b6-bb2d-4e61-8550-0bc6df8464f4",
+            "targetStep": "\/api\/3\/workflow_steps\/ba7f2dc5-3075-425c-91a7-c62b8af28900",
+            "sourceStep": "\/api\/3\/workflow_steps\/62122257-8af5-47c3-94d1-5b26e54e7bb5",
             "label": null,
             "isExecuted": false,
             "group": null,
-            "uuid": "bdd9e7d5-a5b5-47a8-a53a-b644a6a7e446"
+            "uuid": "9f02050c-e12f-4e22-a1a2-ed87b1d5579c"
         },
         {
             "@type": "WorkflowRoute",
-            "name": "Start -> setup vars",
-            "targetStep": "\/api\/3\/workflow_steps\/b66e1429-9c2d-40e9-835b-61425c02f6c3",
-            "sourceStep": "\/api\/3\/workflow_steps\/f7412cb9-a978-42f3-bce3-3e1a23a733d9",
+            "name": "Start -> find actions",
+            "targetStep": "\/api\/3\/workflow_steps\/6907c631-d043-48ef-aa8c-e6c7645195a6",
+            "sourceStep": "\/api\/3\/workflow_steps\/4e26b875-6b4a-4876-ae3c-d369eeaa1f6a",
             "label": null,
             "isExecuted": false,
             "group": null,
-            "uuid": "2fd04e2e-0cfc-4d29-9db4-a129f5216bf5"
+            "uuid": "74cc9f34-8d2c-4e62-b0c6-68761da9b3a2"
         }
     ],
     "groups": [],
     "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
     "playbookOrigin": "\/api\/3\/picklists\/b6d710a9-a8ec-41ec-8817-fe9fa062fcdd",
     "isEditable": false,
-    "uuid": "76c51068-3965-489e-a947-779b77fd2826",
+    "uuid": "bffa3cc5-b3f8-47ac-9046-a8ee348e22dd",
     "owners": [],
     "isPrivate": false,
     "deletedAt": null,

@@ -2,7 +2,7 @@
     "@context": "\/api\/3\/contexts\/Workflow",
     "@type": "Workflow",
     "triggerLimit": null,
-    "name": "> create metadata source data - playbook",
+    "name": "> create metadata source data - step output",
     "aliasName": null,
     "tag": null,
     "description": "Create the standard payload for this metadata source type.",
@@ -12,13 +12,14 @@
     "remoteExecutableFlag": false,
     "parameters": [
         "record_id",
-        "playbook_id",
-        "playbook_args"
+        "step_uuid",
+        "revisions_back",
+        "step_name"
     ],
     "synchronous": false,
     "collection": "\/api\/3\/workflow_collections\/517fb52d-36f5-4bac-a344-7d4599d7dec6",
     "versions": [],
-    "triggerStep": "\/api\/3\/workflow_steps\/972bb9de-bf01-4614-9725-4373ee316d3f",
+    "triggerStep": "\/api\/3\/workflow_steps\/c4e1346a-0a37-4e01-adec-395c37ead086",
     "steps": [
         {
             "@type": "WorkflowStep",
@@ -52,7 +53,7 @@
             "left": "360",
             "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928770",
             "group": null,
-            "uuid": "78dc7d13-4aa4-48b5-aaf4-e2ea75ea753e"
+            "uuid": "cb216a48-06d4-4d18-a715-4ebcf425ceb1"
         },
         {
             "@type": "WorkflowStep",
@@ -60,30 +61,31 @@
             "description": null,
             "arguments": {
                 "empty": "null",
-                "data_payload": "{%- set ret = { \n  \"id\":vars.playbook_id,\n  \"args\":vars.playbook_args\n} -%}\n{{ret}}"
+                "data_payload": "{%- set ret = { \n  \"uuid\":vars.step_uuid,\n  \"name\":vars.step_name,\n  \"revisions_back\":vars.revisions_back\n} -%}\n{{ret}}"
             },
             "status": null,
             "top": "120",
             "left": "360",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
-            "uuid": "32a1f1fb-daff-4987-97c4-dae14601a966"
+            "uuid": "13ea35e7-9ce5-4588-84a7-590e137f0c10"
         },
         {
             "@type": "WorkflowStep",
             "name": "setup variables",
             "description": null,
             "arguments": {
-                "playbook_id": "{%- set ret = vars.input.params['playbook_id'] -%}\n{%- if ret in vars.empty -%}\n  {%- set ret = '<Enter Playbook ID>' -%}\n{%- endif -%}\n{{ret}}",
+                "step_name": "{%- set ret = vars.input.params['step_name'] -%}\n{%- if ret in vars.empty -%}\n  {%- set ret = '<Enter Step Name>' -%}\n{%- endif -%}\n{{ret}}",
+                "step_uuid": "{%- set ret = vars.input.params['step_uuid'] -%}\n{%- if ret in vars.empty -%}\n  {%- set ret = '<Enter Step UUID>' -%}\n{%- endif -%}\n{{ret}}",
                 "record_fqid": "{{vars.steps.find_record[0]['@id']}}",
-                "playbook_args": "{%- set ret = vars.input.params['playbook_args'] -%}\n{%- if ret in vars.empty -%}\n  {%- set ret = '<Enter Playbook Args as a string or a json block>' -%}\n{%- endif -%}\n{{ret}}"
+                "revisions_back": "{%- set ret = vars.input.params['revisions_back'] -%}\n{%- if ret in vars.empty -%}\n  {%- set ret = 1 -%}\n{%- endif -%}\n{{ret}}"
             },
             "status": null,
             "top": "80",
             "left": "700",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
-            "uuid": "bbd6c239-27d3-4f9e-a6c4-40c08f402d90"
+            "uuid": "3c952d63-4b66-439d-912a-47c54e15ff0d"
         },
         {
             "@type": "WorkflowStep",
@@ -105,7 +107,7 @@
             "left": "40",
             "stepType": "\/api\/3\/workflow_step_types\/b348f017-9a94-471f-87f8-ce88b6a7ad62",
             "group": null,
-            "uuid": "972bb9de-bf01-4614-9725-4373ee316d3f"
+            "uuid": "c4e1346a-0a37-4e01-adec-395c37ead086"
         },
         {
             "@type": "WorkflowStep",
@@ -131,56 +133,56 @@
             "left": "40",
             "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928722",
             "group": null,
-            "uuid": "765a5cde-81f9-47ad-a719-f50717b574a4"
+            "uuid": "798e83e1-054b-41d5-885c-c33b7dcb1e27"
         }
     ],
     "routes": [
         {
             "@type": "WorkflowRoute",
             "name": "find record -> setup variables",
-            "targetStep": "\/api\/3\/workflow_steps\/bbd6c239-27d3-4f9e-a6c4-40c08f402d90",
-            "sourceStep": "\/api\/3\/workflow_steps\/78dc7d13-4aa4-48b5-aaf4-e2ea75ea753e",
+            "targetStep": "\/api\/3\/workflow_steps\/3c952d63-4b66-439d-912a-47c54e15ff0d",
+            "sourceStep": "\/api\/3\/workflow_steps\/cb216a48-06d4-4d18-a715-4ebcf425ceb1",
             "label": null,
             "isExecuted": false,
             "group": null,
-            "uuid": "f414a878-ef6f-4840-aeff-fb4afd810800"
+            "uuid": "287f3c78-10e1-4610-bc3d-839a4e5dadef"
         },
         {
             "@type": "WorkflowRoute",
             "name": "setup data_payload -> update record",
-            "targetStep": "\/api\/3\/workflow_steps\/765a5cde-81f9-47ad-a719-f50717b574a4",
-            "sourceStep": "\/api\/3\/workflow_steps\/32a1f1fb-daff-4987-97c4-dae14601a966",
+            "targetStep": "\/api\/3\/workflow_steps\/798e83e1-054b-41d5-885c-c33b7dcb1e27",
+            "sourceStep": "\/api\/3\/workflow_steps\/13ea35e7-9ce5-4588-84a7-590e137f0c10",
             "label": null,
             "isExecuted": false,
             "group": null,
-            "uuid": "bde416fd-5853-4e00-aaaf-aca1002d64b2"
+            "uuid": "16c14fec-9066-4bd5-972c-aa1473c04235"
         },
         {
             "@type": "WorkflowRoute",
             "name": "setup variables -> setup data_payload",
-            "targetStep": "\/api\/3\/workflow_steps\/32a1f1fb-daff-4987-97c4-dae14601a966",
-            "sourceStep": "\/api\/3\/workflow_steps\/bbd6c239-27d3-4f9e-a6c4-40c08f402d90",
+            "targetStep": "\/api\/3\/workflow_steps\/13ea35e7-9ce5-4588-84a7-590e137f0c10",
+            "sourceStep": "\/api\/3\/workflow_steps\/3c952d63-4b66-439d-912a-47c54e15ff0d",
             "label": null,
             "isExecuted": false,
             "group": null,
-            "uuid": "92637537-fbb1-4904-b1e5-f2d2ca8a5bcc"
+            "uuid": "41484343-0448-4b02-ad67-b6258138bd65"
         },
         {
             "@type": "WorkflowRoute",
             "name": "Start -> find record",
-            "targetStep": "\/api\/3\/workflow_steps\/78dc7d13-4aa4-48b5-aaf4-e2ea75ea753e",
-            "sourceStep": "\/api\/3\/workflow_steps\/972bb9de-bf01-4614-9725-4373ee316d3f",
+            "targetStep": "\/api\/3\/workflow_steps\/cb216a48-06d4-4d18-a715-4ebcf425ceb1",
+            "sourceStep": "\/api\/3\/workflow_steps\/c4e1346a-0a37-4e01-adec-395c37ead086",
             "label": null,
             "isExecuted": false,
             "group": null,
-            "uuid": "205da540-bb8e-4390-82c1-5ea1c3ab5470"
+            "uuid": "15f0a2ec-d62a-4cf2-95f9-c53084ba9c7b"
         }
     ],
     "groups": [
         {
             "@type": "WorkflowGroup",
             "name": "Details",
-            "description": "Create the proper payload for a metadata source that needs to call the API of FMG for getting a table or object.",
+            "description": "Create the proper payload for a metadata source that needs to call the output of a step action.",
             "type": "note",
             "isCollapsed": false,
             "hasTriggerStep": false,
@@ -189,16 +191,16 @@
             "reusable": false,
             "top": "200",
             "left": "140",
-            "height": "120",
-            "width": "354",
-            "uuid": "d4a8afa5-bdf8-41ee-8597-dfa26d89f112",
+            "height": "110",
+            "width": "330",
+            "uuid": "11933232-d8c9-42c1-a0e2-25bf9e0ce82b",
             "recordTags": []
         }
     ],
     "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
     "playbookOrigin": "\/api\/3\/picklists\/b6d710a9-a8ec-41ec-8817-fe9fa062fcdd",
     "isEditable": false,
-    "uuid": "43e4995d-a486-448a-84e9-460afdc46830",
+    "uuid": "d0e1bf35-7bd5-41a0-8f02-576334f8c55c",
     "owners": [],
     "isPrivate": false,
     "deletedAt": null,

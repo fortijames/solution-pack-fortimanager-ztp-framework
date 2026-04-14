@@ -5,7 +5,7 @@
     "name": "> run playbook for metadata",
     "aliasName": null,
     "tag": null,
-    "description": null,
+    "description": "Run a custom playbook using a single argument to create metadata.",
     "isActive": true,
     "debug": false,
     "singleRecordExecution": false,
@@ -35,8 +35,8 @@
                 "workflowReference": "{{vars.playbook_id}}"
             },
             "status": null,
-            "top": "160",
-            "left": "360",
+            "top": "140",
+            "left": "340",
             "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
             "group": null,
             "uuid": "bbb36944-95cd-4888-b368-a99a3c403b36"
@@ -52,8 +52,8 @@
                 "payload_id": "{{vars.input.params['playbook_id']}}"
             },
             "status": null,
-            "top": "260",
-            "left": "360",
+            "top": "140",
+            "left": "40",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
             "uuid": "329bc10c-f257-4de7-a691-0625b27877d6"
@@ -67,8 +67,8 @@
                 "playbook_id": "{{vars.input.params['playbook_id']}}"
             },
             "status": null,
-            "top": "60",
-            "left": "360",
+            "top": "40",
+            "left": "340",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
             "uuid": "da507e54-aa7d-4eb0-a756-c7484e7915e0"
@@ -127,7 +127,25 @@
             "uuid": "386d00f5-d8da-4958-b111-d85a4bbdef07"
         }
     ],
-    "groups": [],
+    "groups": [
+        {
+            "@type": "WorkflowGroup",
+            "name": "Details",
+            "description": "Input Parameters and Use:\n - playbook_id: The custom playbook being run. \n - payload: The arguments for the custom playbook. \n - keyname: The attribute used to store the data from the playbook.",
+            "type": "note",
+            "isCollapsed": false,
+            "hasTriggerStep": false,
+            "hideInLogs": true,
+            "metadata": [],
+            "reusable": false,
+            "top": "220",
+            "left": "60",
+            "height": "145",
+            "width": "498",
+            "uuid": "35eb4e33-2a94-45ff-80ca-b1cb562832e8",
+            "recordTags": []
+        }
+    ],
     "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
     "playbookOrigin": "\/api\/3\/picklists\/b6d710a9-a8ec-41ec-8817-fe9fa062fcdd",
     "isEditable": false,
@@ -136,6 +154,6 @@
     "isPrivate": false,
     "deletedAt": null,
     "recordTags": [
-        "TODO"
+        "ztpfMetadataSource"
     ]
 }

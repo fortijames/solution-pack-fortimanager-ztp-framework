@@ -1,0 +1,143 @@
+{
+    "@context": "\/api\/3\/contexts\/Workflow",
+    "@type": "Workflow",
+    "triggerLimit": null,
+    "name": "Generate Random Host IPs",
+    "aliasName": null,
+    "tag": null,
+    "description": "Generate a list of random IP addresses from a list of subnets.",
+    "isActive": true,
+    "debug": false,
+    "singleRecordExecution": false,
+    "remoteExecutableFlag": false,
+    "parameters": [],
+    "synchronous": false,
+    "collection": "\/api\/3\/workflow_collections\/c7d3121b-5311-4dc8-8fcd-7b3fa9502721",
+    "versions": [],
+    "triggerStep": "\/api\/3\/workflow_steps\/bc8abc18-17a9-4524-9291-60b6cc9c1496",
+    "steps": [
+        {
+            "@type": "WorkflowStep",
+            "name": "generate random_ips",
+            "description": null,
+            "arguments": {
+                "random_ips": "{%- set subnets = vars.networks -%}\n{%- set table = [] -%}\n{%- for i in range(vars.total_ips|int) -%}\n  {%- set subnet = subnets | random -%}\n  {%- set size = subnet | ipaddr('size_usable') -%}\n  {%- do table.append(\n    subnet \n      | ipaddr('subnet') \n      | ipsubnet('32',(size|random)) \n      | ipaddr('address')\n  ) -%}\n{%- endfor -%}\n{{table}}"
+            },
+            "status": null,
+            "top": "300",
+            "left": "760",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "01643bb5-ca41-4a79-8bfc-fb81dc0d701e"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "return",
+            "description": null,
+            "arguments": {
+                "output": "{{vars.random_ips}}"
+            },
+            "status": null,
+            "top": "120",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "7161cea0-c919-48f1-bbf1-7a8ec518a2f6"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "setup vars",
+            "description": null,
+            "arguments": {
+                "networks": "[\n    \"192.168.1.0\/24\",\n    \"10.0.0.0\/24\",\n    \"172.16.5.0\/24\"\n]",
+                "total_ips": "10"
+            },
+            "status": null,
+            "top": "40",
+            "left": "600",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "4774ddee-1e55-4c17-8314-8151d8e7eb2e"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Start",
+            "description": null,
+            "arguments": {
+                "__triggerLimit": true,
+                "step_variables": {
+                    "input": {
+                        "params": []
+                    }
+                },
+                "triggerOnSource": true,
+                "triggerOnReplicate": false
+            },
+            "status": null,
+            "top": "40",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/b348f017-9a94-471f-87f8-ce88b6a7ad62",
+            "group": null,
+            "uuid": "bc8abc18-17a9-4524-9291-60b6cc9c1496"
+        }
+    ],
+    "routes": [
+        {
+            "@type": "WorkflowRoute",
+            "name": "generate random_ips -> return",
+            "targetStep": "\/api\/3\/workflow_steps\/7161cea0-c919-48f1-bbf1-7a8ec518a2f6",
+            "sourceStep": "\/api\/3\/workflow_steps\/01643bb5-ca41-4a79-8bfc-fb81dc0d701e",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "8f029e99-0c8b-436b-83c0-8fd6b59ce53d"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "setup vars -> generate ips",
+            "targetStep": "\/api\/3\/workflow_steps\/01643bb5-ca41-4a79-8bfc-fb81dc0d701e",
+            "sourceStep": "\/api\/3\/workflow_steps\/4774ddee-1e55-4c17-8314-8151d8e7eb2e",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "e79e887b-8b86-4ca0-a4aa-4cd2e6598a22"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Start -> setup vars",
+            "targetStep": "\/api\/3\/workflow_steps\/4774ddee-1e55-4c17-8314-8151d8e7eb2e",
+            "sourceStep": "\/api\/3\/workflow_steps\/bc8abc18-17a9-4524-9291-60b6cc9c1496",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "4d4e3d23-8241-401f-a975-f5885e6ddd1c"
+        }
+    ],
+    "groups": [
+        {
+            "@type": "WorkflowGroup",
+            "name": "Details",
+            "description": "Simple example playbook that generates X random IPs in RFC1918 networks.",
+            "type": "note",
+            "isCollapsed": false,
+            "hasTriggerStep": false,
+            "hideInLogs": false,
+            "metadata": [],
+            "reusable": false,
+            "top": "140",
+            "left": "560",
+            "height": "123",
+            "width": "284",
+            "uuid": "aa14bf5f-3741-412f-bef6-9d50f55f5603",
+            "recordTags": []
+        }
+    ],
+    "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+    "playbookOrigin": "\/api\/3\/picklists\/b6d710a9-a8ec-41ec-8817-fe9fa062fcdd",
+    "isEditable": false,
+    "uuid": "990168b8-4f5b-4b4a-a5b0-27372cc44d76",
+    "owners": [],
+    "isPrivate": false,
+    "deletedAt": null,
+    "recordTags": []
+}

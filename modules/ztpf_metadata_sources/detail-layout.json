@@ -186,13 +186,28 @@
                                                                                 "widgetName": "Playbook Execution Wizard",
                                                                                 "selectedPlaybooksWithRecord": [
                                                                                     {
-                                                                                        "name": "Create\/Update Metadata Source Data - FMG API",
+                                                                                        "name": "Configure Metadata Source Data - FMG API",
                                                                                         "uuid": "76c51068-3965-489e-a947-779b77fd2826",
                                                                                         "actionTriggerName": "Configure Data",
                                                                                         "collectionName": "10 - SP - ZTPF - Buttons",
                                                                                         "icon": "icon icon-test-configuration"
+                                                                                    },
+                                                                                    {
+                                                                                        "name": "Configure Metadata Source Data - Playbook",
+                                                                                        "uuid": "8ed93dc4-49b9-4079-a2fb-36e5f3cee8e9",
+                                                                                        "actionTriggerName": "Configure Data",
+                                                                                        "collectionName": "10 - SP - ZTPF - Buttons",
+                                                                                        "icon": "icon icon-test-configuration"
+                                                                                    },
+                                                                                    {
+                                                                                        "name": "Configure Metadata Source Data - Step Output",
+                                                                                        "uuid": "bffa3cc5-b3f8-47ac-9046-a8ee348e22dd",
+                                                                                        "actionTriggerName": "Configure Data",
+                                                                                        "collectionName": "10 - SP - ZTPF - Buttons",
+                                                                                        "icon": "icon icon-test-configuration"
                                                                                     }
-                                                                                ]
+                                                                                ],
+                                                                                "selectedExecutionWizardPlaybooks": []
                                                                             }
                                                                         },
                                                                         {
@@ -205,7 +220,13 @@
                                                                                             {
                                                                                                 "fields": [
                                                                                                     {
-                                                                                                        "name": "orderPriority",
+                                                                                                        "name": "name",
+                                                                                                        "highlightMode": true,
+                                                                                                        "linky": true,
+                                                                                                        "readOnly": true
+                                                                                                    },
+                                                                                                    {
+                                                                                                        "name": "type",
                                                                                                         "highlightMode": true,
                                                                                                         "linky": true,
                                                                                                         "readOnly": true
@@ -215,6 +236,12 @@
                                                                                             },
                                                                                             {
                                                                                                 "fields": [
+                                                                                                    {
+                                                                                                        "name": "orderPriority",
+                                                                                                        "highlightMode": true,
+                                                                                                        "linky": true,
+                                                                                                        "readOnly": true
+                                                                                                    },
                                                                                                     {
                                                                                                         "name": "datakey",
                                                                                                         "highlightMode": true,
@@ -256,7 +283,7 @@
                                                                         {
                                                                             "type": "playbookButtons-1.1.1",
                                                                             "config": {
-                                                                                "wid": "e01dc058-c1b9-4c74-b12b-18fa019dfa10",
+                                                                                "wid": "3d682c9c-bed3-4bbb-8cbe-71243d024094",
                                                                                 "widgetName": "Playbook Execution Wizard",
                                                                                 "selectedPlaybooksWithRecord": [
                                                                                     {
@@ -267,7 +294,109 @@
                                                                                         "icon": "icon icon-add-step-playbook"
                                                                                     }
                                                                                 ],
-                                                                                "selectedExecutionWizardPlaybooks": []
+                                                                                "selectedExecutionWizardPlaybooks": [
+                                                                                    {
+                                                                                        "name": "Get Metadata Source Data on Device",
+                                                                                        "uuid": "d4f71a01-d1c4-4955-ae51-310a061a0eb5",
+                                                                                        "actionTriggerName": "Get Metadata for Device",
+                                                                                        "collectionName": "10 - SP - ZTPF - Buttons",
+                                                                                        "icon": "icon icon-add-step-playbook"
+                                                                                    }
+                                                                                ],
+                                                                                "showExecutionProgress": true
+                                                                            }
+                                                                        },
+                                                                        {
+                                                                            "type": "sectionHeader",
+                                                                            "config": {
+                                                                                "wid": "cf317975-eb81-4aaf-a577-cfe5e2f65fa8",
+                                                                                "query": {
+                                                                                    "filters": [],
+                                                                                    "sort": [],
+                                                                                    "limit": 10
+                                                                                },
+                                                                                "editorType": "html",
+                                                                                "sectionText": "<p style=\"text-align: center;\"><strong>Metadata Source Data -&gt; Jinja Vars -&gt; Metadata Output<\/strong><\/p>",
+                                                                                "visibility": {
+                                                                                    "conditionalVisibility": true,
+                                                                                    "filter": {
+                                                                                        "sort": [],
+                                                                                        "limit": 30,
+                                                                                        "logic": "AND",
+                                                                                        "filters": [
+                                                                                            {
+                                                                                                "field": "exampleJinjaVars",
+                                                                                                "operator": "isnull",
+                                                                                                "value": "false",
+                                                                                                "_value": {
+                                                                                                    "display": "",
+                                                                                                    "itemValue": "",
+                                                                                                    "@id": "false"
+                                                                                                },
+                                                                                                "type": "object",
+                                                                                                "display": ""
+                                                                                            }
+                                                                                        ]
+                                                                                    }
+                                                                                }
+                                                                            }
+                                                                        },
+                                                                        {
+                                                                            "type": "editableFormGroup",
+                                                                            "config": {
+                                                                                "wid": "4d3ae7f0-1257-435d-aa99-dc038e7980de",
+                                                                                "rows": [
+                                                                                    {
+                                                                                        "columns": [
+                                                                                            {
+                                                                                                "fields": [
+                                                                                                    {
+                                                                                                        "name": "exampleJinjaVars",
+                                                                                                        "highlightMode": true,
+                                                                                                        "linky": true,
+                                                                                                        "readOnly": true,
+                                                                                                        "renderWidgetHeight": 800
+                                                                                                    }
+                                                                                                ],
+                                                                                                "style": "col-lg-6"
+                                                                                            },
+                                                                                            {
+                                                                                                "fields": [
+                                                                                                    {
+                                                                                                        "name": "exampleOutput",
+                                                                                                        "highlightMode": true,
+                                                                                                        "linky": true,
+                                                                                                        "readOnly": true,
+                                                                                                        "renderWidgetHeight": 800
+                                                                                                    }
+                                                                                                ],
+                                                                                                "style": "col-lg-6"
+                                                                                            }
+                                                                                        ]
+                                                                                    }
+                                                                                ],
+                                                                                "visibility": {
+                                                                                    "conditionalVisibility": true,
+                                                                                    "filter": {
+                                                                                        "sort": [],
+                                                                                        "limit": 30,
+                                                                                        "logic": "AND",
+                                                                                        "filters": [
+                                                                                            {
+                                                                                                "field": "exampleJinjaVars",
+                                                                                                "operator": "isnull",
+                                                                                                "value": "false",
+                                                                                                "_value": {
+                                                                                                    "display": "",
+                                                                                                    "itemValue": "",
+                                                                                                    "@id": "false"
+                                                                                                },
+                                                                                                "type": "object",
+                                                                                                "display": ""
+                                                                                            }
+                                                                                        ]
+                                                                                    }
+                                                                                }
                                                                             }
                                                                         }
                                                                     ],
@@ -337,7 +466,15 @@
                                                                                 },
                                                                                 "queryFilters": {
                                                                                     "ztpf_templates": {
-                                                                                        "sort": [],
+                                                                                        "sort": [
+                                                                                            {
+                                                                                                "direction": "ASC",
+                                                                                                "field": "name",
+                                                                                                "sort": {
+                                                                                                    "direction": "ASC"
+                                                                                                }
+                                                                                            }
+                                                                                        ],
                                                                                         "limit": 30,
                                                                                         "logic": "AND",
                                                                                         "filters": []

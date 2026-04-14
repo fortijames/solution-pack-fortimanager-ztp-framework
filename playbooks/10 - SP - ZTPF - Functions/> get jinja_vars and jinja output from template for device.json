@@ -1,0 +1,338 @@
+{
+    "@context": "\/api\/3\/contexts\/Workflow",
+    "@type": "Workflow",
+    "triggerLimit": null,
+    "name": "> get jinja_vars and jinja output from template for device",
+    "aliasName": null,
+    "tag": null,
+    "description": "Using a device_id and template_id gather the required jinja_vars and render the template.",
+    "isActive": true,
+    "debug": false,
+    "singleRecordExecution": false,
+    "remoteExecutableFlag": false,
+    "parameters": [
+        "device_id",
+        "template_id"
+    ],
+    "synchronous": false,
+    "collection": "\/api\/3\/workflow_collections\/517fb52d-36f5-4bac-a344-7d4599d7dec6",
+    "versions": [],
+    "triggerStep": "\/api\/3\/workflow_steps\/5676e921-0346-4740-88c3-23d701e3f115",
+    "steps": [
+        {
+            "@type": "WorkflowStep",
+            "name": "create jinja_vars",
+            "description": null,
+            "arguments": {
+                "jinja_vars": "{{vars.steps.get_jinja_vars.output}}"
+            },
+            "status": null,
+            "top": "340",
+            "left": "940",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "749fe5d0-bdc2-4d00-aec3-b29767858553"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "find device",
+            "description": null,
+            "arguments": {
+                "query": {
+                    "sort": [],
+                    "limit": 30,
+                    "logic": "AND",
+                    "filters": [
+                        {
+                            "type": "primitive",
+                            "field": "id",
+                            "value": "{{vars.input.params['device_id']}}",
+                            "operator": "eq",
+                            "_operator": "eq"
+                        }
+                    ],
+                    "__selectFields": [
+                        "name",
+                        "id"
+                    ]
+                },
+                "module": "ztpf_devices?$limit=1",
+                "checkboxFields": true,
+                "step_variables": []
+            },
+            "status": null,
+            "top": "40",
+            "left": "340",
+            "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928770",
+            "group": null,
+            "uuid": "86a8dd1c-6e33-4c8c-a8d1-eaa27969e2e3"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "find metadata sources",
+            "description": null,
+            "arguments": {
+                "query": {
+                    "sort": [
+                        {
+                            "field": "orderPriority",
+                            "direction": "ASC",
+                            "_fieldName": "orderPriority",
+                            "_fieldTitle": "Order Priority"
+                        }
+                    ],
+                    "limit": 30,
+                    "logic": "AND",
+                    "filters": [
+                        {
+                            "type": "primitive",
+                            "field": "ztpfTemplates.id",
+                            "value": "{{vars.input.params['template_id']}}",
+                            "operator": "eq",
+                            "_operator": "eq"
+                        }
+                    ],
+                    "__selectFields": [
+                        "name"
+                    ]
+                },
+                "module": "ztpf_metadata_sources?$limit=5000",
+                "checkboxFields": true,
+                "step_variables": []
+            },
+            "status": null,
+            "top": "40",
+            "left": "940",
+            "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928770",
+            "group": null,
+            "uuid": "80c99703-c285-4b9e-9e0e-7a2a98932f72"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "find template",
+            "description": null,
+            "arguments": {
+                "query": {
+                    "sort": [],
+                    "limit": 30,
+                    "logic": "AND",
+                    "filters": [
+                        {
+                            "type": "primitive",
+                            "field": "id",
+                            "value": "{{vars.input.params['template_id']}}",
+                            "operator": "eq",
+                            "_operator": "eq"
+                        }
+                    ],
+                    "__selectFields": [
+                        "name",
+                        "script",
+                        "id"
+                    ]
+                },
+                "module": "ztpf_templates?$limit=1",
+                "checkboxFields": true,
+                "step_variables": []
+            },
+            "status": null,
+            "top": "40",
+            "left": "640",
+            "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928770",
+            "group": null,
+            "uuid": "c1c92804-f768-4edf-b83f-81bd1a6160d3"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "get jinja_vars",
+            "description": null,
+            "arguments": {
+                "when": "{{vars.device_id and vars.metadata_source_ids|length > 0}}",
+                "arguments": {
+                    "device_id": "{{vars.device_id}}",
+                    "metadata_source_ids": "{{vars.metadata_source_ids}}"
+                },
+                "apply_async": false,
+                "step_variables": [],
+                "pass_parent_env": false,
+                "pass_input_record": false,
+                "workflowReference": "\/api\/3\/workflows\/05070bbe-a848-4286-8f33-269ed1a943b0"
+            },
+            "status": null,
+            "top": "240",
+            "left": "940",
+            "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
+            "group": null,
+            "uuid": "b55f57ae-9f3e-4c8c-befa-679dd725626a"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "render jinja",
+            "description": null,
+            "arguments": {
+                "arguments": {
+                    "script_vars": "{{vars.jinja_vars}}",
+                    "script_template": "{{vars.jinja_script}}"
+                },
+                "apply_async": false,
+                "step_variables": [],
+                "pass_parent_env": false,
+                "pass_input_record": false,
+                "workflowReference": "\/api\/3\/workflows\/b9e9fe1a-4964-4631-ba81-97987676884d"
+            },
+            "status": null,
+            "top": "140",
+            "left": "640",
+            "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
+            "group": null,
+            "uuid": "7f69c239-4055-48cd-bb52-12b1c6b9cb87"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "return",
+            "description": null,
+            "arguments": {
+                "output": "{%- set ret = {\n  \"jinja_vars\": vars.jinja_vars,\n  \"script_rendered\": vars.steps.render_jinja.output\n    |regex_replace('^\"','')\n    |regex_replace('\"$','')\n} -%}\n{{ret}}",
+                "params": "{{vars.input.params}}",
+                "status": "{ \"error\": {{vars.steps.render_jinja.error}} }"
+            },
+            "status": null,
+            "top": "120",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "c73dbc40-9f70-4978-b806-c1fc4d20254f"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "setup vars",
+            "description": null,
+            "arguments": {
+                "device_id": "{{vars.steps.find_device[0].id}}",
+                "template_id": "{{vars.steps.find_template[0].id}}",
+                "jinja_script": "{{vars.steps.find_template[0].script}}",
+                "metadata_source_ids": "{{vars.steps.find_metadata_sources|json_query('[].id')}}"
+            },
+            "status": null,
+            "top": "140",
+            "left": "940",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "97ca9f1f-24bb-4ff5-900a-e6bc368e44a4"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Start",
+            "description": null,
+            "arguments": {
+                "__triggerLimit": true,
+                "step_variables": {
+                    "input": {
+                        "params": []
+                    }
+                },
+                "triggerOnSource": true,
+                "triggerOnReplicate": false
+            },
+            "status": null,
+            "top": "40",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/b348f017-9a94-471f-87f8-ce88b6a7ad62",
+            "group": null,
+            "uuid": "5676e921-0346-4740-88c3-23d701e3f115"
+        }
+    ],
+    "routes": [
+        {
+            "@type": "WorkflowRoute",
+            "name": "create jinja_vars -> render jinja",
+            "targetStep": "\/api\/3\/workflow_steps\/7f69c239-4055-48cd-bb52-12b1c6b9cb87",
+            "sourceStep": "\/api\/3\/workflow_steps\/749fe5d0-bdc2-4d00-aec3-b29767858553",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "c3e98771-8e54-4114-9fec-a6d28fe8a314"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "find device -> find template",
+            "targetStep": "\/api\/3\/workflow_steps\/c1c92804-f768-4edf-b83f-81bd1a6160d3",
+            "sourceStep": "\/api\/3\/workflow_steps\/86a8dd1c-6e33-4c8c-a8d1-eaa27969e2e3",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "0b304ffa-565b-47f3-a995-522c2d68c4bf"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "find metadata sources -> setup vars",
+            "targetStep": "\/api\/3\/workflow_steps\/97ca9f1f-24bb-4ff5-900a-e6bc368e44a4",
+            "sourceStep": "\/api\/3\/workflow_steps\/80c99703-c285-4b9e-9e0e-7a2a98932f72",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "7f27d934-be7b-48ad-9141-dd430192529d"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "find template -> find metadata sources",
+            "targetStep": "\/api\/3\/workflow_steps\/80c99703-c285-4b9e-9e0e-7a2a98932f72",
+            "sourceStep": "\/api\/3\/workflow_steps\/c1c92804-f768-4edf-b83f-81bd1a6160d3",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "b3ddd5e7-ebfb-4b1b-bcd8-00db429af2a1"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "get jinja_vars -> create jinja_vars",
+            "targetStep": "\/api\/3\/workflow_steps\/749fe5d0-bdc2-4d00-aec3-b29767858553",
+            "sourceStep": "\/api\/3\/workflow_steps\/b55f57ae-9f3e-4c8c-befa-679dd725626a",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "a6897367-4eed-4865-be47-5b1c7bacaef7"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "render jinja -> return",
+            "targetStep": "\/api\/3\/workflow_steps\/c73dbc40-9f70-4978-b806-c1fc4d20254f",
+            "sourceStep": "\/api\/3\/workflow_steps\/7f69c239-4055-48cd-bb52-12b1c6b9cb87",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "eea3f373-b416-4aab-af3f-f10e2ef4b44a"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "setup vars -> get jinja_vars",
+            "targetStep": "\/api\/3\/workflow_steps\/b55f57ae-9f3e-4c8c-befa-679dd725626a",
+            "sourceStep": "\/api\/3\/workflow_steps\/97ca9f1f-24bb-4ff5-900a-e6bc368e44a4",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "44ff20fd-b835-4c46-a3cf-c7b7cae0270c"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Start -> find device",
+            "targetStep": "\/api\/3\/workflow_steps\/86a8dd1c-6e33-4c8c-a8d1-eaa27969e2e3",
+            "sourceStep": "\/api\/3\/workflow_steps\/5676e921-0346-4740-88c3-23d701e3f115",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "f8eb3edf-3010-475d-8505-9804c2ff05ce"
+        }
+    ],
+    "groups": [],
+    "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+    "playbookOrigin": "\/api\/3\/picklists\/b6d710a9-a8ec-41ec-8817-fe9fa062fcdd",
+    "isEditable": false,
+    "uuid": "c4061d2f-16bf-45e3-9b97-1a8924973b1b",
+    "owners": [],
+    "isPrivate": false,
+    "deletedAt": null,
+    "recordTags": [
+        "ztpfTemplates"
+    ]
+}
