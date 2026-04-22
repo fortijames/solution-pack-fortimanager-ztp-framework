@@ -199,7 +199,7 @@
             "name": "update jinja_vars data",
             "description": null,
             "arguments": {
-                "jinja_vars": "{%- set jv = vars.jinja_vars -%}\n{%- do jv.update({\"data\":{}}) -%}\n\n{%- for d in vars.steps.run_metadata_source -%}\n  {%- set dk = d.params.datakey -%}\n  {%- if dk in jv.data -%}\n    {%- set data = jv.data[dk] | combine(d.output[dk]) -%}\n  {%- else -%}\n    {%- set data = d.output[dk] -%}\n  {%- endif -%}\n  {%- do jv.data.update({dk:data}) -%}\n{% endfor -%}\n\n{{jv}}"
+                "jinja_vars": "{%- set jv = vars.jinja_vars -%}\n{%- do jv.update({\"data\":{}}) -%}\n\n{%- for d in vars.steps.run_metadata_source -%}\n  {%- set dk = d.params.datakey -%}\n  {%- if dk in jv.data -%}\n    {% if jv.data[dk] is mapping and d.output[dk] is mapping  %}\n      {%- set data = jv.data[dk] | combine(d.output[dk]) -%}\n    {%- else -%}\n      {%- set data = d.output[dk] -%}\n    {%- endif -%}\n  {%- else -%}\n    {%- set data = d.output[dk] -%}\n  {%- endif -%}\n  {%- do jv.data.update({dk:data}) -%}\n{% endfor -%}\n\n{{jv}}"
             },
             "status": null,
             "top": "440",

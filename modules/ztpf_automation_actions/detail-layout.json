@@ -70,7 +70,7 @@
                                                                         {
                                                                             "type": "editableFormGroup",
                                                                             "config": {
-                                                                                "wid": "dbca730c-ab6c-4dc9-a28a-69ee58da6dfd",
+                                                                                "wid": "77e2a226-fcf0-42a2-974b-2235a5a1d215",
                                                                                 "rows": [
                                                                                     {
                                                                                         "columns": [
@@ -83,7 +83,42 @@
                                                                                                         "readOnly": false
                                                                                                     },
                                                                                                     {
+                                                                                                        "name": "description",
+                                                                                                        "highlightMode": true,
+                                                                                                        "linky": true,
+                                                                                                        "readOnly": false
+                                                                                                    }
+                                                                                                ],
+                                                                                                "style": "col-lg-12"
+                                                                                            }
+                                                                                        ]
+                                                                                    }
+                                                                                ]
+                                                                            }
+                                                                        },
+                                                                        {
+                                                                            "type": "editableFormGroup",
+                                                                            "config": {
+                                                                                "wid": "dbca730c-ab6c-4dc9-a28a-69ee58da6dfd",
+                                                                                "rows": [
+                                                                                    {
+                                                                                        "columns": [
+                                                                                            {
+                                                                                                "fields": [
+                                                                                                    {
+                                                                                                        "name": "category",
+                                                                                                        "highlightMode": true,
+                                                                                                        "linky": true,
+                                                                                                        "readOnly": false
+                                                                                                    },
+                                                                                                    {
                                                                                                         "name": "type",
+                                                                                                        "highlightMode": true,
+                                                                                                        "linky": true,
+                                                                                                        "readOnly": false
+                                                                                                    },
+                                                                                                    {
+                                                                                                        "name": "ztpfTemplates",
                                                                                                         "highlightMode": true,
                                                                                                         "linky": true,
                                                                                                         "readOnly": false
@@ -119,29 +154,6 @@
                                                                                                     }
                                                                                                 ],
                                                                                                 "style": "col-lg-6"
-                                                                                            }
-                                                                                        ]
-                                                                                    }
-                                                                                ]
-                                                                            }
-                                                                        },
-                                                                        {
-                                                                            "type": "editableFormGroup",
-                                                                            "config": {
-                                                                                "wid": "77e2a226-fcf0-42a2-974b-2235a5a1d215",
-                                                                                "rows": [
-                                                                                    {
-                                                                                        "columns": [
-                                                                                            {
-                                                                                                "fields": [
-                                                                                                    {
-                                                                                                        "name": "description",
-                                                                                                        "highlightMode": true,
-                                                                                                        "linky": true,
-                                                                                                        "readOnly": false
-                                                                                                    }
-                                                                                                ],
-                                                                                                "style": "col-lg-12"
                                                                                             }
                                                                                         ]
                                                                                     }
@@ -188,6 +200,12 @@
                                                                                             {
                                                                                                 "fields": [
                                                                                                     {
+                                                                                                        "name": "category",
+                                                                                                        "highlightMode": true,
+                                                                                                        "linky": true,
+                                                                                                        "readOnly": true
+                                                                                                    },
+                                                                                                    {
                                                                                                         "name": "type",
                                                                                                         "highlightMode": true,
                                                                                                         "linky": true,
@@ -209,29 +227,7 @@
                                                                                             }
                                                                                         ]
                                                                                     }
-                                                                                ],
-                                                                                "visibility": {
-                                                                                    "conditionalVisibility": true,
-                                                                                    "filter": {
-                                                                                        "sort": [],
-                                                                                        "limit": 30,
-                                                                                        "logic": "AND",
-                                                                                        "filters": [
-                                                                                            {
-                                                                                                "field": "ztpfTemplates",
-                                                                                                "operator": "isnull",
-                                                                                                "value": "false",
-                                                                                                "_value": {
-                                                                                                    "display": "{{template}}",
-                                                                                                    "itemValue": "",
-                                                                                                    "@id": "false"
-                                                                                                },
-                                                                                                "type": "object",
-                                                                                                "display": "{{template}}"
-                                                                                            }
-                                                                                        ]
-                                                                                    }
-                                                                                }
+                                                                                ]
                                                                             }
                                                                         },
                                                                         {
@@ -259,6 +255,32 @@
                                                                             }
                                                                         },
                                                                         {
+                                                                            "type": "playbookButtons-1.1.1",
+                                                                            "config": {
+                                                                                "wid": "30df68c0-0354-4703-87bd-98577cb23416",
+                                                                                "widgetName": "Playbook Execution Wizard",
+                                                                                "selectedPlaybooksWithRecord": [
+                                                                                    {
+                                                                                        "name": "Render Script - Action",
+                                                                                        "uuid": "067207c8-81dd-462c-8656-6f673fb1605a",
+                                                                                        "actionTriggerName": "Render Jinja Script",
+                                                                                        "collectionName": "10 - SP - ZTPF - Buttons",
+                                                                                        "icon": "icon icon-insert-edit-image"
+                                                                                    }
+                                                                                ],
+                                                                                "showExecutionProgress": true,
+                                                                                "selectedExecutionWizardPlaybooks": [
+                                                                                    {
+                                                                                        "name": "Render Script - Action",
+                                                                                        "uuid": "067207c8-81dd-462c-8656-6f673fb1605a",
+                                                                                        "actionTriggerName": "Render Jinja Script",
+                                                                                        "collectionName": "10 - SP - ZTPF - Buttons",
+                                                                                        "icon": "icon icon-insert-edit-image"
+                                                                                    }
+                                                                                ]
+                                                                            }
+                                                                        },
+                                                                        {
                                                                             "type": "sectionHeader",
                                                                             "config": {
                                                                                 "wid": "f756b1e2-245b-4ad1-8b8f-76899a3366ea",
@@ -268,7 +290,86 @@
                                                                                     "limit": 10
                                                                                 },
                                                                                 "editorType": "html",
-                                                                                "sectionText": "<p style=\"text-align: center;\"><strong>Action -&gt; -&gt; Jinja Vars -&gt; [Metadata Source Data -&gt; Jinja Vars] -&gt; Metadata Output<\/strong><\/p>"
+                                                                                "sectionText": "<p style=\"text-align: center;\"><span style=\"font-size: 14pt;\"><strong>Template Metadata Source Data -&gt; Action Metadata Source Data -&gt; Jinja Vars -&gt; <br>Action Script -&gt; Execute Action -&gt; Action Output<\/strong><\/span><\/p>\n<p style=\"text-align: center;\"><span style=\"font-size: 14pt;\"><strong><span style=\"font-size: 12pt;\">Below is an example output and jinja_vars used, including any metadata sources, leveraged from the actoin jinja script. This output can be used to then run on Devices.&nbsp;<\/span><\/strong><\/span><\/p>",
+                                                                                "visibility": {
+                                                                                    "conditionalVisibility": true,
+                                                                                    "filter": {
+                                                                                        "sort": [],
+                                                                                        "limit": 30,
+                                                                                        "logic": "AND",
+                                                                                        "filters": [
+                                                                                            {
+                                                                                                "field": "exampleJinjaVars",
+                                                                                                "operator": "isnull",
+                                                                                                "value": "false",
+                                                                                                "_value": {
+                                                                                                    "display": "",
+                                                                                                    "itemValue": "",
+                                                                                                    "@id": "false"
+                                                                                                },
+                                                                                                "type": "object",
+                                                                                                "display": ""
+                                                                                            }
+                                                                                        ]
+                                                                                    }
+                                                                                }
+                                                                            }
+                                                                        },
+                                                                        {
+                                                                            "type": "editableFormGroup",
+                                                                            "config": {
+                                                                                "wid": "55ac43b9-1761-4d76-9261-ffc5614ef981",
+                                                                                "rows": [
+                                                                                    {
+                                                                                        "columns": [
+                                                                                            {
+                                                                                                "fields": [
+                                                                                                    {
+                                                                                                        "name": "exampleJinjaVars",
+                                                                                                        "highlightMode": true,
+                                                                                                        "linky": true,
+                                                                                                        "readOnly": true,
+                                                                                                        "renderWidgetHeight": 800
+                                                                                                    }
+                                                                                                ],
+                                                                                                "style": "col-lg-6"
+                                                                                            },
+                                                                                            {
+                                                                                                "fields": [
+                                                                                                    {
+                                                                                                        "name": "exampleOutputText",
+                                                                                                        "highlightMode": true,
+                                                                                                        "linky": true,
+                                                                                                        "readOnly": true,
+                                                                                                        "renderWidgetHeight": 800
+                                                                                                    }
+                                                                                                ],
+                                                                                                "style": "col-lg-6"
+                                                                                            }
+                                                                                        ]
+                                                                                    }
+                                                                                ],
+                                                                                "visibility": {
+                                                                                    "conditionalVisibility": true,
+                                                                                    "filter": {
+                                                                                        "sort": [],
+                                                                                        "limit": 30,
+                                                                                        "logic": "AND",
+                                                                                        "filters": [
+                                                                                            {
+                                                                                                "field": "exampleJinjaVars",
+                                                                                                "operator": "isnull",
+                                                                                                "value": "false",
+                                                                                                "_value": {
+                                                                                                    "display": "",
+                                                                                                    "itemValue": "",
+                                                                                                    "@id": "false"
+                                                                                                },
+                                                                                                "type": "object"
+                                                                                            }
+                                                                                        ]
+                                                                                    }
+                                                                                }
                                                                             }
                                                                         }
                                                                     ],
