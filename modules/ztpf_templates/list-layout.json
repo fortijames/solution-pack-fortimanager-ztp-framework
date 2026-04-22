@@ -14,8 +14,11 @@
                                     "wid": "fa02c3bc-810f-46b7-a38a-a3111e1b901a",
                                     "module": "ztpf_templates",
                                     "columns": [
+                                        "id",
                                         "name",
-                                        "id"
+                                        "outputType",
+                                        "recordTags",
+                                        "modifyDate"
                                     ],
                                     "expandableCol": [
                                         {
@@ -28,7 +31,14 @@
                                     "editableFields": false,
                                     "actionButtons": [],
                                     "query": {
-                                        "sort": [],
+                                        "sort": [
+                                            {
+                                                "direction": "ASC",
+                                                "field": "name",
+                                                "_fieldTitle": "Name",
+                                                "_fieldName": "name"
+                                            }
+                                        ],
                                         "limit": 250,
                                         "logic": "AND",
                                         "filters": []

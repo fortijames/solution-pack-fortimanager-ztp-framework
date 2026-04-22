@@ -202,6 +202,13 @@
                                                                                         "actionTriggerName": "Render Jinja Script",
                                                                                         "collectionName": "10 - SP - ZTPF - Buttons",
                                                                                         "icon": "fa fa-picture-o"
+                                                                                    },
+                                                                                    {
+                                                                                        "name": "Delete Example Data",
+                                                                                        "uuid": "c20bc0cd-1b5d-494e-8027-63317210f69d",
+                                                                                        "actionTriggerName": "Delete Example Data",
+                                                                                        "collectionName": "10 - SP - ZTPF - Buttons",
+                                                                                        "icon": "icon icon-post-delete-trigger"
                                                                                     }
                                                                                 ],
                                                                                 "showExecutionProgress": true,
@@ -226,7 +233,7 @@
                                                                                     "limit": 10
                                                                                 },
                                                                                 "editorType": "html",
-                                                                                "sectionText": "<p style=\"text-align: center;\"><span style=\"font-size: 14pt;\"><strong>Metadata Source Data -&gt; Jinja Vars -&gt; Template Output<\/strong><\/span><\/p>",
+                                                                                "sectionText": "<p style=\"text-align: center;\"><span style=\"font-size: 14pt;\"><strong>Metadata Source Data -&gt; Jinja Vars -&gt; Template Output<\/strong><\/span><\/p>\n<p style=\"text-align: center;\"><span style=\"font-size: 12pt;\">Below is an example output and jinja_vars used, including any metadata sources, leveraged from the template jinja script. This output can be used on actions to then run on Devices.&nbsp;<\/span><\/p>",
                                                                                 "visibility": {
                                                                                     "conditionalVisibility": true,
                                                                                     "filter": {
@@ -264,7 +271,8 @@
                                                                                                         "name": "exampleJinjaVars",
                                                                                                         "highlightMode": true,
                                                                                                         "linky": true,
-                                                                                                        "readOnly": true
+                                                                                                        "readOnly": true,
+                                                                                                        "renderWidgetHeight": 800
                                                                                                     }
                                                                                                 ],
                                                                                                 "style": "col-lg-6"
@@ -300,7 +308,8 @@
                                                                                                     "itemValue": "",
                                                                                                     "@id": "false"
                                                                                                 },
-                                                                                                "type": "object"
+                                                                                                "type": "object",
+                                                                                                "display": ""
                                                                                             },
                                                                                             {
                                                                                                 "field": "outputType",
@@ -311,7 +320,8 @@
                                                                                                     "itemValue": "Text",
                                                                                                     "@id": "\/api\/3\/picklists\/d859d6fd-cef6-431a-b4f6-fbcd90c9a654"
                                                                                                 },
-                                                                                                "type": "object"
+                                                                                                "type": "object",
+                                                                                                "display": "Text"
                                                                                             }
                                                                                         ]
                                                                                     }
@@ -331,7 +341,8 @@
                                                                                                         "name": "exampleJinjaVars",
                                                                                                         "highlightMode": true,
                                                                                                         "linky": true,
-                                                                                                        "readOnly": true
+                                                                                                        "readOnly": true,
+                                                                                                        "renderWidgetHeight": 800
                                                                                                     }
                                                                                                 ],
                                                                                                 "style": "col-lg-6"
@@ -367,7 +378,8 @@
                                                                                                     "itemValue": "",
                                                                                                     "@id": "false"
                                                                                                 },
-                                                                                                "type": "object"
+                                                                                                "type": "object",
+                                                                                                "display": ""
                                                                                             },
                                                                                             {
                                                                                                 "field": "outputType",
@@ -378,7 +390,8 @@
                                                                                                     "itemValue": "JSON",
                                                                                                     "@id": "\/api\/3\/picklists\/93f7971d-50c3-4e9b-9c86-d1cf2aa41256"
                                                                                                 },
-                                                                                                "type": "object"
+                                                                                                "type": "object",
+                                                                                                "display": "JSON"
                                                                                             }
                                                                                         ]
                                                                                     }
@@ -398,19 +411,14 @@
                                                                                                         "name": "exampleJinjaVars",
                                                                                                         "highlightMode": true,
                                                                                                         "linky": true,
-                                                                                                        "readOnly": true
+                                                                                                        "readOnly": true,
+                                                                                                        "renderWidgetHeight": 800
                                                                                                     }
                                                                                                 ],
                                                                                                 "style": "col-lg-6"
                                                                                             },
                                                                                             {
                                                                                                 "fields": [
-                                                                                                    {
-                                                                                                        "name": "exampleOutputText",
-                                                                                                        "highlightMode": true,
-                                                                                                        "linky": true,
-                                                                                                        "readOnly": false
-                                                                                                    },
                                                                                                     {
                                                                                                         "name": "exampleOutputTextMarkdown",
                                                                                                         "highlightMode": true,
@@ -439,7 +447,8 @@
                                                                                                     "itemValue": "",
                                                                                                     "@id": "false"
                                                                                                 },
-                                                                                                "type": "object"
+                                                                                                "type": "object",
+                                                                                                "display": ""
                                                                                             },
                                                                                             {
                                                                                                 "field": "outputType",
@@ -450,7 +459,8 @@
                                                                                                     "itemValue": "Markdown",
                                                                                                     "@id": "\/api\/3\/picklists\/9c5462d7-049f-4853-90a8-6fa9ff5d3dab"
                                                                                                 },
-                                                                                                "type": "object"
+                                                                                                "type": "object",
+                                                                                                "display": "Markdown"
                                                                                             }
                                                                                         ]
                                                                                     }
@@ -470,20 +480,14 @@
                                                                                                         "name": "exampleJinjaVars",
                                                                                                         "highlightMode": true,
                                                                                                         "linky": true,
-                                                                                                        "readOnly": true
+                                                                                                        "readOnly": true,
+                                                                                                        "renderWidgetHeight": 800
                                                                                                     }
                                                                                                 ],
                                                                                                 "style": "col-lg-6"
                                                                                             },
                                                                                             {
                                                                                                 "fields": [
-                                                                                                    {
-                                                                                                        "name": "exampleOutputText",
-                                                                                                        "highlightMode": true,
-                                                                                                        "linky": true,
-                                                                                                        "readOnly": true,
-                                                                                                        "renderWidgetHeight": 800
-                                                                                                    },
                                                                                                     {
                                                                                                         "name": "exampleOutputTextHTML",
                                                                                                         "highlightMode": true,
@@ -512,7 +516,8 @@
                                                                                                     "itemValue": "",
                                                                                                     "@id": "false"
                                                                                                 },
-                                                                                                "type": "object"
+                                                                                                "type": "object",
+                                                                                                "display": ""
                                                                                             },
                                                                                             {
                                                                                                 "field": "outputType",
@@ -523,7 +528,8 @@
                                                                                                     "itemValue": "HTML",
                                                                                                     "@id": "\/api\/3\/picklists\/a8bba5aa-e243-4f61-9b9e-c222fc368be6"
                                                                                                 },
-                                                                                                "type": "object"
+                                                                                                "type": "object",
+                                                                                                "display": "HTML"
                                                                                             }
                                                                                         ]
                                                                                     }
@@ -537,7 +543,7 @@
                                                             "wid": "7998a1eb-939e-46e2-9ea3-3fb5fad245f9",
                                                             "collapsible": true,
                                                             "collapsibleIndex": 0,
-                                                            "_collapsed": true
+                                                            "_collapsed": false
                                                         }
                                                     ]
                                                 },
@@ -612,7 +618,15 @@
                                                                                 "enableHorizontalScroll": [],
                                                                                 "queryFilters": {
                                                                                     "ztpf_metadata_sources": {
-                                                                                        "sort": [],
+                                                                                        "sort": [
+                                                                                            {
+                                                                                                "direction": "ASC",
+                                                                                                "field": "name",
+                                                                                                "sort": {
+                                                                                                    "direction": "ASC"
+                                                                                                }
+                                                                                            }
+                                                                                        ],
                                                                                         "limit": 30,
                                                                                         "logic": "AND",
                                                                                         "filters": []
@@ -734,16 +748,6 @@
                     }
                 ],
                 "wid": "2b6453b2-6ced-4d7a-b5ff-12c180a10d12",
-                "_collapsed": false
-            },
-            {
-                "columns": [
-                    {
-                        "widgets": [],
-                        "style": "col-lg-12"
-                    }
-                ],
-                "wid": "f7f83410-0baf-4d02-841d-7f6fdff1e604",
                 "_collapsed": false
             }
         ],

@@ -24,7 +24,9 @@
                 "resource": {
                     "exampleJinjaVars": "{{vars.jinja_vars}}",
                     "exampleOutputJSON": "{{vars.script_rendered_json}}",
-                    "exampleOutputText": "{{vars.script_rendered}}"
+                    "exampleOutputText": "{{vars.script_rendered}}",
+                    "exampleOutputTextHTML": "<p>{%- if vars.output_type == \"HTML\" -%}<br>{{vars.script_rendered}}<br>{%- endif -%}<\/p>",
+                    "exampleOutputTextMarkdown": "{%- if vars.output_type == \"Markdown\" -%}\n{{vars.script_rendered}}\n{%- endif -%}"
                 },
                 "operation": "Append",
                 "collection": "{{vars.input.records[0]['@id']}}",

@@ -122,18 +122,31 @@
                                     "module": "ztpf_metadata_sources",
                                     "columns": [
                                         "id",
+                                        "orderPriority",
                                         "name",
                                         "type",
-                                        "data",
-                                        "datakey"
+                                        "datakey",
+                                        "recordTags",
+                                        "modifyDate"
                                     ],
-                                    "expandableCol": [],
+                                    "expandableCol": [
+                                        {
+                                            "openTab": false,
+                                            "name": "data"
+                                        }
+                                    ],
                                     "relationshipField": [],
-                                    "checkboxStatus": false,
+                                    "checkboxStatus": true,
                                     "editableFields": false,
                                     "actionButtons": [],
                                     "query": {
                                         "sort": [
+                                            {
+                                                "direction": "ASC",
+                                                "field": "orderPriority",
+                                                "_fieldTitle": "Order Priority",
+                                                "_fieldName": "orderPriority"
+                                            },
                                             {
                                                 "direction": "ASC",
                                                 "field": "name",
