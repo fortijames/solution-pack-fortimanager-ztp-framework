@@ -2,7 +2,7 @@
     "@context": "\/api\/3\/contexts\/Workflow",
     "@type": "Workflow",
     "triggerLimit": null,
-    "name": "Delete Example Data",
+    "name": "Delete Example Data from Templates",
     "aliasName": null,
     "tag": null,
     "description": "Delete fields that hold example data for this record.",
@@ -39,13 +39,19 @@
                         "step_iri": "\/api\/3\/workflow_steps\/9b64ae6e-0e60-45c8-8fb1-8fe1470eb32d",
                         "condition": "{{ vars.record_type == \"ZtpfMetadataSource\" }}",
                         "step_name": "type metadata source"
+                    },
+                    {
+                        "option": "3",
+                        "step_iri": "\/api\/3\/workflow_steps\/d64a2fce-6dfd-4778-a72e-53470f9a63d7",
+                        "condition": "{{ vars.record_type == \"ZtpfAutomationAction\" }}",
+                        "step_name": "type action"
                     }
                 ],
                 "step_variables": []
             },
             "status": null,
-            "top": "140",
-            "left": "520",
+            "top": "120",
+            "left": "360",
             "stepType": "\/api\/3\/workflow_step_types\/12254cf5-5db7-4b1a-8cb1-3af081924b28",
             "group": null,
             "uuid": "f5b641e4-a2fa-4888-ab76-c25e93386d10"
@@ -89,7 +95,8 @@
                 "title": "Delete Example Data",
                 "resources": [
                     "ztpf_templates",
-                    "ztpf_metadata_sources"
+                    "ztpf_metadata_sources",
+                    "ztpf_automation_actions"
                 ],
                 "__triggerLimit": true,
                 "inputVariables": [],
@@ -136,6 +143,24 @@
                                 "operator": "isnull"
                             }
                         ]
+                    },
+                    "ztpf_automation_actions": {
+                        "sort": [],
+                        "limit": 30,
+                        "logic": "AND",
+                        "filters": [
+                            {
+                                "type": "object",
+                                "field": "exampleJinjaVars",
+                                "value": "false",
+                                "_value": {
+                                    "@id": "false",
+                                    "display": "",
+                                    "itemValue": ""
+                                },
+                                "operator": "isnull"
+                            }
+                        ]
                     }
                 },
                 "executeButtonText": "Execute",
@@ -156,12 +181,24 @@
         },
         {
             "@type": "WorkflowStep",
+            "name": "type action",
+            "description": null,
+            "arguments": [],
+            "status": null,
+            "top": "360",
+            "left": "740",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "d64a2fce-6dfd-4778-a72e-53470f9a63d7"
+        },
+        {
+            "@type": "WorkflowStep",
             "name": "type metadata source",
             "description": null,
             "arguments": [],
             "status": null,
-            "top": "240",
-            "left": "680",
+            "top": "280",
+            "left": "740",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
             "uuid": "9b64ae6e-0e60-45c8-8fb1-8fe1470eb32d"
@@ -172,8 +209,8 @@
             "description": null,
             "arguments": [],
             "status": null,
-            "top": "60",
-            "left": "820",
+            "top": "40",
+            "left": "660",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
             "uuid": "c7a4f5f8-7a42-4b4c-9b4d-44fd61472703"
@@ -184,11 +221,42 @@
             "description": null,
             "arguments": [],
             "status": null,
-            "top": "240",
-            "left": "360",
+            "top": "200",
+            "left": "740",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
             "uuid": "d70a2146-0d15-452b-85ff-1e0b5e629cad"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "update action",
+            "description": null,
+            "arguments": {
+                "for_each": {
+                    "item": "{{vars.input.records}}",
+                    "__bulk": true,
+                    "condition": "",
+                    "batch_size": 100
+                },
+                "resource": {
+                    "exampleJinjaVars": "{{vars.value_null}}",
+                    "exampleOutputText": "{{vars.value_empty}}"
+                },
+                "operation": "Append",
+                "collection": "{{vars.item['@id']}}",
+                "__recommend": [],
+                "collectionType": "\/api\/3\/ztpf_automation_actions",
+                "fieldOperation": {
+                    "recordTags": "Append"
+                },
+                "step_variables": []
+            },
+            "status": null,
+            "top": "360",
+            "left": "360",
+            "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928722",
+            "group": null,
+            "uuid": "9134f80b-277b-4150-af86-1cebfbe9ec99"
         },
         {
             "@type": "WorkflowStep",
@@ -216,8 +284,8 @@
                 "step_variables": []
             },
             "status": null,
-            "top": "340",
-            "left": "680",
+            "top": "280",
+            "left": "360",
             "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928722",
             "group": null,
             "uuid": "7c639dbe-b01d-47c1-88f3-70df0c5d9b95"
@@ -250,7 +318,7 @@
                 "step_variables": []
             },
             "status": null,
-            "top": "340",
+            "top": "200",
             "left": "360",
             "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928722",
             "group": null,
@@ -258,6 +326,16 @@
         }
     ],
     "routes": [
+        {
+            "@type": "WorkflowRoute",
+            "name": "find module -> type action",
+            "targetStep": "\/api\/3\/workflow_steps\/d64a2fce-6dfd-4778-a72e-53470f9a63d7",
+            "sourceStep": "\/api\/3\/workflow_steps\/f5b641e4-a2fa-4888-ab76-c25e93386d10",
+            "label": "3",
+            "isExecuted": false,
+            "group": null,
+            "uuid": "7a4ecaf6-f2ab-43a4-bf64-380d013e456a"
+        },
         {
             "@type": "WorkflowRoute",
             "name": "find module -> unknown",
@@ -310,6 +388,16 @@
         },
         {
             "@type": "WorkflowRoute",
+            "name": "type action -> update action",
+            "targetStep": "\/api\/3\/workflow_steps\/9134f80b-277b-4150-af86-1cebfbe9ec99",
+            "sourceStep": "\/api\/3\/workflow_steps\/d64a2fce-6dfd-4778-a72e-53470f9a63d7",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "be8210cf-1da0-41a0-a744-185d52109255"
+        },
+        {
+            "@type": "WorkflowRoute",
             "name": "type metadata source -> update metadata source",
             "targetStep": "\/api\/3\/workflow_steps\/7c639dbe-b01d-47c1-88f3-70df0c5d9b95",
             "sourceStep": "\/api\/3\/workflow_steps\/9b64ae6e-0e60-45c8-8fb1-8fe1470eb32d",
@@ -327,6 +415,26 @@
             "isExecuted": false,
             "group": null,
             "uuid": "c859844b-68ce-41e7-b835-534e1fd22377"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "update action -> return",
+            "targetStep": "\/api\/3\/workflow_steps\/774806a9-7e3a-4d56-9c4f-867aab0964fa",
+            "sourceStep": "\/api\/3\/workflow_steps\/9134f80b-277b-4150-af86-1cebfbe9ec99",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "d64ca4c4-c050-4c64-9a8c-7e69dc68d773"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "update metadata sources -> return",
+            "targetStep": "\/api\/3\/workflow_steps\/774806a9-7e3a-4d56-9c4f-867aab0964fa",
+            "sourceStep": "\/api\/3\/workflow_steps\/7c639dbe-b01d-47c1-88f3-70df0c5d9b95",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "eb5d22b0-784b-4fc3-bfce-ab73580e82eb"
         },
         {
             "@type": "WorkflowRoute",
@@ -350,10 +458,10 @@
             "hideInLogs": false,
             "metadata": [],
             "reusable": false,
-            "top": "420",
+            "top": "440",
             "left": "400",
-            "height": "70",
-            "width": "481",
+            "height": "76",
+            "width": "487",
             "uuid": "ce4916d8-5f8b-415c-86b4-05a85e791cdc",
             "recordTags": []
         }
@@ -366,6 +474,8 @@
     "isPrivate": false,
     "deletedAt": null,
     "recordTags": [
+        "ztpfAutomationAction",
+        "ztpfMetadataSource",
         "ztpfTemplates"
     ]
 }

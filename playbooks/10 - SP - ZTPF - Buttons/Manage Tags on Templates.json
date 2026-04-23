@@ -1,0 +1,796 @@
+{
+    "@context": "\/api\/3\/contexts\/Workflow",
+    "@type": "Workflow",
+    "triggerLimit": null,
+    "name": "Manage Tags on Templates",
+    "aliasName": null,
+    "tag": null,
+    "description": "Manage Tags of the selected record(s)",
+    "isActive": true,
+    "debug": false,
+    "singleRecordExecution": false,
+    "remoteExecutableFlag": false,
+    "parameters": [],
+    "synchronous": false,
+    "collection": "\/api\/3\/workflow_collections\/f0b56dc0-6c1e-4f5b-9199-c807800f028a",
+    "versions": [],
+    "triggerStep": "\/api\/3\/workflow_steps\/a88e07aa-fc57-4652-92f7-44a3af7ca9b8",
+    "steps": [
+        {
+            "@type": "WorkflowStep",
+            "name": "cancel or timeout",
+            "description": null,
+            "arguments": [],
+            "status": null,
+            "top": "20",
+            "left": "1020",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "f2befef1-6425-4bf4-b54a-44b5bf5e5420"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "find ztpfAutomationAction",
+            "description": null,
+            "arguments": {
+                "when": "{{vars.get_linked}}",
+                "query": {
+                    "sort": [],
+                    "limit": 30,
+                    "logic": "AND",
+                    "filters": [
+                        {
+                            "type": "primitive",
+                            "field": "id",
+                            "value": "{{vars.record_ids}}",
+                            "operator": "in",
+                            "_operator": "in"
+                        }
+                    ],
+                    "__selectFields": [
+                        "id",
+                        "ztpfMetadataSources",
+                        "ztpfTemplates"
+                    ]
+                },
+                "module": "ztpf_automation_actions?$limit=5000&$relationships=true&$fsr_max_relation_count=5000",
+                "checkboxFields": true,
+                "step_variables": {
+                    "linked_template_ids": "{{vars.steps.find_ztpfAutomationAction\n|json_query('[].ztpfTemplates.id')\n|sort\n|unique\n}}",
+                    "linked_metadatasource_ids": "{{vars.steps.find_ztpfAutomationAction\n|json_query('[].ztpfMetadataSources')\n|json_query('[].id')\n|sort\n|unique\n}}"
+                }
+            },
+            "status": null,
+            "top": "600",
+            "left": "120",
+            "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928770",
+            "group": null,
+            "uuid": "f89a3fda-c753-4769-9797-de626afa7340"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "find ztpfMetadataSource",
+            "description": null,
+            "arguments": {
+                "when": "{{vars.get_linked}}",
+                "query": {
+                    "sort": [],
+                    "limit": 30,
+                    "logic": "AND",
+                    "filters": [
+                        {
+                            "type": "primitive",
+                            "field": "id",
+                            "value": "{{vars.record_ids}}",
+                            "operator": "in",
+                            "_operator": "in"
+                        }
+                    ],
+                    "__selectFields": [
+                        "id",
+                        "ztpfTemplates",
+                        "ztpfAutomationActions"
+                    ]
+                },
+                "module": "ztpf_metadata_sources?$limit=5000&$relationships=true&$fsr_max_relation_count=5000",
+                "checkboxFields": true,
+                "step_variables": {
+                    "linked_action_ids": "{{vars.steps.find_ztpfMetadataSource\n|json_query('[].ztpfAutomationActions')\n|json_query('[].id')\n|sort\n|unique\n}}",
+                    "linked_template_ids": "{{vars.steps.find_ztpfMetadataSource\n|json_query('[].ztpfTemplates')\n|json_query('[].id')\n|sort\n|unique\n}}"
+                }
+            },
+            "status": null,
+            "top": "440",
+            "left": "120",
+            "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928770",
+            "group": null,
+            "uuid": "0b850bf2-878d-4295-927a-bd8b1ab7bb81"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "find ztpfTemplate",
+            "description": null,
+            "arguments": {
+                "when": "{{vars.get_linked}}",
+                "query": {
+                    "sort": [],
+                    "limit": 30,
+                    "logic": "AND",
+                    "filters": [
+                        {
+                            "type": "primitive",
+                            "field": "id",
+                            "value": "{{vars.record_ids}}",
+                            "operator": "in",
+                            "_operator": "in"
+                        }
+                    ],
+                    "__selectFields": [
+                        "id",
+                        "ztpfMetadataSources",
+                        "ztpfAutomationActions"
+                    ]
+                },
+                "module": "ztpf_templates?$limit=5000&$relationships=true&$fsr_max_relation_count=5000",
+                "checkboxFields": true,
+                "step_variables": {
+                    "linked_action_ids": "{{vars.steps.find_ztpfTemplate\n|json_query('[].ztpfAutomationActions')\n|json_query('[].id')\n|sort\n|unique\n}}",
+                    "linked_metadatasource_ids": "{{vars.steps.find_ztpfTemplate\n|json_query('[].ztpfMetadataSources')\n|json_query('[].id')\n|sort\n|unique\n}}"
+                }
+            },
+            "status": null,
+            "top": "520",
+            "left": "120",
+            "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928770",
+            "group": null,
+            "uuid": "c13ad55f-fec0-49ea-9ab3-1165643e5ac4"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "module type",
+            "description": null,
+            "arguments": {
+                "conditions": [
+                    {
+                        "option": "Default",
+                        "default": true,
+                        "step_iri": "\/api\/3\/workflow_steps\/05bb1b26-83da-4b57-a2c2-ce8f7b53b1f9",
+                        "step_name": "type unknown"
+                    },
+                    {
+                        "option": "1",
+                        "step_iri": "\/api\/3\/workflow_steps\/0b850bf2-878d-4295-927a-bd8b1ab7bb81",
+                        "condition": "{{ vars.record_type == \"ztpfMetadataSource\" }}",
+                        "step_name": "find ztpfMetadataSource"
+                    },
+                    {
+                        "option": "2",
+                        "step_iri": "\/api\/3\/workflow_steps\/c13ad55f-fec0-49ea-9ab3-1165643e5ac4",
+                        "condition": "{{ vars.record_type == \"ztpfTemplate\" }}",
+                        "step_name": "find ztpfTemplate"
+                    },
+                    {
+                        "option": "3",
+                        "step_iri": "\/api\/3\/workflow_steps\/f89a3fda-c753-4769-9797-de626afa7340",
+                        "condition": "{{ vars.record_type == \"ztpfAutomationAction\" }}",
+                        "step_name": "find ztpfAutomationAction"
+                    }
+                ],
+                "step_variables": []
+            },
+            "status": null,
+            "top": "240",
+            "left": "680",
+            "stepType": "\/api\/3\/workflow_step_types\/12254cf5-5db7-4b1a-8cb1-3af081924b28",
+            "group": null,
+            "uuid": "53390f79-8bb8-4277-87fb-107abf6a18a3"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "prompt action",
+            "description": null,
+            "arguments": {
+                "type": "InputBased",
+                "input": {
+                    "schema": {
+                        "title": "Manage Tags",
+                        "description": "What would you like to do? ",
+                        "inputVariables": [
+                            {
+                                "name": "action",
+                                "type": "array",
+                                "label": "Action",
+                                "title": "Dynamic List",
+                                "usable": true,
+                                "options": "{{vars.actions}}",
+                                "tooltip": "What action do you want to perform on the selected records regarding tags?",
+                                "dataType": "dynamicList",
+                                "formType": "dynamicList",
+                                "required": false,
+                                "_expanded": false,
+                                "mmdUpdate": true,
+                                "collection": false,
+                                "searchable": false,
+                                "templateUrl": "app\/components\/form\/fields\/dynamicList.html",
+                                "defaultValue": null,
+                                "_previousName": "",
+                                "playbookField": true,
+                                "lengthConstraint": true,
+                                "allowedGridColumn": false,
+                                "requiredCondition": "notrequired",
+                                "jinjaExpressionView": true,
+                                "useRecordFieldDefault": false,
+                                "_addRequiredConditions": false
+                            },
+                            {
+                                "name": "tag",
+                                "type": "string",
+                                "label": "Tag",
+                                "tooltip": "Add new tag to selected records",
+                                "dataType": "text",
+                                "formType": "text",
+                                "required": false,
+                                "_expanded": false,
+                                "defaultValue": null,
+                                "_previousName": "tagName",
+                                "visibilityQuery": {
+                                    "sort": [],
+                                    "limit": 30,
+                                    "logic": "AND",
+                                    "filters": [
+                                        {
+                                            "type": "array",
+                                            "field": "action",
+                                            "value": [
+                                                "Add"
+                                            ],
+                                            "module": "action",
+                                            "display": "",
+                                            "operator": "in",
+                                            "template": "tags",
+                                            "OPERATOR_KEY": "$",
+                                            "useInOperator": true,
+                                            "previousOperator": "in",
+                                            "previousTemplate": "tags"
+                                        }
+                                    ]
+                                },
+                                "requiredCondition": "notrequired",
+                                "jinjaExpressionView": true,
+                                "useRecordFieldDefault": false,
+                                "_addRequiredConditions": false,
+                                "_addVisibilityConditions": true
+                            },
+                            {
+                                "name": "selectTag",
+                                "type": "array",
+                                "label": "Select Tag",
+                                "title": "Dynamic List",
+                                "usable": true,
+                                "options": "{{vars.all_tags|sort}}",
+                                "tooltip": "Select a tag from the selected records.",
+                                "dataType": "dynamicList",
+                                "formType": "dynamicList",
+                                "required": false,
+                                "_expanded": false,
+                                "mmdUpdate": true,
+                                "collection": false,
+                                "searchable": false,
+                                "templateUrl": "app\/components\/form\/fields\/dynamicList.html",
+                                "defaultValue": null,
+                                "_previousName": "seleTag",
+                                "playbookField": true,
+                                "visibilityQuery": {
+                                    "sort": [],
+                                    "limit": 30,
+                                    "logic": "AND",
+                                    "filters": [
+                                        {
+                                            "type": "array",
+                                            "field": "action",
+                                            "value": [
+                                                "Copy",
+                                                "Delete"
+                                            ],
+                                            "module": "action",
+                                            "display": "",
+                                            "operator": "in",
+                                            "template": "tags",
+                                            "OPERATOR_KEY": "$",
+                                            "useInOperator": true,
+                                            "previousOperator": "in",
+                                            "previousTemplate": "tags"
+                                        }
+                                    ]
+                                },
+                                "lengthConstraint": true,
+                                "allowedGridColumn": false,
+                                "requiredCondition": "notrequired",
+                                "jinjaExpressionView": true,
+                                "useRecordFieldDefault": false,
+                                "_addRequiredConditions": false,
+                                "_addVisibilityConditions": true
+                            },
+                            {
+                                "name": "recursive",
+                                "type": "boolean",
+                                "label": "Recursive",
+                                "title": "Checkbox",
+                                "usable": true,
+                                "tooltip": "Recursively perform this action to all linked records of the selected records.",
+                                "dataType": "checkbox",
+                                "formType": "checkbox",
+                                "required": false,
+                                "_expanded": true,
+                                "mmdUpdate": true,
+                                "collection": false,
+                                "searchable": true,
+                                "templateUrl": "app\/components\/form\/fields\/checkbox.html",
+                                "defaultValue": null,
+                                "_previousName": "re",
+                                "playbookField": true,
+                                "visibilityQuery": {
+                                    "sort": [],
+                                    "limit": 30,
+                                    "logic": "AND",
+                                    "filters": [
+                                        {
+                                            "type": "array",
+                                            "field": "action",
+                                            "value": "false",
+                                            "_value": "false",
+                                            "operator": "isnull"
+                                        }
+                                    ]
+                                },
+                                "lengthConstraint": false,
+                                "allowedEncryption": false,
+                                "allowedGridColumn": true,
+                                "requiredCondition": "notrequired",
+                                "jinjaExpressionView": true,
+                                "useRecordFieldDefault": false,
+                                "_addRequiredConditions": false,
+                                "_addVisibilityConditions": true
+                            }
+                        ]
+                    }
+                },
+                "record": "",
+                "timeout": {
+                    "days": 0,
+                    "hours": 0,
+                    "minutes": 1,
+                    "step_iri": "\/api\/3\/workflow_steps\/f2befef1-6425-4bf4-b54a-44b5bf5e5420"
+                },
+                "agent_id": null,
+                "resources": "ztpf_metadata_sources",
+                "is_approval": false,
+                "owner_detail": {
+                    "isAssigned": false,
+                    "emailRecipients": ""
+                },
+                "isRecordLinked": false,
+                "step_variables": [],
+                "response_mapping": {
+                    "options": [
+                        {
+                            "option": "Ok",
+                            "primary": true,
+                            "step_iri": "\/api\/3\/workflow_steps\/88258612-21f8-4900-8cf4-d8c72169f435"
+                        },
+                        {
+                            "option": "Cancel",
+                            "step_iri": "\/api\/3\/workflow_steps\/f2befef1-6425-4bf4-b54a-44b5bf5e5420"
+                        }
+                    ],
+                    "duplicateOption": false,
+                    "customSuccessMessage": "Awaiting Playbook resumed successfully."
+                },
+                "email_notification": {
+                    "enabled": false,
+                    "smtpParameters": []
+                },
+                "customEmailExternal": false,
+                "inline_channel_list": [],
+                "external_channel_list": [],
+                "unauthenticated_input": false,
+                "external_email_subject": null,
+                "internal_email_subject": "A FortiSOAR playbook is requesting your input",
+                "custom_email_body_external": null,
+                "external_email_attachments": null
+            },
+            "status": null,
+            "top": "40",
+            "left": "640",
+            "stepType": "\/api\/3\/workflow_step_types\/fc04082a-d7dc-4299-96fb-6837b1baa0fe",
+            "group": null,
+            "uuid": "53fe0e64-37d1-4ce5-afdc-340f07c10ea8"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "prompt vars",
+            "description": null,
+            "arguments": {
+                "tag_name": "{{vars.steps.prompt_action.input.tag \n  or vars.steps.prompt_action.input.selectTag\n}}",
+                "get_linked": "{{vars.steps.prompt_action.input.recursive}}",
+                "tag_action": "{%- set ret = vars.steps.prompt_action.input.action -%}\n{%- if ret|lower == \"copy\" -%}\n  {%- set ret = \"Add\" -%}\n{%- endif -%}\n{{ret}}"
+            },
+            "status": null,
+            "top": "120",
+            "left": "640",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "88258612-21f8-4900-8cf4-d8c72169f435"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "setup vars",
+            "description": null,
+            "arguments": {
+                "actions": "[\"Add\",\"Copy\",\"Delete\",\"Purge\"]",
+                "all_tags": "{{vars.input.records\n  |json_query('[].recordTags')\n  |json_query('[]')\n  |sort\n  |unique\n}}",
+                "record_ids": "{{vars.input.records|json_query('[].id')}}",
+                "record_type": "{{vars.input.records[0]['@type'][0]\n| lower ~ vars.input.records[0]['@type'][1:]\n}}"
+            },
+            "status": null,
+            "top": "40",
+            "left": "340",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "e4ba58dd-5afd-45b4-ba5c-2644f533639b"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Start",
+            "description": "Manage tags on selected records.",
+            "arguments": {
+                "route": "3274392c-b1ce-45e2-a05a-f3862a977709",
+                "title": "Manage Tags",
+                "resources": [
+                    "ztpf_metadata_sources",
+                    "ztpf_templates",
+                    "ztpf_automation_actions"
+                ],
+                "__triggerLimit": true,
+                "inputVariables": [],
+                "step_variables": {
+                    "input": {
+                        "params": [],
+                        "records": "{{vars.input.records}}"
+                    }
+                },
+                "triggerOnSource": true,
+                "displayConditions": {
+                    "ztpf_templates": {
+                        "sort": [],
+                        "limit": 30,
+                        "logic": "AND",
+                        "filters": []
+                    },
+                    "ztpf_metadata_sources": {
+                        "sort": [],
+                        "limit": 30,
+                        "logic": "AND",
+                        "filters": []
+                    },
+                    "ztpf_automation_actions": {
+                        "sort": [],
+                        "limit": 30,
+                        "logic": "AND",
+                        "filters": []
+                    }
+                },
+                "executeButtonText": "Execute",
+                "noRecordExecution": false,
+                "showToasterMessage": {
+                    "visible": false,
+                    "messageVisible": true
+                },
+                "triggerOnReplicate": false,
+                "singleRecordExecution": false
+            },
+            "status": null,
+            "top": "40",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/f414d039-bb0d-4e59-9c39-a8f1e880b18a",
+            "group": null,
+            "uuid": "a88e07aa-fc57-4652-92f7-44a3af7ca9b8"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "type unknown",
+            "description": null,
+            "arguments": {
+                "unknown_type": "{{vars.record_type}}"
+            },
+            "status": null,
+            "top": "100",
+            "left": "1020",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "05bb1b26-83da-4b57-a2c2-ce8f7b53b1f9"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "update linked actions",
+            "description": null,
+            "arguments": {
+                "when": "{{vars.linked_action_ids|length > 0}}",
+                "arguments": {
+                    "tag_name": "{{vars.tag_name}}",
+                    "record_ids": "{{vars.linked_action_ids}}",
+                    "tag_action": "{{vars.tag_action}}",
+                    "record_type": "ztpfAutomationAction"
+                },
+                "apply_async": false,
+                "step_variables": [],
+                "pass_parent_env": false,
+                "pass_input_record": false,
+                "workflowReference": "\/api\/3\/workflows\/da48faf2-a2aa-4788-98b6-60a9c0b8d1d9"
+            },
+            "status": null,
+            "top": "560",
+            "left": "720",
+            "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
+            "group": null,
+            "uuid": "bd77b547-603f-45c1-b0a1-c91de17ab5af"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "update linked metadata sources",
+            "description": null,
+            "arguments": {
+                "when": "{{vars.linked_metadatasource_ids|length > 0}}",
+                "arguments": {
+                    "tag_name": "{{vars.tag_name}}",
+                    "record_ids": "{{vars.linked_metadatasource_ids}}",
+                    "tag_action": "{{vars.tag_action}}",
+                    "record_type": "ztpfMetadataSource"
+                },
+                "apply_async": false,
+                "step_variables": [],
+                "pass_parent_env": false,
+                "pass_input_record": false,
+                "workflowReference": "\/api\/3\/workflows\/da48faf2-a2aa-4788-98b6-60a9c0b8d1d9"
+            },
+            "status": null,
+            "top": "400",
+            "left": "720",
+            "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
+            "group": null,
+            "uuid": "2ac5a9ba-95d9-4f76-b02d-7813e06a0f0d"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "update linked templates",
+            "description": null,
+            "arguments": {
+                "when": "{{vars.linked_template_ids|length > 0}}",
+                "arguments": {
+                    "tag_name": "{{vars.tag_name}}",
+                    "record_ids": "{{vars.linked_template_ids}}",
+                    "tag_action": "{{vars.tag_action}}",
+                    "record_type": "ztpfTemplate"
+                },
+                "apply_async": false,
+                "step_variables": [],
+                "pass_parent_env": false,
+                "pass_input_record": false,
+                "workflowReference": "\/api\/3\/workflows\/da48faf2-a2aa-4788-98b6-60a9c0b8d1d9"
+            },
+            "status": null,
+            "top": "480",
+            "left": "720",
+            "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
+            "group": null,
+            "uuid": "1ccd6017-0abf-4d90-8a6c-985f64ab0a5d"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "update tags selected",
+            "description": null,
+            "arguments": {
+                "arguments": {
+                    "tag_name": "{{vars.tag_name}}",
+                    "record_ids": "{{vars.record_ids}}",
+                    "tag_action": "{{vars.tag_action}}",
+                    "record_type": "{{vars.record_type}}"
+                },
+                "apply_async": false,
+                "step_variables": [],
+                "pass_parent_env": false,
+                "pass_input_record": false,
+                "workflowReference": "\/api\/3\/workflows\/da48faf2-a2aa-4788-98b6-60a9c0b8d1d9"
+            },
+            "status": null,
+            "top": "320",
+            "left": "720",
+            "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
+            "group": null,
+            "uuid": "4d204462-a607-4d74-a16e-d68024d12a76"
+        }
+    ],
+    "routes": [
+        {
+            "@type": "WorkflowRoute",
+            "name": "find ztpfAutomationAction -> update ztpfMetadataSource",
+            "targetStep": "\/api\/3\/workflow_steps\/4d204462-a607-4d74-a16e-d68024d12a76",
+            "sourceStep": "\/api\/3\/workflow_steps\/f89a3fda-c753-4769-9797-de626afa7340",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "18611221-1fe1-4b0a-83f2-bb8bbde41420"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "find ztpfMetadataSource -> update zt",
+            "targetStep": "\/api\/3\/workflow_steps\/4d204462-a607-4d74-a16e-d68024d12a76",
+            "sourceStep": "\/api\/3\/workflow_steps\/0b850bf2-878d-4295-927a-bd8b1ab7bb81",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "c964d7d0-2f73-46e1-bf86-09712696fc7b"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "find ztpfTemplate -> update ztpfMetadataSource",
+            "targetStep": "\/api\/3\/workflow_steps\/4d204462-a607-4d74-a16e-d68024d12a76",
+            "sourceStep": "\/api\/3\/workflow_steps\/c13ad55f-fec0-49ea-9ab3-1165643e5ac4",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "3f1bc824-686e-4532-874c-b55162ba6d71"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "module type -> find ztpfAutomationAction",
+            "targetStep": "\/api\/3\/workflow_steps\/f89a3fda-c753-4769-9797-de626afa7340",
+            "sourceStep": "\/api\/3\/workflow_steps\/53390f79-8bb8-4277-87fb-107abf6a18a3",
+            "label": "3",
+            "isExecuted": false,
+            "group": null,
+            "uuid": "5e6cfdd7-384b-4aaf-83d6-76d9d4afd210"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "module type -> find ztpfMetadataSource",
+            "targetStep": "\/api\/3\/workflow_steps\/0b850bf2-878d-4295-927a-bd8b1ab7bb81",
+            "sourceStep": "\/api\/3\/workflow_steps\/53390f79-8bb8-4277-87fb-107abf6a18a3",
+            "label": "1",
+            "isExecuted": false,
+            "group": null,
+            "uuid": "f9d1c995-9c36-43cd-9e53-a863f825aa62"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "module type -> find ztpfTemplate",
+            "targetStep": "\/api\/3\/workflow_steps\/c13ad55f-fec0-49ea-9ab3-1165643e5ac4",
+            "sourceStep": "\/api\/3\/workflow_steps\/53390f79-8bb8-4277-87fb-107abf6a18a3",
+            "label": "2",
+            "isExecuted": false,
+            "group": null,
+            "uuid": "1c468e74-6aec-4486-8af3-f2282f71c13a"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "module type -> type unknown",
+            "targetStep": "\/api\/3\/workflow_steps\/05bb1b26-83da-4b57-a2c2-ce8f7b53b1f9",
+            "sourceStep": "\/api\/3\/workflow_steps\/53390f79-8bb8-4277-87fb-107abf6a18a3",
+            "label": "Default",
+            "isExecuted": false,
+            "group": null,
+            "uuid": "929b6aeb-cb86-4587-a4ff-c419c63d6fbe"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "prompt action -> cancel or timeout",
+            "targetStep": "\/api\/3\/workflow_steps\/f2befef1-6425-4bf4-b54a-44b5bf5e5420",
+            "sourceStep": "\/api\/3\/workflow_steps\/53fe0e64-37d1-4ce5-afdc-340f07c10ea8",
+            "label": "Cancel",
+            "isExecuted": false,
+            "group": null,
+            "uuid": "55c4481a-81e6-4ce1-80ac-d0df6a5f5088"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "prompt action -> prompt vars",
+            "targetStep": "\/api\/3\/workflow_steps\/88258612-21f8-4900-8cf4-d8c72169f435",
+            "sourceStep": "\/api\/3\/workflow_steps\/53fe0e64-37d1-4ce5-afdc-340f07c10ea8",
+            "label": "Ok",
+            "isExecuted": false,
+            "group": null,
+            "uuid": "154c98a7-fda1-4b3b-a9a3-04e509762ab7"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "prompt vars -> module type",
+            "targetStep": "\/api\/3\/workflow_steps\/53390f79-8bb8-4277-87fb-107abf6a18a3",
+            "sourceStep": "\/api\/3\/workflow_steps\/88258612-21f8-4900-8cf4-d8c72169f435",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "7bfdd856-35d0-480c-beb4-c4558c0b8ba0"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "setup vars -> prompt action",
+            "targetStep": "\/api\/3\/workflow_steps\/53fe0e64-37d1-4ce5-afdc-340f07c10ea8",
+            "sourceStep": "\/api\/3\/workflow_steps\/e4ba58dd-5afd-45b4-ba5c-2644f533639b",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "dc1a6a3f-8783-4a13-92da-4a9eb5bb5eb0"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Start -> setup vars",
+            "targetStep": "\/api\/3\/workflow_steps\/e4ba58dd-5afd-45b4-ba5c-2644f533639b",
+            "sourceStep": "\/api\/3\/workflow_steps\/a88e07aa-fc57-4652-92f7-44a3af7ca9b8",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "21d3325a-0925-44a8-a58c-2df23dd5caa5"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "update linked metadata sources -> update linked templates",
+            "targetStep": "\/api\/3\/workflow_steps\/1ccd6017-0abf-4d90-8a6c-985f64ab0a5d",
+            "sourceStep": "\/api\/3\/workflow_steps\/2ac5a9ba-95d9-4f76-b02d-7813e06a0f0d",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "a7a1bbaa-9c55-46bc-b17e-843018a6c188"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "update linked templates -> Copy 1 of update linked templates",
+            "targetStep": "\/api\/3\/workflow_steps\/bd77b547-603f-45c1-b0a1-c91de17ab5af",
+            "sourceStep": "\/api\/3\/workflow_steps\/1ccd6017-0abf-4d90-8a6c-985f64ab0a5d",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "5eed36e2-083a-490e-a377-dc3acaed7ccd"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "update tags selected -> Copy of update linked templates",
+            "targetStep": "\/api\/3\/workflow_steps\/2ac5a9ba-95d9-4f76-b02d-7813e06a0f0d",
+            "sourceStep": "\/api\/3\/workflow_steps\/4d204462-a607-4d74-a16e-d68024d12a76",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "81b3019e-523e-4133-a860-45d9345a25c8"
+        }
+    ],
+    "groups": [
+        {
+            "@type": "WorkflowGroup",
+            "name": "Action Options",
+            "description": "Common action to manage tags on ztpf template modules. \n\nRecord Types:\n - ztpfMetadataSource\n - ztpfTemplate\n - ztpfAutomationAction\n\nAction Options for Managing Tags:\n  - add: append a tag to the records.\n  - delete: delete a tag to records if it exists.\n  - purge: simple delete all tags of the records.",
+            "type": "note",
+            "isCollapsed": false,
+            "hasTriggerStep": false,
+            "hideInLogs": false,
+            "metadata": [],
+            "reusable": false,
+            "top": "120",
+            "left": "40",
+            "height": "298",
+            "width": "439",
+            "uuid": "84d2c8bb-ecb6-4fd3-9c9e-8b216a811f03",
+            "recordTags": []
+        }
+    ],
+    "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+    "playbookOrigin": "\/api\/3\/picklists\/b6d710a9-a8ec-41ec-8817-fe9fa062fcdd",
+    "isEditable": false,
+    "uuid": "46c1ec8a-6541-43ec-b73d-b9553a56565d",
+    "owners": [],
+    "isPrivate": false,
+    "deletedAt": null,
+    "recordTags": [
+        "ztpfAutomationAction",
+        "ztpfMetadataSource",
+        "ztpfTemplates"
+    ]
+}

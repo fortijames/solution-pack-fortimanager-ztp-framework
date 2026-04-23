@@ -50,7 +50,7 @@
             },
             "status": null,
             "top": "420",
-            "left": "700",
+            "left": "1000",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
             "uuid": "2311a5fa-81c7-4770-853f-f6724100b7e5"
@@ -120,7 +120,7 @@
             },
             "status": null,
             "top": "340",
-            "left": "700",
+            "left": "1000",
             "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
             "group": null,
             "uuid": "c478619b-4c6e-4607-9283-ccf1cde620c3"
@@ -386,7 +386,7 @@
             },
             "status": null,
             "top": "340",
-            "left": "360",
+            "left": "660",
             "stepType": "\/api\/3\/workflow_step_types\/fc04082a-d7dc-4299-96fb-6837b1baa0fe",
             "group": null,
             "uuid": "eb62ada2-cf74-4b06-88a1-2a7f4e0d00d2"
@@ -394,7 +394,7 @@
         {
             "@type": "WorkflowStep",
             "name": "Start",
-            "description": "Get Metadata for Device",
+            "description": "Select a device to use the variables from the device record, manager record to then retrieve data from the config of this record. Optionally save the results as example data on this record.",
             "arguments": {
                 "route": "81d0acd1-5af4-4647-b409-6817c0e23eb0",
                 "title": "Get Metadata for Device",
@@ -573,6 +573,23 @@
     "groups": [
         {
             "@type": "WorkflowGroup",
+            "name": "Details",
+            "description": "- Prompt and and collect the Manager and then Device to retrieve data.\n- Call the metadata source script using the device ID and this record ID.\n- Prompt with results and optionally provide method to save results as an example.",
+            "type": "note",
+            "isCollapsed": false,
+            "hasTriggerStep": false,
+            "hideInLogs": false,
+            "metadata": [],
+            "reusable": false,
+            "top": "200",
+            "left": "60",
+            "height": "143",
+            "width": "498",
+            "uuid": "edd92dfc-7906-423c-888e-0e3de00d0390",
+            "recordTags": []
+        },
+        {
+            "@type": "WorkflowGroup",
             "name": "Pick a Manager then Device",
             "description": "Pick a Manager and then Pick a Device from that Manager.",
             "type": "block",
@@ -582,7 +599,7 @@
             "metadata": [],
             "reusable": false,
             "top": "20",
-            "left": "360",
+            "left": "660",
             "height": "306",
             "width": "987",
             "uuid": "b8b66120-16c1-4a34-8b4c-7cca4b85f35f",
@@ -597,7 +614,6 @@
     "isPrivate": false,
     "deletedAt": null,
     "recordTags": [
-        "TODO",
         "ztpfMetadataSource"
     ]
 }
