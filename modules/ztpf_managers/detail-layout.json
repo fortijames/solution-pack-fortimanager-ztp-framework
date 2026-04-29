@@ -298,6 +298,216 @@
                                             "visible": true
                                         },
                                         {
+                                            "title": "Rules",
+                                            "active": 0,
+                                            "icon": "icon icon-queue_rules",
+                                            "show": true,
+                                            "visible": true,
+                                            "widget": {
+                                                "type": "rows",
+                                                "config": {
+                                                    "wid": "200b876f-242d-48fd-84b2-9efc00461a65",
+                                                    "rows": [
+                                                        {
+                                                            "columns": [
+                                                                {
+                                                                    "widgets": [
+                                                                        {
+                                                                            "type": "sectionHeader",
+                                                                            "config": {
+                                                                                "wid": "2a45c031-b7fe-444e-b60a-a2b270b94ce9",
+                                                                                "query": {
+                                                                                    "filters": [],
+                                                                                    "sort": [],
+                                                                                    "limit": 10
+                                                                                },
+                                                                                "editorType": "html",
+                                                                                "sectionText": "<p style=\"text-align: center;\"><span style=\"font-size: 14pt;\">Rules for Assigning Automation Profiles to Device(s) on this Manager<\/span><\/p>\n<p style=\"text-align: center;\">&nbsp;<\/p>\n<p style=\"text-align: center;\"><span style=\"text-decoration: underline;\"><span style=\"font-size: 14pt;\">Onboard New Devices:<\/span><\/span><\/p>"
+                                                                            }
+                                                                        },
+                                                                        {
+                                                                            "type": "relationship.subtab",
+                                                                            "config": {
+                                                                                "wid": "0b9e13ae-9663-426e-8b18-70b5b5b4d2f5",
+                                                                                "excludes": [],
+                                                                                "selectionType": "include",
+                                                                                "actionButtons": [],
+                                                                                "expandableCol": {
+                                                                                    "ztpfManagerAutomationProfileRule": {
+                                                                                        "columns": [],
+                                                                                        "checkBox": false
+                                                                                    }
+                                                                                },
+                                                                                "enableHorizontalScroll": [],
+                                                                                "includes": [
+                                                                                    "ztpfManagerAutomationProfileRule"
+                                                                                ],
+                                                                                "queryFilters": {
+                                                                                    "ztpf_manager_automation_profile_rules": {
+                                                                                        "sort": [
+                                                                                            {
+                                                                                                "direction": "ASC",
+                                                                                                "field": "orderPriority",
+                                                                                                "sort": {
+                                                                                                    "direction": "ASC"
+                                                                                                }
+                                                                                            }
+                                                                                        ],
+                                                                                        "limit": 30,
+                                                                                        "logic": "AND",
+                                                                                        "filters": [
+                                                                                            {
+                                                                                                "field": "type",
+                                                                                                "operator": "eq",
+                                                                                                "value": "\/api\/3\/picklists\/2ca31961-6e46-48a9-8bac-8c9846344d3b",
+                                                                                                "_value": {
+                                                                                                    "display": "Onboard New Device",
+                                                                                                    "itemValue": "Onboard New Device",
+                                                                                                    "@id": "\/api\/3\/picklists\/2ca31961-6e46-48a9-8bac-8c9846344d3b"
+                                                                                                },
+                                                                                                "type": "object",
+                                                                                                "display": "Onboard New Device"
+                                                                                            }
+                                                                                        ]
+                                                                                    }
+                                                                                }
+                                                                            }
+                                                                        },
+                                                                        {
+                                                                            "type": "sectionHeader",
+                                                                            "config": {
+                                                                                "wid": "92707413-ea08-4b3c-a66d-0c54157c2a8b",
+                                                                                "query": {
+                                                                                    "filters": [],
+                                                                                    "sort": [],
+                                                                                    "limit": 10
+                                                                                },
+                                                                                "editorType": "html",
+                                                                                "sectionText": "<p style=\"text-align: center;\"><span style=\"text-decoration: underline;\"><span style=\"font-size: 14pt;\">Device Lifecycle (MACD):<\/span><\/span><\/p>"
+                                                                            }
+                                                                        },
+                                                                        {
+                                                                            "type": "relationship.subtab",
+                                                                            "config": {
+                                                                                "wid": "e6563a45-1751-4fce-8e61-e712ab7fa5ce",
+                                                                                "excludes": [],
+                                                                                "selectionType": "include",
+                                                                                "actionButtons": [],
+                                                                                "expandableCol": {
+                                                                                    "ztpfManagerAutomationProfileRule": {
+                                                                                        "columns": [],
+                                                                                        "checkBox": false
+                                                                                    }
+                                                                                },
+                                                                                "enableHorizontalScroll": [],
+                                                                                "includes": [
+                                                                                    "ztpfManagerAutomationProfileRule"
+                                                                                ],
+                                                                                "queryFilters": {
+                                                                                    "ztpf_manager_automation_profile_rules": {
+                                                                                        "sort": [
+                                                                                            {
+                                                                                                "direction": "ASC",
+                                                                                                "field": "orderPriority",
+                                                                                                "sort": {
+                                                                                                    "direction": "ASC"
+                                                                                                }
+                                                                                            }
+                                                                                        ],
+                                                                                        "limit": 30,
+                                                                                        "logic": "AND",
+                                                                                        "filters": [
+                                                                                            {
+                                                                                                "field": "type",
+                                                                                                "operator": "eq",
+                                                                                                "value": "\/api\/3\/picklists\/a1e64e7f-91af-407b-b0d1-c6e767b3a981",
+                                                                                                "_value": {
+                                                                                                    "display": "Device Lifecycle MACD",
+                                                                                                    "itemValue": "Device Lifecycle MACD",
+                                                                                                    "@id": "\/api\/3\/picklists\/a1e64e7f-91af-407b-b0d1-c6e767b3a981"
+                                                                                                },
+                                                                                                "type": "object",
+                                                                                                "display": "Device Lifecycle MACD"
+                                                                                            }
+                                                                                        ]
+                                                                                    }
+                                                                                }
+                                                                            }
+                                                                        },
+                                                                        {
+                                                                            "type": "sectionHeader",
+                                                                            "config": {
+                                                                                "wid": "d5184625-aa11-4edc-8227-0c0447d10c3b",
+                                                                                "query": {
+                                                                                    "filters": [],
+                                                                                    "sort": [],
+                                                                                    "limit": 10
+                                                                                },
+                                                                                "editorType": "html",
+                                                                                "sectionText": "<p style=\"text-align: center;\"><span style=\"text-decoration: underline;\"><span style=\"font-size: 14pt;\">Decommission Device:<\/span><\/span><\/p>"
+                                                                            }
+                                                                        },
+                                                                        {
+                                                                            "type": "relationship.subtab",
+                                                                            "config": {
+                                                                                "wid": "b6239d71-2be2-4252-9a64-887d6ea71017",
+                                                                                "excludes": [],
+                                                                                "selectionType": "include",
+                                                                                "actionButtons": [],
+                                                                                "expandableCol": {
+                                                                                    "ztpfManagerAutomationProfileRule": {
+                                                                                        "columns": [],
+                                                                                        "checkBox": false
+                                                                                    }
+                                                                                },
+                                                                                "enableHorizontalScroll": [],
+                                                                                "includes": [
+                                                                                    "ztpfManagerAutomationProfileRule"
+                                                                                ],
+                                                                                "queryFilters": {
+                                                                                    "ztpf_manager_automation_profile_rules": {
+                                                                                        "sort": [
+                                                                                            {
+                                                                                                "direction": "ASC",
+                                                                                                "field": "orderPriority",
+                                                                                                "sort": {
+                                                                                                    "direction": "ASC"
+                                                                                                }
+                                                                                            }
+                                                                                        ],
+                                                                                        "limit": 30,
+                                                                                        "logic": "AND",
+                                                                                        "filters": [
+                                                                                            {
+                                                                                                "field": "type",
+                                                                                                "operator": "eq",
+                                                                                                "value": "\/api\/3\/picklists\/eea91b78-a36b-400b-b0ff-86dc11a6ef73",
+                                                                                                "_value": {
+                                                                                                    "display": "Decommision Device",
+                                                                                                    "itemValue": "Decommision Device",
+                                                                                                    "@id": "\/api\/3\/picklists\/eea91b78-a36b-400b-b0ff-86dc11a6ef73"
+                                                                                                },
+                                                                                                "type": "object",
+                                                                                                "display": "Decommision Device"
+                                                                                            }
+                                                                                        ]
+                                                                                    }
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                    ],
+                                                                    "style": "col-lg-12"
+                                                                }
+                                                            ],
+                                                            "wid": "dc9c91ca-04a4-4f65-ae40-1f1ec66145b8",
+                                                            "_collapsed": false
+                                                        }
+                                                    ]
+                                                },
+                                                "visible": true
+                                            }
+                                        },
+                                        {
                                             "title": "Devices",
                                             "active": 0,
                                             "widget": {
@@ -366,7 +576,7 @@
                                                 "visible": true
                                             },
                                             "icon": "fa fa-hdd-o",
-                                            "show": true,
+                                            "show": false,
                                             "visible": true
                                         },
                                         {

@@ -11,7 +11,38 @@
                             {
                                 "type": "grid",
                                 "config": {
-                                    "wid": "12f3c928-2e51-4f7c-acc9-0fbb420f3718"
+                                    "wid": "12f3c928-2e51-4f7c-acc9-0fbb420f3718",
+                                    "module": "ztpf_automation_profiles",
+                                    "columns": [
+                                        "id",
+                                        "name",
+                                        "recordTags",
+                                        "modifyDate"
+                                    ],
+                                    "expandableCol": [],
+                                    "relationshipField": [],
+                                    "checkboxStatus": false,
+                                    "editableFields": false,
+                                    "actionButtons": [
+                                        {
+                                            "id": "\/api\/3\/workflows\/46c1ec8a-6541-43ec-b73d-b9553a56565d",
+                                            "name": "Manage Tags",
+                                            "icon": "fa fa-tags"
+                                        }
+                                    ],
+                                    "query": {
+                                        "sort": [
+                                            {
+                                                "direction": "ASC",
+                                                "field": "name",
+                                                "_fieldTitle": "Name",
+                                                "_fieldName": "name"
+                                            }
+                                        ],
+                                        "limit": 30,
+                                        "logic": "AND",
+                                        "filters": []
+                                    }
                                 }
                             }
                         ],

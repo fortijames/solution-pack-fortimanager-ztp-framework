@@ -10,66 +10,6 @@
                 "items": [
                     {
                         "editMode": false,
-                        "icon": "icon icon-queue-management",
-                        "require": {
-                            "action": "read",
-                            "module": "ztpf_managers"
-                        },
-                        "state": {
-                            "name": "main.modules.list",
-                            "parameters": {
-                                "module": "ztpf_managers"
-                            }
-                        },
-                        "title": "Managers"
-                    },
-                    {
-                        "editMode": false,
-                        "icon": "fa fa-hdd-o",
-                        "require": {
-                            "action": "read",
-                            "module": "ztpf_devices"
-                        },
-                        "state": {
-                            "name": "main.modules.list",
-                            "parameters": {
-                                "module": "ztpf_devices"
-                            }
-                        },
-                        "title": "Devices"
-                    },
-                    {
-                        "editMode": false,
-                        "icon": "icon icon-data_sets",
-                        "require": {
-                            "action": "read",
-                            "module": "ztpf_metadata_devices"
-                        },
-                        "state": {
-                            "name": "main.modules.list",
-                            "parameters": {
-                                "module": "ztpf_metadata_devices"
-                            }
-                        },
-                        "title": "Device Metadata"
-                    },
-                    {
-                        "editMode": false,
-                        "icon": "icon icon-audit-log",
-                        "require": {
-                            "action": "read",
-                            "module": "ztpf_device_automation_steps"
-                        },
-                        "state": {
-                            "name": "main.modules.list",
-                            "parameters": {
-                                "module": "ztpf_device_automation_steps"
-                            }
-                        },
-                        "title": "Device Steps"
-                    },
-                    {
-                        "editMode": false,
                         "icon": "icon icon-set-variables",
                         "require": {
                             "action": "read",
@@ -126,7 +66,7 @@
                                 "module": "ztpf_automation_profiles"
                             }
                         },
-                        "title": "ZTPF Profiles"
+                        "title": "Automation Profiles"
                     },
                     {
                         "editMode": false,
@@ -141,7 +81,82 @@
                                 "module": "ztpf_automation_profile_steps"
                             }
                         },
-                        "title": "ZTPF Profile Steps"
+                        "title": "Profile Steps"
+                    },
+                    {
+                        "editMode": false,
+                        "icon": "icon icon-queue-management",
+                        "require": {
+                            "action": "read",
+                            "module": "ztpf_managers"
+                        },
+                        "state": {
+                            "name": "main.modules.list",
+                            "parameters": {
+                                "module": "ztpf_managers"
+                            }
+                        },
+                        "title": "Managers"
+                    },
+                    {
+                        "editMode": false,
+                        "icon": "icon icon-queue_rules",
+                        "require": {
+                            "action": "read",
+                            "module": "ztpf_manager_automation_profile_rules"
+                        },
+                        "state": {
+                            "name": "main.modules.list",
+                            "parameters": {
+                                "module": "ztpf_manager_automation_profile_rules"
+                            }
+                        },
+                        "title": "Manager Profile Rules"
+                    },
+                    {
+                        "editMode": false,
+                        "icon": "fa fa-hdd-o",
+                        "require": {
+                            "action": "read",
+                            "module": "ztpf_devices"
+                        },
+                        "state": {
+                            "name": "main.modules.list",
+                            "parameters": {
+                                "module": "ztpf_devices"
+                            }
+                        },
+                        "title": "Devices"
+                    },
+                    {
+                        "editMode": false,
+                        "icon": "icon icon-data_sets",
+                        "require": {
+                            "action": "read",
+                            "module": "ztpf_metadata_devices"
+                        },
+                        "state": {
+                            "name": "main.modules.list",
+                            "parameters": {
+                                "module": "ztpf_metadata_devices"
+                            }
+                        },
+                        "title": "Device Metadata"
+                    },
+                    {
+                        "editMode": false,
+                        "icon": "icon icon-audit-log",
+                        "require": {
+                            "action": "read",
+                            "module": "ztpf_device_automation_steps"
+                        },
+                        "state": {
+                            "name": "main.modules.list",
+                            "parameters": {
+                                "module": "ztpf_device_automation_steps"
+                            }
+                        },
+                        "title": "Device Steps"
                     }
                 ],
                 "title": "ZTP Flow"

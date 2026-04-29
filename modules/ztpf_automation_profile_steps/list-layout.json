@@ -11,7 +11,40 @@
                             {
                                 "type": "grid",
                                 "config": {
-                                    "wid": "b3ea4cf9-8abb-45c0-a859-0469f6e55475"
+                                    "wid": "b3ea4cf9-8abb-45c0-a859-0469f6e55475",
+                                    "module": "ztpf_automation_profile_steps",
+                                    "columns": [
+                                        "id",
+                                        "ztpfAutomationProfiles",
+                                        "stepSequence",
+                                        "ztpfAutomationActions",
+                                        "recordTags",
+                                        "modifyDate"
+                                    ],
+                                    "expandableCol": [],
+                                    "relationshipField": [],
+                                    "checkboxStatus": false,
+                                    "editableFields": false,
+                                    "actionButtons": [],
+                                    "query": {
+                                        "sort": [
+                                            {
+                                                "direction": "ASC",
+                                                "field": "ztpfAutomationProfiles.name",
+                                                "_fieldTitle": "Automation Profile",
+                                                "_fieldName": "ztpfAutomationProfiles"
+                                            },
+                                            {
+                                                "direction": "ASC",
+                                                "field": "stepSequence",
+                                                "_fieldTitle": "Step Number",
+                                                "_fieldName": "stepSequence"
+                                            }
+                                        ],
+                                        "limit": 30,
+                                        "logic": "AND",
+                                        "filters": []
+                                    }
                                 }
                             }
                         ],

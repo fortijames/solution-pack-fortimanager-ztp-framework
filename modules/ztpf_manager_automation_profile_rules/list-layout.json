@@ -11,7 +11,7 @@
                             {
                                 "type": "chart",
                                 "config": {
-                                    "wid": "0251182a-0722-436b-9ed5-32336a95108c",
+                                    "wid": "6093659b-3259-4175-97d1-752c3254b93e",
                                     "widgetAlwaysDisplay": true,
                                     "showTabularData": false,
                                     "query": {
@@ -48,16 +48,19 @@
                                         ]
                                     },
                                     "mapping": {
-                                        "fieldName": "type"
+                                        "fieldName": "type",
+                                        "displayValues": [
+                                            "name"
+                                        ]
                                     },
                                     "assignedToSetting": "all",
                                     "aggregate": true,
                                     "viewType": "chart",
-                                    "title": "Types",
-                                    "resource": "ztpf_metadata_sources",
-                                    "chart": "donut",
-                                    "showCount": true,
-                                    "widgetAlwaysExpanded": true
+                                    "title": "Rule Type",
+                                    "resource": "ztpf_manager_automation_profile_rules",
+                                    "chart": "pie",
+                                    "widgetAlwaysExpanded": true,
+                                    "showCount": true
                                 }
                             }
                         ],
@@ -68,11 +71,16 @@
                             {
                                 "type": "chart",
                                 "config": {
-                                    "wid": "3d947aa5-ce71-4dc8-b71d-a8260efed36b",
+                                    "wid": "b712ca36-f1d2-49a7-9bad-81d5c5db7055",
                                     "widgetAlwaysDisplay": true,
                                     "showTabularData": false,
                                     "query": {
-                                        "sort": [],
+                                        "sort": [
+                                            {
+                                                "field": "assignmentSearchType.orderIndex",
+                                                "direction": "ASC"
+                                            }
+                                        ],
                                         "limit": 2147483647,
                                         "logic": "AND",
                                         "filters": [],
@@ -84,29 +92,39 @@
                                             },
                                             {
                                                 "operator": "groupby",
-                                                "alias": "recordTags",
-                                                "field": "recordTags.uuid"
+                                                "alias": "assignmentSearchType",
+                                                "field": "assignmentSearchType.itemValue"
+                                            },
+                                            {
+                                                "operator": "groupby",
+                                                "alias": "color",
+                                                "field": "assignmentSearchType.color"
+                                            },
+                                            {
+                                                "operator": "groupby",
+                                                "alias": "orderIndex",
+                                                "field": "assignmentSearchType.orderIndex"
                                             }
                                         ]
                                     },
                                     "mapping": {
-                                        "fieldName": "recordTags"
+                                        "fieldName": "assignmentSearchType"
                                     },
                                     "assignedToSetting": "all",
                                     "aggregate": true,
                                     "viewType": "chart",
-                                    "title": "Tags",
-                                    "resource": "ztpf_metadata_sources",
-                                    "chart": "donut",
-                                    "showCount": true,
-                                    "widgetAlwaysExpanded": true
+                                    "title": "Search Type",
+                                    "resource": "ztpf_manager_automation_profile_rules",
+                                    "chart": "pie",
+                                    "widgetAlwaysExpanded": true,
+                                    "showCount": true
                                 }
                             }
                         ],
                         "style": "col-lg-6"
                     }
                 ],
-                "wid": "618d73db-342b-4234-a2a8-4370c842b3b6",
+                "wid": "34547aed-3779-4e8f-91cb-a3c67374e2dc",
                 "_collapsed": false,
                 "collapsible": false,
                 "collapsibleIndex": 0
@@ -118,33 +136,23 @@
                             {
                                 "type": "grid",
                                 "config": {
-                                    "wid": "d0b771be-9ea6-4630-81fe-af094f983428",
-                                    "module": "ztpf_metadata_sources",
+                                    "wid": "0698adaa-ab42-4b39-ae25-2482483281dc",
+                                    "module": "ztpf_manager_automation_profile_rules",
                                     "columns": [
                                         "id",
+                                        "ztpfManagers",
                                         "orderPriority",
-                                        "name",
                                         "type",
-                                        "datakey",
+                                        "assignmentSearchType",
+                                        "ztpfAutomationProfiles",
                                         "recordTags",
                                         "modifyDate"
                                     ],
-                                    "expandableCol": [
-                                        {
-                                            "openTab": false,
-                                            "name": "data"
-                                        }
-                                    ],
+                                    "expandableCol": [],
                                     "relationshipField": [],
-                                    "checkboxStatus": true,
+                                    "checkboxStatus": false,
                                     "editableFields": false,
-                                    "actionButtons": [
-                                        {
-                                            "id": "\/api\/3\/workflows\/46c1ec8a-6541-43ec-b73d-b9553a56565d",
-                                            "name": "Manage Tags",
-                                            "icon": "fa fa-tags"
-                                        }
-                                    ],
+                                    "actionButtons": [],
                                     "query": {
                                         "sort": [
                                             {
@@ -155,9 +163,9 @@
                                             },
                                             {
                                                 "direction": "ASC",
-                                                "field": "name",
-                                                "_fieldTitle": "Name",
-                                                "_fieldName": "name"
+                                                "field": "ztpfManagers.name",
+                                                "_fieldTitle": "Manager",
+                                                "_fieldName": "ztpfManagers"
                                             }
                                         ],
                                         "limit": 30,
@@ -170,23 +178,23 @@
                         "style": "col-lg-12"
                     }
                 ],
-                "wid": "1515cfb7-fbe1-4025-8045-fef09fe69cc7",
+                "wid": "7853618b-4bd4-4a6e-b51d-197cfef384f8",
                 "_collapsed": false
             }
         ],
-        "wid": "e64cb7d4-501b-48ca-ac7a-0826f4322606",
+        "wid": "e20e7cac-e30a-4c8f-bb4d-b453eb8b1033",
         "metadata": {
-            "customTemplateTitle": "ZTPF Metadata Sources",
-            "originalTemplateTitle": "ztpfMetadataSources"
+            "customTemplateTitle": "Manager Automation Profile Rules",
+            "originalTemplateTitle": "ztpfManagerAutomationProfileRules"
         }
     },
-    "module": "ztpf_metadata_sources",
+    "module": "ztpf_manager_automation_profile_rules",
     "filters": [],
     "isDefault": true,
     "visible": true,
     "viewOptions": "list",
     "name": "Base Template",
     "system": false,
-    "uuid": "modules-ztpf_metadata_sources-list",
-    "newUuid": "4bc8ae26-7ec9-4208-82bf-31c927a19181"
+    "uuid": "modules-ztpf_manager_automation_profile_rules-list",
+    "newUuid": "1284d79e-34e6-453b-b6f2-2098bb7cde4f"
 }
