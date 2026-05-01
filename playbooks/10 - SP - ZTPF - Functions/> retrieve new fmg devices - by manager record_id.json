@@ -1,5 +1,4 @@
 {
-    "@context": "\/api\/3\/contexts\/Workflow",
     "@type": "Workflow",
     "triggerLimit": null,
     "name": "> retrieve new fmg devices - by manager record_id",
@@ -24,6 +23,7 @@
             "name": "create device records",
             "description": null,
             "arguments": {
+                "when": "{{not vars.playbook_status['error']}}",
                 "for_each": {
                     "item": "{{vars.fmg_devices}}",
                     "__bulk": true,
@@ -59,7 +59,8 @@
             "name": "create fmg devices vars",
             "description": null,
             "arguments": {
-                "fmg_devices": "{{vars.steps.get_fmg_devices.output['get_response']}}"
+                "fmg_devices": "{{vars.steps.get_fmg_devices.output['get_response']}}",
+                "playbook_status": "{%- set apiret = vars.steps.get_fmg_devices -%}\n{%- set s = {\"error\":false,\"status\":\"Ok\",\"message\":\"\"} -%}\n\n{%- if apiret.output.status != 0 -%}\n  {%-do s.update({\n  \"error\":true,\n  \"status\":\"Failed\",\n  \"message\":\"Failed to get devices.<br>\"\n    + '<br><code>'\n    + apiret.output.get_response.status.message\n    + '<\/code>'\n}) -%}\n  \n{%- elif apiret == \"ok\" -%}\n  {%- do s.update({\n    \"message\":\"Synch FMG Status ok.\"\n  }) -%}\n\n{%- endif -%}\n{{s}}"
             },
             "status": null,
             "top": "360",
@@ -134,7 +135,7 @@
             "description": null,
             "arguments": {
                 "resource": {
-                    "status": "\/api\/3\/picklists\/2a2f34dc-4f3b-4434-aa58-ba995b2bf7c6"
+                    "status": "{{\"ztpfStatus\" | picklist(vars.playbook_status.status, \"@id\")}}"
                 },
                 "operation": "Append",
                 "collection": "{{vars.steps.find_manager[0]['@id']}}",
@@ -196,6 +197,7 @@
             "name": "synch source data",
             "description": "Synch source data of the new data.",
             "arguments": {
+                "when": "{{not vars.playbook_status['error']}}",
                 "arguments": {
                     "record_ids": "{{vars.steps.create_device_records|json_query('[].id')}}"
                 },
@@ -306,7 +308,7 @@
     ],
     "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
     "playbookOrigin": "\/api\/3\/picklists\/b6d710a9-a8ec-41ec-8817-fe9fa062fcdd",
-    "isEditable": false,
+    "isEditable": true,
     "uuid": "fa5eea78-898f-4d08-8d39-f30736803467",
     "owners": [],
     "isPrivate": false,

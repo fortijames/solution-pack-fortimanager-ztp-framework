@@ -1,0 +1,284 @@
+{
+    "@type": "Workflow",
+    "triggerLimit": null,
+    "name": "> find recursive records - ztpfAutomationProfileStep",
+    "aliasName": null,
+    "tag": null,
+    "description": "find all linked records from a record.",
+    "isActive": true,
+    "debug": false,
+    "singleRecordExecution": false,
+    "remoteExecutableFlag": false,
+    "parameters": [
+        "record_ids"
+    ],
+    "synchronous": false,
+    "collection": "\/api\/3\/workflow_collections\/517fb52d-36f5-4bac-a344-7d4599d7dec6",
+    "versions": [],
+    "triggerStep": "\/api\/3\/workflow_steps\/1342c42c-b54e-4105-b5ac-ef65afefc547",
+    "steps": [
+        {
+            "@type": "WorkflowStep",
+            "name": "find root records",
+            "description": "Find root records for recursive search.",
+            "arguments": {
+                "query": {
+                    "sort": [],
+                    "limit": 30,
+                    "logic": "AND",
+                    "filters": [
+                        {
+                            "type": "primitive",
+                            "field": "id",
+                            "value": "{{vars.record_ids}}",
+                            "operator": "in",
+                            "_operator": "in"
+                        }
+                    ],
+                    "__selectFields": [
+                        "ztpfAutomationProfiles",
+                        "id"
+                    ]
+                },
+                "module": "ztpf_automation_profile_steps?$limit=5000&$relationships=true&$fsr_max_relation_count=5000",
+                "checkboxFields": true,
+                "step_variables": []
+            },
+            "status": null,
+            "top": "40",
+            "left": "620",
+            "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928770",
+            "group": null,
+            "uuid": "a701c88a-40d5-4855-9bac-efbc409100c9"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "find ztpfAutomationAction",
+            "description": null,
+            "arguments": {
+                "when": "{{vars.type2record['ztpfAutomationProfileStep']|length > 0}}",
+                "query": {
+                    "sort": [],
+                    "limit": 30,
+                    "logic": "AND",
+                    "filters": [
+                        {
+                            "type": "primitive",
+                            "field": "ztpfAutomationProfileSteps.id.uuid",
+                            "value": "{{vars.type2record['ztpfAutomationProfileStep']}}",
+                            "operator": "in",
+                            "_operator": "in"
+                        }
+                    ],
+                    "__selectFields": [
+                        "id",
+                        "ztpfMetadataSources"
+                    ]
+                },
+                "module": "ztpf_automation_actions?$limit=5000&$relationships=true&$fsr_max_relation_count=5000",
+                "checkboxFields": true,
+                "step_variables": {
+                    "type2record": "{%- set root = vars.steps.find_ztpfAutomationAction -%}\n{%- set ret = vars.type2record -%}\n\n{%- do ret.update({\"ztpfAutomationAction\":\n       ( ret.ztpfAutomationAction \n       + root\n        | json_query('[].id')) | sort | unique\n}) -%}\n\n{%- do ret.update({\"ztpfMetadataSource\":\n       (ret.ztpfMetadataSource \n       + root\n        | json_query('[].ztpfMetadataSources')\n        | json_query('[].id')) | sort | unique\n}) -%}\n\n{{ret}}"
+                }
+            },
+            "status": null,
+            "top": "200",
+            "left": "620",
+            "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928770",
+            "group": null,
+            "uuid": "8ce34c02-5cab-490e-9ff7-845bd242b49a"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "find ztpfTemplate",
+            "description": "Find ztpfTemplate from ztpfAutomationAction",
+            "arguments": {
+                "when": "{{vars.type2record['ztpfAutomationAction']|length > 0}}",
+                "query": {
+                    "sort": [],
+                    "limit": 30,
+                    "logic": "AND",
+                    "filters": [
+                        {
+                            "type": "primitive",
+                            "field": "ztpfAutomationActions.id.uuid",
+                            "value": "{{vars.type2record['ztpfAutomationAction']}}",
+                            "operator": "in",
+                            "_operator": "in"
+                        }
+                    ],
+                    "__selectFields": [
+                        "id",
+                        "ztpfMetadataSources"
+                    ]
+                },
+                "module": "ztpf_templates?$limit=5000&$relationships=true&$fsr_max_relation_count=5000",
+                "checkboxFields": true,
+                "step_variables": {
+                    "type2record": "{%- set root = vars.steps.find_ztpfTemplate -%}\n{%- set ret = vars.type2record -%}\n\n{%- do ret.update({\"ztpfTemplate\":\n       ret.ztpfTemplate \n       + root\n        | json_query('[].id')\n        | sort\n        | unique\n}) -%}\n\n{%- do ret.update({\"ztpfMetadataSource\":\n       (ret.ztpfMetadataSource \n       + root\n        | json_query('[].ztpfMetadataSources')\n        | json_query('[].id')) | sort | unique\n}) -%}\n\n{{ret}}"
+                }
+            },
+            "status": null,
+            "top": "280",
+            "left": "620",
+            "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928770",
+            "group": null,
+            "uuid": "a230daae-6a24-4100-82c1-83cf6c94e5f9"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "initial type2record",
+            "description": "Update ztpfAutomationProfile and ztpfAutomationProfileStep",
+            "arguments": {
+                "type2record": "{%- set ret = vars.type2record -%}\n{%- set root = vars.steps.find_root_records -%}\n\n{%- do ret.update({\"ztpfAutomationProfileStep\":\n       root\n        | json_query('[].id')\n        | sort\n}) -%}\n\n{%- do ret.update({\"ztpfAutomationProfile\":\n       root\n        | json_query('[].ztpfAutomationProfiles.id')\n        | sort\n        | unique\n}) -%}\n\n{{ret}}"
+            },
+            "status": null,
+            "top": "120",
+            "left": "620",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "83fc85ec-b001-4d49-a538-eb77e6ee09ac"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "return",
+            "description": null,
+            "arguments": {
+                "output": "{{vars.type2record}}"
+            },
+            "status": null,
+            "top": "280",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "febffe34-225a-4bd9-a34a-ac1f23270df0"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "setup vars",
+            "description": null,
+            "arguments": {
+                "record_ids": "{%- set in_field = vars.input.params['record_ids'] -%}\n{%- set ret = \"\" -%}\n\n{%- if in_field not in ['',None] -%}\n  {%- if in_field is sequence \n        and in_field is not string \n        and in_field is not integer -%}\n    {%- set ret = in_field -%}\n  {%- else -%}\n    {%- set cmt = in_field | regex_replace('[,\\n]+', ',') -%}\n    {%- set ret = cmt.split(',') -%}\n  {%- endif -%}\n{%- endif -%}\n{{ret|unique}}",
+                "type2record": "{\n  \"ztpfAutomationProfile\":[],\n  \"ztpfAutomationProfileStep\":[],\n  \"ztpfAutomationAction\":[],\n  \"ztpfMetadataSource\":[],\n  \"ztpfTemplate\":[],\n  \"ztpfAutomationAction\":[],\n  \"ztpfAutomationProfile\":[]\n}"
+            },
+            "status": null,
+            "top": "20",
+            "left": "320",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "40ace56f-556c-4d34-9641-604f325fe781"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Start",
+            "description": null,
+            "arguments": {
+                "__triggerLimit": true,
+                "step_variables": {
+                    "input": {
+                        "params": []
+                    }
+                },
+                "triggerOnSource": true,
+                "triggerOnReplicate": false
+            },
+            "status": null,
+            "top": "20",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/b348f017-9a94-471f-87f8-ce88b6a7ad62",
+            "group": null,
+            "uuid": "1342c42c-b54e-4105-b5ac-ef65afefc547"
+        }
+    ],
+    "routes": [
+        {
+            "@type": "WorkflowRoute",
+            "name": "find root records -> next step",
+            "targetStep": "\/api\/3\/workflow_steps\/83fc85ec-b001-4d49-a538-eb77e6ee09ac",
+            "sourceStep": "\/api\/3\/workflow_steps\/a701c88a-40d5-4855-9bac-efbc409100c9",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "0651ace3-5e37-4fa2-a367-5eb1f51e8375"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "find ztpfAutomationAction -> find ztpfTemplate",
+            "targetStep": "\/api\/3\/workflow_steps\/a230daae-6a24-4100-82c1-83cf6c94e5f9",
+            "sourceStep": "\/api\/3\/workflow_steps\/8ce34c02-5cab-490e-9ff7-845bd242b49a",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "9b84b325-0549-43b0-9b4c-e400e12dc660"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "find ztpfTemplate -> return",
+            "targetStep": "\/api\/3\/workflow_steps\/febffe34-225a-4bd9-a34a-ac1f23270df0",
+            "sourceStep": "\/api\/3\/workflow_steps\/a230daae-6a24-4100-82c1-83cf6c94e5f9",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "d3acfaf8-5e5e-4260-9177-b2e08f38fab7"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "initial type2record -> find",
+            "targetStep": "\/api\/3\/workflow_steps\/8ce34c02-5cab-490e-9ff7-845bd242b49a",
+            "sourceStep": "\/api\/3\/workflow_steps\/83fc85ec-b001-4d49-a538-eb77e6ee09ac",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "90a2461a-ed0f-438f-9076-56ee2fe59076"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "setup vars -> find root records",
+            "targetStep": "\/api\/3\/workflow_steps\/a701c88a-40d5-4855-9bac-efbc409100c9",
+            "sourceStep": "\/api\/3\/workflow_steps\/40ace56f-556c-4d34-9641-604f325fe781",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "91010681-8a65-4ba4-a165-ae34c4ccf82e"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Start -> setup vars",
+            "targetStep": "\/api\/3\/workflow_steps\/40ace56f-556c-4d34-9641-604f325fe781",
+            "sourceStep": "\/api\/3\/workflow_steps\/1342c42c-b54e-4105-b5ac-ef65afefc547",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "94fe0334-b280-4f3b-9879-dc1363686e8e"
+        }
+    ],
+    "groups": [
+        {
+            "@type": "WorkflowGroup",
+            "name": "Details",
+            "description": "Find records for ztpfAutomationProfileStep:\n - root with ztpfAutomationProfile\n - ztpfAutomationAction and ztpfMetadataSource\n - ztpfTemplate and ztpfMetadataSource",
+            "type": "note",
+            "isCollapsed": false,
+            "hasTriggerStep": false,
+            "hideInLogs": false,
+            "metadata": [],
+            "reusable": false,
+            "top": "120",
+            "left": "160",
+            "height": "137",
+            "width": "401",
+            "uuid": "25d735dc-de17-4fc1-9323-800f2c993ed6",
+            "recordTags": []
+        }
+    ],
+    "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+    "playbookOrigin": "\/api\/3\/picklists\/b6d710a9-a8ec-41ec-8817-fe9fa062fcdd",
+    "isEditable": true,
+    "uuid": "caa10e03-0192-404a-a1d8-ed75f1b03be3",
+    "owners": [],
+    "isPrivate": false,
+    "deletedAt": null,
+    "recordTags": [
+        "ztpfAutomationProfileStep"
+    ]
+}

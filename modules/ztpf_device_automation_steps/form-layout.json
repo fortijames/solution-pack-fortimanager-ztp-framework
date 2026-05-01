@@ -18,7 +18,19 @@
                                                 {
                                                     "fields": [
                                                         {
+                                                            "name": "device",
+                                                            "highlightMode": true,
+                                                            "linky": true,
+                                                            "readOnly": false
+                                                        },
+                                                        {
                                                             "name": "stepNumber",
+                                                            "highlightMode": true,
+                                                            "linky": true,
+                                                            "readOnly": false
+                                                        },
+                                                        {
+                                                            "name": "ztpfAutomationActions",
                                                             "highlightMode": true,
                                                             "linky": true,
                                                             "readOnly": false
@@ -35,7 +47,13 @@
                                                 {
                                                     "fields": [
                                                         {
-                                                            "name": "ztpfAutomationActions",
+                                                            "name": "stepStartTimestamp",
+                                                            "highlightMode": true,
+                                                            "linky": true,
+                                                            "readOnly": false
+                                                        },
+                                                        {
+                                                            "name": "stepStopTimestamp",
                                                             "highlightMode": true,
                                                             "linky": true,
                                                             "readOnly": false
@@ -61,7 +79,8 @@
             "customTemplateTitle": "ztpfDeviceAutomationSteps",
             "originalTemplateTitle": "ztpfDeviceAutomationSteps"
         },
-        "style": "col-lg-6 col-lg-offset-3 col-md-8 col-md-offset-2 col-sm-10 col-sm-offset-1"
+        "style": "col-lg-6 col-lg-offset-3 col-md-8 col-md-offset-2 col-sm-10 col-sm-offset-1",
+        "actionButtons": []
     },
     "module": "ztpf_device_automation_steps",
     "filters": [],
@@ -69,7 +88,7 @@
     "visible": true,
     "viewOptions": "form",
     "name": "Base Template",
-    "system": false,
+    "system": true,
     "uuid": "modules-ztpf_device_automation_steps-form",
     "newUuid": "09394178-a697-4be9-8a14-d9ff150b0628"
 }

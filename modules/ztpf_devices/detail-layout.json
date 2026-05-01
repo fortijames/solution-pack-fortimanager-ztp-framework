@@ -308,7 +308,7 @@
                                                 "visible": true
                                             },
                                             "icon": "icon icon-details",
-                                            "show": true,
+                                            "show": false,
                                             "visible": true
                                         },
                                         {
@@ -366,7 +366,25 @@
                                                                                         ],
                                                                                         "limit": 30,
                                                                                         "logic": "AND",
-                                                                                        "filters": []
+                                                                                        "filters": [
+                                                                                            {
+                                                                                                "field": "queueStatus",
+                                                                                                "value": [
+                                                                                                    "e9673983-4d60-4c01-b61f-d7d43361f9c3",
+                                                                                                    "91ff63f2-78cd-4bb5-92e3-36c99ec4d2c1",
+                                                                                                    "b2b405dc-97e6-40cd-98bb-9132e37d5b6d"
+                                                                                                ],
+                                                                                                "display": "",
+                                                                                                "operator": "in",
+                                                                                                "type": "array",
+                                                                                                "OPERATOR_KEY": "$",
+                                                                                                "module": "queueStatus",
+                                                                                                "template": "multiselectpicklist",
+                                                                                                "previousOperator": "in",
+                                                                                                "previousTemplate": "multiselectpicklist",
+                                                                                                "useInOperator": true
+                                                                                            }
+                                                                                        ]
                                                                                     }
                                                                                 }
                                                                             }
@@ -424,8 +442,25 @@
                                                                                             }
                                                                                         ],
                                                                                         "limit": 30,
-                                                                                        "logic": "AND",
-                                                                                        "filters": []
+                                                                                        "logic": "OR",
+                                                                                        "filters": [
+                                                                                            {
+                                                                                                "field": "queueStatus",
+                                                                                                "value": [
+                                                                                                    "1e63778c-8a03-4a74-a04f-37ead93d445e"
+                                                                                                ],
+                                                                                                "display": "null",
+                                                                                                "operator": "in",
+                                                                                                "type": "object",
+                                                                                                "OPERATOR_KEY": "$",
+                                                                                                "displayTemplate": "",
+                                                                                                "module": "queueStatus",
+                                                                                                "template": "multiselectpicklist",
+                                                                                                "previousOperator": "in",
+                                                                                                "previousTemplate": "multiselectpicklist",
+                                                                                                "useInOperator": true
+                                                                                            }
+                                                                                        ]
                                                                                     }
                                                                                 }
                                                                             }
@@ -442,7 +477,7 @@
                                                 "visible": true
                                             },
                                             "icon": "icon icon-library",
-                                            "show": false,
+                                            "show": true,
                                             "visible": true
                                         },
                                         {
@@ -813,7 +848,7 @@
     "visible": true,
     "viewOptions": "detail",
     "name": "Base Template",
-    "system": false,
+    "system": true,
     "uuid": "modules-ztpf_devices-detail",
     "newUuid": "092de4e4-ed79-4a32-9b08-1dd107e9f3a6"
 }

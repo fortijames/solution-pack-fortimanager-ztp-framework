@@ -9,6 +9,53 @@
                     {
                         "widgets": [
                             {
+                                "type": "chart",
+                                "config": {
+                                    "wid": "9ba7832e-0860-48b1-a68a-658661200604",
+                                    "widgetAlwaysDisplay": true,
+                                    "showTabularData": false,
+                                    "query": {
+                                        "sort": [],
+                                        "limit": 2147483647,
+                                        "logic": "AND",
+                                        "filters": [],
+                                        "aggregates": [
+                                            {
+                                                "operator": "countdistinct",
+                                                "field": "*",
+                                                "alias": "total"
+                                            },
+                                            {
+                                                "operator": "groupby",
+                                                "alias": "recordTags",
+                                                "field": "recordTags.uuid"
+                                            }
+                                        ]
+                                    },
+                                    "mapping": {
+                                        "fieldName": "recordTags"
+                                    },
+                                    "assignedToSetting": "all",
+                                    "aggregate": true,
+                                    "viewType": "chart",
+                                    "title": "Tags",
+                                    "resource": "ztpf_automation_profile_steps",
+                                    "chart": "pie",
+                                    "widgetAlwaysExpanded": true
+                                }
+                            }
+                        ],
+                        "style": "col-lg-12"
+                    }
+                ],
+                "wid": "915fb6b3-5066-428a-86ed-a27cd23c4e79",
+                "_collapsed": false
+            },
+            {
+                "columns": [
+                    {
+                        "widgets": [
+                            {
                                 "type": "grid",
                                 "config": {
                                     "wid": "b3ea4cf9-8abb-45c0-a859-0469f6e55475",
@@ -27,20 +74,7 @@
                                     "editableFields": false,
                                     "actionButtons": [],
                                     "query": {
-                                        "sort": [
-                                            {
-                                                "direction": "ASC",
-                                                "field": "ztpfAutomationProfiles.name",
-                                                "_fieldTitle": "Automation Profile",
-                                                "_fieldName": "ztpfAutomationProfiles"
-                                            },
-                                            {
-                                                "direction": "ASC",
-                                                "field": "stepSequence",
-                                                "_fieldTitle": "Step Number",
-                                                "_fieldName": "stepSequence"
-                                            }
-                                        ],
+                                        "sort": [],
                                         "limit": 30,
                                         "logic": "AND",
                                         "filters": []
@@ -67,7 +101,7 @@
     "visible": true,
     "viewOptions": "list",
     "name": "Base Template",
-    "system": false,
+    "system": true,
     "uuid": "modules-ztpf_automation_profile_steps-list",
     "newUuid": "94037132-66ff-4d55-8749-738665b3ed5a"
 }

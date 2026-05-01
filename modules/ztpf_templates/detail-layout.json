@@ -41,35 +41,6 @@
                                                                         {
                                                                             "type": "editableFormGroup",
                                                                             "config": {
-                                                                                "wid": "d51cb072-bc6e-46fc-8c4d-cdf3b835c756",
-                                                                                "rows": [
-                                                                                    {
-                                                                                        "columns": [
-                                                                                            {
-                                                                                                "fields": [
-                                                                                                    {
-                                                                                                        "name": "name",
-                                                                                                        "highlightMode": true,
-                                                                                                        "linky": true,
-                                                                                                        "readOnly": false
-                                                                                                    },
-                                                                                                    {
-                                                                                                        "name": "description",
-                                                                                                        "highlightMode": true,
-                                                                                                        "linky": true,
-                                                                                                        "readOnly": false
-                                                                                                    }
-                                                                                                ],
-                                                                                                "style": "col-lg-12"
-                                                                                            }
-                                                                                        ]
-                                                                                    }
-                                                                                ]
-                                                                            }
-                                                                        },
-                                                                        {
-                                                                            "type": "editableFormGroup",
-                                                                            "config": {
                                                                                 "wid": "0bff5842-3d10-4641-8241-68822bbb781f",
                                                                                 "rows": [
                                                                                     {
@@ -124,6 +95,35 @@
                                                                                     }
                                                                                 ]
                                                                             }
+                                                                        },
+                                                                        {
+                                                                            "type": "editableFormGroup",
+                                                                            "config": {
+                                                                                "wid": "d51cb072-bc6e-46fc-8c4d-cdf3b835c756",
+                                                                                "rows": [
+                                                                                    {
+                                                                                        "columns": [
+                                                                                            {
+                                                                                                "fields": [
+                                                                                                    {
+                                                                                                        "name": "name",
+                                                                                                        "highlightMode": true,
+                                                                                                        "linky": true,
+                                                                                                        "readOnly": false
+                                                                                                    },
+                                                                                                    {
+                                                                                                        "name": "description",
+                                                                                                        "highlightMode": true,
+                                                                                                        "linky": true,
+                                                                                                        "readOnly": false
+                                                                                                    }
+                                                                                                ],
+                                                                                                "style": "col-lg-12"
+                                                                                            }
+                                                                                        ]
+                                                                                    }
+                                                                                ]
+                                                                            }
                                                                         }
                                                                     ],
                                                                     "style": "col-lg-3",
@@ -134,14 +134,14 @@
                                                                         {
                                                                             "type": "sectionHeader",
                                                                             "config": {
-                                                                                "wid": "10f6c958-09b2-43be-8e19-e8569479e59c",
+                                                                                "wid": "2f4b1d0e-81f0-47d7-a791-2e9d8517d10c",
                                                                                 "query": {
                                                                                     "filters": [],
                                                                                     "sort": [],
                                                                                     "limit": 10
                                                                                 },
                                                                                 "editorType": "html",
-                                                                                "sectionText": "<p style=\"text-align: center;\"><span style=\"font-size: 14pt;\"><strong>Jinja Script Template<\/strong><\/span><\/p>"
+                                                                                "sectionText": "<p style=\"text-align: center;\"><span style=\"font-size: 14pt;\"><strong>Template<\/strong><\/span><\/p>"
                                                                             }
                                                                         },
                                                                         {
@@ -158,6 +158,12 @@
                                                                                                         "highlightMode": true,
                                                                                                         "linky": true,
                                                                                                         "readOnly": true
+                                                                                                    },
+                                                                                                    {
+                                                                                                        "name": "outputType",
+                                                                                                        "highlightMode": true,
+                                                                                                        "linky": true,
+                                                                                                        "readOnly": true
                                                                                                     }
                                                                                                 ],
                                                                                                 "style": "col-lg-6"
@@ -165,7 +171,7 @@
                                                                                             {
                                                                                                 "fields": [
                                                                                                     {
-                                                                                                        "name": "outputType",
+                                                                                                        "name": "description",
                                                                                                         "highlightMode": true,
                                                                                                         "linky": true,
                                                                                                         "readOnly": true
@@ -176,6 +182,19 @@
                                                                                         ]
                                                                                     }
                                                                                 ]
+                                                                            }
+                                                                        },
+                                                                        {
+                                                                            "type": "sectionHeader",
+                                                                            "config": {
+                                                                                "wid": "10f6c958-09b2-43be-8e19-e8569479e59c",
+                                                                                "query": {
+                                                                                    "filters": [],
+                                                                                    "sort": [],
+                                                                                    "limit": 10
+                                                                                },
+                                                                                "editorType": "html",
+                                                                                "sectionText": "<p style=\"text-align: center;\"><span style=\"font-size: 14pt;\"><strong>Jinja Script<\/strong><\/span><\/p>"
                                                                             }
                                                                         },
                                                                         {
@@ -554,7 +573,7 @@
                                                             "wid": "7998a1eb-939e-46e2-9ea3-3fb5fad245f9",
                                                             "collapsible": true,
                                                             "collapsibleIndex": 0,
-                                                            "_collapsed": false
+                                                            "_collapsed": true
                                                         }
                                                     ]
                                                 },
@@ -772,7 +791,7 @@
     "visible": true,
     "viewOptions": "detail",
     "name": "Base Template",
-    "system": false,
+    "system": true,
     "uuid": "modules-ztpf_templates-detail",
     "newUuid": "b3902708-7c2a-4d31-8017-3132f2a28424"
 }

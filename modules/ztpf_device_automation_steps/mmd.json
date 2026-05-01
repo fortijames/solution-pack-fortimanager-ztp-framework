@@ -286,6 +286,85 @@
             "descriptions": {
                 "singular": "Stop Timestamp"
             }
+        },
+        {
+            "@type": "AttributeMetadata",
+            "type": "picklists",
+            "name": "queueStatus",
+            "length": null,
+            "formType": "picklist",
+            "dataSource": {
+                "model": "picklists",
+                "query": {
+                    "logic": "AND",
+                    "filters": [
+                        {
+                            "field": "listName__name",
+                            "operator": "eq",
+                            "value": "ztpfDeviceStepQueueStatus"
+                        }
+                    ],
+                    "sort": [
+                        {
+                            "field": "orderIndex",
+                            "direction": "ASC"
+                        }
+                    ]
+                },
+                "displayConditions": {
+                    "e9673983-4d60-4c01-b61f-d7d43361f9c3": {
+                        "visibility": "visible",
+                        "conditions": null
+                    },
+                    "91ff63f2-78cd-4bb5-92e3-36c99ec4d2c1": {
+                        "visibility": "visible",
+                        "conditions": null
+                    },
+                    "b2b405dc-97e6-40cd-98bb-9132e37d5b6d": {
+                        "visibility": "visible",
+                        "conditions": null
+                    },
+                    "1e63778c-8a03-4a74-a04f-37ead93d445e": {
+                        "visibility": "visible",
+                        "conditions": null
+                    }
+                }
+            },
+            "searchable": false,
+            "peerReplicable": true,
+            "system": false,
+            "encrypted": false,
+            "gridColumn": true,
+            "collection": false,
+            "inversedField": null,
+            "ownsRelationship": false,
+            "validation": {
+                "required": false,
+                "minlength": 0,
+                "maxlength": 10485761
+            },
+            "bulkAction": {
+                "allow": false,
+                "buttonText": "",
+                "buttonIcon": "",
+                "buttonClass": "btn btn-default btn-sm"
+            },
+            "dataSourceFilters": null,
+            "defaultValue": "\/api\/3\/picklists\/e9673983-4d60-4c01-b61f-d7d43361f9c3",
+            "tooltip": "Queue status of this step.",
+            "visibility": true,
+            "htmlEscape": false,
+            "orphanRemoval": null,
+            "readable": true,
+            "writeable": true,
+            "identifier": null,
+            "unique": false,
+            "recommend": false,
+            "skipSerialization": false,
+            "displayName": "{{ queueStatus }}",
+            "descriptions": {
+                "singular": "Queue Status"
+            }
         }
     ],
     "system": false,
