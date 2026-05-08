@@ -1,0 +1,238 @@
+{
+    "@type": "Workflow",
+    "triggerLimit": null,
+    "name": "> fmg exec task - return standard output of results",
+    "aliasName": null,
+    "tag": null,
+    "description": "Execute a task in FMG, track the task, and return the results.",
+    "isActive": true,
+    "debug": false,
+    "singleRecordExecution": false,
+    "remoteExecutableFlag": false,
+    "parameters": [
+        "connector_config",
+        "exec_url",
+        "exec_payload"
+    ],
+    "synchronous": false,
+    "collection": "\/api\/3\/workflow_collections\/c15a8515-33ae-46d2-9166-fa6fa47ac762",
+    "versions": [],
+    "triggerStep": "\/api\/3\/workflow_steps\/8703d632-9f20-4f4c-bc4b-903bb06adb96",
+    "steps": [
+        {
+            "@type": "WorkflowStep",
+            "name": "analyze task data",
+            "description": null,
+            "arguments": {
+                "task_data_parsed": "{%- macro format_seconds(seconds) -%}\n    {%- set hours = seconds \/\/ 3600 -%}\n    {%- set minutes = (seconds % 3600) \/\/ 60 -%}\n    {%- set remaining_seconds = seconds % 60 -%}\n    {{ hours }}h {{ minutes }}m {{ remaining_seconds }}s\n{%- endmacro -%}\n{%- set empty = ['',Null,None] -%}\n{%- set exec_results = vars.task_data -%}\n{%- set results = {} -%}\n\n{# set the default structure for the return #}\n{%- set _do = results.update( {\n  \"error\":True,\n  \"task_id\":'',\n  \"task_data\":{},\n  \"task_time\": {\n    \"total_seconds\":\"\",\n    \"total_time\":\"\"\n  },\n  \"msg\":\"Task data is empty.\"\n} ) -%}\n\n{%- if exec_results.execute_response.task is defined  -%}\n    {%- set _do = results.update( {\"task_id\":exec_results.execute_response.task} ) -%}\n{%- endif -%}\n\n{%- if exec_results.status is defined \n      and exec_results.task_response is defined \n      and exec_results.task_response|length > 1 -%}\n\n  {# If we look to have task status and task response data we can parse it. #}\n  {%- set _do = results.update( {\"task_data\":exec_results.task_response} ) -%}\n  {%- set start_time = exec_results.task_response.start_tm -%}\n  {%- set end_time = exec_results.task_response.end_tm -%}\n  {%- if end_time == 0 -%}\n    {%- set end_time = arrow.utcnow().int_timestamp -%}\n  {%- endif -%}\n  {%- set total_seconds = end_time-start_time -%}\n  {%- set _do = results.update( { \n                        \"task_time\": {\n                          \"total_seconds\":end_time-start_time,\n                          \"total_time\":format_seconds(total_seconds)\n                       } \n    } ) -%}\n  {%- set line_cnt = 0 -%}  \n  {%- if exec_results.task_response.line not in empty -%}\n    {%- set line_cnt = exec_results.task_response.line|length -%}\n  {%- endif -%}\n  {%- if exec_results.status == 0 -%}\n    {%- set _do = results.update( {\"error\":False} ) -%}\n    {%- set msg = exec_results.task_response.title \n                         + \" ( \" + exec_results.task_response.state|default(\"unknown\") + \" ) \"\n                         + \" -- \" \n                         + exec_results.task_response.line[line_cnt-1].name|default(\"\")\n                         + \" \"\n                         + exec_results.task_response.line[line_cnt-1].detail|default(\"\") -%}\n    {%- set _do = results.update( {\"msg\":msg}) -%}\n    {%- if \"error\" in exec_results.task_response.state -%}\n      {%- set _do = results.update( {\"error\":True} ) -%}\n    {%- endif -%}\n  {%- else -%}\n    {%- set msg = results.msg -%}\n    {%- if exec_results.task_response.msg is defined -%}\n      {%- set msg = exec_results.task_response.msg -%}\n      {%- if line_cnt > 0 -%}\n        {%- set msg = msg \n                           + \" -- \" \n                           + exec_results.task_response.line[line_cnt-1].name|default(\"\")\n                           + \" \"\n                           + exec_results.task_response.line[line_cnt-1].detail|default(\"\") -%}\n      {%- endif -%}\n    {%- endif -%}\n    {%- set _do = results.update( {\"msg\":msg}) -%}\n  {%- endif -%}\n\n{%- else -%}\n  {%- if exec_results.task_response.msg is defined -%}\n    {%- set _do = results.update( {\"msg\":exec_results.task_response.msg}) -%}\n {%- endif -%}\n{%- endif -%}\n{{results}}"
+            },
+            "status": null,
+            "top": "300",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "5bdd2ee9-6004-4ce6-87db-fc7fd3fbcbae"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "exec task",
+            "description": null,
+            "arguments": {
+                "name": "Fortinet FortiManager JSON-RPC",
+                "config": "{{vars.connector_config}}",
+                "params": {
+                    "url": "{{vars.exec_url}}",
+                    "data": "{{vars.exec_payload}}",
+                    "track_task": "{{vars.track_task_flag}}"
+                },
+                "version": "1.1.0",
+                "connector": "fortinet-fortimanager-json-rpc",
+                "operation": "json_rpc_execute",
+                "operationTitle": "JSON RPC Exec",
+                "pickFromTenant": false,
+                "step_variables": []
+            },
+            "status": null,
+            "top": "40",
+            "left": "680",
+            "stepType": "\/api\/3\/workflow_step_types\/0bfed618-0316-11e7-93ae-92361f002671",
+            "group": null,
+            "uuid": "7599f567-8021-4a5f-b566-3a9dde4cb68e"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "exec task data",
+            "description": null,
+            "arguments": {
+                "exec_task_data": "{{vars.steps.exec_task}}"
+            },
+            "status": null,
+            "top": "160",
+            "left": "680",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "438f9cec-d75f-49fc-b1cd-203896ab0b03"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "return",
+            "description": null,
+            "arguments": {
+                "output": "{{vars.task_data_parsed}}",
+                "params": "{{vars.input.params}}",
+                "status": "{%- set ret = vars.status -%}\n\n{%- if vars.task_data_parsed.error -%}\n  {%- do ret.update({\n    \"error\":true,\n    \"message\":vars.task_data_parsed.msg\n  }) -%}\n{%- endif -%}\n\n{{ret}}"
+            },
+            "status": null,
+            "top": "120",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "ae35eca7-4e03-4e68-b533-5eb457a8e798"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "setup env",
+            "description": null,
+            "arguments": {
+                "status": "{# Set a default status #}\n{%- set ret = {} -%}\n{%- do ret.update({\n  \"error\":false,\n  \"message\":\"\"\n}) -%}\n{{ret}}",
+                "exec_url": "{{vars.input.params['exec_url']}}",
+                "exec_payload": "{{vars.input.params['exec_payload']}}",
+                "track_task_flag": "true",
+                "connector_config": "{{vars.input.params['connector_config']}}"
+            },
+            "status": null,
+            "top": "40",
+            "left": "360",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "c287f4ad-1a87-4a81-8fd0-cd6a85df2f24"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Start",
+            "description": null,
+            "arguments": {
+                "__triggerLimit": true,
+                "step_variables": {
+                    "input": {
+                        "params": []
+                    }
+                },
+                "triggerOnSource": true,
+                "triggerOnReplicate": false
+            },
+            "status": null,
+            "top": "40",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/b348f017-9a94-471f-87f8-ce88b6a7ad62",
+            "group": null,
+            "uuid": "8703d632-9f20-4f4c-bc4b-903bb06adb96"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "task data from tracked task",
+            "description": null,
+            "arguments": {
+                "task_data": "{{vars.steps.exec_task.data}}"
+            },
+            "status": null,
+            "top": "300",
+            "left": "680",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "7538b4d0-40e4-42f4-a3e8-7fb9c9f0a8e1"
+        }
+    ],
+    "routes": [
+        {
+            "@type": "WorkflowRoute",
+            "name": "analyze task data -> return",
+            "targetStep": "\/api\/3\/workflow_steps\/ae35eca7-4e03-4e68-b533-5eb457a8e798",
+            "sourceStep": "\/api\/3\/workflow_steps\/5bdd2ee9-6004-4ce6-87db-fc7fd3fbcbae",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "49503735-3efc-4b8b-9387-aee47da2ac19"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "exec task data -> task data from tracked task",
+            "targetStep": "\/api\/3\/workflow_steps\/7538b4d0-40e4-42f4-a3e8-7fb9c9f0a8e1",
+            "sourceStep": "\/api\/3\/workflow_steps\/438f9cec-d75f-49fc-b1cd-203896ab0b03",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "9823b110-cceb-4b63-9fa3-f8e2f1c1ff47"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "exec task -> exec task data",
+            "targetStep": "\/api\/3\/workflow_steps\/438f9cec-d75f-49fc-b1cd-203896ab0b03",
+            "sourceStep": "\/api\/3\/workflow_steps\/7599f567-8021-4a5f-b566-3a9dde4cb68e",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "c0e5194a-2d8f-47d1-ad8c-c6fc2f527311"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "setup env -> exec task",
+            "targetStep": "\/api\/3\/workflow_steps\/7599f567-8021-4a5f-b566-3a9dde4cb68e",
+            "sourceStep": "\/api\/3\/workflow_steps\/c287f4ad-1a87-4a81-8fd0-cd6a85df2f24",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "2dfbacfc-645b-4768-aa77-0e2638d2f7dc"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Start -> setup env",
+            "targetStep": "\/api\/3\/workflow_steps\/c287f4ad-1a87-4a81-8fd0-cd6a85df2f24",
+            "sourceStep": "\/api\/3\/workflow_steps\/8703d632-9f20-4f4c-bc4b-903bb06adb96",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "44fc15ec-8da9-4ab5-b63b-1e769e5a0790"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "task data from tracked task -> analyze task data",
+            "targetStep": "\/api\/3\/workflow_steps\/5bdd2ee9-6004-4ce6-87db-fc7fd3fbcbae",
+            "sourceStep": "\/api\/3\/workflow_steps\/7538b4d0-40e4-42f4-a3e8-7fb9c9f0a8e1",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "5e7205d9-f612-4443-9cca-475944680839"
+        }
+    ],
+    "groups": [
+        {
+            "@type": "WorkflowGroup",
+            "name": "Details",
+            "description": "Run a task with track task enabled. This will monitor the task and if the task is stale it will be aborted and the task will be deleted. \n\nParse the results and add task_time to the results for the caller.",
+            "type": "note",
+            "isCollapsed": false,
+            "hasTriggerStep": false,
+            "hideInLogs": false,
+            "metadata": [],
+            "reusable": false,
+            "top": "120",
+            "left": "320",
+            "height": "179",
+            "width": "327",
+            "uuid": "67b8e692-5505-4e3b-8aad-4e1bc37769c1",
+            "recordTags": []
+        }
+    ],
+    "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+    "playbookOrigin": "\/api\/3\/picklists\/b6d710a9-a8ec-41ec-8817-fe9fa062fcdd",
+    "isEditable": false,
+    "uuid": "ec1c9a17-98b1-40c3-bda5-7e3a9b315e70",
+    "owners": [],
+    "isPrivate": false,
+    "deletedAt": null,
+    "recordTags": [
+        "exec",
+        "fmg_api"
+    ]
+}

@@ -54,7 +54,7 @@
             "description": "overwrite the inputs if needed.",
             "arguments": {
                 "api_url": "{{vars.input.params['api_url']}}",
-                "api_fields": "{{vars.input.params['api_fields']}}",
+                "api_fields": "{%- set in_field = vars.input.params['api_fields'] -%}\n{%- set ret = '' -%}\n\n{%- if in_field not in ['',None] -%}\n  {%- if in_field is sequence and in_field is not string -%}\n    {% set ret = in_field %}\n  {%- else -%}\n    {%- set cmt = in_field | regex_replace('[,\\n]+', ',') -%}\n    {%- set ret = cmt.split(',') | list -%}\n  {%- endif -%}\n{%- endif -%}\n\n{{ret}}",
                 "api_filter": "{%- set inf = vars.input.params['api_filter'] -%}\n\n{%- if inf in ['',None] -%}\n  {%- set inf = [] -%}\n{%- endif -%}\n\n{{inf}}",
                 "api_loadsub": "{%- set d = vars.input.params['api_loadsub'] -%} \n{%- if d in ['',None] -%}\n1\n{%- else -%}\n{{d}}\n{%- endif -%}",
                 "api_options": "{%- set ino = vars.input.params['api_options'] -%}\n\n{%- if ino in ['',None] -%}\n  {%- set ino = [] -%}\n{%- endif -%}\n\n{{ino}}"
@@ -189,6 +189,8 @@
     "isPrivate": false,
     "deletedAt": null,
     "recordTags": [
-        "fmg_api"
+        "fmg_api",
+        "get",
+        "table"
     ]
 }

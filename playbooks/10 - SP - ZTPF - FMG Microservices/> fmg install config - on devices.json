@@ -1,0 +1,236 @@
+{
+    "@type": "Workflow",
+    "triggerLimit": null,
+    "name": "> fmg install config - on devices",
+    "aliasName": null,
+    "tag": null,
+    "description": "Exec install config on a device list in the form of fg1,fg2,fg3 or fg1:vdom1,fg2:vdom1,fg3:vdoma or fg1:vdom1,fg2,fg3",
+    "isActive": true,
+    "debug": false,
+    "singleRecordExecution": false,
+    "remoteExecutableFlag": false,
+    "parameters": [
+        "connector_config",
+        "adom",
+        "devices",
+        "flags"
+    ],
+    "synchronous": false,
+    "collection": "\/api\/3\/workflow_collections\/c15a8515-33ae-46d2-9166-fa6fa47ac762",
+    "versions": [],
+    "triggerStep": "\/api\/3\/workflow_steps\/76097c06-f681-4184-9210-69174f093cca",
+    "steps": [
+        {
+            "@type": "WorkflowStep",
+            "name": "device_scope",
+            "description": null,
+            "arguments": {
+                "device_scope": "{%- for dev in vars.device_list -%}\n{%- set name = dev.split(\":\") -%}\n{\n  \"name\":\"{{name[0]}}\",\n  \"vdom\":\"{{name[1]|default('root')}}\"\n},\n{%- endfor -%}",
+                "device_scope_test": "[{\n  \"name\": \"FG1\",\n  \"vdom\": \"root\"\n},\n{\n  \"name\": \"FG2\",\n  \"vdom\": \"root\"\n},\n{\n  \"name\": \"FG3\",\n  \"vdom\": \"root\"\n}]"
+            },
+            "status": null,
+            "top": "120",
+            "left": "880",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "85e510a3-d0b9-4960-a453-5e8b04d98db1"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "exec_payload",
+            "description": null,
+            "arguments": {
+                "fmg_data_payload": "{%- set data = {\n    \"adom\": vars.input.params.adom,\n    \"scope\": vars.device_scope\n}\n-%}\n\n{%- if vars.flags -%}\n  {%- do data.update({\"flags\":vars.flags}) -%}\n{%- endif -%}\n\n{\n  \"data\":{{data}}\n}"
+            },
+            "status": null,
+            "top": "200",
+            "left": "880",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "d1b68779-d39c-43d3-8574-067590cefb5a"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "exec task",
+            "description": null,
+            "arguments": {
+                "arguments": {
+                    "exec_url": "{{vars.exec_url}}",
+                    "exec_payload": "{{vars.fmg_data_payload}}",
+                    "connector_config": "{{vars.input.params['connector_config']}}"
+                },
+                "apply_async": false,
+                "step_variables": [],
+                "pass_parent_env": false,
+                "pass_input_record": false,
+                "workflowReference": "\/api\/3\/workflows\/ec1c9a17-98b1-40c3-bda5-7e3a9b315e70"
+            },
+            "status": null,
+            "top": "240",
+            "left": "440",
+            "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
+            "group": null,
+            "uuid": "7999fc53-b303-4d1c-93d8-d6fb4a02fa80"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "extract task data",
+            "description": null,
+            "arguments": {
+                "exec_status": "{{vars.steps.exec_task.status}}",
+                "exec_results": "{{vars.steps.exec_task.output}}"
+            },
+            "status": null,
+            "top": "200",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "baa012ad-d460-4d7d-b400-7beac5539a57"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "return",
+            "description": null,
+            "arguments": {
+                "output": "{{vars.exec_results}}",
+                "params": "{{vars.input.params}}",
+                "status": "{{vars.exec_status}}"
+            },
+            "status": null,
+            "top": "120",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "bf28fc72-40d5-442a-ad3e-0f2f0561319f"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "setup_input",
+            "description": null,
+            "arguments": {
+                "flags": "{%- set in_field = vars.input.params.flags -%}\n{%- set ret = '' -%}\n\n{%- if in_field not in ['',None] -%}\n  {%- if in_field is sequence and in_field is not string -%}\n    {% set ret = in_field %}\n  {%- else -%}\n    {%- set cmt = in_field | regex_replace('[,\\n]+', ',') -%}\n    {%- set ret = cmt.split(',') | list -%}\n  {%- endif -%}\n{%- endif -%}\n\n{{ret}}",
+                "exec_url": "\/securityconsole\/install\/device",
+                "device_list": "{{vars.input.params.devices.split(\",\")}}"
+            },
+            "status": null,
+            "top": "40",
+            "left": "880",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "b49e1bc1-d876-42a8-8fe4-fc8f097f3f62"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Start",
+            "description": null,
+            "arguments": {
+                "__triggerLimit": true,
+                "step_variables": {
+                    "input": {
+                        "params": []
+                    }
+                },
+                "triggerOnSource": true,
+                "triggerOnReplicate": false
+            },
+            "status": null,
+            "top": "40",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/b348f017-9a94-471f-87f8-ce88b6a7ad62",
+            "group": null,
+            "uuid": "76097c06-f681-4184-9210-69174f093cca"
+        }
+    ],
+    "routes": [
+        {
+            "@type": "WorkflowRoute",
+            "name": "device_scope -> exec_payload",
+            "targetStep": "\/api\/3\/workflow_steps\/d1b68779-d39c-43d3-8574-067590cefb5a",
+            "sourceStep": "\/api\/3\/workflow_steps\/85e510a3-d0b9-4960-a453-5e8b04d98db1",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "62c37422-9b96-431e-a0fd-aa0ba362c983"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "exec_payload -> exec task",
+            "targetStep": "\/api\/3\/workflow_steps\/7999fc53-b303-4d1c-93d8-d6fb4a02fa80",
+            "sourceStep": "\/api\/3\/workflow_steps\/d1b68779-d39c-43d3-8574-067590cefb5a",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "f7b057f0-50b4-4df6-a97a-b14489970313"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "exec task -> extract task data",
+            "targetStep": "\/api\/3\/workflow_steps\/baa012ad-d460-4d7d-b400-7beac5539a57",
+            "sourceStep": "\/api\/3\/workflow_steps\/7999fc53-b303-4d1c-93d8-d6fb4a02fa80",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "2ac96c43-84e4-40fb-9299-19073cbacb32"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "extract task data -> return",
+            "targetStep": "\/api\/3\/workflow_steps\/bf28fc72-40d5-442a-ad3e-0f2f0561319f",
+            "sourceStep": "\/api\/3\/workflow_steps\/baa012ad-d460-4d7d-b400-7beac5539a57",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "cac9f54c-bb3e-493c-9f71-8380d3b99959"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "setup_input -> device_scope",
+            "targetStep": "\/api\/3\/workflow_steps\/85e510a3-d0b9-4960-a453-5e8b04d98db1",
+            "sourceStep": "\/api\/3\/workflow_steps\/b49e1bc1-d876-42a8-8fe4-fc8f097f3f62",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "2e9c13bc-2e2d-461d-af77-c4a888aa1148"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Start -> setup_input",
+            "targetStep": "\/api\/3\/workflow_steps\/b49e1bc1-d876-42a8-8fe4-fc8f097f3f62",
+            "sourceStep": "\/api\/3\/workflow_steps\/76097c06-f681-4184-9210-69174f093cca",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "1c7dbbc6-824d-4038-afa0-8449eb1722fb"
+        }
+    ],
+    "groups": [
+        {
+            "@type": "WorkflowGroup",
+            "name": "Details",
+            "description": "Create a payload to run against \/securityconsole\/install\/device using the playbook *fmg exec task - return standard output of results*.",
+            "type": "note",
+            "isCollapsed": false,
+            "hasTriggerStep": false,
+            "hideInLogs": false,
+            "metadata": [],
+            "reusable": false,
+            "top": "100",
+            "left": "380",
+            "height": "125",
+            "width": "394",
+            "uuid": "d9f580ff-0e69-44fb-b042-9de45ced86b3",
+            "recordTags": []
+        }
+    ],
+    "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+    "playbookOrigin": "\/api\/3\/picklists\/b6d710a9-a8ec-41ec-8817-fe9fa062fcdd",
+    "isEditable": false,
+    "uuid": "73db1cb9-d57a-4895-84f5-1b76caba9704",
+    "owners": [],
+    "isPrivate": false,
+    "deletedAt": null,
+    "recordTags": [
+        "exec",
+        "fmg_api"
+    ]
+}

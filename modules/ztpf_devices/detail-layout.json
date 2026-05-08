@@ -347,11 +347,15 @@
                                                                                     "ztpfDeviceAutomationSteps": {
                                                                                         "columns": [],
                                                                                         "checkBox": false
+                                                                                    },
+                                                                                    "ztpfDeviceAutomtionSteps": {
+                                                                                        "columns": [],
+                                                                                        "checkBox": false
                                                                                     }
                                                                                 },
                                                                                 "enableHorizontalScroll": [],
                                                                                 "includes": [
-                                                                                    "ztpfDeviceAutomationSteps"
+                                                                                    "ztpfDeviceAutomtionSteps"
                                                                                 ],
                                                                                 "queryFilters": {
                                                                                     "ztpf_device_automation_steps": {
@@ -365,24 +369,14 @@
                                                                                             }
                                                                                         ],
                                                                                         "limit": 30,
-                                                                                        "logic": "AND",
+                                                                                        "logic": "OR",
                                                                                         "filters": [
                                                                                             {
-                                                                                                "field": "queueStatus",
-                                                                                                "value": [
-                                                                                                    "e9673983-4d60-4c01-b61f-d7d43361f9c3",
-                                                                                                    "91ff63f2-78cd-4bb5-92e3-36c99ec4d2c1",
-                                                                                                    "b2b405dc-97e6-40cd-98bb-9132e37d5b6d"
-                                                                                                ],
-                                                                                                "display": "",
-                                                                                                "operator": "in",
-                                                                                                "type": "array",
-                                                                                                "OPERATOR_KEY": "$",
-                                                                                                "module": "queueStatus",
-                                                                                                "template": "multiselectpicklist",
-                                                                                                "previousOperator": "in",
-                                                                                                "previousTemplate": "multiselectpicklist",
-                                                                                                "useInOperator": true
+                                                                                                "field": "stepDone",
+                                                                                                "operator": "neq",
+                                                                                                "_operator": "neq",
+                                                                                                "value": true,
+                                                                                                "type": "primitive"
                                                                                             }
                                                                                         ]
                                                                                     }
@@ -424,11 +418,15 @@
                                                                                     "ztpfDeviceAutomationSteps": {
                                                                                         "columns": [],
                                                                                         "checkBox": false
+                                                                                    },
+                                                                                    "ztpfDeviceAutomtionSteps": {
+                                                                                        "columns": [],
+                                                                                        "checkBox": false
                                                                                     }
                                                                                 },
                                                                                 "enableHorizontalScroll": [],
                                                                                 "includes": [
-                                                                                    "ztpfDeviceAutomationSteps"
+                                                                                    "ztpfDeviceAutomtionSteps"
                                                                                 ],
                                                                                 "queryFilters": {
                                                                                     "ztpf_device_automation_steps": {
@@ -445,20 +443,11 @@
                                                                                         "logic": "OR",
                                                                                         "filters": [
                                                                                             {
-                                                                                                "field": "queueStatus",
-                                                                                                "value": [
-                                                                                                    "1e63778c-8a03-4a74-a04f-37ead93d445e"
-                                                                                                ],
-                                                                                                "display": "null",
-                                                                                                "operator": "in",
-                                                                                                "type": "object",
-                                                                                                "OPERATOR_KEY": "$",
-                                                                                                "displayTemplate": "",
-                                                                                                "module": "queueStatus",
-                                                                                                "template": "multiselectpicklist",
-                                                                                                "previousOperator": "in",
-                                                                                                "previousTemplate": "multiselectpicklist",
-                                                                                                "useInOperator": true
+                                                                                                "field": "stepDone",
+                                                                                                "operator": "eq",
+                                                                                                "_operator": "eq",
+                                                                                                "value": true,
+                                                                                                "type": "primitive"
                                                                                             }
                                                                                         ]
                                                                                     }

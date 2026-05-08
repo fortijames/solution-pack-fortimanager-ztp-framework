@@ -47,7 +47,7 @@
             "inversedField": null,
             "ownsRelationship": false,
             "validation": {
-                "required": true,
+                "required": false,
                 "minlength": 0,
                 "maxlength": 10485761,
                 "_enableRange": false
@@ -517,7 +517,8 @@
             "validation": {
                 "required": false,
                 "minlength": 0,
-                "maxlength": 10485761
+                "maxlength": 10485761,
+                "_enableRange": false
             },
             "bulkAction": {
                 "allow": false,
@@ -896,47 +897,6 @@
         },
         {
             "@type": "AttributeMetadata",
-            "type": "ztpf_metadata_devices",
-            "name": "ztpfMetadataDevices",
-            "length": null,
-            "formType": "oneToMany",
-            "dataSource": {
-                "model": "ztpf_metadata_devices"
-            },
-            "searchable": false,
-            "peerReplicable": true,
-            "system": false,
-            "encrypted": false,
-            "gridColumn": false,
-            "collection": true,
-            "inversedField": "ztpfDevices",
-            "ownsRelationship": true,
-            "validation": {
-                "required": false,
-                "minlength": 0,
-                "maxlength": 10485761,
-                "_enableRange": false
-            },
-            "bulkAction": [],
-            "dataSourceFilters": null,
-            "defaultValue": null,
-            "tooltip": null,
-            "visibility": true,
-            "htmlEscape": false,
-            "orphanRemoval": null,
-            "readable": true,
-            "writeable": true,
-            "identifier": null,
-            "unique": false,
-            "recommend": false,
-            "skipSerialization": false,
-            "displayName": "{{ ztpfMetadataDevices }}",
-            "descriptions": {
-                "singular": "Metadata Records"
-            }
-        },
-        {
-            "@type": "AttributeMetadata",
             "type": "object",
             "name": "metadata",
             "length": null,
@@ -981,58 +941,12 @@
         },
         {
             "@type": "AttributeMetadata",
-            "type": "ztpf_automation_profiles",
-            "name": "ztpfAutomationProfiles",
-            "length": null,
-            "formType": "lookup",
-            "dataSource": {
-                "model": "ztpf_automation_profiles"
-            },
-            "searchable": false,
-            "peerReplicable": true,
-            "system": false,
-            "encrypted": false,
-            "gridColumn": false,
-            "collection": false,
-            "inversedField": null,
-            "ownsRelationship": false,
-            "validation": {
-                "required": false,
-                "minlength": 0,
-                "maxlength": 10485761,
-                "_enableRange": false
-            },
-            "bulkAction": {
-                "allow": false,
-                "buttonText": "",
-                "buttonIcon": "",
-                "buttonClass": "btn btn-default btn-sm"
-            },
-            "dataSourceFilters": null,
-            "defaultValue": null,
-            "tooltip": null,
-            "visibility": true,
-            "htmlEscape": false,
-            "orphanRemoval": null,
-            "readable": true,
-            "writeable": true,
-            "identifier": null,
-            "unique": false,
-            "recommend": false,
-            "skipSerialization": false,
-            "displayName": "{{ ztpfAutomationProfiles }}",
-            "descriptions": {
-                "singular": "Automation Profile"
-            }
-        },
-        {
-            "@type": "AttributeMetadata",
-            "type": "ztpf_device_automation_steps",
-            "name": "ztpfDeviceAutomationSteps",
+            "type": "ztpf_metadata_devices",
+            "name": "ztpfMetadataDevices",
             "length": null,
             "formType": "oneToMany",
             "dataSource": {
-                "model": "ztpf_device_automation_steps"
+                "model": "ztpf_metadata_devices"
             },
             "searchable": false,
             "peerReplicable": true,
@@ -1061,9 +975,9 @@
             "unique": false,
             "recommend": false,
             "skipSerialization": false,
-            "displayName": "{{ ztpfDeviceAutomationSteps }}",
+            "displayName": "{{ ztpfMetadataDevices }}",
             "descriptions": {
-                "singular": "Automation Steps"
+                "singular": "Metadata Records"
             }
         },
         {
@@ -1105,6 +1019,46 @@
             "displayName": "{{ comments }}",
             "descriptions": {
                 "singular": "Comments"
+            }
+        },
+        {
+            "@type": "AttributeMetadata",
+            "type": "ztpf_device_automation_steps",
+            "name": "ztpfDeviceAutomtionSteps",
+            "length": null,
+            "formType": "oneToMany",
+            "dataSource": {
+                "model": "ztpf_device_automation_steps"
+            },
+            "searchable": false,
+            "peerReplicable": true,
+            "system": false,
+            "encrypted": false,
+            "gridColumn": false,
+            "collection": true,
+            "inversedField": "ztpfDevices",
+            "ownsRelationship": false,
+            "validation": {
+                "required": false,
+                "minlength": 0,
+                "maxlength": 10485761
+            },
+            "bulkAction": [],
+            "dataSourceFilters": null,
+            "defaultValue": null,
+            "tooltip": null,
+            "visibility": true,
+            "htmlEscape": false,
+            "orphanRemoval": null,
+            "readable": true,
+            "writeable": true,
+            "identifier": null,
+            "unique": false,
+            "recommend": false,
+            "skipSerialization": false,
+            "displayName": "{{ ztpfDeviceAutomtionSteps }}",
+            "descriptions": {
+                "singular": "ztpfDeviceAutomtionSteps"
             }
         }
     ],

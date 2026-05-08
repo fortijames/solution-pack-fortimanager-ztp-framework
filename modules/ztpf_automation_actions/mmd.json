@@ -725,7 +725,8 @@
             "validation": {
                 "required": false,
                 "minlength": 0,
-                "maxlength": 10485761
+                "maxlength": 10485761,
+                "_enableRange": false
             },
             "bulkAction": {
                 "allow": false,
@@ -735,7 +736,7 @@
             },
             "dataSourceFilters": null,
             "defaultValue": null,
-            "tooltip": null,
+            "tooltip": "Example jinja vars from a test run.",
             "visibility": true,
             "htmlEscape": false,
             "orphanRemoval": null,
@@ -753,7 +754,7 @@
         {
             "@type": "AttributeMetadata",
             "type": "string",
-            "name": "exampleOutputText",
+            "name": "exampleScriptRendered",
             "length": null,
             "formType": "textarea",
             "dataSource": null,
@@ -768,7 +769,8 @@
             "validation": {
                 "required": false,
                 "minlength": 0,
-                "maxlength": 10485761
+                "maxlength": 10485761,
+                "_enableRange": false
             },
             "bulkAction": {
                 "allow": false,
@@ -777,7 +779,7 @@
                 "buttonClass": "btn btn-default btn-sm"
             },
             "dataSourceFilters": null,
-            "defaultValue": null,
+            "defaultValue": "Example of a script being rendered with jinja vars.",
             "tooltip": null,
             "visibility": true,
             "htmlEscape": false,
@@ -788,9 +790,9 @@
             "unique": false,
             "recommend": false,
             "skipSerialization": false,
-            "displayName": "{{ exampleOutputText }}",
+            "displayName": "{{ exampleScriptRendered }}",
             "descriptions": {
-                "singular": "Example Output Text"
+                "singular": "Example Script Rendered"
             }
         },
         {
@@ -873,6 +875,130 @@
             "displayName": "{{ ztpfDeviceAutomationSteps }}",
             "descriptions": {
                 "singular": "Device Automation Steps"
+            }
+        },
+        {
+            "@type": "AttributeMetadata",
+            "type": "picklists",
+            "name": "actionOutputType",
+            "length": null,
+            "formType": "picklist",
+            "dataSource": {
+                "model": "picklists",
+                "query": {
+                    "logic": "AND",
+                    "filters": [
+                        {
+                            "field": "listName__name",
+                            "operator": "eq",
+                            "value": "ztpfOutputType"
+                        }
+                    ],
+                    "sort": [
+                        {
+                            "field": "orderIndex",
+                            "direction": "ASC"
+                        }
+                    ]
+                },
+                "displayConditions": {
+                    "d859d6fd-cef6-431a-b4f6-fbcd90c9a654": {
+                        "visibility": "visible",
+                        "conditions": null
+                    },
+                    "9c5462d7-049f-4853-90a8-6fa9ff5d3dab": {
+                        "visibility": "visible",
+                        "conditions": null
+                    },
+                    "a8bba5aa-e243-4f61-9b9e-c222fc368be6": {
+                        "visibility": "visible",
+                        "conditions": null
+                    },
+                    "93f7971d-50c3-4e9b-9c86-d1cf2aa41256": {
+                        "visibility": "visible",
+                        "conditions": null
+                    }
+                }
+            },
+            "searchable": false,
+            "peerReplicable": true,
+            "system": false,
+            "encrypted": false,
+            "gridColumn": false,
+            "collection": false,
+            "inversedField": null,
+            "ownsRelationship": false,
+            "validation": {
+                "required": false,
+                "minlength": 0,
+                "maxlength": 10485761,
+                "_enableRange": false
+            },
+            "bulkAction": {
+                "allow": false,
+                "buttonText": "",
+                "buttonIcon": "",
+                "buttonClass": "btn btn-default btn-sm"
+            },
+            "dataSourceFilters": null,
+            "defaultValue": "\/api\/3\/picklists\/d859d6fd-cef6-431a-b4f6-fbcd90c9a654",
+            "tooltip": "The output expected from running this automation.",
+            "visibility": true,
+            "htmlEscape": false,
+            "orphanRemoval": null,
+            "readable": true,
+            "writeable": true,
+            "identifier": null,
+            "unique": false,
+            "recommend": false,
+            "skipSerialization": false,
+            "displayName": "{{ actionOutputType }}",
+            "descriptions": {
+                "singular": "Action Output Type"
+            }
+        },
+        {
+            "@type": "AttributeMetadata",
+            "type": "string",
+            "name": "inputParameters",
+            "length": null,
+            "formType": "textarea",
+            "dataSource": null,
+            "searchable": true,
+            "peerReplicable": true,
+            "system": false,
+            "encrypted": false,
+            "gridColumn": false,
+            "collection": false,
+            "inversedField": null,
+            "ownsRelationship": false,
+            "validation": {
+                "required": false,
+                "minlength": 0,
+                "maxlength": 10485761,
+                "_enableRange": false
+            },
+            "bulkAction": {
+                "allow": false,
+                "buttonText": "",
+                "buttonIcon": "",
+                "buttonClass": "btn btn-default btn-sm"
+            },
+            "dataSourceFilters": null,
+            "defaultValue": "",
+            "tooltip": "Input fields that can be used in jinja under input.<fieldname> in your jinja script if needed.",
+            "visibility": true,
+            "htmlEscape": false,
+            "orphanRemoval": null,
+            "readable": true,
+            "writeable": true,
+            "identifier": null,
+            "unique": false,
+            "recommend": false,
+            "skipSerialization": false,
+            "displayName": "{{ inputParameters }}",
+            "descriptions": {
+                "singular": "Input Parameters"
             }
         }
     ],

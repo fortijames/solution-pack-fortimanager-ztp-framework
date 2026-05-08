@@ -4,7 +4,7 @@
     "name": "Get Metadata Source Data on Device",
     "aliasName": null,
     "tag": null,
-    "description": "Get the metasource data on a device for this record.",
+    "description": "Render any jinja in the config and get the metasource data on a device for this record.",
     "isActive": true,
     "debug": false,
     "singleRecordExecution": false,
@@ -34,11 +34,37 @@
                 "step_variables": []
             },
             "status": null,
-            "top": "380",
+            "top": "520",
             "left": "40",
             "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928722",
             "group": null,
             "uuid": "f734fbac-e00b-4cce-8af9-bc7b613cf07c"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "cancel or timeout",
+            "description": null,
+            "arguments": [],
+            "status": null,
+            "top": "120",
+            "left": "-80",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": "\/api\/3\/workflow_groups\/4c46b8fc-5442-46bd-80ae-51a1e17305b5",
+            "uuid": "dcd708a5-f3cd-4fd7-9e47-54437a2d5027"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "create device options",
+            "description": null,
+            "arguments": {
+                "manager_and_device_options": "{%- set recs = vars.steps.find_devices_with_manager -%}\n{%- set src = [] -%}\n{%- set mdb = [] -%}\n\n{%- for s in recs -%}\n  {%- set n = s -%}\n  {%- set m = s.ztpfManagers.name\n                  + \" (\"\n                  + s.ztpfManagers.firmware.split(' ')[0]\n                  + \")\"\n  -%}\n  {%- set d = s.name\n                  + \" (\"\n                  + s.platform\n                  + \")\"\n  -%}\n  {%- do n.update({\n    \"_option_mgr\":m,\n    \"_option_dev\":d\n  }) -%}\n  {%- do src.append(n) -%}\n{%- endfor -%}\n\n{%- set managers = src|json_query('[]._option_mgr')|unique -%}\n{%- for m in managers|sort  -%}\n  {%- set o = {} -%}\n  {%- do o.update({\n    \"value\":m,\n    \"options\": src \n        | json_query('[?_option_mgr==`{}`]'.format(m))\n        | json_query('[]._option_dev') | sort\n  }) -%}\n  {%- do mdb.append(o) -%}\n{%- endfor -%}\n\n{\n\"opts\": {{mdb}},\n \"src\": {{src}}\n}"
+            },
+            "status": null,
+            "top": "140",
+            "left": "260",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": "\/api\/3\/workflow_groups\/4c46b8fc-5442-46bd-80ae-51a1e17305b5",
+            "uuid": "dd8e5a48-a539-4fb5-9785-14b956ae36c8"
         },
         {
             "@type": "WorkflowStep",
@@ -48,59 +74,53 @@
                 "metadata_returned": "{{vars.steps.get_jinja_vars.output.data[vars.datakey]}}"
             },
             "status": null,
-            "top": "420",
-            "left": "1000",
+            "top": "540",
+            "left": "380",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
             "uuid": "2311a5fa-81c7-4770-853f-f6724100b7e5"
         },
         {
             "@type": "WorkflowStep",
-            "name": "find devices",
+            "name": "device option selected",
+            "description": null,
+            "arguments": {
+                "device_option_selected": "{%- set m = vars.user_device_selection[0] -%}\n{%- set d = vars.user_device_selection[1] -%}\n\n{%- set ret = vars.manager_and_device_options.src \n        | json_query('[?_option_mgr==`{}`]'.format(m))\n        | json_query('[?_option_dev==`{}`]'.format(d))\n        | json_query('[]')\n-%}\n\n{{ret[0]}}"
+            },
+            "status": null,
+            "top": "340",
+            "left": "260",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": "\/api\/3\/workflow_groups\/4c46b8fc-5442-46bd-80ae-51a1e17305b5",
+            "uuid": "33dcf55e-4cf9-4d48-bad6-d01c647a26e7"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "find devices with manager",
             "description": null,
             "arguments": {
                 "query": {
-                    "sort": [
-                        {
-                            "field": "name",
-                            "direction": "ASC",
-                            "_fieldName": "name",
-                            "_fieldTitle": "Name"
-                        }
-                    ],
+                    "sort": [],
                     "limit": 30,
                     "logic": "AND",
-                    "filters": [
-                        {
-                            "type": "object",
-                            "field": "ztpfManagers",
-                            "value": "{{vars.steps.Pick_Manager.input.manager['@id']}}",
-                            "_value": {
-                                "@id": "{{vars.steps.Pick_Manager.input.manager['@id']}}",
-                                "display": "FMGBP",
-                                "itemValue": ""
-                            },
-                            "operator": "eq"
-                        }
-                    ],
+                    "filters": [],
                     "__selectFields": [
-                        "id",
+                        "ztpfManagers",
                         "name",
+                        "id",
                         "platform"
                     ]
                 },
                 "module": "ztpf_devices?$limit=5000",
                 "checkboxFields": true,
-                "step_variables": {
-                    "device_list": "{%- set table = [] -%}\n{%- for d in vars.steps.find_devices -%}\n  {%- if d.name and d.platform -%}\n    {%- set rec = d -%}\n    {%- do rec.update(\n      {\"pick_option\":d.name + \" (\" + d.platform + \")\"}\n    )-%}\n    {%- do table.append(rec) -%}\n  {%- endif -%}\n{%- endfor -%}\n{{table}}"
-                }
+                "step_variables": []
             },
             "status": null,
-            "top": "51",
-            "left": "348",
+            "top": "56",
+            "left": "263",
             "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928770",
-            "group": "\/api\/3\/workflow_groups\/b8b66120-16c1-4a34-8b4c-7cca4b85f35f",
-            "uuid": "02fffda5-a208-44d0-8b13-eb433cbe5415"
+            "group": "\/api\/3\/workflow_groups\/4c46b8fc-5442-46bd-80ae-51a1e17305b5",
+            "uuid": "8a380a42-2362-459d-a044-37f03c7f8874"
         },
         {
             "@type": "WorkflowStep",
@@ -108,7 +128,7 @@
             "description": null,
             "arguments": {
                 "arguments": {
-                    "device_id": "{{vars.device_picked[0].id}}",
+                    "device_id": "{{vars.device_option_selected.id}}",
                     "metadata_source_ids": "{{vars.input.records[0].id}}"
                 },
                 "apply_async": false,
@@ -118,145 +138,44 @@
                 "workflowReference": "\/api\/3\/workflows\/05070bbe-a848-4286-8f33-269ed1a943b0"
             },
             "status": null,
-            "top": "340",
-            "left": "1000",
+            "top": "480",
+            "left": "920",
             "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
             "group": null,
             "uuid": "c478619b-4c6e-4607-9283-ccf1cde620c3"
         },
         {
             "@type": "WorkflowStep",
-            "name": "Pick Device",
+            "name": "pick a manager and device",
             "description": null,
             "arguments": {
                 "type": "InputBased",
                 "input": {
                     "schema": {
-                        "title": "Pick a Device",
-                        "description": "Choose a Device from below:",
+                        "title": "Choose a Manager and a Device",
+                        "description": "Choose a Manager and then a Device from below:",
                         "inputVariables": [
                             {
-                                "name": "device",
+                                "name": "managerAndDevice",
                                 "type": "array",
-                                "label": "Device",
+                                "label": "Manager and Device",
                                 "title": "Dynamic List",
                                 "usable": true,
-                                "options": "{{vars.device_list|json_query('[].pick_option')}}",
-                                "tooltip": "Select a Device to Render",
+                                "options": "{{vars.manager_and_device_options[\"opts\"]}}",
+                                "tooltip": "",
                                 "dataType": "dynamicList",
                                 "formType": "dynamicList",
-                                "required": true,
-                                "_expanded": true,
-                                "mmdUpdate": true,
-                                "collection": false,
-                                "dataSource": [],
-                                "isMultiple": false,
-                                "searchable": false,
-                                "templateUrl": "app\/components\/form\/fields\/dynamicList.html",
-                                "defaultValue": null,
-                                "_previousName": "device",
-                                "playbookField": true,
-                                "requiredQuery": [],
-                                "displayTemplate": "%7B%7B%20name%20%7D%7D",
-                                "lengthConstraint": true,
-                                "responseSelected": [],
-                                "allowedEncryption": false,
-                                "allowedGridColumn": false,
-                                "requiredCondition": "required",
-                                "jinjaExpressionView": true,
-                                "useRecordFieldDefault": false,
-                                "_addRequiredConditions": true
-                            }
-                        ]
-                    }
-                },
-                "record": "",
-                "timeout": {
-                    "minutes": 1,
-                    "step_iri": "\/api\/3\/workflow_steps\/8cd6a27f-87c4-406e-ade9-7d670468d107"
-                },
-                "agent_id": null,
-                "resources": "ztpf_metadata_sources",
-                "is_approval": false,
-                "owner_detail": {
-                    "isAssigned": false,
-                    "emailRecipients": ""
-                },
-                "isRecordLinked": false,
-                "step_variables": {
-                    "device_picked": "{{  vars.device_list\n  |json_query('[?pick_option==`{}`]'\n    .format(vars.steps.Pick_Device.input.device)\n  )\n}}"
-                },
-                "response_mapping": {
-                    "options": [
-                        {
-                            "option": "Ok",
-                            "primary": true,
-                            "step_iri": "\/api\/3\/workflow_steps\/c478619b-4c6e-4607-9283-ccf1cde620c3"
-                        },
-                        {
-                            "option": "Cancel",
-                            "step_iri": "\/api\/3\/workflow_steps\/8cd6a27f-87c4-406e-ade9-7d670468d107"
-                        }
-                    ],
-                    "duplicateOption": false,
-                    "customSuccessMessage": "Awaiting Playbook resumed successfully."
-                },
-                "email_notification": {
-                    "enabled": false,
-                    "smtpParameters": []
-                },
-                "customEmailExternal": false,
-                "inline_channel_list": [],
-                "external_channel_list": [],
-                "unauthenticated_input": false,
-                "external_email_subject": null,
-                "internal_email_subject": "A FortiSOAR playbook is requesting your input",
-                "custom_email_body_external": null,
-                "external_email_attachments": null
-            },
-            "status": null,
-            "top": "131",
-            "left": "668",
-            "stepType": "\/api\/3\/workflow_step_types\/fc04082a-d7dc-4299-96fb-6837b1baa0fe",
-            "group": "\/api\/3\/workflow_groups\/b8b66120-16c1-4a34-8b4c-7cca4b85f35f",
-            "uuid": "3e09bb60-7001-4c0f-8b7d-f848ad964b90"
-        },
-        {
-            "@type": "WorkflowStep",
-            "name": "Pick Manager",
-            "description": null,
-            "arguments": {
-                "type": "InputBased",
-                "input": {
-                    "schema": {
-                        "title": "Pick a Manager",
-                        "description": "Choose a Manager to then pick a Device from below:",
-                        "inputVariables": [
-                            {
-                                "name": "manager",
-                                "type": "ztpf_managers",
-                                "label": "Manager",
-                                "title": "Lookup (One to Many or One to One)",
-                                "usable": true,
-                                "tooltip": "Select Manager",
-                                "dataType": "lookup",
-                                "formType": "lookup",
                                 "required": false,
                                 "_expanded": true,
                                 "mmdUpdate": true,
                                 "collection": false,
-                                "dataSource": {
-                                    "model": "ztpf_managers"
-                                },
                                 "searchable": false,
-                                "templateUrl": "app\/components\/form\/fields\/typeahead.html",
+                                "templateUrl": "app\/components\/form\/fields\/dynamicList.html",
                                 "defaultValue": null,
-                                "_previousName": "device",
+                                "_previousName": "manager",
                                 "playbookField": true,
-                                "displayTemplate": "%7B%7B%20name%20%7D%7D",
-                                "lengthConstraint": false,
-                                "allowedEncryption": false,
-                                "allowedGridColumn": true,
+                                "lengthConstraint": true,
+                                "allowedGridColumn": false,
                                 "requiredCondition": "notrequired",
                                 "jinjaExpressionView": true,
                                 "useRecordFieldDefault": false,
@@ -268,31 +187,35 @@
                 "record": "",
                 "timeout": {
                     "days": 0,
-                    "hours": 1,
-                    "step_iri": "\/api\/3\/workflow_steps\/8cd6a27f-87c4-406e-ade9-7d670468d107"
+                    "hours": 0,
+                    "minutes": 1,
+                    "step_iri": "\/api\/3\/workflow_steps\/9ee0298d-3bab-415b-a0ad-ca5eb1438940"
                 },
                 "agent_id": null,
-                "resources": "ztpf_metadata_sources",
+                "resources": "ztpf_templates",
                 "is_approval": false,
                 "owner_detail": {
                     "isAssigned": false,
                     "emailRecipients": ""
                 },
                 "isRecordLinked": false,
-                "step_variables": [],
+                "step_variables": {
+                    "user_device_selection": "{{vars.steps.pick_a_manager_and_device.input.managerAndDevice}}"
+                },
                 "response_mapping": {
                     "options": [
                         {
                             "option": "Ok",
-                            "step_iri": "\/api\/3\/workflow_steps\/02fffda5-a208-44d0-8b13-eb433cbe5415"
+                            "primary": true,
+                            "step_iri": "\/api\/3\/workflow_steps\/33dcf55e-4cf9-4d48-bad6-d01c647a26e7"
                         },
                         {
                             "option": "Cancel",
-                            "step_iri": "\/api\/3\/workflow_steps\/8cd6a27f-87c4-406e-ade9-7d670468d107"
+                            "step_iri": "\/api\/3\/workflow_steps\/dcd708a5-f3cd-4fd7-9e47-54437a2d5027"
                         }
                     ],
                     "duplicateOption": false,
-                    "customSuccessMessage": "Awaiting Playbook resumed successfully."
+                    "customSuccessMessage": "Device Selected"
                 },
                 "email_notification": {
                     "enabled": false,
@@ -308,11 +231,11 @@
                 "external_email_attachments": null
             },
             "status": null,
-            "top": "131",
-            "left": "28",
+            "top": "240",
+            "left": "260",
             "stepType": "\/api\/3\/workflow_step_types\/fc04082a-d7dc-4299-96fb-6837b1baa0fe",
-            "group": "\/api\/3\/workflow_groups\/b8b66120-16c1-4a34-8b4c-7cca4b85f35f",
-            "uuid": "ec274ae3-9e4e-4328-8d9c-52ac9e698c93"
+            "group": "\/api\/3\/workflow_groups\/4c46b8fc-5442-46bd-80ae-51a1e17305b5",
+            "uuid": "7a420d85-1145-40d5-af54-ffb70a7b3bad"
         },
         {
             "@type": "WorkflowStep",
@@ -343,8 +266,8 @@
                 "timeout": {
                     "days": 0,
                     "hours": 0,
-                    "minutes": 1,
-                    "step_iri": "\/api\/3\/workflow_steps\/8cd6a27f-87c4-406e-ade9-7d670468d107"
+                    "minutes": 3,
+                    "step_iri": "\/api\/3\/workflow_steps\/dcd708a5-f3cd-4fd7-9e47-54437a2d5027"
                 },
                 "agent_id": null,
                 "resources": "ztpf_metadata_sources",
@@ -384,8 +307,8 @@
                 "external_email_attachments": null
             },
             "status": null,
-            "top": "340",
-            "left": "660",
+            "top": "440",
+            "left": "380",
             "stepType": "\/api\/3\/workflow_step_types\/fc04082a-d7dc-4299-96fb-6837b1baa0fe",
             "group": null,
             "uuid": "eb62ada2-cf74-4b06-88a1-2a7f4e0d00d2"
@@ -433,18 +356,6 @@
             "stepType": "\/api\/3\/workflow_step_types\/f414d039-bb0d-4e59-9c39-a8f1e880b18a",
             "group": null,
             "uuid": "8acf918a-cde1-4902-a312-8229621dccb8"
-        },
-        {
-            "@type": "WorkflowStep",
-            "name": "timeout or cancel",
-            "description": null,
-            "arguments": [],
-            "status": null,
-            "top": "220",
-            "left": "340",
-            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
-            "group": "\/api\/3\/workflow_groups\/b8b66120-16c1-4a34-8b4c-7cca4b85f35f",
-            "uuid": "8cd6a27f-87c4-406e-ade9-7d670468d107"
         }
     ],
     "routes": [
@@ -460,6 +371,16 @@
         },
         {
             "@type": "WorkflowRoute",
+            "name": "create device options -> pick a manager and device",
+            "targetStep": "\/api\/3\/workflow_steps\/7a420d85-1145-40d5-af54-ffb70a7b3bad",
+            "sourceStep": "\/api\/3\/workflow_steps\/dd8e5a48-a539-4fb5-9785-14b956ae36c8",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "6ca25057-21a9-4ba2-9e86-d09c64a6bd88"
+        },
+        {
+            "@type": "WorkflowRoute",
             "name": "create metadata_returned -> return results",
             "targetStep": "\/api\/3\/workflow_steps\/eb62ada2-cf74-4b06-88a1-2a7f4e0d00d2",
             "sourceStep": "\/api\/3\/workflow_steps\/2311a5fa-81c7-4770-853f-f6724100b7e5",
@@ -470,23 +391,23 @@
         },
         {
             "@type": "WorkflowRoute",
-            "name": "find devices -> Get Device",
-            "targetStep": "\/api\/3\/workflow_steps\/3e09bb60-7001-4c0f-8b7d-f848ad964b90",
-            "sourceStep": "\/api\/3\/workflow_steps\/02fffda5-a208-44d0-8b13-eb433cbe5415",
+            "name": "device option selected -> get jinja_vars",
+            "targetStep": "\/api\/3\/workflow_steps\/c478619b-4c6e-4607-9283-ccf1cde620c3",
+            "sourceStep": "\/api\/3\/workflow_steps\/33dcf55e-4cf9-4d48-bad6-d01c647a26e7",
             "label": null,
             "isExecuted": false,
             "group": null,
-            "uuid": "93ea4c5c-7553-4080-9d30-a9d40e0507ec"
+            "uuid": "0f573ad7-4b92-48a5-b80b-46d340f853ca"
         },
         {
             "@type": "WorkflowRoute",
-            "name": "Get Device -> timeout or cancel",
-            "targetStep": "\/api\/3\/workflow_steps\/8cd6a27f-87c4-406e-ade9-7d670468d107",
-            "sourceStep": "\/api\/3\/workflow_steps\/3e09bb60-7001-4c0f-8b7d-f848ad964b90",
-            "label": "Cancel",
+            "name": "find devices with manager -> create device options",
+            "targetStep": "\/api\/3\/workflow_steps\/dd8e5a48-a539-4fb5-9785-14b956ae36c8",
+            "sourceStep": "\/api\/3\/workflow_steps\/8a380a42-2362-459d-a044-37f03c7f8874",
+            "label": null,
             "isExecuted": false,
             "group": null,
-            "uuid": "e026901d-94eb-45d2-8966-63bffd51c4e0"
+            "uuid": "920bc14d-8933-4c0a-81f2-b49d898aa5f9"
         },
         {
             "@type": "WorkflowRoute",
@@ -500,33 +421,23 @@
         },
         {
             "@type": "WorkflowRoute",
-            "name": "Get Manager -> find devices",
-            "targetStep": "\/api\/3\/workflow_steps\/02fffda5-a208-44d0-8b13-eb433cbe5415",
-            "sourceStep": "\/api\/3\/workflow_steps\/ec274ae3-9e4e-4328-8d9c-52ac9e698c93",
-            "label": "Ok",
+            "name": "pick a manager and device -> cancel or timeout",
+            "targetStep": "\/api\/3\/workflow_steps\/dcd708a5-f3cd-4fd7-9e47-54437a2d5027",
+            "sourceStep": "\/api\/3\/workflow_steps\/7a420d85-1145-40d5-af54-ffb70a7b3bad",
+            "label": null,
             "isExecuted": false,
             "group": null,
-            "uuid": "600b2ec9-6c17-45a0-aa32-438429f5a958"
+            "uuid": "7cf578d6-1155-4201-8466-a1fdbb37b31a"
         },
         {
             "@type": "WorkflowRoute",
-            "name": "Get Manager -> timeout or cancel",
-            "targetStep": "\/api\/3\/workflow_steps\/8cd6a27f-87c4-406e-ade9-7d670468d107",
-            "sourceStep": "\/api\/3\/workflow_steps\/ec274ae3-9e4e-4328-8d9c-52ac9e698c93",
-            "label": "Cancel",
+            "name": "pick a manager and device -> device option selected",
+            "targetStep": "\/api\/3\/workflow_steps\/33dcf55e-4cf9-4d48-bad6-d01c647a26e7",
+            "sourceStep": "\/api\/3\/workflow_steps\/7a420d85-1145-40d5-af54-ffb70a7b3bad",
+            "label": null,
             "isExecuted": false,
             "group": null,
-            "uuid": "622b25f7-6f4a-4ef9-aed5-100bf2c62677"
-        },
-        {
-            "@type": "WorkflowRoute",
-            "name": "Pick Device -> get jinja_vars",
-            "targetStep": "\/api\/3\/workflow_steps\/c478619b-4c6e-4607-9283-ccf1cde620c3",
-            "sourceStep": "\/api\/3\/workflow_steps\/3e09bb60-7001-4c0f-8b7d-f848ad964b90",
-            "label": "Ok",
-            "isExecuted": false,
-            "group": null,
-            "uuid": "8b5cf83c-e355-4da5-bbbf-2766356915f8"
+            "uuid": "6885d8d8-3851-425a-b140-8b38855d2c21"
         },
         {
             "@type": "WorkflowRoute",
@@ -540,6 +451,16 @@
         },
         {
             "@type": "WorkflowRoute",
+            "name": "return results -> cancel or timeout",
+            "targetStep": "\/api\/3\/workflow_steps\/dcd708a5-f3cd-4fd7-9e47-54437a2d5027",
+            "sourceStep": "\/api\/3\/workflow_steps\/eb62ada2-cf74-4b06-88a1-2a7f4e0d00d2",
+            "label": "",
+            "isExecuted": false,
+            "group": null,
+            "uuid": "a842ceae-396a-4b03-9876-67609a19910f"
+        },
+        {
+            "@type": "WorkflowRoute",
             "name": "return results -> return",
             "targetStep": "\/api\/3\/workflow_steps\/251df4a3-28a3-4a8a-8e95-e20e6f23aaec",
             "sourceStep": "\/api\/3\/workflow_steps\/eb62ada2-cf74-4b06-88a1-2a7f4e0d00d2",
@@ -550,23 +471,13 @@
         },
         {
             "@type": "WorkflowRoute",
-            "name": "Return -> timeout or cancel",
-            "targetStep": "\/api\/3\/workflow_steps\/8cd6a27f-87c4-406e-ade9-7d670468d107",
-            "sourceStep": "\/api\/3\/workflow_steps\/eb62ada2-cf74-4b06-88a1-2a7f4e0d00d2",
-            "label": "",
-            "isExecuted": false,
-            "group": null,
-            "uuid": "c272b16a-34ed-43de-908b-dd1b7a7662ff"
-        },
-        {
-            "@type": "WorkflowRoute",
-            "name": "Start -> Get Manager",
-            "targetStep": "\/api\/3\/workflow_steps\/ec274ae3-9e4e-4328-8d9c-52ac9e698c93",
+            "name": "Start -> find devices with manager",
+            "targetStep": "\/api\/3\/workflow_steps\/8a380a42-2362-459d-a044-37f03c7f8874",
             "sourceStep": "\/api\/3\/workflow_steps\/8acf918a-cde1-4902-a312-8229621dccb8",
             "label": null,
             "isExecuted": false,
             "group": null,
-            "uuid": "552fd6ee-ecec-48a7-86ba-35b6d2c83635"
+            "uuid": "ad7c89df-8e7c-408d-97fa-3081b2b1f00c"
         }
     ],
     "groups": [
@@ -580,17 +491,17 @@
             "hideInLogs": false,
             "metadata": [],
             "reusable": false,
-            "top": "200",
-            "left": "60",
-            "height": "143",
+            "top": "220",
+            "left": "100",
+            "height": "139",
             "width": "498",
             "uuid": "edd92dfc-7906-423c-888e-0e3de00d0390",
             "recordTags": []
         },
         {
             "@type": "WorkflowGroup",
-            "name": "Pick a Manager then Device",
-            "description": "Pick a Manager and then Pick a Device from that Manager.",
+            "name": "ztpf: Pick a Manager then Device in one step",
+            "description": "",
             "type": "block",
             "isCollapsed": false,
             "hasTriggerStep": false,
@@ -599,9 +510,9 @@
             "reusable": false,
             "top": "20",
             "left": "660",
-            "height": "306",
-            "width": "987",
-            "uuid": "b8b66120-16c1-4a34-8b4c-7cca4b85f35f",
+            "height": "416",
+            "width": "569",
+            "uuid": "4c46b8fc-5442-46bd-80ae-51a1e17305b5",
             "recordTags": []
         }
     ],

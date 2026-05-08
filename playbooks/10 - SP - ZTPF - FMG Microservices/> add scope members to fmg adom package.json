@@ -1,0 +1,217 @@
+{
+    "@type": "Workflow",
+    "triggerLimit": null,
+    "name": "> add scope members to fmg adom package",
+    "aliasName": null,
+    "tag": null,
+    "description": "Add a device device list in the form of fg1,fg2,fg3 or fg1:vdom1,fg2:vdom1,fg3:vdoma or fg1:vdom1,fg2,fg3 to a package if needed.",
+    "isActive": true,
+    "debug": false,
+    "singleRecordExecution": false,
+    "remoteExecutableFlag": false,
+    "parameters": [
+        "connector_config",
+        "adom",
+        "policy_package",
+        "devices"
+    ],
+    "synchronous": false,
+    "collection": "\/api\/3\/workflow_collections\/c15a8515-33ae-46d2-9166-fa6fa47ac762",
+    "versions": [],
+    "triggerStep": "\/api\/3\/workflow_steps\/3b50a0c6-de30-4151-bd58-dea9bf8ec2f8",
+    "steps": [
+        {
+            "@type": "WorkflowStep",
+            "name": "device_scope",
+            "description": null,
+            "arguments": {
+                "device_scope": "{%- for dev in vars.device_list -%}\n{%- if dev | regex_search(\"^group\\\/\") -%}\n{%- set name = dev.split(\"\/\") -%}\n{\n  \"name\":\"{{name[1]}}\"\n},\n{%- else -%}\n{%- set name = dev.split(\":\") -%}\n{\n  \"name\":\"{{name[0]}}\",\n  \"vdom\":\"{{name[1]|default('root')}}\"\n},\n{%- endif -%}\n{%- endfor -%}",
+                "device_scope_test": "[ {\n      \"name\": \"FG1\",\n      \"vdom\": \"root\"\n    },\n    {\n      \"name\": \"FG2\",\n      \"vdom\": \"root\"\n    },\n    {\n      \"name\": \"FG3\",\n      \"vdom\": \"root\"\n    } ]"
+            },
+            "status": null,
+            "top": "140",
+            "left": "780",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "aab17fd3-ba47-46f9-a4de-c5bfca3873e0"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "fmg_api",
+            "description": null,
+            "arguments": {
+                "name": "Fortinet FortiManager JSON RPC",
+                "config": "{{vars.connector_config}}",
+                "params": {
+                    "url": "{{vars.api_url}}",
+                    "data": "{{vars.device_scope}}"
+                },
+                "version": "1.1.0",
+                "connector": "fortinet-fortimanager-json-rpc",
+                "operation": "json_rpc_add",
+                "operationTitle": "JSON RPC Add",
+                "pickFromTenant": false,
+                "step_variables": []
+            },
+            "status": null,
+            "top": "240",
+            "left": "340",
+            "stepType": "\/api\/3\/workflow_step_types\/0bfed618-0316-11e7-93ae-92361f002671",
+            "group": null,
+            "uuid": "ec831128-b3ea-4aae-85fc-d061592f447e"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "return",
+            "description": null,
+            "arguments": {
+                "output": "{{vars.steps.fmg_api}}",
+                "params": "{{vars.input.params}}",
+                "status": "{{vars.status}}"
+            },
+            "status": null,
+            "top": "120",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "13524cd3-4924-47a3-a408-a59df16a1884"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "setup_input",
+            "description": null,
+            "arguments": {
+                "adom": "{{vars.input.params.adom}}",
+                "status": "{# Set a default status #}\n{%- set ret = {} -%}\n{%- do ret.update({\n  \"error\":false,\n  \"message\":\"\"\n}) -%}\n{{ret}}",
+                "device_list": "{{vars.input.params.devices.split(\",\")}}",
+                "policy_package": "{{vars.input.params['policy_package']}}",
+                "connector_config": "{{vars.input.params['connector_config']}}",
+                "assign_device_flag": "{{vars.input.params['assign_device_flag']|default(True)}}"
+            },
+            "status": null,
+            "top": "40",
+            "left": "780",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "1f5b7abb-9b23-4033-b9d8-23fec323f3ec"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "setup input vars",
+            "description": null,
+            "arguments": {
+                "api_url": "\/pm\/pkg\/adom\/{{vars.adom}}\/{{vars.policy_package}}\/scope member"
+            },
+            "status": null,
+            "top": "240",
+            "left": "780",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "227adce9-237f-4f01-8f8b-7c8ea471dddf"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Start",
+            "description": null,
+            "arguments": {
+                "__triggerLimit": true,
+                "step_variables": {
+                    "input": {
+                        "params": []
+                    }
+                },
+                "triggerOnSource": true,
+                "triggerOnReplicate": false
+            },
+            "status": null,
+            "top": "40",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/b348f017-9a94-471f-87f8-ce88b6a7ad62",
+            "group": null,
+            "uuid": "3b50a0c6-de30-4151-bd58-dea9bf8ec2f8"
+        }
+    ],
+    "routes": [
+        {
+            "@type": "WorkflowRoute",
+            "name": "device_scope -> setup input vars",
+            "targetStep": "\/api\/3\/workflow_steps\/227adce9-237f-4f01-8f8b-7c8ea471dddf",
+            "sourceStep": "\/api\/3\/workflow_steps\/aab17fd3-ba47-46f9-a4de-c5bfca3873e0",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "9cd1a66f-93a6-40df-9d81-04e232fd7919"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "fmg_api -> return",
+            "targetStep": "\/api\/3\/workflow_steps\/13524cd3-4924-47a3-a408-a59df16a1884",
+            "sourceStep": "\/api\/3\/workflow_steps\/ec831128-b3ea-4aae-85fc-d061592f447e",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "c28b011b-8e8f-4b90-b251-1f570cc52dd0"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "setup_input -> device_scope",
+            "targetStep": "\/api\/3\/workflow_steps\/aab17fd3-ba47-46f9-a4de-c5bfca3873e0",
+            "sourceStep": "\/api\/3\/workflow_steps\/1f5b7abb-9b23-4033-b9d8-23fec323f3ec",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "a09172b2-5c4a-4d20-b0af-17b66b583edc"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "setup input vars -> fmg_api",
+            "targetStep": "\/api\/3\/workflow_steps\/ec831128-b3ea-4aae-85fc-d061592f447e",
+            "sourceStep": "\/api\/3\/workflow_steps\/227adce9-237f-4f01-8f8b-7c8ea471dddf",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "e90491ec-0be0-4de9-a8d2-d84837210f33"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Start -> setup_input",
+            "targetStep": "\/api\/3\/workflow_steps\/1f5b7abb-9b23-4033-b9d8-23fec323f3ec",
+            "sourceStep": "\/api\/3\/workflow_steps\/3b50a0c6-de30-4151-bd58-dea9bf8ec2f8",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "4031bf7b-5f1e-4c8c-be86-2851592efc79"
+        }
+    ],
+    "groups": [
+        {
+            "@type": "WorkflowGroup",
+            "name": "Details",
+            "description": "Add scope to \/pm\/pkg\/adom\/[adom]\/[policy_package]\/scope member.\nThe API simply ignores if adding a device that is already in the scope.",
+            "type": "note",
+            "isCollapsed": false,
+            "hasTriggerStep": false,
+            "hideInLogs": false,
+            "metadata": [],
+            "reusable": false,
+            "top": "80",
+            "left": "340",
+            "height": "148",
+            "width": "421",
+            "uuid": "c00b22e3-f7df-4117-a2ee-5fa2181e0399",
+            "recordTags": []
+        }
+    ],
+    "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+    "playbookOrigin": "\/api\/3\/picklists\/b6d710a9-a8ec-41ec-8817-fe9fa062fcdd",
+    "isEditable": false,
+    "uuid": "f8ddf77a-dfc6-41cb-b1b7-c0f3322cf900",
+    "owners": [],
+    "isPrivate": false,
+    "deletedAt": null,
+    "recordTags": [
+        "add",
+        "fmg_api",
+        "object_field"
+    ]
+}

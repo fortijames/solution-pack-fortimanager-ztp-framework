@@ -104,7 +104,7 @@
                 "step_variables": []
             },
             "status": null,
-            "top": "200",
+            "top": "380",
             "left": "660",
             "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928770",
             "group": null,
@@ -154,7 +154,7 @@
         {
             "@type": "WorkflowStep",
             "name": "query device source data",
-            "description": "Loop through api_queries to do minimal API calls to retrieve devide data.",
+            "description": "Loop through api_queries to do minimal API calls to retrieve devive data.",
             "arguments": {
                 "for_each": {
                     "item": "{{vars.api_queries}}",
@@ -162,10 +162,10 @@
                     "condition": ""
                 },
                 "arguments": {
-                    "api_adom": "",
-                    "api_fields": "",
-                    "api_filter": "{{vars.item[\"filter\"]}}",
-                    "api_loadsub": "",
+                    "adom": "",
+                    "fields": "",
+                    "filter": "{{vars.item[\"filter\"]}}",
+                    "loadsub": "",
                     "connector_config": "{{vars.item[\"connector_config\"]}}"
                 },
                 "apply_async": false,
@@ -258,8 +258,8 @@
                 "step_variables": []
             },
             "status": null,
-            "top": "120",
-            "left": "340",
+            "top": "380",
+            "left": "360",
             "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928722",
             "group": null,
             "uuid": "b2f3c5da-062a-4c12-b20f-7a4c27d0df36"
@@ -410,8 +410,8 @@
             "hideInLogs": false,
             "metadata": [],
             "reusable": false,
-            "top": "300",
-            "left": "80",
+            "top": "200",
+            "left": "380",
             "height": "160",
             "width": "498",
             "uuid": "fbe783b1-73ba-4f4f-aea5-0a82b96c29ed",

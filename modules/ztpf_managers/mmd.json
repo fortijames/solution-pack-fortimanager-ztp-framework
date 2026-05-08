@@ -1070,6 +1070,47 @@
         },
         {
             "@type": "AttributeMetadata",
+            "type": "ztpf_manager_automation_profile_rules",
+            "name": "ztpfManagerAutomationProfileRules",
+            "length": null,
+            "formType": "oneToMany",
+            "dataSource": {
+                "model": "ztpf_manager_automation_profile_rules"
+            },
+            "searchable": false,
+            "peerReplicable": true,
+            "system": false,
+            "encrypted": false,
+            "gridColumn": false,
+            "collection": true,
+            "inversedField": "ztpfManagers",
+            "ownsRelationship": true,
+            "validation": {
+                "required": false,
+                "minlength": 0,
+                "maxlength": 10485761,
+                "_enableRange": false
+            },
+            "bulkAction": [],
+            "dataSourceFilters": null,
+            "defaultValue": null,
+            "tooltip": null,
+            "visibility": true,
+            "htmlEscape": false,
+            "orphanRemoval": null,
+            "readable": true,
+            "writeable": true,
+            "identifier": null,
+            "unique": false,
+            "recommend": false,
+            "skipSerialization": false,
+            "displayName": "{{ ztpfManagerAutomationProfileRules }}",
+            "descriptions": {
+                "singular": "Automation Profile Rules"
+            }
+        },
+        {
+            "@type": "AttributeMetadata",
             "type": "ztpf_devices",
             "name": "ztpfDevices",
             "length": null,
@@ -1107,47 +1148,6 @@
             "displayName": "{{ ztpfDevices }}",
             "descriptions": {
                 "singular": "Devices"
-            }
-        },
-        {
-            "@type": "AttributeMetadata",
-            "type": "ztpf_manager_automation_profile_rules",
-            "name": "ztpfManagerAutomationProfileRule",
-            "length": null,
-            "formType": "oneToMany",
-            "dataSource": {
-                "model": "ztpf_manager_automation_profile_rules"
-            },
-            "searchable": false,
-            "peerReplicable": true,
-            "system": false,
-            "encrypted": false,
-            "gridColumn": false,
-            "collection": true,
-            "inversedField": "ztpfManagers",
-            "ownsRelationship": false,
-            "validation": {
-                "required": false,
-                "minlength": 0,
-                "maxlength": 10485761,
-                "_enableRange": false
-            },
-            "bulkAction": [],
-            "dataSourceFilters": null,
-            "defaultValue": null,
-            "tooltip": null,
-            "visibility": true,
-            "htmlEscape": false,
-            "orphanRemoval": null,
-            "readable": true,
-            "writeable": true,
-            "identifier": null,
-            "unique": false,
-            "recommend": false,
-            "skipSerialization": false,
-            "displayName": "{{ ztpfManagerAutomationProfileRule }}",
-            "descriptions": {
-                "singular": "ztpfManagerAutomationProfileRule"
             }
         }
     ],

@@ -1,0 +1,285 @@
+{
+    "@type": "Workflow",
+    "triggerLimit": null,
+    "name": "Run Action",
+    "aliasName": null,
+    "tag": null,
+    "description": "Run an Action",
+    "isActive": true,
+    "debug": false,
+    "singleRecordExecution": false,
+    "remoteExecutableFlag": false,
+    "parameters": [],
+    "synchronous": false,
+    "collection": "\/api\/3\/workflow_collections\/f0b56dc0-6c1e-4f5b-9199-c807800f028a",
+    "versions": [],
+    "triggerStep": "\/api\/3\/workflow_steps\/e27433b1-e4f1-462a-98b1-21868777ab9f",
+    "steps": [
+        {
+            "@type": "WorkflowStep",
+            "name": "action options",
+            "description": null,
+            "arguments": {
+                "action": "{%- set recs = vars.steps.find_actions -%}\n{%- set opts = [] -%}\n{%- for r in recs -%}\n{%- set o = r -%}\n{%- set on = \n             r.category.itemValue\n             + \" - \" \n             + r.type.itemValue\n             + \" - \" \n             + r.name\n-%}\n{%- do o.update({\n  \"_option\": on\n}) -%}\n{%- do opts.append(o) -%}\n{%- endfor -%}\n{\n  \"records\": {{opts}},\n  \"options\": {{opts|json_query('[]._option')|sort}}\n}"
+            },
+            "status": null,
+            "top": "40",
+            "left": "640",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "b380c122-b512-41d0-a538-771cea51f960"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "action selected",
+            "description": null,
+            "arguments": {
+                "action_selected": "{{vars.steps.select_action.input.action}}"
+            },
+            "status": null,
+            "top": "320",
+            "left": "640",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "0010bcbc-974e-48de-8912-0d15ef1adbcf"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "find actions",
+            "description": null,
+            "arguments": {
+                "query": {
+                    "sort": [],
+                    "limit": 30,
+                    "logic": "AND",
+                    "filters": [],
+                    "__selectFields": [
+                        "name",
+                        "category",
+                        "type",
+                        "inputParameters"
+                    ]
+                },
+                "module": "ztpf_automation_actions?$limit=5000",
+                "checkboxFields": true,
+                "step_variables": []
+            },
+            "status": null,
+            "top": "40",
+            "left": "340",
+            "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928770",
+            "group": null,
+            "uuid": "30a87d7f-0efe-4d51-b4d1-c7983d372ae8"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "select action",
+            "description": null,
+            "arguments": {
+                "type": "InputBased",
+                "input": {
+                    "schema": {
+                        "title": "Select Action",
+                        "description": "Select an action to run. ",
+                        "inputVariables": [
+                            {
+                                "name": "action",
+                                "type": "array",
+                                "label": "Action",
+                                "title": "Dynamic List",
+                                "usable": true,
+                                "options": "{{vars.action.options}}",
+                                "tooltip": "",
+                                "dataType": "dynamicList",
+                                "formType": "dynamicList",
+                                "required": false,
+                                "_expanded": true,
+                                "mmdUpdate": true,
+                                "collection": false,
+                                "searchable": false,
+                                "templateUrl": "app\/components\/form\/fields\/dynamicList.html",
+                                "defaultValue": null,
+                                "_previousName": "a",
+                                "playbookField": true,
+                                "lengthConstraint": true,
+                                "allowedGridColumn": false,
+                                "requiredCondition": "notrequired",
+                                "jinjaExpressionView": true,
+                                "useRecordFieldDefault": false,
+                                "_addRequiredConditions": false
+                            }
+                        ]
+                    }
+                },
+                "record": "",
+                "timeout": {
+                    "days": 0,
+                    "hours": 0,
+                    "minutes": 1,
+                    "step_iri": "\/api\/3\/workflow_steps\/c5776d84-1ff9-41d2-ade6-c95695aab8cf"
+                },
+                "agent_id": null,
+                "resources": "ztpf_devices",
+                "is_approval": false,
+                "owner_detail": {
+                    "isAssigned": false,
+                    "emailRecipients": ""
+                },
+                "isRecordLinked": false,
+                "step_variables": [],
+                "response_mapping": {
+                    "options": [
+                        {
+                            "option": "Ok",
+                            "primary": true,
+                            "step_iri": "\/api\/3\/workflow_steps\/0010bcbc-974e-48de-8912-0d15ef1adbcf"
+                        },
+                        {
+                            "option": "Cancel",
+                            "step_iri": "\/api\/3\/workflow_steps\/c5776d84-1ff9-41d2-ade6-c95695aab8cf"
+                        }
+                    ],
+                    "duplicateOption": false,
+                    "customSuccessMessage": "Awaiting Playbook resumed successfully."
+                },
+                "email_notification": {
+                    "enabled": false,
+                    "smtpParameters": []
+                },
+                "customEmailExternal": false,
+                "inline_channel_list": [],
+                "external_channel_list": [],
+                "unauthenticated_input": false,
+                "external_email_subject": null,
+                "internal_email_subject": "A FortiSOAR playbook is requesting your input",
+                "custom_email_body_external": null,
+                "external_email_attachments": null
+            },
+            "status": null,
+            "top": "120",
+            "left": "640",
+            "stepType": "\/api\/3\/workflow_step_types\/fc04082a-d7dc-4299-96fb-6837b1baa0fe",
+            "group": null,
+            "uuid": "0d968f1d-71a1-4a03-85ef-1822d79c9b7a"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Start",
+            "description": null,
+            "arguments": {
+                "route": "df5dc929-4a6e-4db7-9809-e5a221abde1b",
+                "resources": [
+                    "ztpf_devices"
+                ],
+                "__triggerLimit": true,
+                "inputVariables": [],
+                "step_variables": {
+                    "input": {
+                        "params": [],
+                        "records": "{{vars.input.records}}"
+                    }
+                },
+                "triggerOnSource": true,
+                "displayConditions": {
+                    "ztpf_devices": {
+                        "sort": [],
+                        "limit": 30,
+                        "logic": "AND",
+                        "filters": []
+                    }
+                },
+                "executeButtonText": "Execute",
+                "noRecordExecution": false,
+                "showToasterMessage": {
+                    "visible": false,
+                    "messageVisible": true
+                },
+                "triggerOnReplicate": false,
+                "singleRecordExecution": false
+            },
+            "status": null,
+            "top": "40",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/f414d039-bb0d-4e59-9c39-a8f1e880b18a",
+            "group": null,
+            "uuid": "e27433b1-e4f1-462a-98b1-21868777ab9f"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "timeout or cancel",
+            "description": null,
+            "arguments": [],
+            "status": null,
+            "top": "120",
+            "left": "1080",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "c5776d84-1ff9-41d2-ade6-c95695aab8cf"
+        }
+    ],
+    "routes": [
+        {
+            "@type": "WorkflowRoute",
+            "name": "action options -> select action",
+            "targetStep": "\/api\/3\/workflow_steps\/0d968f1d-71a1-4a03-85ef-1822d79c9b7a",
+            "sourceStep": "\/api\/3\/workflow_steps\/b380c122-b512-41d0-a538-771cea51f960",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "21ba7b3c-4aa8-4f58-bc4c-edde9de38bb7"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "find actions -> action options",
+            "targetStep": "\/api\/3\/workflow_steps\/b380c122-b512-41d0-a538-771cea51f960",
+            "sourceStep": "\/api\/3\/workflow_steps\/30a87d7f-0efe-4d51-b4d1-c7983d372ae8",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "ac031a60-ee0a-4c04-922e-b87288e14a2a"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "select action -> action selected",
+            "targetStep": "\/api\/3\/workflow_steps\/0010bcbc-974e-48de-8912-0d15ef1adbcf",
+            "sourceStep": "\/api\/3\/workflow_steps\/0d968f1d-71a1-4a03-85ef-1822d79c9b7a",
+            "label": "Ok",
+            "isExecuted": false,
+            "group": null,
+            "uuid": "f8d56b07-b3ee-4812-9f62-a0dbca81f5de"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "select action -> timeout or cancel",
+            "targetStep": "\/api\/3\/workflow_steps\/c5776d84-1ff9-41d2-ade6-c95695aab8cf",
+            "sourceStep": "\/api\/3\/workflow_steps\/0d968f1d-71a1-4a03-85ef-1822d79c9b7a",
+            "label": "Cancel",
+            "isExecuted": false,
+            "group": null,
+            "uuid": "3aea7de4-d230-4f8e-993c-d9b84ccb3af1"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Start -> find actions",
+            "targetStep": "\/api\/3\/workflow_steps\/30a87d7f-0efe-4d51-b4d1-c7983d372ae8",
+            "sourceStep": "\/api\/3\/workflow_steps\/e27433b1-e4f1-462a-98b1-21868777ab9f",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "20ccd989-5c99-40d6-af6f-400428c4ae12"
+        }
+    ],
+    "groups": [],
+    "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+    "playbookOrigin": "\/api\/3\/picklists\/b6d710a9-a8ec-41ec-8817-fe9fa062fcdd",
+    "isEditable": false,
+    "uuid": "3ebf17b8-3554-4e63-baf9-5b6b3ee2571d",
+    "owners": [],
+    "isPrivate": false,
+    "deletedAt": null,
+    "recordTags": [
+        "TODO",
+        "ztpfAutomationAction",
+        "ztpfDevice"
+    ]
+}

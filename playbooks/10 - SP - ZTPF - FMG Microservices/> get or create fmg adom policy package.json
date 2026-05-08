@@ -1,0 +1,333 @@
+{
+    "@type": "Workflow",
+    "triggerLimit": null,
+    "name": "> get or create fmg adom policy package",
+    "aliasName": null,
+    "tag": null,
+    "description": "Get a policy package or create and return if needed.",
+    "isActive": true,
+    "debug": false,
+    "singleRecordExecution": false,
+    "remoteExecutableFlag": false,
+    "parameters": [
+        "connector_config",
+        "adom",
+        "package"
+    ],
+    "synchronous": false,
+    "collection": "\/api\/3\/workflow_collections\/c15a8515-33ae-46d2-9166-fa6fa47ac762",
+    "versions": [],
+    "triggerStep": "\/api\/3\/workflow_steps\/31c0d0db-1ee6-41bf-9ed9-4de3fb52f4a9",
+    "steps": [
+        {
+            "@type": "WorkflowStep",
+            "name": "create package vars",
+            "description": null,
+            "arguments": {
+                "api_url": "\/pm\/pkg\/adom\/{{vars.adom}}\/",
+                "api_payload": "{\n   \"name\" : \"{{vars.policy_package}}\",\n   \"type\" : \"pkg\",\n   \"desc\" : \"Created by FortiSOAR.\"\n}"
+            },
+            "status": null,
+            "top": "320",
+            "left": "1000",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "1727671a-04bf-4ca7-8c66-edc6a2d5c86f"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "create policy",
+            "description": null,
+            "arguments": {
+                "conditions": [
+                    {
+                        "option": "Yes",
+                        "default": true,
+                        "step_iri": "\/api\/3\/workflow_steps\/1727671a-04bf-4ca7-8c66-edc6a2d5c86f",
+                        "step_name": "create package vars"
+                    },
+                    {
+                        "option": "No",
+                        "step_iri": "\/api\/3\/workflow_steps\/a52847b8-fc3b-496b-9c38-8b913010850e",
+                        "condition": "{{ vars.steps.find_package.output['get_response']|length > 0 }}",
+                        "step_name": "policy exists"
+                    }
+                ],
+                "step_variables": []
+            },
+            "status": null,
+            "top": "260",
+            "left": "620",
+            "stepType": "\/api\/3\/workflow_step_types\/12254cf5-5db7-4b1a-8cb1-3af081924b28",
+            "group": null,
+            "uuid": "ff5dc089-726f-4330-87cf-3a24c29f2dd3"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "create policy api",
+            "description": null,
+            "arguments": {
+                "name": "Fortinet FortiManager JSON RPC",
+                "config": "{{vars.connector_config}}",
+                "params": {
+                    "url": "{{vars.api_url}}",
+                    "data": "{{vars.api_payload}}"
+                },
+                "version": "1.1.0",
+                "connector": "fortinet-fortimanager-json-rpc",
+                "operation": "json_rpc_add",
+                "operationTitle": "JSON RPC Add",
+                "pickFromTenant": false,
+                "step_variables": []
+            },
+            "status": null,
+            "top": "380",
+            "left": "620",
+            "stepType": "\/api\/3\/workflow_step_types\/0bfed618-0316-11e7-93ae-92361f002671",
+            "group": null,
+            "uuid": "1452391f-64b0-458d-a188-6f3eb69cb359"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "find new package",
+            "description": "populate pkg_data with results.",
+            "arguments": {
+                "arguments": {
+                    "adom": "{{vars.adom}}",
+                    "fields": "",
+                    "filter": "[\"name\",\"==\",\"{{vars.policy_package}}\"]",
+                    "connector_config": "{{vars.connector_config}}"
+                },
+                "apply_async": false,
+                "step_variables": {
+                    "pkg_data": "{{vars.steps.find_new_package.output['get_response'][0]}}"
+                },
+                "pass_parent_env": false,
+                "pass_input_record": false,
+                "workflowReference": "\/api\/3\/workflows\/1effc6b4-f560-4b0e-8653-84c99fc7b5d1"
+            },
+            "status": null,
+            "top": "380",
+            "left": "240",
+            "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
+            "group": null,
+            "uuid": "97b7ebe0-43e8-4ca6-a1c2-37c8591a8154"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "find package",
+            "description": null,
+            "arguments": {
+                "arguments": {
+                    "adom": "{{vars.adom}}",
+                    "fields": "",
+                    "filter": "[\"name\",\"==\",\"{{vars.policy_package}}\"]",
+                    "connector_config": "{{vars.connector_config}}"
+                },
+                "apply_async": false,
+                "step_variables": [],
+                "pass_parent_env": false,
+                "pass_input_record": false,
+                "workflowReference": "\/api\/3\/workflows\/1effc6b4-f560-4b0e-8653-84c99fc7b5d1"
+            },
+            "status": null,
+            "top": "160",
+            "left": "1000",
+            "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
+            "group": null,
+            "uuid": "60b66a1b-19ae-4f10-97f6-7d48de71fc17"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "policy exists",
+            "description": null,
+            "arguments": {
+                "pkg_data": "{{vars.steps.find_package.output['get_response'][0]}}"
+            },
+            "status": null,
+            "top": "260",
+            "left": "240",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "a52847b8-fc3b-496b-9c38-8b913010850e"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "return",
+            "description": null,
+            "arguments": {
+                "output": "{{vars.pkg_data}}",
+                "params": "{{vars.input.params}}",
+                "status": "{{vars.status}}"
+            },
+            "status": null,
+            "top": "120",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "6b67a317-c5a3-4993-8f6a-64d4a6227693"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "setup vars",
+            "description": null,
+            "arguments": {
+                "adom": "{{vars.input.params.adom}}",
+                "status": "{# Set a default status #}\n{%- set ret = {} -%}\n{%- do ret.update({\n  \"error\":false,\n  \"message\":\"\"\n}) -%}\n{{ret}}",
+                "policy_package": "{{vars.input.params['package']}}",
+                "connector_config": "{{vars.input.params['connector_config']}}"
+            },
+            "status": null,
+            "top": "40",
+            "left": "480",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "f1253201-a88a-455e-8a2b-a5bbf180a3e6"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Start",
+            "description": null,
+            "arguments": {
+                "__triggerLimit": true,
+                "step_variables": {
+                    "input": {
+                        "params": []
+                    }
+                },
+                "triggerOnSource": true,
+                "triggerOnReplicate": false
+            },
+            "status": null,
+            "top": "40",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/b348f017-9a94-471f-87f8-ce88b6a7ad62",
+            "group": null,
+            "uuid": "31c0d0db-1ee6-41bf-9ed9-4de3fb52f4a9"
+        }
+    ],
+    "routes": [
+        {
+            "@type": "WorkflowRoute",
+            "name": "create package vars -> create policy api",
+            "targetStep": "\/api\/3\/workflow_steps\/1452391f-64b0-458d-a188-6f3eb69cb359",
+            "sourceStep": "\/api\/3\/workflow_steps\/1727671a-04bf-4ca7-8c66-edc6a2d5c86f",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "7d525112-4445-4130-a76c-528a10905352"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "create policy api -> find new package",
+            "targetStep": "\/api\/3\/workflow_steps\/97b7ebe0-43e8-4ca6-a1c2-37c8591a8154",
+            "sourceStep": "\/api\/3\/workflow_steps\/1452391f-64b0-458d-a188-6f3eb69cb359",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "26e4996d-c082-421f-bef9-03b370b9a96c"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "create policy -> create package vars",
+            "targetStep": "\/api\/3\/workflow_steps\/1727671a-04bf-4ca7-8c66-edc6a2d5c86f",
+            "sourceStep": "\/api\/3\/workflow_steps\/ff5dc089-726f-4330-87cf-3a24c29f2dd3",
+            "label": "Yes",
+            "isExecuted": false,
+            "group": null,
+            "uuid": "10c5833e-9eaa-4237-bb50-411e4b947302"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "create policy -> policy exists",
+            "targetStep": "\/api\/3\/workflow_steps\/a52847b8-fc3b-496b-9c38-8b913010850e",
+            "sourceStep": "\/api\/3\/workflow_steps\/ff5dc089-726f-4330-87cf-3a24c29f2dd3",
+            "label": "No",
+            "isExecuted": false,
+            "group": null,
+            "uuid": "0357bab6-c635-43c9-886f-3ed5e3f02184"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "find new package -> return",
+            "targetStep": "\/api\/3\/workflow_steps\/6b67a317-c5a3-4993-8f6a-64d4a6227693",
+            "sourceStep": "\/api\/3\/workflow_steps\/97b7ebe0-43e8-4ca6-a1c2-37c8591a8154",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "250bb55c-5dc9-4265-b925-801cc0e8bb16"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "find package -> create policy",
+            "targetStep": "\/api\/3\/workflow_steps\/ff5dc089-726f-4330-87cf-3a24c29f2dd3",
+            "sourceStep": "\/api\/3\/workflow_steps\/60b66a1b-19ae-4f10-97f6-7d48de71fc17",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "8f7f7ee8-3f72-4286-9475-e61304d677a2"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "policy exists -> return",
+            "targetStep": "\/api\/3\/workflow_steps\/6b67a317-c5a3-4993-8f6a-64d4a6227693",
+            "sourceStep": "\/api\/3\/workflow_steps\/a52847b8-fc3b-496b-9c38-8b913010850e",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "3955ea73-4d3b-4c4c-8b66-c0e09aa73645"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "setup vars -> find package",
+            "targetStep": "\/api\/3\/workflow_steps\/60b66a1b-19ae-4f10-97f6-7d48de71fc17",
+            "sourceStep": "\/api\/3\/workflow_steps\/f1253201-a88a-455e-8a2b-a5bbf180a3e6",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "556198e2-7142-4f0b-a34c-0557699c1786"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Start -> setup vars",
+            "targetStep": "\/api\/3\/workflow_steps\/f1253201-a88a-455e-8a2b-a5bbf180a3e6",
+            "sourceStep": "\/api\/3\/workflow_steps\/31c0d0db-1ee6-41bf-9ed9-4de3fb52f4a9",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "f929a3b1-b136-4350-b48e-1b24ea6f8426"
+        }
+    ],
+    "groups": [
+        {
+            "@type": "WorkflowGroup",
+            "name": "Details",
+            "description": "Find the package if it exists.\nIf it does not exist then create it and find the package created.",
+            "type": "note",
+            "isCollapsed": false,
+            "hasTriggerStep": false,
+            "hideInLogs": false,
+            "metadata": [],
+            "reusable": false,
+            "top": "120",
+            "left": "360",
+            "height": "99",
+            "width": "455",
+            "uuid": "919cc3ed-3fac-4d80-9805-bebe31d26925",
+            "recordTags": []
+        }
+    ],
+    "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+    "playbookOrigin": "\/api\/3\/picklists\/b6d710a9-a8ec-41ec-8817-fe9fa062fcdd",
+    "isEditable": false,
+    "uuid": "8c738873-6778-4b4f-a81c-de1c45fe3ecd",
+    "owners": [],
+    "isPrivate": false,
+    "deletedAt": null,
+    "recordTags": [
+        "add",
+        "fmg_api",
+        "get",
+        "object"
+    ]
+}
