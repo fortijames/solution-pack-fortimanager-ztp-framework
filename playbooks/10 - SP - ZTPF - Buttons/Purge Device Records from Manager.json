@@ -1,0 +1,294 @@
+{
+    "@type": "Workflow",
+    "triggerLimit": null,
+    "name": "Purge Device Records from Manager",
+    "aliasName": null,
+    "tag": null,
+    "description": "Delete all device records associated to a manager.",
+    "isActive": true,
+    "debug": false,
+    "singleRecordExecution": false,
+    "remoteExecutableFlag": false,
+    "parameters": [],
+    "synchronous": false,
+    "collection": "\/api\/3\/workflow_collections\/f0b56dc0-6c1e-4f5b-9199-c807800f028a",
+    "versions": [],
+    "triggerStep": "\/api\/3\/workflow_steps\/e075d624-b842-4482-bbd7-608ce351da17",
+    "steps": [
+        {
+            "@type": "WorkflowStep",
+            "name": "confirmation",
+            "description": null,
+            "arguments": {
+                "type": "InputBased",
+                "input": {
+                    "schema": {
+                        "title": "Purge these records?",
+                        "description": "Are you sure you want to purge these devices from ZTPF? \n*Devices will not be deleted from the Manager itself*\n\n| Manager | Device | \n| ----------  | --------  |\n{% for d in vars.steps.find_devices -%}\n| {{d.ztpfManagers.name}} | {{d.name}} |\n{% endfor -%}",
+                        "inputVariables": []
+                    }
+                },
+                "record": "",
+                "timeout": {
+                    "days": 0,
+                    "hours": 0,
+                    "minutes": 1,
+                    "step_iri": "\/api\/3\/workflow_steps\/7f7656f0-cb03-4c95-985e-411156aaf250"
+                },
+                "agent_id": null,
+                "resources": "ztpf_managers",
+                "is_approval": false,
+                "owner_detail": {
+                    "isAssigned": false,
+                    "emailRecipients": ""
+                },
+                "isRecordLinked": false,
+                "step_variables": [],
+                "response_mapping": {
+                    "options": [
+                        {
+                            "option": "Yes",
+                            "step_iri": "\/api\/3\/workflow_steps\/82260bc4-6e1f-4bad-afb9-e9f133cfd69d"
+                        },
+                        {
+                            "option": "No",
+                            "step_iri": "\/api\/3\/workflow_steps\/7f7656f0-cb03-4c95-985e-411156aaf250"
+                        }
+                    ],
+                    "duplicateOption": false,
+                    "customSuccessMessage": "Awaiting Playbook resumed successfully."
+                },
+                "email_notification": {
+                    "enabled": false,
+                    "smtpParameters": []
+                },
+                "customEmailExternal": false,
+                "inline_channel_list": [],
+                "external_channel_list": [],
+                "unauthenticated_input": false,
+                "external_email_subject": null,
+                "internal_email_subject": "A FortiSOAR playbook is requesting your input",
+                "custom_email_body_external": null,
+                "external_email_attachments": null
+            },
+            "status": null,
+            "top": "140",
+            "left": "520",
+            "stepType": "\/api\/3\/workflow_step_types\/fc04082a-d7dc-4299-96fb-6837b1baa0fe",
+            "group": null,
+            "uuid": "62b34449-4aad-41b3-9880-b19c2ff2e280"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Delete_Record",
+            "description": null,
+            "arguments": {
+                "params": {
+                    "iri": "{{vars.item['@id']}}",
+                    "body": "",
+                    "method": "DELETE"
+                },
+                "version": "3.7.0",
+                "for_each": {
+                    "item": "{{vars.steps.find_devices}}",
+                    "__bulk": false,
+                    "parallel": true,
+                    "condition": ""
+                },
+                "connector": "cyops_utilities",
+                "operation": "make_cyops_request",
+                "operationTitle": "FSR: Make FortiSOAR API Call",
+                "step_variables": []
+            },
+            "status": null,
+            "top": "360",
+            "left": "180",
+            "stepType": "\/api\/3\/workflow_step_types\/0109f35d-090b-4a2b-bd8a-94cbc3508562",
+            "group": null,
+            "uuid": "554b01ed-ac8b-4b82-988f-400422a3d510"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "find devices",
+            "description": null,
+            "arguments": {
+                "query": {
+                    "sort": [
+                        {
+                            "field": "ztpfManagers.name",
+                            "direction": "ASC",
+                            "_fieldName": "ztpfManagers",
+                            "_fieldTitle": "Manager"
+                        },
+                        {
+                            "field": "name",
+                            "direction": "ASC",
+                            "_fieldName": "name",
+                            "_fieldTitle": "Name"
+                        }
+                    ],
+                    "limit": 30,
+                    "logic": "AND",
+                    "filters": [
+                        {
+                            "type": "object",
+                            "field": "ztpfManagers",
+                            "value": "{{vars.input.records|json_query('[][\"@id\"][]')}}",
+                            "_value": {
+                                "@id": "{{vars.input.records|json_query('[][\"@id\"][]')}}",
+                                "display": "",
+                                "itemValue": ""
+                            },
+                            "operator": "in"
+                        }
+                    ],
+                    "__selectFields": [
+                        "id",
+                        "name",
+                        "ztpfManagers"
+                    ]
+                },
+                "module": "ztpf_devices?$limit=5000",
+                "checkboxFields": true,
+                "step_variables": []
+            },
+            "status": null,
+            "top": "40",
+            "left": "520",
+            "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928770",
+            "group": null,
+            "uuid": "f5ae9f71-dd56-4893-a5a0-908768d8872f"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "no or timeout",
+            "description": null,
+            "arguments": [],
+            "status": null,
+            "top": "260",
+            "left": "860",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "7f7656f0-cb03-4c95-985e-411156aaf250"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Start",
+            "description": null,
+            "arguments": {
+                "route": "8489e9c8-2675-4945-a09b-1e05d818af6c",
+                "title": "Purge Device Records",
+                "resources": [
+                    "ztpf_managers"
+                ],
+                "__triggerLimit": true,
+                "inputVariables": [],
+                "step_variables": {
+                    "input": {
+                        "params": [],
+                        "records": "{{vars.input.records}}"
+                    }
+                },
+                "triggerOnSource": true,
+                "displayConditions": {
+                    "ztpf_managers": {
+                        "sort": [],
+                        "limit": 30,
+                        "logic": "AND",
+                        "filters": []
+                    }
+                },
+                "executeButtonText": "Execute",
+                "noRecordExecution": false,
+                "showToasterMessage": {
+                    "visible": false,
+                    "messageVisible": true
+                },
+                "triggerOnReplicate": false,
+                "singleRecordExecution": false
+            },
+            "status": null,
+            "top": "40",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/f414d039-bb0d-4e59-9c39-a8f1e880b18a",
+            "group": null,
+            "uuid": "e075d624-b842-4482-bbd7-608ce351da17"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "yes",
+            "description": null,
+            "arguments": [],
+            "status": null,
+            "top": "260",
+            "left": "180",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "82260bc4-6e1f-4bad-afb9-e9f133cfd69d"
+        }
+    ],
+    "routes": [
+        {
+            "@type": "WorkflowRoute",
+            "name": "confirmation -> no",
+            "targetStep": "\/api\/3\/workflow_steps\/7f7656f0-cb03-4c95-985e-411156aaf250",
+            "sourceStep": "\/api\/3\/workflow_steps\/62b34449-4aad-41b3-9880-b19c2ff2e280",
+            "label": "No",
+            "isExecuted": false,
+            "group": null,
+            "uuid": "a8213af1-eaca-473a-b470-8c8275d65c81"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "confirmation -> yes",
+            "targetStep": "\/api\/3\/workflow_steps\/82260bc4-6e1f-4bad-afb9-e9f133cfd69d",
+            "sourceStep": "\/api\/3\/workflow_steps\/62b34449-4aad-41b3-9880-b19c2ff2e280",
+            "label": "Yes",
+            "isExecuted": false,
+            "group": null,
+            "uuid": "0b1dff8a-f6d7-4ca4-aac7-14c3f0cc9026"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "find devices -> confirmation",
+            "targetStep": "\/api\/3\/workflow_steps\/62b34449-4aad-41b3-9880-b19c2ff2e280",
+            "sourceStep": "\/api\/3\/workflow_steps\/f5ae9f71-dd56-4893-a5a0-908768d8872f",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "33e0947c-9ca9-448e-88ad-2f0a0624347f"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Start -> find devices",
+            "targetStep": "\/api\/3\/workflow_steps\/f5ae9f71-dd56-4893-a5a0-908768d8872f",
+            "sourceStep": "\/api\/3\/workflow_steps\/e075d624-b842-4482-bbd7-608ce351da17",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "cd7dbbde-95e8-4888-979b-78cda49f9b16"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "yes -> Delete_Record",
+            "targetStep": "\/api\/3\/workflow_steps\/554b01ed-ac8b-4b82-988f-400422a3d510",
+            "sourceStep": "\/api\/3\/workflow_steps\/82260bc4-6e1f-4bad-afb9-e9f133cfd69d",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "75caf6ce-2cc7-4bde-8f28-149bc0b26d1c"
+        }
+    ],
+    "groups": [],
+    "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+    "playbookOrigin": "\/api\/3\/picklists\/b6d710a9-a8ec-41ec-8817-fe9fa062fcdd",
+    "isEditable": false,
+    "uuid": "f5e903ad-b232-4f6b-a137-49acb7781f3d",
+    "owners": [],
+    "isPrivate": false,
+    "deletedAt": null,
+    "recordTags": [
+        "ztpfDevice",
+        "ztpfManager"
+    ]
+}

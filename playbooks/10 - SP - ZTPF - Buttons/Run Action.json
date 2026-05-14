@@ -34,7 +34,7 @@
             "name": "action selected",
             "description": null,
             "arguments": {
-                "action_selected": "{{vars.steps.select_action.input.action}}"
+                "action_selected": "{{vars.action.records\n  | json_query('[?_option==`{}`]'\n    .format(vars.steps.select_action.input.action)\n)\n}}"
             },
             "status": null,
             "top": "320",
