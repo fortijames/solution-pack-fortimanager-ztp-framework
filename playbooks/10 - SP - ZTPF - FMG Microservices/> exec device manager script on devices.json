@@ -1,0 +1,196 @@
+{
+    "@type": "Workflow",
+    "triggerLimit": null,
+    "name": "> exec device manager script on devices",
+    "aliasName": null,
+    "tag": null,
+    "description": "Exec an existing script on a device list in the form of fg1,fg2,fg3 or fg1:vdom1,fg2:vdom1,fg3:vdoma or fg1:vdom1,fg2,fg3",
+    "isActive": true,
+    "debug": false,
+    "singleRecordExecution": false,
+    "remoteExecutableFlag": false,
+    "parameters": [
+        "connector_config",
+        "adom",
+        "script_name",
+        "devices"
+    ],
+    "synchronous": false,
+    "collection": "\/api\/3\/workflow_collections\/c15a8515-33ae-46d2-9166-fa6fa47ac762",
+    "versions": [],
+    "triggerStep": "\/api\/3\/workflow_steps\/c98be13a-f343-4c74-9350-a05df9a6fdf2",
+    "steps": [
+        {
+            "@type": "WorkflowStep",
+            "name": "device_scope",
+            "description": null,
+            "arguments": {
+                "device_scope": "{%- for dev in vars.device_list -%}\n{%- set name = dev.split(\":\") -%}\n{\n  \"name\":\"{{name[0]}}\",\n  \"vdom\":\"{{name[1]|default('root')}}\"\n},\n{%- endfor -%}",
+                "device_scope_test": "{\n      \"name\": \"FG1\",\n      \"vdom\": \"root\"\n    },\n    {\n      \"name\": \"FG2\",\n      \"vdom\": \"root\"\n    },\n    {\n      \"name\": \"FG3\",\n      \"vdom\": \"root\"\n    }"
+            },
+            "status": null,
+            "top": "120",
+            "left": "440",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "6c13dc6c-a095-4a3b-b368-7487dd67721e"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "exec_payload",
+            "description": null,
+            "arguments": {
+                "api_url": "\/dvmdb\/adom\/{{vars.adom}}\/script\/execute",
+                "data_payload": "{\n  \"data\": {    \n    \"adom\": \"{{vars.adom}}\", \n    \"script\": \"{{vars.script_name}}\", \n    \"scope\": {{vars.device_scope}}\n  }\n}"
+            },
+            "status": null,
+            "top": "200",
+            "left": "440",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "61a5c011-14dc-41a2-9511-5260bbfd3174"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "fmg_api",
+            "description": null,
+            "arguments": {
+                "arguments": {
+                    "exec_url": "{{vars.api_url}}",
+                    "exec_payload": "{{vars.data_payload}}",
+                    "connector_config": "{{vars.connector_config}}"
+                },
+                "apply_async": false,
+                "step_variables": [],
+                "pass_parent_env": false,
+                "pass_input_record": false,
+                "workflowReference": "\/api\/3\/workflows\/ec1c9a17-98b1-40c3-bda5-7e3a9b315e70"
+            },
+            "status": null,
+            "top": "280",
+            "left": "440",
+            "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
+            "group": null,
+            "uuid": "07ffc300-d534-417c-99e1-d60159d0a41a"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "return_results",
+            "description": null,
+            "arguments": {
+                "output": "{{vars.steps.fmg_api.output}}",
+                "params": "{{vars.input.params}}",
+                "status": "{%- set stat = {\n  \"error\":vars.steps.fmg_api.output.error,\n  \"message\":vars.steps.fmg_api.output.msg\n}\n-%}\n\n{{stat}}"
+            },
+            "status": null,
+            "top": "120",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "1b94e574-49b8-407d-a45c-41f9af147449"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "setup env",
+            "description": null,
+            "arguments": {
+                "adom": "{%- if vars.input.params.adom not in ['',None,Null] -%}\n{{vars.input.params.adom}}\n{%- else -%}\nroot\n{%- endif -%}",
+                "devices": "{{vars.input.params.devices}}",
+                "device_list": "{{vars.input.params.devices.split(\",\")}}",
+                "script_name": "{{vars.input.params['script_name']}}",
+                "connector_config": "{{vars.input.params['connector_config']}}"
+            },
+            "status": null,
+            "top": "40",
+            "left": "440",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "e7bc455c-136b-48ee-947e-233e94ad6ac1"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Start",
+            "description": null,
+            "arguments": {
+                "__triggerLimit": true,
+                "step_variables": {
+                    "input": {
+                        "params": []
+                    }
+                },
+                "triggerOnSource": true,
+                "triggerOnReplicate": false
+            },
+            "status": null,
+            "top": "40",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/b348f017-9a94-471f-87f8-ce88b6a7ad62",
+            "group": null,
+            "uuid": "c98be13a-f343-4c74-9350-a05df9a6fdf2"
+        }
+    ],
+    "routes": [
+        {
+            "@type": "WorkflowRoute",
+            "name": "device_scope -> exec_payload",
+            "targetStep": "\/api\/3\/workflow_steps\/61a5c011-14dc-41a2-9511-5260bbfd3174",
+            "sourceStep": "\/api\/3\/workflow_steps\/6c13dc6c-a095-4a3b-b368-7487dd67721e",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "0e5a60ad-4e86-4b79-a412-0ec42b4a6f91"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "exec_payload -> fmg_api",
+            "targetStep": "\/api\/3\/workflow_steps\/07ffc300-d534-417c-99e1-d60159d0a41a",
+            "sourceStep": "\/api\/3\/workflow_steps\/61a5c011-14dc-41a2-9511-5260bbfd3174",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "8390af4c-1a49-4da5-a4f4-6c95e8caa485"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "fmg_api -> return_results",
+            "targetStep": "\/api\/3\/workflow_steps\/1b94e574-49b8-407d-a45c-41f9af147449",
+            "sourceStep": "\/api\/3\/workflow_steps\/07ffc300-d534-417c-99e1-d60159d0a41a",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "b5f7f2f4-4af1-4269-b016-7e88639b8b3c"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "setup env -> device_scope",
+            "targetStep": "\/api\/3\/workflow_steps\/6c13dc6c-a095-4a3b-b368-7487dd67721e",
+            "sourceStep": "\/api\/3\/workflow_steps\/e7bc455c-136b-48ee-947e-233e94ad6ac1",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "6d653d3e-4648-4e7c-81bf-e978baf23fc9"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Start -> setup env",
+            "targetStep": "\/api\/3\/workflow_steps\/e7bc455c-136b-48ee-947e-233e94ad6ac1",
+            "sourceStep": "\/api\/3\/workflow_steps\/c98be13a-f343-4c74-9350-a05df9a6fdf2",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "d54ad5c0-27f2-4500-9f9e-3bd547f9bdea"
+        }
+    ],
+    "groups": [],
+    "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+    "playbookOrigin": "\/api\/3\/picklists\/b6d710a9-a8ec-41ec-8817-fe9fa062fcdd",
+    "isEditable": false,
+    "uuid": "6c83b626-12ef-43f9-b323-396fa1b469eb",
+    "owners": [],
+    "isPrivate": false,
+    "deletedAt": null,
+    "recordTags": [
+        "fmg_api",
+        "TODO"
+    ]
+}

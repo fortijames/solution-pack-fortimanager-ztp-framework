@@ -11,7 +11,8 @@
     "remoteExecutableFlag": false,
     "parameters": [
         "action_id",
-        "device_id"
+        "device_id",
+        "input_yaml"
     ],
     "synchronous": false,
     "collection": "\/api\/3\/workflow_collections\/517fb52d-36f5-4bac-a344-7d4599d7dec6",
@@ -26,8 +27,8 @@
                 "jinja_vars": "{%- set ret = {} -%}\n\n{%- set ac = vars.steps.jinja_vars_from_action -%}\n{%- set tp = vars.steps.jinja_vars_from_template -%}\n\n{%- if tp.output.jinja_vars is defined -%}\n  {%- do ret.update(tp.output.jinja_vars) -%}\n  {%- do ret.update({\"template\":tp.output.script_rendered}) -%}  \n{%- endif -%}\n\n{%- if ac.output is defined -%}\n    {%- set merge =  ret | combine(ac.output) -%}\n    {%- do ret.update(merge) -%}\n{%- endif -%}  \n\n{{ret}}"
             },
             "status": null,
-            "top": "480",
-            "left": "680",
+            "top": "580",
+            "left": "660",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
             "uuid": "20dde07d-d1a9-470b-bc11-0fcfa376b2b1"
@@ -188,9 +189,9 @@
             "name": "jinja_vars from action",
             "description": null,
             "arguments": {
-                "when": "{{vars.metadata_source_ids|length > 0}}",
                 "arguments": {
                     "device_id": "{{vars.device_id}}",
+                    "input_yaml": "{{vars.input_yaml}}",
                     "metadata_source_ids": "{{vars.metadata_source_ids}}"
                 },
                 "apply_async": false,
@@ -200,8 +201,8 @@
                 "workflowReference": "\/api\/3\/workflows\/05070bbe-a848-4286-8f33-269ed1a943b0"
             },
             "status": null,
-            "top": "320",
-            "left": "680",
+            "top": "360",
+            "left": "660",
             "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
             "group": null,
             "uuid": "ae0931ab-3b0b-4ed1-82f6-c664d8d316a6"
@@ -222,7 +223,7 @@
                 "workflowReference": "\/api\/3\/workflows\/c4061d2f-16bf-45e3-9b97-1a8924973b1b"
             },
             "status": null,
-            "top": "360",
+            "top": "320",
             "left": "980",
             "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
             "group": null,
@@ -234,7 +235,7 @@
             "description": null,
             "arguments": [],
             "status": null,
-            "top": "260",
+            "top": "280",
             "left": "340",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
@@ -284,7 +285,8 @@
             "description": null,
             "arguments": {
                 "action_id": "{{vars.input.params['action_id']}}",
-                "device_id": "{{vars.input.params['device_id']}}"
+                "device_id": "{{vars.input.params['device_id']}}",
+                "input_yaml": "{{vars.input.params['input_yaml']}}"
             },
             "status": null,
             "top": "40",

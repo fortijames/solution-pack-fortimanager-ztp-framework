@@ -75,7 +75,7 @@
             "name": "create_post_data",
             "description": null,
             "arguments": {
-                "post_data": "{\n  \"template\": '{{vars.input.params[\"script_template\"]|tojson}}', \n  \"values\": {{vars.input.params['script_vars']}}\n}"
+                "post_data": "{%- set t = vars.input.params[\"script_template\"]|tojson -%}\n{%- set v = vars.input.params['script_vars'] or {} -%}\n{\n  \"template\": '{{t}}', \n  \"values\": {{v}}\n}"
             },
             "status": null,
             "top": "40",
@@ -216,6 +216,7 @@
     "isPrivate": false,
     "deletedAt": null,
     "recordTags": [
-        "FortiSOAR-API"
+        "fsr_api",
+        "function"
     ]
 }

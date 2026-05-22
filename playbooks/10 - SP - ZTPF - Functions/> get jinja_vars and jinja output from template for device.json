@@ -21,9 +21,9 @@
         {
             "@type": "WorkflowStep",
             "name": "create jinja_vars",
-            "description": null,
+            "description": "Create jinja_vars from one of the last two playbooks referenced.",
             "arguments": {
-                "jinja_vars": "{{vars.steps.get_jinja_vars.output}}"
+                "jinja_vars": "{{ vars.steps.get_jinja_vars.output }}"
             },
             "status": null,
             "top": "120",
@@ -144,9 +144,9 @@
         {
             "@type": "WorkflowStep",
             "name": "get jinja_vars",
-            "description": null,
+            "description": "Collect jinja_vars from metadata sources to which includes device record data.",
             "arguments": {
-                "when": "{{vars.device_id and vars.metadata_source_ids|length > 0}}",
+                "when": "{{vars.device_id}}",
                 "arguments": {
                     "device_id": "{{vars.device_id}}",
                     "metadata_source_ids": "{{vars.metadata_source_ids}}"
@@ -159,7 +159,7 @@
             },
             "status": null,
             "top": "380",
-            "left": "640",
+            "left": "340",
             "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
             "group": null,
             "uuid": "b55f57ae-9f3e-4c8c-befa-679dd725626a"
@@ -180,8 +180,8 @@
                 "workflowReference": "\/api\/3\/workflows\/b9e9fe1a-4964-4631-ba81-97987676884d"
             },
             "status": null,
-            "top": "380",
-            "left": "340",
+            "top": "220",
+            "left": "40",
             "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
             "group": null,
             "uuid": "7f69c239-4055-48cd-bb52-12b1c6b9cb87"
@@ -214,7 +214,7 @@
             },
             "status": null,
             "top": "380",
-            "left": "960",
+            "left": "1120",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
             "uuid": "97ca9f1f-24bb-4ff5-900a-e6bc368e44a4"
@@ -290,7 +290,7 @@
             "label": null,
             "isExecuted": false,
             "group": null,
-            "uuid": "a6897367-4eed-4865-be47-5b1c7bacaef7"
+            "uuid": "0b7064eb-157c-4b0b-a2fe-78324ede1df1"
         },
         {
             "@type": "WorkflowRoute",
@@ -327,17 +327,17 @@
         {
             "@type": "WorkflowGroup",
             "name": "Details",
-            "description": "Collect all jinja_vars from the device details and metadata sources linked to this template.\n\nRender the output using the jinja vars and jinja script.",
+            "description": "Collect all jinja_vars from the metadata sources linked to this template which includes record data or just the device record data. \n\nRender the output using the jinja vars and jinja script.",
             "type": "note",
             "isCollapsed": false,
             "hasTriggerStep": false,
             "hideInLogs": false,
             "metadata": [],
             "reusable": false,
-            "top": "160",
-            "left": "680",
-            "height": "167",
-            "width": "360",
+            "top": "140",
+            "left": "620",
+            "height": "177",
+            "width": "405",
             "uuid": "fde8bb29-83b7-42a0-9a4e-36852d9fef5b",
             "recordTags": []
         }

@@ -83,20 +83,6 @@
         },
         {
             "@type": "WorkflowStep",
-            "name": "device option selected",
-            "description": null,
-            "arguments": {
-                "device_option_selected": "{%- set m = vars.user_device_selection[0] -%}\n{%- set d = vars.user_device_selection[1] -%}\n\n{%- set ret = vars.manager_and_device_options.src \n        | json_query('[?_option_mgr==`{}`]'.format(m))\n        | json_query('[?_option_dev==`{}`]'.format(d))\n        | json_query('[]')\n-%}\n\n{{ret[0]}}"
-            },
-            "status": null,
-            "top": "340",
-            "left": "260",
-            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
-            "group": "\/api\/3\/workflow_groups\/0b540b21-f0c6-4813-b595-090d761695bc",
-            "uuid": "5bb357ca-c3c4-4b76-9fda-dcefeafc9e8c"
-        },
-        {
-            "@type": "WorkflowStep",
             "name": "find devices with manager",
             "description": null,
             "arguments": {
@@ -125,6 +111,21 @@
         },
         {
             "@type": "WorkflowStep",
+            "name": "options selected",
+            "description": null,
+            "arguments": {
+                "input_yaml": "{%- if vars.steps.pick_a_manager_and_device.input.populateInputParameters -%}\n{{vars.steps.pick_a_manager_and_device.input.inputParameters}}\n{%- endif -%}",
+                "device_option_selected": "{%- set m = vars.user_device_selection[0] -%}\n{%- set d = vars.user_device_selection[1] -%}\n\n{%- set ret = vars.manager_and_device_options.src \n        | json_query('[?_option_mgr==`{}`]'.format(m))\n        | json_query('[?_option_dev==`{}`]'.format(d))\n        | json_query('[]')\n-%}\n\n{{ret[0]}}"
+            },
+            "status": null,
+            "top": "340",
+            "left": "260",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": "\/api\/3\/workflow_groups\/0b540b21-f0c6-4813-b595-090d761695bc",
+            "uuid": "5bb357ca-c3c4-4b76-9fda-dcefeafc9e8c"
+        },
+        {
+            "@type": "WorkflowStep",
             "name": "pick a manager and device",
             "description": null,
             "arguments": {
@@ -132,7 +133,7 @@
                 "input": {
                     "schema": {
                         "title": "Choose a Manager and a Device",
-                        "description": "Choose a Manager and then a Device from below:",
+                        "description": "1. Choose a Manager and then a Device from below.\n2. Optionally provide input parameters. ",
                         "inputVariables": [
                             {
                                 "name": "managerAndDevice",
@@ -145,7 +146,7 @@
                                 "dataType": "dynamicList",
                                 "formType": "dynamicList",
                                 "required": false,
-                                "_expanded": true,
+                                "_expanded": false,
                                 "mmdUpdate": true,
                                 "collection": false,
                                 "searchable": false,
@@ -159,6 +160,80 @@
                                 "jinjaExpressionView": true,
                                 "useRecordFieldDefault": false,
                                 "_addRequiredConditions": false
+                            },
+                            {
+                                "name": "populateInputParameters",
+                                "type": "boolean",
+                                "label": "Populate Input Parameters",
+                                "title": "Checkbox",
+                                "usable": true,
+                                "tooltip": "",
+                                "dataType": "checkbox",
+                                "formType": "checkbox",
+                                "required": false,
+                                "_expanded": true,
+                                "mmdUpdate": true,
+                                "collection": false,
+                                "searchable": true,
+                                "templateUrl": "app\/components\/form\/fields\/checkbox.html",
+                                "defaultValue": null,
+                                "_previousName": "populateParameters",
+                                "playbookField": true,
+                                "visibilityQuery": {
+                                    "sort": [],
+                                    "limit": 30,
+                                    "logic": "AND",
+                                    "filters": []
+                                },
+                                "lengthConstraint": false,
+                                "allowedEncryption": false,
+                                "allowedGridColumn": true,
+                                "requiredCondition": "notrequired",
+                                "jinjaExpressionView": true,
+                                "useRecordFieldDefault": false,
+                                "_addRequiredConditions": true,
+                                "_addVisibilityConditions": true
+                            },
+                            {
+                                "name": "inputParameters",
+                                "type": "string",
+                                "label": "Input Parameters",
+                                "title": "Text Area",
+                                "usable": false,
+                                "options": "{{vars.input.records[0].inputParameters.split(\"\\n\")}}",
+                                "tooltip": "",
+                                "dataType": "text",
+                                "formType": "textarea",
+                                "required": false,
+                                "_expanded": true,
+                                "mmdUpdate": false,
+                                "collection": false,
+                                "searchable": false,
+                                "templateUrl": "app\/components\/form\/fields\/json.html",
+                                "defaultValue": "input:\n{%- for f in vars.input.records[0].inputParameters.split(\"\\n\") %}\n  {{f}}:\n{%- endfor %}",
+                                "_previousName": "inputFields",
+                                "playbookField": true,
+                                "visibilityQuery": {
+                                    "sort": [],
+                                    "limit": 30,
+                                    "logic": "AND",
+                                    "filters": [
+                                        {
+                                            "type": "primitive",
+                                            "field": "populateInputParameters",
+                                            "value": true,
+                                            "operator": "eq",
+                                            "_operator": "eq"
+                                        }
+                                    ]
+                                },
+                                "lengthConstraint": false,
+                                "allowedGridColumn": false,
+                                "requiredCondition": "notrequired",
+                                "jinjaExpressionView": true,
+                                "useRecordFieldDefault": false,
+                                "_addRequiredConditions": false,
+                                "_addVisibilityConditions": true
                             }
                         ]
                     }
@@ -223,7 +298,8 @@
             "arguments": {
                 "arguments": {
                     "action_id": "{{vars.action_id}}",
-                    "device_id": "{{vars.device_option_selected.id}}"
+                    "device_id": "{{vars.device_option_selected.id}}",
+                    "input_yaml": "{{vars.input_yaml}}"
                 },
                 "apply_async": false,
                 "step_variables": [],
@@ -232,7 +308,7 @@
                 "workflowReference": "\/api\/3\/workflows\/6ed8988b-5216-4fb3-94e5-0be09ec2ac0a"
             },
             "status": null,
-            "top": "480",
+            "top": "540",
             "left": "920",
             "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
             "group": null,

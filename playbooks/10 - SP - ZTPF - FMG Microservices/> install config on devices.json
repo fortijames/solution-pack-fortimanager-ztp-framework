@@ -1,10 +1,10 @@
 {
     "@type": "Workflow",
     "triggerLimit": null,
-    "name": "> fmg reinstall policy package - on devices",
+    "name": "> install config on devices",
     "aliasName": null,
     "tag": null,
-    "description": "Reinstall pkg on a device list in the form of fg1,fg2,fg3 or fg1:vdom1,fg2:vdom1,fg3:vdoma or fg1:vdom1,fg2,fg3.",
+    "description": "Exec install config on a device list in the form of fg1,fg2,fg3 or fg1:vdom1,fg2:vdom1,fg3:vdoma or fg1:vdom1,fg2,fg3",
     "isActive": true,
     "debug": false,
     "singleRecordExecution": false,
@@ -13,13 +13,12 @@
         "connector_config",
         "adom",
         "devices",
-        "package",
         "flags"
     ],
     "synchronous": false,
     "collection": "\/api\/3\/workflow_collections\/c15a8515-33ae-46d2-9166-fa6fa47ac762",
     "versions": [],
-    "triggerStep": "\/api\/3\/workflow_steps\/bddbea62-c48e-4375-ab68-73087bd0a951",
+    "triggerStep": "\/api\/3\/workflow_steps\/76097c06-f681-4184-9210-69174f093cca",
     "steps": [
         {
             "@type": "WorkflowStep",
@@ -34,21 +33,21 @@
             "left": "880",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
-            "uuid": "6d7bf0b4-9c48-42c5-aaa4-5330c3b6ab88"
+            "uuid": "85e510a3-d0b9-4960-a453-5e8b04d98db1"
         },
         {
             "@type": "WorkflowStep",
             "name": "exec_payload",
             "description": null,
             "arguments": {
-                "fmg_data_payload": "{%- set data = {\n    \"adom\": vars.input.params.adom,\n    \"flags\": [\"auto_lock_ws\"],\n    \"target\": [ \n       {\n         \"pkg\": vars.package,\n         \"scope\": vars.device_scope\n      }\n    ]\n  }\n-%}\n\n{%- if vars.flags -%}\n  {%- set f = data.flags -%}\n  {%- do data.update({\"flags\":(f + vars.flags)|unique}) -%}\n{%- endif -%}\n\n{\n  \"data\":{{data}}\n}"
+                "fmg_data_payload": "{%- set data = {\n    \"adom\": vars.input.params.adom,\n    \"scope\": vars.device_scope\n}\n-%}\n\n{%- if vars.flags -%}\n  {%- do data.update({\"flags\":vars.flags}) -%}\n{%- endif -%}\n\n{\n  \"data\":{{data}}\n}"
             },
             "status": null,
             "top": "200",
             "left": "880",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
-            "uuid": "76c0b5c6-e103-4769-a912-670d5689f8bd"
+            "uuid": "d1b68779-d39c-43d3-8574-067590cefb5a"
         },
         {
             "@type": "WorkflowStep",
@@ -67,11 +66,11 @@
                 "workflowReference": "\/api\/3\/workflows\/ec1c9a17-98b1-40c3-bda5-7e3a9b315e70"
             },
             "status": null,
-            "top": "300",
+            "top": "240",
             "left": "440",
             "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
             "group": null,
-            "uuid": "a342be8b-e24d-498e-bcb7-e927951019ed"
+            "uuid": "7999fc53-b303-4d1c-93d8-d6fb4a02fa80"
         },
         {
             "@type": "WorkflowStep",
@@ -86,7 +85,7 @@
             "left": "40",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
-            "uuid": "020fdf1f-c303-4c60-b82a-2da528c04278"
+            "uuid": "baa012ad-d460-4d7d-b400-7beac5539a57"
         },
         {
             "@type": "WorkflowStep",
@@ -102,7 +101,7 @@
             "left": "40",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
-            "uuid": "f5c6848f-b13b-462b-a8a0-29eda828288f"
+            "uuid": "bf28fc72-40d5-442a-ad3e-0f2f0561319f"
         },
         {
             "@type": "WorkflowStep",
@@ -110,8 +109,7 @@
             "description": null,
             "arguments": {
                 "flags": "{%- set in_field = vars.input.params.flags -%}\n{%- set ret = '' -%}\n\n{%- if in_field not in ['',None] -%}\n  {%- if in_field is sequence and in_field is not string -%}\n    {% set ret = in_field %}\n  {%- else -%}\n    {%- set cmt = in_field | regex_replace('[,\\n]+', ',') -%}\n    {%- set ret = cmt.split(',') | list -%}\n  {%- endif -%}\n{%- endif -%}\n\n{{ret}}",
-                "package": "{{vars.input.params.package}}",
-                "exec_url": "\/securityconsole\/reinstall\/package",
+                "exec_url": "\/securityconsole\/install\/device",
                 "device_list": "{{vars.input.params.devices.split(\",\")}}"
             },
             "status": null,
@@ -119,7 +117,7 @@
             "left": "880",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
-            "uuid": "42b7ede1-143e-4d77-a1cf-3bce4e6348f0"
+            "uuid": "b49e1bc1-d876-42a8-8fe4-fc8f097f3f62"
         },
         {
             "@type": "WorkflowStep",
@@ -140,94 +138,94 @@
             "left": "40",
             "stepType": "\/api\/3\/workflow_step_types\/b348f017-9a94-471f-87f8-ce88b6a7ad62",
             "group": null,
-            "uuid": "bddbea62-c48e-4375-ab68-73087bd0a951"
+            "uuid": "76097c06-f681-4184-9210-69174f093cca"
         }
     ],
     "routes": [
         {
             "@type": "WorkflowRoute",
             "name": "device_scope -> exec_payload",
-            "targetStep": "\/api\/3\/workflow_steps\/76c0b5c6-e103-4769-a912-670d5689f8bd",
-            "sourceStep": "\/api\/3\/workflow_steps\/6d7bf0b4-9c48-42c5-aaa4-5330c3b6ab88",
+            "targetStep": "\/api\/3\/workflow_steps\/d1b68779-d39c-43d3-8574-067590cefb5a",
+            "sourceStep": "\/api\/3\/workflow_steps\/85e510a3-d0b9-4960-a453-5e8b04d98db1",
             "label": null,
             "isExecuted": false,
             "group": null,
-            "uuid": "e50f767a-387d-44f8-a524-892a8b7567f4"
+            "uuid": "62c37422-9b96-431e-a0fd-aa0ba362c983"
         },
         {
             "@type": "WorkflowRoute",
             "name": "exec_payload -> exec task",
-            "targetStep": "\/api\/3\/workflow_steps\/a342be8b-e24d-498e-bcb7-e927951019ed",
-            "sourceStep": "\/api\/3\/workflow_steps\/76c0b5c6-e103-4769-a912-670d5689f8bd",
+            "targetStep": "\/api\/3\/workflow_steps\/7999fc53-b303-4d1c-93d8-d6fb4a02fa80",
+            "sourceStep": "\/api\/3\/workflow_steps\/d1b68779-d39c-43d3-8574-067590cefb5a",
             "label": null,
             "isExecuted": false,
             "group": null,
-            "uuid": "c9ce917f-2d28-4386-97de-c1b2b5047397"
+            "uuid": "f7b057f0-50b4-4df6-a97a-b14489970313"
         },
         {
             "@type": "WorkflowRoute",
             "name": "exec task -> extract task data",
-            "targetStep": "\/api\/3\/workflow_steps\/020fdf1f-c303-4c60-b82a-2da528c04278",
-            "sourceStep": "\/api\/3\/workflow_steps\/a342be8b-e24d-498e-bcb7-e927951019ed",
+            "targetStep": "\/api\/3\/workflow_steps\/baa012ad-d460-4d7d-b400-7beac5539a57",
+            "sourceStep": "\/api\/3\/workflow_steps\/7999fc53-b303-4d1c-93d8-d6fb4a02fa80",
             "label": null,
             "isExecuted": false,
             "group": null,
-            "uuid": "88d9858c-3d6c-4400-bd76-0617154e18e1"
+            "uuid": "2ac96c43-84e4-40fb-9299-19073cbacb32"
         },
         {
             "@type": "WorkflowRoute",
             "name": "extract task data -> return",
-            "targetStep": "\/api\/3\/workflow_steps\/f5c6848f-b13b-462b-a8a0-29eda828288f",
-            "sourceStep": "\/api\/3\/workflow_steps\/020fdf1f-c303-4c60-b82a-2da528c04278",
+            "targetStep": "\/api\/3\/workflow_steps\/bf28fc72-40d5-442a-ad3e-0f2f0561319f",
+            "sourceStep": "\/api\/3\/workflow_steps\/baa012ad-d460-4d7d-b400-7beac5539a57",
             "label": null,
             "isExecuted": false,
             "group": null,
-            "uuid": "0ff4ee7f-ed20-42bd-b56c-375b1b4adf93"
+            "uuid": "cac9f54c-bb3e-493c-9f71-8380d3b99959"
         },
         {
             "@type": "WorkflowRoute",
             "name": "setup_input -> device_scope",
-            "targetStep": "\/api\/3\/workflow_steps\/6d7bf0b4-9c48-42c5-aaa4-5330c3b6ab88",
-            "sourceStep": "\/api\/3\/workflow_steps\/42b7ede1-143e-4d77-a1cf-3bce4e6348f0",
+            "targetStep": "\/api\/3\/workflow_steps\/85e510a3-d0b9-4960-a453-5e8b04d98db1",
+            "sourceStep": "\/api\/3\/workflow_steps\/b49e1bc1-d876-42a8-8fe4-fc8f097f3f62",
             "label": null,
             "isExecuted": false,
             "group": null,
-            "uuid": "b936409f-4f86-439c-ad4b-16565fe0d8a9"
+            "uuid": "2e9c13bc-2e2d-461d-af77-c4a888aa1148"
         },
         {
             "@type": "WorkflowRoute",
             "name": "Start -> setup_input",
-            "targetStep": "\/api\/3\/workflow_steps\/42b7ede1-143e-4d77-a1cf-3bce4e6348f0",
-            "sourceStep": "\/api\/3\/workflow_steps\/bddbea62-c48e-4375-ab68-73087bd0a951",
+            "targetStep": "\/api\/3\/workflow_steps\/b49e1bc1-d876-42a8-8fe4-fc8f097f3f62",
+            "sourceStep": "\/api\/3\/workflow_steps\/76097c06-f681-4184-9210-69174f093cca",
             "label": null,
             "isExecuted": false,
             "group": null,
-            "uuid": "49e16974-976a-4334-86aa-d2a27a008c2e"
+            "uuid": "1c7dbbc6-824d-4038-afa0-8449eb1722fb"
         }
     ],
     "groups": [
         {
             "@type": "WorkflowGroup",
             "name": "Details",
-            "description": "Create a payload to run against \/securityconsole\/reinstall\/package using the playbook *fmg exec task - return standard output of results*. \n\nThis simply runs a reinstall on a pkg already assumed to be assigned to a device and fmg will skip the install if nothing has been changed in the pkg.",
+            "description": "Create a payload to run against \/securityconsole\/install\/device using the playbook *fmg exec task - return standard output of results*.",
             "type": "note",
             "isCollapsed": false,
             "hasTriggerStep": false,
             "hideInLogs": false,
             "metadata": [],
             "reusable": false,
-            "top": "80",
+            "top": "100",
             "left": "380",
-            "height": "209",
-            "width": "385",
-            "uuid": "b6b05671-52e2-46c6-99e5-4b1637bca063",
+            "height": "125",
+            "width": "394",
+            "uuid": "d9f580ff-0e69-44fb-b042-9de45ced86b3",
             "recordTags": []
         }
     ],
     "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
     "playbookOrigin": "\/api\/3\/picklists\/b6d710a9-a8ec-41ec-8817-fe9fa062fcdd",
     "isEditable": false,
-    "uuid": "be557ce1-2730-482d-a947-921a98d4700f",
+    "uuid": "73db1cb9-d57a-4895-84f5-1b76caba9704",
     "owners": [],
     "isPrivate": false,
     "deletedAt": null,

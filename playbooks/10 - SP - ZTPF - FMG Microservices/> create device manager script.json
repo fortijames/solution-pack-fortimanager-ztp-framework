@@ -1,0 +1,248 @@
+{
+    "@type": "Workflow",
+    "triggerLimit": null,
+    "name": "> create device manager script",
+    "aliasName": null,
+    "tag": null,
+    "description": "Create a dvmdb\/script based on the script type options and the FMG version.",
+    "isActive": true,
+    "debug": false,
+    "singleRecordExecution": false,
+    "remoteExecutableFlag": false,
+    "parameters": [
+        "connector_config",
+        "adom",
+        "script_name",
+        "script_type",
+        "script_contents",
+        "fmg_version"
+    ],
+    "synchronous": false,
+    "collection": "\/api\/3\/workflow_collections\/c15a8515-33ae-46d2-9166-fa6fa47ac762",
+    "versions": [],
+    "triggerStep": "\/api\/3\/workflow_steps\/9a651a30-9709-4f1b-9d6f-64d7a0dbd8b1",
+    "steps": [
+        {
+            "@type": "WorkflowStep",
+            "name": "create_script",
+            "description": null,
+            "arguments": {
+                "name": "Fortinet FortiManager JSON-RPC",
+                "config": "{{vars.input.params['connector_config']}}",
+                "params": {
+                    "url": "{{vars.url}}",
+                    "data": "{{vars.script_payload}}"
+                },
+                "version": "1.2.2",
+                "connector": "fortinet-fortimanager-json-rpc",
+                "operation": "json_rpc_add",
+                "operationTitle": "JSON RPC Add",
+                "pickFromTenant": false,
+                "step_variables": []
+            },
+            "status": null,
+            "top": "380",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/0bfed618-0316-11e7-93ae-92361f002671",
+            "group": null,
+            "uuid": "6dda7e80-291f-4a92-8798-9358cf3a1bde"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "get fmg version matrix",
+            "description": null,
+            "arguments": {
+                "when": "{{vars.input.params['fmg_version']}}",
+                "arguments": {
+                    "version": "{{vars.input.params['fmg_version']}}",
+                    "find_version_list": "[\n\"<= 7.6.4\"\n]"
+                },
+                "apply_async": false,
+                "step_variables": {
+                    "fmg_legacyversion_scripts_check": "{{vars.steps.get_fmg_version_matrix.output['version_check']}}"
+                },
+                "pass_parent_env": false,
+                "pass_input_record": false,
+                "workflowReference": "\/api\/3\/workflows\/99a05d7e-1a17-4375-b475-b315e14cdd1f"
+            },
+            "status": null,
+            "top": "40",
+            "left": "380",
+            "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
+            "group": null,
+            "uuid": "220add5b-2ffe-4820-a850-41db027246df"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "return",
+            "description": null,
+            "arguments": {
+                "output": "{{vars.steps.create_script}}",
+                "params": "{{vars.input.params}}",
+                "status": "{%- set stat = vars.status -%}\n\n{%- set res = vars.steps.create_script.data -%}\n{%- if res.status != 0 -%}\n  {%- do stat.update({\n    \"error\":true,\n    \"message\": res.add_response.status.message\n  }) -%}\n{%- endif -%}\n\n{{stat}}"
+            },
+            "status": null,
+            "top": "120",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "7ddda12f-a034-458b-83df-629cbc834080"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "setup payload and url",
+            "description": null,
+            "arguments": {
+                "url": "{# \n# matches legacy version use \/dvmdb\/adom\/<adom>\/script\/\n#  default to \/pm\/config\/adom\/<adom>\/obj\/fmg\/script\n#}\n{%- if true in vars.fmg_legacyversion_scripts_check.values() | list -%}\n\/dvmdb\/adom\/{{vars.input.params.adom}}\/script\/\n{%- else -%}\n\/pm\/config\/adom\/{{vars.input.params.adom}}\/obj\/fmg\/script\n{%- endif -%}",
+                "script_payload": "{%- set script_type = vars.script_type -%}\n\n{%- set payload = {} -%}\n{%- set tgt = vars.script_type_ref[script_type].target -%}\n{%- set typ =  vars.script_type_ref[script_type].type -%}\n\n{%- set _do = payload.update({\n    \"data\": {\n      \"name\":vars.script_name,\n      \"target\":tgt,\n      \"type\":typ,\n      \"content\":vars.script_contents.strip('\\\"'),\n      \"desc\": \"Created by FortiSOAR and will be deleted when executed.\"\n    }\n  }) \n%}\n{{payload}}"
+            },
+            "status": null,
+            "top": "380",
+            "left": "760",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "b7a3806d-1cb7-483c-9a44-5ead6e232122"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "setup vars data",
+            "description": null,
+            "arguments": {
+                "status": "{# Set a default status #}\n{%- set ret = {} -%}\n{%- do ret.update({\n  \"error\":false,\n  \"message\":\"\"\n}) -%}\n{{ret}}",
+                "script_name": "{{vars.input.params['script_name']}}",
+                "script_type": "{{vars.input.params['script_type']}}",
+                "script_contents": "{{vars.input.params['script_contents']}}",
+                "script_type_ref": "{%- set script_type_input = vars.input.params.script_type -%}\n{%- set target_type = {} -%}\n\n{# \n# matches legacy version create legacy script ref\n#  default to current options\n#}\n{%- set legacy = false -%}\n{%- if true in vars.fmg_legacyversion_scripts_check.values() | list -%}\n  {%- set legacy = true -%}\n{%- endif -%}\n\n{%- if legacy -%}\n  {%- do target_type.update({\n    \"DeviceDB\":{\"target\": \"device_database\",\"type\": \"cli\"},\n    \"Remote CLI\":{\"target\": \"remote_device\",\"type\": \"cli\"},\n    \"Remote TCL\":{\"target\": \"remote_device\",\"type\": \"tcl\"},\n    \"PolicyDB\":{\"target\": \"adom_database\",\"type\": \"cli\"}\n    }) -%}\n{%- else -%}\n  {%- do target_type.update({\n    \"DeviceDB\":{\"target\": \"devdb\",\"type\": \"cli\"},\n    \"Remote CLI\":{\"target\": \"remote\",\"type\": \"cli\"},\n    \"Remote TCL\":{\"target\": \"remote\",\"type\": \"tcl\"},\n    \"PolicyDB\":{\"target\": \"adomdb\",\"type\": \"cli\"}\n    }) -%}\n{%- endif -%}\n\n{{target_type}}",
+                "connector_config": "{{vars.input.params['connector_config']}}"
+            },
+            "status": null,
+            "top": "120",
+            "left": "760",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "db43be2f-4172-41f6-a7be-b3b57df228e4"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Start",
+            "description": null,
+            "arguments": {
+                "__triggerLimit": true,
+                "step_variables": {
+                    "input": {
+                        "params": []
+                    },
+                    "fmg_legacyversion_scripts_check": "{}"
+                },
+                "triggerOnSource": true,
+                "triggerOnReplicate": false
+            },
+            "status": null,
+            "top": "40",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/b348f017-9a94-471f-87f8-ce88b6a7ad62",
+            "group": null,
+            "uuid": "9a651a30-9709-4f1b-9d6f-64d7a0dbd8b1"
+        }
+    ],
+    "routes": [
+        {
+            "@type": "WorkflowRoute",
+            "name": "create_script -> extract_fmg_data",
+            "targetStep": "\/api\/3\/workflow_steps\/7ddda12f-a034-458b-83df-629cbc834080",
+            "sourceStep": "\/api\/3\/workflow_steps\/6dda7e80-291f-4a92-8798-9358cf3a1bde",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "ff23be21-6e30-4ea9-8594-88850bd0fed3"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "get fmg version matrix -> setup_vars_data",
+            "targetStep": "\/api\/3\/workflow_steps\/db43be2f-4172-41f6-a7be-b3b57df228e4",
+            "sourceStep": "\/api\/3\/workflow_steps\/220add5b-2ffe-4820-a850-41db027246df",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "45e40bdf-ced8-4123-944c-9e1605ab0d5d"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "setup payload and url -> create_script",
+            "targetStep": "\/api\/3\/workflow_steps\/6dda7e80-291f-4a92-8798-9358cf3a1bde",
+            "sourceStep": "\/api\/3\/workflow_steps\/b7a3806d-1cb7-483c-9a44-5ead6e232122",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "68c76366-bdb4-41c2-81f6-6b1f2cc502c2"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "setup_vars_data -> setup_payload",
+            "targetStep": "\/api\/3\/workflow_steps\/b7a3806d-1cb7-483c-9a44-5ead6e232122",
+            "sourceStep": "\/api\/3\/workflow_steps\/db43be2f-4172-41f6-a7be-b3b57df228e4",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "9a43895b-333c-434f-a05f-cd024201718f"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Start -> get fmg version matrix",
+            "targetStep": "\/api\/3\/workflow_steps\/220add5b-2ffe-4820-a850-41db027246df",
+            "sourceStep": "\/api\/3\/workflow_steps\/9a651a30-9709-4f1b-9d6f-64d7a0dbd8b1",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "11204166-78a1-42e5-aca2-5146b6230797"
+        }
+    ],
+    "groups": [
+        {
+            "@type": "WorkflowGroup",
+            "name": "Change Log",
+            "description": "05\/22\/2026 - Migrate to ZTPF2\n03\/11\/2026 - Add use of fmg version matrix. \n01\/12\/2026 - Add support of new dvmdb\/script api \nfor FMG 7.6.5+ and 8.0.0+ inside the setup_payload.\nInternal ref #1234061\n\nAs of FMG 7.6.5 the resource:\n\/dvmdb\/adom\/_adom_name_\/script\nmoved to\n\/pm\/config\/adom\/_adom_name_\/obj\/fmg\/script",
+            "type": "note",
+            "isCollapsed": false,
+            "hasTriggerStep": false,
+            "hideInLogs": false,
+            "metadata": [],
+            "reusable": false,
+            "top": "120",
+            "left": "1020",
+            "height": "258",
+            "width": "392",
+            "uuid": "6c60310f-27e2-42cd-ade7-90646cf2e76a",
+            "recordTags": []
+        },
+        {
+            "@type": "WorkflowGroup",
+            "name": "Details",
+            "description": "Requires the FMG version if the version might need a legacy API call.\n\nCreate a device manager script of type DeviceDB, Remote CLI, Remote TCL, or PolicyDB.",
+            "type": "note",
+            "isCollapsed": false,
+            "hasTriggerStep": false,
+            "hideInLogs": false,
+            "metadata": [],
+            "reusable": false,
+            "top": "200",
+            "left": "300",
+            "height": "158",
+            "width": "449",
+            "uuid": "ed9fe88b-15f0-488b-b24e-4ff8d1b11560",
+            "recordTags": []
+        }
+    ],
+    "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+    "playbookOrigin": "\/api\/3\/picklists\/b6d710a9-a8ec-41ec-8817-fe9fa062fcdd",
+    "isEditable": false,
+    "uuid": "8a20be86-58da-4fd7-bd6f-248e43dd8e01",
+    "owners": [],
+    "isPrivate": false,
+    "deletedAt": null,
+    "recordTags": [
+        "add",
+        "fmg_api",
+        "version_matrix"
+    ]
+}

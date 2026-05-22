@@ -1,0 +1,184 @@
+{
+    "@type": "Workflow",
+    "triggerLimit": null,
+    "name": "> version match matrix",
+    "aliasName": null,
+    "tag": null,
+    "description": "Standard Method for checking for a version.",
+    "isActive": true,
+    "debug": false,
+    "singleRecordExecution": false,
+    "remoteExecutableFlag": false,
+    "parameters": [
+        "find_version_list",
+        "version"
+    ],
+    "synchronous": false,
+    "collection": "\/api\/3\/workflow_collections\/517fb52d-36f5-4bac-a344-7d4599d7dec6",
+    "versions": [],
+    "triggerStep": "\/api\/3\/workflow_steps\/88524700-e5a5-491a-bbb5-43a45114ea9a",
+    "steps": [
+        {
+            "@type": "WorkflowStep",
+            "name": "compare versions",
+            "description": null,
+            "arguments": {
+                "config": "74c7e349-a99d-44ac-a576-8c1b158fc364",
+                "params": {
+                    "python_function": "# Install the packaging library if you don't have it:\r\n# pip install packaging\r\n\r\nimport operator\r\nimport json\r\nfrom packaging.version import parse\r\n\r\ndef compare_versions(version1, version_check):\r\n    oper, version2 = version_check.split(\" \")\r\n    v1 = parse(version1)\r\n    v2 = parse(version2)\r\n\r\n    ops = {\r\n        \"<=\": operator.le,\r\n        \"<\": operator.lt,\r\n        \">=\": operator.ge,\r\n        \">\": operator.gt,\r\n        \"==\": operator.eq,\r\n        \"!=\": operator.ne\r\n    }\r\n\r\n    if ops[oper](v1, v2):\r\n        return True\r\n    else:\r\n        return False\r\n\r\n#\r\n# Script to Compare\r\n#\r\n\r\n\r\nVERSION = \"{{vars.version_parsed}}\"\r\n#VERSION = \"v7.6.6-build3654 260127 (GA.M)\"\r\n#VERSION = \"7.6.6-build3654 260127 (GA.M)\"\r\n#VERSION = \"v7.6.6-build3654\"\r\n#VERSION = \"7.6.6-build3654\"\r\n#VERSION = \"v7.6.6\"\r\n#VERSION = \"7.6.6\"\r\n\r\nFIND_VERSIONS = {{vars.find_version_list}}\r\nresults = {}\r\n\r\nfor v in FIND_VERSIONS:\r\n    results[v] = compare_versions(VERSION, v)\r\n\r\nprint(json.dumps(results, indent=2))\r\n"
+                },
+                "version": "2.1.5",
+                "connector": "code-snippet",
+                "operation": "python_inline_code_editor",
+                "operationTitle": "Execute Python Code",
+                "step_variables": []
+            },
+            "status": null,
+            "top": "340",
+            "left": "420",
+            "stepType": "\/api\/3\/workflow_step_types\/1fdd14cc-d6b4-4335-a3af-ab49c8ed2fd8",
+            "group": null,
+            "uuid": "3995d087-63a9-4961-8ec9-59f7dcd70fc5"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "parse version",
+            "description": null,
+            "arguments": {
+                "version_parsed": "{%- set v = vars.version_full|split('-') -%}\n{{v[0]}}"
+            },
+            "status": null,
+            "top": "140",
+            "left": "940",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "0f2e95ec-153b-46da-ad94-42e71fdb7f91"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "return",
+            "description": null,
+            "arguments": {
+                "output": "{%- set ret = {} -%}\n{%- do ret.update({\n  \"version_parsed\":vars.version_parsed,\n  \"version_check\":vars.steps.compare_versions.data['code_output']\n}) -%}\n{{ret}}",
+                "params": "{{vars.input.params}}",
+                "status": "{%- set ret = {\"error\":false} -%}\n\n{%- if vars.steps.compare_versions.status != \"Success\" -%}\n  {%- do ret.update({\n    \"error\":true,\n    \"message\":\"Status from compare_versions is \" + vars.steps.compare_versions.status\n  }) -%}\n{%- endif -%}\n\n{{ret}}"
+            },
+            "status": null,
+            "top": "120",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "609ddbcf-6e84-47fc-8559-d07a4e3ae243"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "setup vars",
+            "description": null,
+            "arguments": {
+                "version_full": "{{vars.input.params.version}}",
+                "find_version_list": "{{vars.input.params['find_version_list']}}",
+                "version_full_example": "7.4.11-build2878",
+                "find_version_list_example": "[\n\"<= 7.2.0\",\n\">= 7.2.0\",\n\"!= 7.6.0\",\n\"<= 7.6.4\",\n\"== 7.6.4\",\n\"<= 7.6.5\",\n\">= 7.6.5\",\n\"<= 8.0.0\",\n\">= 8.0.0\"\n]"
+            },
+            "status": null,
+            "top": "40",
+            "left": "420",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "90ccaa20-7e3c-4d2b-a96e-8b308d8d5447"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Start",
+            "description": null,
+            "arguments": {
+                "__triggerLimit": true,
+                "step_variables": {
+                    "input": {
+                        "params": []
+                    }
+                },
+                "triggerOnSource": true,
+                "triggerOnReplicate": false
+            },
+            "status": null,
+            "top": "40",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/b348f017-9a94-471f-87f8-ce88b6a7ad62",
+            "group": null,
+            "uuid": "88524700-e5a5-491a-bbb5-43a45114ea9a"
+        }
+    ],
+    "routes": [
+        {
+            "@type": "WorkflowRoute",
+            "name": "compare versions -> return",
+            "targetStep": "\/api\/3\/workflow_steps\/609ddbcf-6e84-47fc-8559-d07a4e3ae243",
+            "sourceStep": "\/api\/3\/workflow_steps\/3995d087-63a9-4961-8ec9-59f7dcd70fc5",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "d1a0a893-41b2-4ffd-bcd2-44ffbf4a1cdb"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "setup vars -> testing vars",
+            "targetStep": "\/api\/3\/workflow_steps\/0f2e95ec-153b-46da-ad94-42e71fdb7f91",
+            "sourceStep": "\/api\/3\/workflow_steps\/90ccaa20-7e3c-4d2b-a96e-8b308d8d5447",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "d6d41fff-b004-4399-957d-c00da3a8952d"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Start -> setup vars",
+            "targetStep": "\/api\/3\/workflow_steps\/90ccaa20-7e3c-4d2b-a96e-8b308d8d5447",
+            "sourceStep": "\/api\/3\/workflow_steps\/88524700-e5a5-491a-bbb5-43a45114ea9a",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "5fb2268d-83e9-45cd-825d-1e2e7b8c991b"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "testing vars -> compare versions",
+            "targetStep": "\/api\/3\/workflow_steps\/3995d087-63a9-4961-8ec9-59f7dcd70fc5",
+            "sourceStep": "\/api\/3\/workflow_steps\/0f2e95ec-153b-46da-ad94-42e71fdb7f91",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "ca720f91-b171-4a6f-9a60-4f39d0eece00"
+        }
+    ],
+    "groups": [
+        {
+            "@type": "WorkflowGroup",
+            "name": "Version Check",
+            "description": "The find_version_list variable should be a list containing an operand and version to check. Look for the _example variables to see inputs.\n\nThis playbook returns True or False for each version check.",
+            "type": "note",
+            "isCollapsed": false,
+            "hasTriggerStep": false,
+            "hideInLogs": false,
+            "metadata": [],
+            "reusable": false,
+            "top": "140",
+            "left": "380",
+            "height": "185",
+            "width": "399",
+            "uuid": "3be67f2a-9c65-43e5-a3d7-c0e353e621b9",
+            "recordTags": []
+        }
+    ],
+    "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+    "playbookOrigin": "\/api\/3\/picklists\/b6d710a9-a8ec-41ec-8817-fe9fa062fcdd",
+    "isEditable": false,
+    "uuid": "99a05d7e-1a17-4375-b475-b315e14cdd1f",
+    "owners": [],
+    "isPrivate": false,
+    "deletedAt": null,
+    "recordTags": [
+        "code-snippet",
+        "function"
+    ]
+}

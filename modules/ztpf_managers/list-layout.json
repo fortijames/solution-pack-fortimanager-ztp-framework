@@ -65,7 +65,7 @@
                                                                 "query": {
                                                                     "sort": [
                                                                         {
-                                                                            "field": "adminStatus.orderIndex",
+                                                                            "field": "status.orderIndex",
                                                                             "direction": "ASC"
                                                                         }
                                                                     ],
@@ -80,28 +80,28 @@
                                                                         },
                                                                         {
                                                                             "operator": "groupby",
-                                                                            "alias": "adminStatus",
-                                                                            "field": "adminStatus.itemValue"
+                                                                            "alias": "status",
+                                                                            "field": "status.itemValue"
                                                                         },
                                                                         {
                                                                             "operator": "groupby",
                                                                             "alias": "color",
-                                                                            "field": "adminStatus.color"
+                                                                            "field": "status.color"
                                                                         },
                                                                         {
                                                                             "operator": "groupby",
                                                                             "alias": "orderIndex",
-                                                                            "field": "adminStatus.orderIndex"
+                                                                            "field": "status.orderIndex"
                                                                         }
                                                                     ]
                                                                 },
                                                                 "mapping": {
-                                                                    "fieldName": "adminStatus"
+                                                                    "fieldName": "status"
                                                                 },
                                                                 "assignedToSetting": "all",
                                                                 "aggregate": true,
                                                                 "viewType": "chart",
-                                                                "title": "Managers",
+                                                                "title": "Managers Status",
                                                                 "widgetAlwaysExpanded": true,
                                                                 "resource": "ztpf_managers",
                                                                 "chart": "donut",
@@ -366,7 +366,7 @@
                 "wid": "27dcaed4-6bf7-485e-beaa-122e692b1677",
                 "collapsible": true,
                 "collapsibleIndex": 0,
-                "_collapsed": false
+                "_collapsed": true
             },
             {
                 "columns": [

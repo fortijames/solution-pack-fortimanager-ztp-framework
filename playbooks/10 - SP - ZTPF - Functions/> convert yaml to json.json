@@ -1,0 +1,132 @@
+{
+    "@type": "Workflow",
+    "triggerLimit": null,
+    "name": "> convert yaml to json",
+    "aliasName": null,
+    "tag": null,
+    "description": "Convert YAML to JSON via Python",
+    "isActive": true,
+    "debug": false,
+    "singleRecordExecution": false,
+    "remoteExecutableFlag": false,
+    "parameters": [
+        "yaml"
+    ],
+    "synchronous": false,
+    "collection": "\/api\/3\/workflow_collections\/517fb52d-36f5-4bac-a344-7d4599d7dec6",
+    "versions": [],
+    "triggerStep": "\/api\/3\/workflow_steps\/9ea8cbfe-ae31-4989-a438-401a02400877",
+    "steps": [
+        {
+            "@type": "WorkflowStep",
+            "name": "return",
+            "description": null,
+            "arguments": {
+                "output": "{{vars.steps.yaml2json.data['code_output']}}",
+                "params": "{{vars.input.params}}",
+                "status": "{%- set ret = {\"error\":false} -%}\n\n{%- if  vars.steps.yaml2json.status != \"Success\" -%}\n  {%- do ret.update({\n    \"error\":true,\n    \"message\":\"Status from yaml2json is \" + vars.steps.yaml2json.status\n  }) -%}\n{%- endif -%}\n\n{{ret}}"
+            },
+            "status": null,
+            "top": "260",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "0089f060-1f7f-439b-9887-d0b91cd4756d"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Start",
+            "description": null,
+            "arguments": {
+                "__triggerLimit": true,
+                "step_variables": {
+                    "input": {
+                        "params": []
+                    }
+                },
+                "triggerOnSource": true,
+                "triggerOnReplicate": false
+            },
+            "status": null,
+            "top": "40",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/b348f017-9a94-471f-87f8-ce88b6a7ad62",
+            "group": null,
+            "uuid": "9ea8cbfe-ae31-4989-a438-401a02400877"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "yaml2json",
+            "description": null,
+            "arguments": {
+                "config": "74c7e349-a99d-44ac-a576-8c1b158fc364",
+                "params": {
+                    "python_function": "#!\/usr\/bin\/env python3\r\n\r\nimport json\r\nimport yaml\r\n\r\n\r\ndef yaml_string_to_json(yaml_string):\r\n    data = yaml.safe_load(yaml_string)\r\n    return json.dumps(data, indent=2)\r\n\r\n# Example usage\r\nyaml_input = \"\"\"\r\n{{vars.input.params.yaml}}\r\n\"\"\"\r\n\r\nprint(yaml_string_to_json(yaml_input))"
+                },
+                "version": "2.1.5",
+                "connector": "code-snippet",
+                "operation": "python_inline_code_editor",
+                "operationTitle": "Execute Python Code",
+                "step_variables": []
+            },
+            "status": null,
+            "top": "140",
+            "left": "520",
+            "stepType": "\/api\/3\/workflow_step_types\/1fdd14cc-d6b4-4335-a3af-ab49c8ed2fd8",
+            "group": null,
+            "uuid": "1bdd5598-9f28-4c07-bae8-f5de10e6f32a"
+        }
+    ],
+    "routes": [
+        {
+            "@type": "WorkflowRoute",
+            "name": "Start -> yaml2json",
+            "targetStep": "\/api\/3\/workflow_steps\/1bdd5598-9f28-4c07-bae8-f5de10e6f32a",
+            "sourceStep": "\/api\/3\/workflow_steps\/9ea8cbfe-ae31-4989-a438-401a02400877",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "611ac46f-955a-4223-82db-903a0dbfc049"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "yaml2json -> create yaml2json",
+            "targetStep": "\/api\/3\/workflow_steps\/0089f060-1f7f-439b-9887-d0b91cd4756d",
+            "sourceStep": "\/api\/3\/workflow_steps\/1bdd5598-9f28-4c07-bae8-f5de10e6f32a",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "89875710-4fab-484c-9ece-bf02d29d2d0f"
+        }
+    ],
+    "groups": [
+        {
+            "@type": "WorkflowGroup",
+            "name": "Details",
+            "description": "Use python modules to convert yaml to json.",
+            "type": "note",
+            "isCollapsed": false,
+            "hasTriggerStep": false,
+            "hideInLogs": false,
+            "metadata": [],
+            "reusable": false,
+            "top": "140",
+            "left": "60",
+            "height": "0",
+            "width": "300",
+            "uuid": "1b1b2f0d-765d-4bca-801c-1c2bedf4d41d",
+            "recordTags": []
+        }
+    ],
+    "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+    "playbookOrigin": "\/api\/3\/picklists\/b6d710a9-a8ec-41ec-8817-fe9fa062fcdd",
+    "isEditable": false,
+    "uuid": "e8a9ca65-8ba2-4da5-993a-e98d1e22283c",
+    "owners": [],
+    "isPrivate": false,
+    "deletedAt": null,
+    "recordTags": [
+        "code-snippet",
+        "function"
+    ]
+}

@@ -1,39 +1,39 @@
 {
     "@type": "Workflow",
     "triggerLimit": null,
-    "name": "> get fmg devices",
+    "name": "> get adom package policies",
     "aliasName": null,
     "tag": null,
-    "description": "API call for \/dvmdb\/device with options to filter and\/or select fields.",
+    "description": "API call for \/pm\/config\/adom\/<adom_name>\/pkg\/<pkg_name_path>\/firewall\/policy with options to filter and\/or select fields.",
     "isActive": true,
     "debug": false,
     "singleRecordExecution": false,
     "remoteExecutableFlag": false,
     "parameters": [
         "connector_config",
+        "adom",
         "filter",
         "fields",
-        "loadsub",
-        "adom"
+        "package"
     ],
     "synchronous": false,
     "collection": "\/api\/3\/workflow_collections\/c15a8515-33ae-46d2-9166-fa6fa47ac762",
     "versions": [],
-    "triggerStep": "\/api\/3\/workflow_steps\/e831f29c-c6ce-4fff-b2ad-836f2c34140b",
+    "triggerStep": "\/api\/3\/workflow_steps\/e40bac89-4cb5-4368-8b32-7ed91ec52dc1",
     "steps": [
         {
             "@type": "WorkflowStep",
             "name": "create filter_db",
-            "description": "Setup a reference of redefined functions.",
+            "description": null,
             "arguments": {
-                "filter_db": "{\n\"default\": [\"os_type\",\"==\",\"fos\"],\n\"unauthorized\" : [[\"mgmt_mode\",\"==\",0],\"&&\",[\"os_type\",\"==\",\"fos\"]],\n\"authorized\" : [[\"mgmt_mode\",\"==\",1],\"&&\",[\"os_type\",\"==\",\"fos\"]],\n\"model\" : [[\"conn_status\",\"==\",\"UNKNOWN\"],\"&&\",[\"os_type\",\"==\",\"fos\"]],\n\"real\" : [[\"conn_status\",\"!=\",\"UNKNOWN\"],\"&&\",[\"os_type\",\"==\",\"fos\"]]\n}"
+                "filter_db": "{\n\"default\": []\n}"
             },
             "status": null,
             "top": "40",
-            "left": "360",
+            "left": "720",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
-            "uuid": "7285bc70-aa52-4d43-9499-a1900c344af4"
+            "uuid": "16a25c5c-a673-40f8-a466-a87a7543c1c7"
         },
         {
             "@type": "WorkflowStep",
@@ -41,7 +41,6 @@
             "description": null,
             "arguments": {
                 "name": "Fortinet FortiManager JSON RPC",
-                "when": "{{vars.connector_config}}",
                 "config": "{{vars.connector_config}}",
                 "params": {
                     "url": "{{vars.api_url}}",
@@ -55,28 +54,29 @@
                 "step_variables": []
             },
             "status": null,
-            "top": "340",
+            "top": "420",
             "left": "360",
             "stepType": "\/api\/3\/workflow_step_types\/0bfed618-0316-11e7-93ae-92361f002671",
             "group": null,
-            "uuid": "46b4edd7-cf99-4b3b-9d5f-d84a926259b6"
+            "uuid": "0fe22945-9355-423c-954a-04640e669520"
         },
         {
             "@type": "WorkflowStep",
             "name": "handle inputs",
             "description": "overwrite the inputs if needed.",
             "arguments": {
-                "api_url": "{%- if vars.input.params['adom'] not in ['',None] -%}\n\/dvmdb\/adom\/{{vars.input.params['adom']}}\/device\n{%- else -%}\n\/dvmdb\/device\n{%- endif -%}",
+                "adom": "{{vars.input.params.adom|default('root')}}",
+                "package": "{{vars.input.params.package}}",
                 "api_fields": "{%- set in_field = vars.input.params['fields'] -%}\n{%- set ret = '' -%}\n\n{%- if in_field not in ['',None] -%}\n  {%- if in_field is sequence and in_field is not string -%}\n    {% set ret = in_field %}\n  {%- else -%}\n    {%- set cmt = in_field | regex_replace('[,\\n]+', ',') -%}\n    {%- set ret = cmt.split(',') | list -%}\n  {%- endif -%}\n{%- endif -%}\n\n{{ret}}",
                 "api_filter": "{%- set inf = vars.input.params['filter'] -%}\n{%- set kws = vars.filter_db.keys() | list -%}\n\n{%- if inf|lower in ['',None,\"all\"] -%}\n  {%- set inf = vars.filter_db[\"default\"] -%}\n{%- elif inf|lower in kws -%}\n  {%- set inf = vars.filter_db[inf|lower] -%}\n{%- endif -%}\n\n{{inf}}",
-                "api_loadsub": "{%- set d = vars.input.params['loadsub'] -%} \n{%- if d in ['',None] -%}\n1\n{%- else -%}\n{{d}}\n{%- endif -%}"
+                "connector_config": "{{vars.input.params['connector_config']}}"
             },
             "status": null,
             "top": "140",
-            "left": "360",
+            "left": "720",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
-            "uuid": "7600d840-d9a9-4a80-818d-ed09d40ed59c"
+            "uuid": "d7108190-920f-44a5-963a-a37874835f1d"
         },
         {
             "@type": "WorkflowStep",
@@ -85,14 +85,14 @@
             "arguments": {
                 "output": "{{vars.steps.fmg_api.data}}",
                 "params": "{{vars.input.params}}",
-                "status": "{%- set ret = vars.status -%}\n\n{%- if not vars.connector_config -%}\n  {%- do ret.update({\n    \"error\":true,\n    \"message\":\"Connector config missing.\"\n  }) -%}\n  \n{%- elif vars.steps.fmg_api.data.status != 0 -%}\n  {%- do ret.update({\n    \"error\":true,\n    \"message\":vars.steps.fmg_api.data['get_response'].status.message\n  }) -%}\n\n{%- endif -%}\n\n{{ret}}"
+                "status": "{%- set stat = vars.status -%}\n{%- set ret = vars.steps.fmg_api -%}\n\n{%- if ret.data.status != 0 -%}\n  {%- do stat.update({\n    \"error\":true,\n  }) -%}\n  {%- if ret.data.get_response.status.message is defined -%}\n    {%- do stat.update({\n      \"message\": ret.data.get_response.status.message\n    }) -%}\n  {%- endif -%}\n{%- endif -%}\n\n{{stat}}"
             },
             "status": null,
             "top": "120",
             "left": "40",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
-            "uuid": "96530c19-09df-4a2b-b894-59fea267214f"
+            "uuid": "3936a941-d5ea-4bfd-aa17-37723e54c079"
         },
         {
             "@type": "WorkflowStep",
@@ -100,15 +100,15 @@
             "description": "Leverage input vars from user or the overriding step.",
             "arguments": {
                 "status": "{# Set a default status #}\n{%- set ret = {} -%}\n{%- do ret.update({\n  \"error\":false,\n  \"message\":\"\"\n}) -%}\n{{ret}}",
-                "api_data": "{%- set apifilter = vars.api_filter -%}\n{%- set apifields = vars.api_fields -%}\n\n{%- set ret = {\n  \"option\": [\"extra info\",\"assignment info\",\"get meta\"],\n  \"loadsub\":vars.api_loadsub\n} -%}\n\n{%- if apifilter -%}\n{%- do ret.update({\"filter\":apifilter}) -%}\n{%- endif -%}\n\n{%- if apifields -%}\n{%- do ret.update({\"fields\":apifields}) -%}\n{%- endif -%}\n\n{{ret}}",
-                "connector_config": "{{vars.input.params['connector_config']}}"
+                "api_url": "{%- if vars.input.params['adom'] not in ['',None] -%}\n\/pm\/config\/adom\/{{vars.adom}}\/pkg\/{{vars.package}}\/firewall\/policy\n{%- else -%}\n\/pm\/config\/adom\/root\/pkg\/{{vars.package}}\/firewall\/policy\n{%- endif -%}",
+                "api_data": "{%- set apifilter = vars.api_filter -%}\n{%- set apifields = vars.api_fields -%}\n\n{%- set ret = {\n  \"loadsub\": 1\n} -%}\n\n{%- if apifilter -%}\n{%- do ret.update({\"filter\":apifilter}) -%}\n{%- endif -%}\n\n{%- if apifields -%}\n{%- do ret.update({\"fields\":apifields}) -%}\n{%- endif -%}\n\n{{ret}}"
             },
             "status": null,
-            "top": "240",
-            "left": "360",
+            "top": "420",
+            "left": "720",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
-            "uuid": "46d1d3d5-4ae8-4d56-add9-d464755bc127"
+            "uuid": "d21a38b1-265b-4fc3-8c7c-8b2c40f3e1c7"
         },
         {
             "@type": "WorkflowStep",
@@ -129,101 +129,101 @@
             "left": "40",
             "stepType": "\/api\/3\/workflow_step_types\/b348f017-9a94-471f-87f8-ce88b6a7ad62",
             "group": null,
-            "uuid": "e831f29c-c6ce-4fff-b2ad-836f2c34140b"
+            "uuid": "e40bac89-4cb5-4368-8b32-7ed91ec52dc1"
         }
     ],
     "routes": [
         {
             "@type": "WorkflowRoute",
-            "name": "create filter_db -> handle api_filter",
-            "targetStep": "\/api\/3\/workflow_steps\/7600d840-d9a9-4a80-818d-ed09d40ed59c",
-            "sourceStep": "\/api\/3\/workflow_steps\/7285bc70-aa52-4d43-9499-a1900c344af4",
+            "name": "create filter_db -> handle inputs",
+            "targetStep": "\/api\/3\/workflow_steps\/d7108190-920f-44a5-963a-a37874835f1d",
+            "sourceStep": "\/api\/3\/workflow_steps\/16a25c5c-a673-40f8-a466-a87a7543c1c7",
             "label": null,
             "isExecuted": false,
             "group": null,
-            "uuid": "40c1e1ab-c99f-48f7-a16e-beab3b9daf56"
+            "uuid": "5252e03d-896c-43c3-83f3-46eca711dc9c"
         },
         {
             "@type": "WorkflowRoute",
             "name": "fmg_api -> return",
-            "targetStep": "\/api\/3\/workflow_steps\/96530c19-09df-4a2b-b894-59fea267214f",
-            "sourceStep": "\/api\/3\/workflow_steps\/46b4edd7-cf99-4b3b-9d5f-d84a926259b6",
+            "targetStep": "\/api\/3\/workflow_steps\/3936a941-d5ea-4bfd-aa17-37723e54c079",
+            "sourceStep": "\/api\/3\/workflow_steps\/0fe22945-9355-423c-954a-04640e669520",
             "label": null,
             "isExecuted": false,
             "group": null,
-            "uuid": "59dac125-5365-4df5-82c9-d47aeae307ad"
+            "uuid": "ce5c3258-550e-4fb0-99b5-caea5a9059e8"
         },
         {
             "@type": "WorkflowRoute",
-            "name": "handle api_filter -> setup vars",
-            "targetStep": "\/api\/3\/workflow_steps\/46d1d3d5-4ae8-4d56-add9-d464755bc127",
-            "sourceStep": "\/api\/3\/workflow_steps\/7600d840-d9a9-4a80-818d-ed09d40ed59c",
+            "name": "handle inputs -> setup input vars",
+            "targetStep": "\/api\/3\/workflow_steps\/d21a38b1-265b-4fc3-8c7c-8b2c40f3e1c7",
+            "sourceStep": "\/api\/3\/workflow_steps\/d7108190-920f-44a5-963a-a37874835f1d",
             "label": null,
             "isExecuted": false,
             "group": null,
-            "uuid": "bd72a7ce-13a4-4ab1-8351-f001f0d03757"
+            "uuid": "3bf90120-0a0c-4a32-b7ea-252e2d446fe4"
         },
         {
             "@type": "WorkflowRoute",
-            "name": "setup vars -> fmg_api",
-            "targetStep": "\/api\/3\/workflow_steps\/46b4edd7-cf99-4b3b-9d5f-d84a926259b6",
-            "sourceStep": "\/api\/3\/workflow_steps\/46d1d3d5-4ae8-4d56-add9-d464755bc127",
+            "name": "setup input vars -> fmg_api",
+            "targetStep": "\/api\/3\/workflow_steps\/0fe22945-9355-423c-954a-04640e669520",
+            "sourceStep": "\/api\/3\/workflow_steps\/d21a38b1-265b-4fc3-8c7c-8b2c40f3e1c7",
             "label": null,
             "isExecuted": false,
             "group": null,
-            "uuid": "368189d2-a24a-4079-8204-d003e698e91c"
+            "uuid": "378322ee-8700-4ec7-9e43-de2874937823"
         },
         {
             "@type": "WorkflowRoute",
             "name": "Start -> create filter_db",
-            "targetStep": "\/api\/3\/workflow_steps\/7285bc70-aa52-4d43-9499-a1900c344af4",
-            "sourceStep": "\/api\/3\/workflow_steps\/e831f29c-c6ce-4fff-b2ad-836f2c34140b",
+            "targetStep": "\/api\/3\/workflow_steps\/16a25c5c-a673-40f8-a466-a87a7543c1c7",
+            "sourceStep": "\/api\/3\/workflow_steps\/e40bac89-4cb5-4368-8b32-7ed91ec52dc1",
             "label": null,
             "isExecuted": false,
             "group": null,
-            "uuid": "d46daaef-835f-4857-853b-735f21e07249"
+            "uuid": "06fc5633-d700-477f-aa15-2475367f9571"
         }
     ],
     "groups": [
         {
             "@type": "WorkflowGroup",
             "name": "Details",
-            "description": "Call FMG for system info using:\n\/dvmdb\/device or\n\/dvmdb\/adom\/[adom_name]\/device\/",
+            "description": "Call to FMG using:\n\/pm\/config\/adom\/[adom]\/pkg\/[package]\/firewall\/policy",
             "type": "note",
             "isCollapsed": false,
             "hasTriggerStep": false,
             "hideInLogs": false,
             "metadata": [],
             "reusable": false,
-            "top": "40",
-            "left": "700",
+            "top": "80",
+            "left": "380",
             "height": "121",
             "width": "305",
-            "uuid": "8a59923e-b3ab-416c-9ed8-d74f6489a9cc",
+            "uuid": "ff513a7f-f469-42ea-98ff-3ea859894320",
             "recordTags": []
         },
         {
             "@type": "WorkflowGroup",
             "name": "Options",
-            "description": "Playbook Options:\n - You can set an ADOM, the default is all.\n - You can set loadsub to 0, the default is 1. \n - You can pass fields in the form of a list, the default is all.\n - A filter can be sent to this playbook in a raw form...\n   ...or using these predefined settings:\n   - unauthorized\n   - authorized\n   - model\n   - real",
+            "description": "Playbook Options:\n - You can set an ADOM, the default is root.\n - You can pass fields in the form of a list or comma separated, the default  is all.\n - A filter can be sent to this playbook in a json list form.",
             "type": "note",
             "isCollapsed": false,
             "hasTriggerStep": false,
             "hideInLogs": false,
             "metadata": [],
             "reusable": false,
-            "top": "180",
-            "left": "640",
-            "height": "259",
-            "width": "453",
-            "uuid": "69c0a440-4c67-49a0-a751-b1ece903b1c6",
+            "top": "220",
+            "left": "360",
+            "height": "182",
+            "width": "455",
+            "uuid": "821ec6b5-8f98-4fe0-b00b-81302b277db9",
             "recordTags": []
         }
     ],
     "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
     "playbookOrigin": "\/api\/3\/picklists\/b6d710a9-a8ec-41ec-8817-fe9fa062fcdd",
-    "isEditable": true,
-    "uuid": "000fef7b-5d40-4010-beb2-c6144d0bd12e",
+    "isEditable": false,
+    "uuid": "faa001b1-cb71-416b-bd32-9d1b8622f09a",
     "owners": [],
     "isPrivate": false,
     "deletedAt": null,

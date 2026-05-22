@@ -11,7 +11,8 @@
     "remoteExecutableFlag": false,
     "parameters": [
         "device_id",
-        "metadata_source_ids"
+        "metadata_source_ids",
+        "input_yaml"
     ],
     "synchronous": false,
     "collection": "\/api\/3\/workflow_collections\/517fb52d-36f5-4bac-a344-7d4599d7dec6",
@@ -23,10 +24,10 @@
             "name": "create jinja_vars device",
             "description": null,
             "arguments": {
-                "jinja_vars": "{%- set ret = {\n  \"record\":{}\n} -%}\n{%- do ret.update( vars.steps.get_device_jinja_vars.output ) -%}\n{{ret}}"
+                "jinja_vars": "{%- set ret = {\n  \"record\":{}\n} -%}\n\n{%- do ret.update( vars.steps.get_device_jinja_vars.output ) -%}\n\n{%- if vars.steps.get_yaml2json -%}\n  {%- set ret = ret | combine(vars.steps.get_yaml2json.output) -%}\n{%- endif -%}\n\n{{ret}}"
             },
             "status": null,
-            "top": "320",
+            "top": "340",
             "left": "800",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
@@ -106,11 +107,33 @@
                 "workflowReference": "\/api\/3\/workflows\/7b1c12a7-a422-45f4-87e4-96f01a4c03f2"
             },
             "status": null,
-            "top": "200",
+            "top": "240",
             "left": "800",
             "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
             "group": null,
             "uuid": "3b7f943c-aa70-49c1-80a0-22c6e13f1f77"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "get yaml2json",
+            "description": null,
+            "arguments": {
+                "when": "{{vars.input_yaml}}",
+                "arguments": {
+                    "yaml": "{{vars.input_yaml}}"
+                },
+                "apply_async": false,
+                "step_variables": [],
+                "pass_parent_env": false,
+                "pass_input_record": false,
+                "workflowReference": "\/api\/3\/workflows\/e8a9ca65-8ba2-4da5-993a-e98d1e22283c"
+            },
+            "status": null,
+            "top": "140",
+            "left": "800",
+            "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
+            "group": null,
+            "uuid": "9006af5f-34ae-4522-bef2-fb33c829462f"
         },
         {
             "@type": "WorkflowStep",
@@ -163,6 +186,7 @@
             "description": null,
             "arguments": {
                 "device_id": "{{vars.input.params['device_id']}}",
+                "input_yaml": "{{vars.input.params['input_yaml']}}",
                 "metadata_source_ids": "{%- set in_field = vars.input.params['metadata_source_ids'] -%}\n{%- set ret = \"\" -%}\n\n{%- if in_field not in ['',None] -%}\n  {%- if in_field is sequence \n        and in_field is not string \n        and in_field is not integer -%}\n    {%- set ret = in_field -%}\n  {%- else -%}\n    {%- set cmt = in_field | regex_replace('[,\\n]+', ',') -%}\n    {%- set ret = cmt.split(',') -%}\n  {%- endif -%}\n{%- endif -%}\n{{ret|unique}}"
             },
             "status": null,
@@ -211,13 +235,13 @@
     "routes": [
         {
             "@type": "WorkflowRoute",
-            "name": "create source_types -> get device jinja_vars",
-            "targetStep": "\/api\/3\/workflow_steps\/3b7f943c-aa70-49c1-80a0-22c6e13f1f77",
+            "name": "create source_types -> get yaml2json",
+            "targetStep": "\/api\/3\/workflow_steps\/9006af5f-34ae-4522-bef2-fb33c829462f",
             "sourceStep": "\/api\/3\/workflow_steps\/6cf226f5-192d-4f52-a2f0-507fe9c9d531",
             "label": null,
             "isExecuted": false,
             "group": null,
-            "uuid": "0f1af9d7-2dd5-45e5-992a-ff390589aad1"
+            "uuid": "db73d23b-c4bd-401d-974d-49f339162ab0"
         },
         {
             "@type": "WorkflowRoute",
@@ -238,6 +262,16 @@
             "isExecuted": false,
             "group": null,
             "uuid": "22ce674c-4fd6-452c-a4c7-a82deb2859ef"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "get yaml2json -> get device jinja_vars",
+            "targetStep": "\/api\/3\/workflow_steps\/3b7f943c-aa70-49c1-80a0-22c6e13f1f77",
+            "sourceStep": "\/api\/3\/workflow_steps\/9006af5f-34ae-4522-bef2-fb33c829462f",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "b78e8a98-b240-420e-9435-351c3e9d9d76"
         },
         {
             "@type": "WorkflowRoute",
@@ -318,7 +352,6 @@
     "deletedAt": null,
     "recordTags": [
         "jinja_vars",
-        "TODO",
         "ztpfDevice",
         "ztpfMetadataSource"
     ]
