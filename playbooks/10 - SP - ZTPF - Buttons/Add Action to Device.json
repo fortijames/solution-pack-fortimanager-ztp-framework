@@ -1,10 +1,10 @@
 {
     "@type": "Workflow",
     "triggerLimit": null,
-    "name": "Run Action",
+    "name": "Add Action to Device",
     "aliasName": null,
     "tag": null,
-    "description": "Run an Action",
+    "description": "Add an action record to a device that will be run when queued.",
     "isActive": true,
     "debug": false,
     "singleRecordExecution": false,
@@ -37,11 +37,39 @@
                 "action_selected": "{{vars.action.records\n  | json_query('[?_option==`{}`]'\n    .format(vars.steps.select_action.input.action)\n)\n}}"
             },
             "status": null,
-            "top": "320",
+            "top": "240",
             "left": "640",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
             "uuid": "0010bcbc-974e-48de-8912-0d15ef1adbcf"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "create step",
+            "description": null,
+            "arguments": {
+                "for_each": {
+                    "item": "{{vars.input.records}}",
+                    "__bulk": false,
+                    "parallel": true,
+                    "condition": ""
+                },
+                "arguments": {
+                    "action_id": "{{vars.action_selected[0].id}}",
+                    "device_id": "{{vars.item.id}}"
+                },
+                "apply_async": false,
+                "step_variables": [],
+                "pass_parent_env": false,
+                "pass_input_record": false,
+                "workflowReference": "\/api\/3\/workflows\/6839c219-b88a-413c-9cdd-e38b0b764163"
+            },
+            "status": null,
+            "top": "340",
+            "left": "640",
+            "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
+            "group": null,
+            "uuid": "33df6fd8-96ec-4229-b846-93086cd6c796"
         },
         {
             "@type": "WorkflowStep",
@@ -156,7 +184,7 @@
                 "external_email_attachments": null
             },
             "status": null,
-            "top": "120",
+            "top": "140",
             "left": "640",
             "stepType": "\/api\/3\/workflow_step_types\/fc04082a-d7dc-4299-96fb-6837b1baa0fe",
             "group": null,
@@ -168,6 +196,7 @@
             "description": null,
             "arguments": {
                 "route": "df5dc929-4a6e-4db7-9809-e5a221abde1b",
+                "title": "Add Action",
                 "resources": [
                     "ztpf_devices"
                 ],
@@ -179,6 +208,7 @@
                         "records": "{{vars.input.records}}"
                     }
                 },
+                "_promptexpanded": false,
                 "triggerOnSource": true,
                 "displayConditions": {
                     "ztpf_devices": {
@@ -191,7 +221,8 @@
                 "executeButtonText": "Execute",
                 "noRecordExecution": false,
                 "showToasterMessage": {
-                    "visible": false,
+                    "message": "Adding Step - Refresh the Step Grid",
+                    "visible": true,
                     "messageVisible": true
                 },
                 "triggerOnReplicate": false,
@@ -210,8 +241,8 @@
             "description": null,
             "arguments": [],
             "status": null,
-            "top": "120",
-            "left": "1080",
+            "top": "40",
+            "left": "960",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
             "uuid": "c5776d84-1ff9-41d2-ade6-c95695aab8cf"
@@ -227,6 +258,16 @@
             "isExecuted": false,
             "group": null,
             "uuid": "21ba7b3c-4aa8-4f58-bc4c-edde9de38bb7"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "action selected -> create step",
+            "targetStep": "\/api\/3\/workflow_steps\/33df6fd8-96ec-4229-b846-93086cd6c796",
+            "sourceStep": "\/api\/3\/workflow_steps\/0010bcbc-974e-48de-8912-0d15ef1adbcf",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "e658400d-812d-4eae-8191-1a10e5e856a1"
         },
         {
             "@type": "WorkflowRoute",
@@ -269,7 +310,25 @@
             "uuid": "20ccd989-5c99-40d6-af6f-400428c4ae12"
         }
     ],
-    "groups": [],
+    "groups": [
+        {
+            "@type": "WorkflowGroup",
+            "name": "Details",
+            "description": "Prompt the user to add an action and create a new action record on the device.",
+            "type": "note",
+            "isCollapsed": false,
+            "hasTriggerStep": false,
+            "hideInLogs": false,
+            "metadata": [],
+            "reusable": false,
+            "top": "120",
+            "left": "100",
+            "height": "114",
+            "width": "438",
+            "uuid": "e4775e61-23f2-4ad9-ab70-c9538dde0b7e",
+            "recordTags": []
+        }
+    ],
     "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
     "playbookOrigin": "\/api\/3\/picklists\/b6d710a9-a8ec-41ec-8817-fe9fa062fcdd",
     "isEditable": false,

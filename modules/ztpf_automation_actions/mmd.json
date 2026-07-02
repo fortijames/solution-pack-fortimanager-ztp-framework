@@ -535,96 +535,6 @@
         {
             "@type": "AttributeMetadata",
             "type": "string",
-            "name": "script",
-            "length": null,
-            "formType": "textarea",
-            "dataSource": null,
-            "searchable": true,
-            "peerReplicable": true,
-            "system": false,
-            "encrypted": false,
-            "gridColumn": true,
-            "collection": false,
-            "inversedField": null,
-            "ownsRelationship": false,
-            "validation": {
-                "required": false,
-                "minlength": 0,
-                "maxlength": 10485761,
-                "_enableRange": false
-            },
-            "bulkAction": {
-                "allow": false,
-                "buttonText": "",
-                "buttonIcon": "",
-                "buttonClass": "btn btn-default btn-sm"
-            },
-            "dataSourceFilters": null,
-            "defaultValue": "{{template}}",
-            "tooltip": "Jinja Template Script used for the action. Action types maybe have specific format expectations which can be found in the documentation.",
-            "visibility": true,
-            "htmlEscape": false,
-            "orphanRemoval": null,
-            "readable": true,
-            "writeable": true,
-            "identifier": null,
-            "unique": false,
-            "recommend": false,
-            "skipSerialization": false,
-            "displayName": "{{ script }}",
-            "descriptions": {
-                "singular": "Script"
-            }
-        },
-        {
-            "@type": "AttributeMetadata",
-            "type": "ztpf_templates",
-            "name": "ztpfTemplates",
-            "length": null,
-            "formType": "lookup",
-            "dataSource": {
-                "model": "ztpf_templates"
-            },
-            "searchable": false,
-            "peerReplicable": true,
-            "system": false,
-            "encrypted": false,
-            "gridColumn": true,
-            "collection": false,
-            "inversedField": null,
-            "ownsRelationship": false,
-            "validation": {
-                "required": false,
-                "minlength": 0,
-                "maxlength": 10485761,
-                "_enableRange": false
-            },
-            "bulkAction": {
-                "allow": false,
-                "buttonText": "",
-                "buttonIcon": "",
-                "buttonClass": "btn btn-default btn-sm"
-            },
-            "dataSourceFilters": null,
-            "defaultValue": null,
-            "tooltip": "When assigned populates the jinja variable {{template}} to be used in the action script.",
-            "visibility": true,
-            "htmlEscape": false,
-            "orphanRemoval": null,
-            "readable": true,
-            "writeable": true,
-            "identifier": null,
-            "unique": false,
-            "recommend": false,
-            "skipSerialization": false,
-            "displayName": "{{ ztpfTemplates }}",
-            "descriptions": {
-                "singular": "Template"
-            }
-        },
-        {
-            "@type": "AttributeMetadata",
-            "type": "string",
             "name": "description",
             "length": null,
             "formType": "richtext",
@@ -705,6 +615,140 @@
             "displayName": "{{ ztpfMetadataSources }}",
             "descriptions": {
                 "singular": "Metadata Sources"
+            }
+        },
+        {
+            "@type": "AttributeMetadata",
+            "type": "ztpf_templates",
+            "name": "ztpfTemplates",
+            "length": null,
+            "formType": "lookup",
+            "dataSource": {
+                "model": "ztpf_templates"
+            },
+            "searchable": false,
+            "peerReplicable": true,
+            "system": false,
+            "encrypted": false,
+            "gridColumn": true,
+            "collection": false,
+            "inversedField": null,
+            "ownsRelationship": false,
+            "validation": {
+                "required": false,
+                "minlength": 0,
+                "maxlength": 10485761,
+                "_enableRange": false
+            },
+            "bulkAction": {
+                "allow": false,
+                "buttonText": "",
+                "buttonIcon": "",
+                "buttonClass": "btn btn-default btn-sm"
+            },
+            "dataSourceFilters": null,
+            "defaultValue": null,
+            "tooltip": "When assigned populates the jinja variable {{template}} to be used in the action script.",
+            "visibility": true,
+            "htmlEscape": false,
+            "orphanRemoval": null,
+            "readable": true,
+            "writeable": true,
+            "identifier": null,
+            "unique": false,
+            "recommend": false,
+            "skipSerialization": false,
+            "displayName": "{{ ztpfTemplates }}",
+            "descriptions": {
+                "singular": "Template"
+            }
+        },
+        {
+            "@type": "AttributeMetadata",
+            "type": "string",
+            "name": "script",
+            "length": null,
+            "formType": "textarea",
+            "dataSource": null,
+            "searchable": true,
+            "peerReplicable": true,
+            "system": false,
+            "encrypted": false,
+            "gridColumn": true,
+            "collection": false,
+            "inversedField": null,
+            "ownsRelationship": false,
+            "validation": {
+                "required": false,
+                "minlength": 0,
+                "maxlength": 10485761,
+                "_enableRange": false
+            },
+            "bulkAction": {
+                "allow": false,
+                "buttonText": "",
+                "buttonIcon": "",
+                "buttonClass": "btn btn-default btn-sm"
+            },
+            "dataSourceFilters": null,
+            "defaultValue": "{{template}}",
+            "tooltip": "Script supporting Jinja used for the Action. Different action types have specific format expectations, such as YAML, which can be found in the documentation.",
+            "visibility": true,
+            "htmlEscape": false,
+            "orphanRemoval": null,
+            "readable": true,
+            "writeable": true,
+            "identifier": null,
+            "unique": false,
+            "recommend": false,
+            "skipSerialization": false,
+            "displayName": "{{ script }}",
+            "descriptions": {
+                "singular": "Script"
+            }
+        },
+        {
+            "@type": "AttributeMetadata",
+            "type": "string",
+            "name": "inputParameters",
+            "length": null,
+            "formType": "textarea",
+            "dataSource": null,
+            "searchable": true,
+            "peerReplicable": true,
+            "system": false,
+            "encrypted": false,
+            "gridColumn": false,
+            "collection": false,
+            "inversedField": null,
+            "ownsRelationship": false,
+            "validation": {
+                "required": false,
+                "minlength": 0,
+                "maxlength": 10485761,
+                "_enableRange": false
+            },
+            "bulkAction": {
+                "allow": false,
+                "buttonText": "",
+                "buttonIcon": "",
+                "buttonClass": "btn btn-default btn-sm"
+            },
+            "dataSourceFilters": null,
+            "defaultValue": "",
+            "tooltip": "Input fields that can be used in jinja under input.<fieldname> in your jinja script if needed.",
+            "visibility": true,
+            "htmlEscape": false,
+            "orphanRemoval": null,
+            "readable": true,
+            "writeable": true,
+            "identifier": null,
+            "unique": false,
+            "recommend": false,
+            "skipSerialization": false,
+            "displayName": "{{ inputParameters }}",
+            "descriptions": {
+                "singular": "Input Parameters"
             }
         },
         {
@@ -797,88 +841,6 @@
         },
         {
             "@type": "AttributeMetadata",
-            "type": "ztpf_automation_profile_steps",
-            "name": "ztpfAutomationProfileSteps",
-            "length": null,
-            "formType": "oneToMany",
-            "dataSource": {
-                "model": "ztpf_automation_profile_steps"
-            },
-            "searchable": false,
-            "peerReplicable": true,
-            "system": false,
-            "encrypted": false,
-            "gridColumn": false,
-            "collection": true,
-            "inversedField": "ztpfAutomationActions",
-            "ownsRelationship": true,
-            "validation": {
-                "required": false,
-                "minlength": 0,
-                "maxlength": 10485761,
-                "_enableRange": false
-            },
-            "bulkAction": [],
-            "dataSourceFilters": null,
-            "defaultValue": null,
-            "tooltip": null,
-            "visibility": true,
-            "htmlEscape": false,
-            "orphanRemoval": null,
-            "readable": true,
-            "writeable": true,
-            "identifier": null,
-            "unique": false,
-            "recommend": false,
-            "skipSerialization": false,
-            "displayName": "{{ ztpfAutomationProfileSteps }}",
-            "descriptions": {
-                "singular": "Automation Profile Steps"
-            }
-        },
-        {
-            "@type": "AttributeMetadata",
-            "type": "ztpf_device_automation_steps",
-            "name": "ztpfDeviceAutomationSteps",
-            "length": null,
-            "formType": "oneToMany",
-            "dataSource": {
-                "model": "ztpf_device_automation_steps"
-            },
-            "searchable": false,
-            "peerReplicable": true,
-            "system": false,
-            "encrypted": false,
-            "gridColumn": false,
-            "collection": true,
-            "inversedField": "ztpfAutomationActions",
-            "ownsRelationship": true,
-            "validation": {
-                "required": false,
-                "minlength": 0,
-                "maxlength": 10485761,
-                "_enableRange": false
-            },
-            "bulkAction": [],
-            "dataSourceFilters": null,
-            "defaultValue": null,
-            "tooltip": null,
-            "visibility": true,
-            "htmlEscape": false,
-            "orphanRemoval": null,
-            "readable": true,
-            "writeable": true,
-            "identifier": null,
-            "unique": false,
-            "recommend": false,
-            "skipSerialization": false,
-            "displayName": "{{ ztpfDeviceAutomationSteps }}",
-            "descriptions": {
-                "singular": "Device Automation Steps"
-            }
-        },
-        {
-            "@type": "AttributeMetadata",
             "type": "picklists",
             "name": "actionOutputType",
             "length": null,
@@ -960,7 +922,7 @@
         {
             "@type": "AttributeMetadata",
             "type": "string",
-            "name": "inputParameters",
+            "name": "actionOutputTemplate",
             "length": null,
             "formType": "textarea",
             "dataSource": null,
@@ -975,8 +937,7 @@
             "validation": {
                 "required": false,
                 "minlength": 0,
-                "maxlength": 10485761,
-                "_enableRange": false
+                "maxlength": 10485761
             },
             "bulkAction": {
                 "allow": false,
@@ -985,8 +946,8 @@
                 "buttonClass": "btn btn-default btn-sm"
             },
             "dataSourceFilters": null,
-            "defaultValue": "",
-            "tooltip": "Input fields that can be used in jinja under input.<fieldname> in your jinja script if needed.",
+            "defaultValue": null,
+            "tooltip": "Template for the step output from the step source data.",
             "visibility": true,
             "htmlEscape": false,
             "orphanRemoval": null,
@@ -996,9 +957,91 @@
             "unique": false,
             "recommend": false,
             "skipSerialization": false,
-            "displayName": "{{ inputParameters }}",
+            "displayName": "{{ actionOutputTemplate }}",
             "descriptions": {
-                "singular": "Input Parameters"
+                "singular": "Action Output Template"
+            }
+        },
+        {
+            "@type": "AttributeMetadata",
+            "type": "ztpf_automation_profile_steps",
+            "name": "ztpfAutomationProfileSteps",
+            "length": null,
+            "formType": "oneToMany",
+            "dataSource": {
+                "model": "ztpf_automation_profile_steps"
+            },
+            "searchable": false,
+            "peerReplicable": true,
+            "system": false,
+            "encrypted": false,
+            "gridColumn": false,
+            "collection": true,
+            "inversedField": "ztpfAutomationActions",
+            "ownsRelationship": true,
+            "validation": {
+                "required": false,
+                "minlength": 0,
+                "maxlength": 10485761,
+                "_enableRange": false
+            },
+            "bulkAction": [],
+            "dataSourceFilters": null,
+            "defaultValue": null,
+            "tooltip": null,
+            "visibility": true,
+            "htmlEscape": false,
+            "orphanRemoval": null,
+            "readable": true,
+            "writeable": true,
+            "identifier": null,
+            "unique": false,
+            "recommend": false,
+            "skipSerialization": false,
+            "displayName": "{{ ztpfAutomationProfileSteps }}",
+            "descriptions": {
+                "singular": "Automation Profile Steps"
+            }
+        },
+        {
+            "@type": "AttributeMetadata",
+            "type": "ztpf_device_automation_steps",
+            "name": "ztpfDeviceAutomationSteps",
+            "length": null,
+            "formType": "oneToMany",
+            "dataSource": {
+                "model": "ztpf_device_automation_steps"
+            },
+            "searchable": false,
+            "peerReplicable": true,
+            "system": false,
+            "encrypted": false,
+            "gridColumn": false,
+            "collection": true,
+            "inversedField": "ztpfAutomationActions",
+            "ownsRelationship": true,
+            "validation": {
+                "required": false,
+                "minlength": 0,
+                "maxlength": 10485761,
+                "_enableRange": false
+            },
+            "bulkAction": [],
+            "dataSourceFilters": null,
+            "defaultValue": null,
+            "tooltip": null,
+            "visibility": true,
+            "htmlEscape": false,
+            "orphanRemoval": null,
+            "readable": true,
+            "writeable": true,
+            "identifier": null,
+            "unique": false,
+            "recommend": false,
+            "skipSerialization": false,
+            "displayName": "{{ ztpfDeviceAutomationSteps }}",
+            "descriptions": {
+                "singular": "Device Automation Steps"
             }
         }
     ],

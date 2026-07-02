@@ -2,7 +2,7 @@
     "@context": "\/api\/3\/contexts\/Role",
     "@id": "\/api\/3\/roles\/8e4011ef-94a3-442e-9f07-739e9c390acd",
     "@type": "Role",
-    "description": null,
+    "description": "Users interacting with the ZTPF Solution Pack and need full access except for the fields that should only be managed by Playbooks.",
     "name": "ztpfAdmin",
     "modulePermissions": [
         {
@@ -524,6 +524,16 @@
             "canDelete": true,
             "fieldPermissions": [],
             "module": "ztpf_manager_automation_profile_rules"
+        },
+        {
+            "@type": "ModulePermission",
+            "canCreate": true,
+            "canExecute": true,
+            "canRead": true,
+            "canUpdate": true,
+            "canDelete": true,
+            "fieldPermissions": [],
+            "module": "ztpf_run_groups"
         }
     ],
     "uuid": "8e4011ef-94a3-442e-9f07-739e9c390acd"

@@ -1,0 +1,355 @@
+{
+    "@type": "Workflow",
+    "triggerLimit": null,
+    "name": "> run queued steps from a rungroup_id",
+    "aliasName": null,
+    "tag": null,
+    "description": "Run the queued steps in a ztpfRunGroup record.",
+    "isActive": true,
+    "debug": false,
+    "singleRecordExecution": false,
+    "remoteExecutableFlag": false,
+    "parameters": [
+        "rungroup_id"
+    ],
+    "synchronous": false,
+    "collection": "\/api\/3\/workflow_collections\/517fb52d-36f5-4bac-a344-7d4599d7dec6",
+    "versions": [],
+    "triggerStep": "\/api\/3\/workflow_steps\/455f7588-272f-4274-b8a8-d15fbba06095",
+    "steps": [
+        {
+            "@type": "WorkflowStep",
+            "name": "action_ids",
+            "description": null,
+            "arguments": {
+                "action_ids": "{{vars.steps.find_steps|json_query('[].ztpfAutomationActions.id')|unique}}"
+            },
+            "status": null,
+            "top": "160",
+            "left": "660",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "79fbf599-6956-4784-a869-a425f23fb0cd"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "devices and ztpfArtifact",
+            "description": "The ztpfArtifact data is deprecated. Might remove from this logic.",
+            "arguments": {
+                "device_records": "{%- set table = [] -%}\n{%- set devs = [] -%}\n\n{%- for d in vars.steps.find_steps|json_query('[].ztpfDevices') -%}\n{%- if d.id not in devs and ztpfRunning != True  -%}\n  {%- do devs.append(d.id) -%}\n  {%- set steps = [] -%}\n  {%- set steprecs = vars.steps.find_steps\n      |json_query('[?ztpfDevices.id==`{}`]'.format(d.id)) \n  -%}\n  {%- for s in steprecs -%}\n    {%- set act_id = s.ztpfAutomationActions.id -%}\n    {%- set act = vars.steps.find_actions\n        |json_query('[?id==`{}`]'.format(act_id)) \n    -%}\n    {%- set r = {\n          \"id\": s.id,\n          \"fqid\": s['@id'],\n          \"name\":s.name,\n          \"stepNumber\": s.stepNumber,\n          \"action_category\": act[0].category.itemValue,\n          \"action_type\": act[0].type.itemValue,\n          \"ztpf_status\":\"Pending\",\n          \"ztpf_start_time\":None,\n          \"ztpf_stop_time\":None\n        } \n    -%}\n    {%- do steps.append(r) -%}\n  {%- endfor -%}\n  {%- set r = {\n      \"id\":d.id,\n      \"fqid\":d[\"@id\"],\n      \"ztpfArtifact\": {\n        \"ztfGroup\": vars.steps.find_rungroup[0].name,\n        \"total_steps\":steps|length,\n        \"steps\": steps\n      }\n    } \n  -%}\n  {%- do table.append(r) -%}\n{%- endif -%}\n{%- endfor -%}\n{{table}}"
+            },
+            "status": null,
+            "top": "360",
+            "left": "660",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "eac062ef-8147-4beb-b0c1-0b64de4ae1ba"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "find actions",
+            "description": null,
+            "arguments": {
+                "query": {
+                    "sort": [],
+                    "limit": 30,
+                    "logic": "AND",
+                    "filters": [
+                        {
+                            "type": "primitive",
+                            "field": "id",
+                            "value": "{{vars.action_ids}}",
+                            "operator": "in",
+                            "_operator": "in"
+                        }
+                    ],
+                    "__selectFields": [
+                        "id",
+                        "name",
+                        "category",
+                        "type"
+                    ]
+                },
+                "module": "ztpf_automation_actions?$limit=5000",
+                "checkboxFields": true,
+                "step_variables": []
+            },
+            "status": null,
+            "top": "260",
+            "left": "660",
+            "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928770",
+            "group": null,
+            "uuid": "df5e61ba-681c-4ace-a883-088259211876"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "find rungroup",
+            "description": null,
+            "arguments": {
+                "query": {
+                    "sort": [],
+                    "limit": 30,
+                    "logic": "AND",
+                    "filters": [
+                        {
+                            "type": "primitive",
+                            "field": "id",
+                            "value": "{{vars.input.params['rungroup_id']}}",
+                            "operator": "eq",
+                            "_operator": "eq"
+                        }
+                    ],
+                    "__selectFields": [
+                        "id",
+                        "name"
+                    ]
+                },
+                "module": "ztpf_run_groups?$limit=1",
+                "checkboxFields": true,
+                "step_variables": []
+            },
+            "status": null,
+            "top": "40",
+            "left": "340",
+            "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928770",
+            "group": null,
+            "uuid": "e1e5f53a-6b3b-455e-8a3e-ad3126a1d69a"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "find steps",
+            "description": null,
+            "arguments": {
+                "query": {
+                    "sort": [
+                        {
+                            "field": "ztpfDevices.name",
+                            "direction": "ASC",
+                            "_fieldName": "ztpfDevices",
+                            "_fieldTitle": "Device"
+                        },
+                        {
+                            "field": "stepNumber",
+                            "direction": "ASC",
+                            "_fieldName": "stepNumber",
+                            "_fieldTitle": "Step Number"
+                        }
+                    ],
+                    "limit": 30,
+                    "logic": "AND",
+                    "filters": [
+                        {
+                            "type": "object",
+                            "field": "ztpfRunGroups",
+                            "value": "{{vars.steps.find_rungroup[0]['@id']}}",
+                            "_value": {
+                                "@id": "{{vars.steps.find_rungroup[0]['@id']}}",
+                                "display": "",
+                                "itemValue": ""
+                            },
+                            "operator": "eq"
+                        }
+                    ],
+                    "__selectFields": [
+                        "ztpfDevices",
+                        "stepNumber",
+                        "name",
+                        "id",
+                        "ztpfAutomationActions"
+                    ]
+                },
+                "module": "ztpf_device_automation_steps?$limit=5000",
+                "checkboxFields": true,
+                "step_variables": []
+            },
+            "status": null,
+            "top": "60",
+            "left": "660",
+            "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928770",
+            "group": null,
+            "uuid": "e60b882e-6b88-4886-b5b0-9f4daa21e76a"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "run next automation step",
+            "description": null,
+            "arguments": {
+                "for_each": {
+                    "item": "{{vars.device_records}}",
+                    "__bulk": false,
+                    "parallel": true,
+                    "condition": ""
+                },
+                "arguments": {
+                    "device_id": "{{vars.item.id}}"
+                },
+                "apply_async": false,
+                "step_variables": [],
+                "pass_parent_env": false,
+                "pass_input_record": false,
+                "workflowReference": "\/api\/3\/workflows\/3bcc3bbf-7003-4676-9d49-abdcd4f5913b"
+            },
+            "status": null,
+            "top": "380",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
+            "group": null,
+            "uuid": "7e57fa1d-02b4-4c65-9984-d21546b7a3b3"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Start",
+            "description": null,
+            "arguments": {
+                "__triggerLimit": true,
+                "step_variables": {
+                    "input": {
+                        "params": []
+                    }
+                },
+                "triggerOnSource": true,
+                "triggerOnReplicate": false
+            },
+            "status": null,
+            "top": "40",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/b348f017-9a94-471f-87f8-ce88b6a7ad62",
+            "group": null,
+            "uuid": "455f7588-272f-4274-b8a8-d15fbba06095"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "update devices",
+            "description": null,
+            "arguments": {
+                "for_each": {
+                    "item": "{{vars.device_records}}",
+                    "__bulk": true,
+                    "parallel": false,
+                    "condition": "",
+                    "batch_size": 100
+                },
+                "resource": {
+                    "ztpfRunning": true
+                },
+                "operation": "Append",
+                "collection": "{{vars.item['fqid']}}",
+                "__recommend": [],
+                "collectionType": "\/api\/3\/ztpf_devices",
+                "fieldOperation": {
+                    "recordTags": "Append"
+                },
+                "step_variables": []
+            },
+            "status": null,
+            "top": "280",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928722",
+            "group": null,
+            "uuid": "e42e5069-8e81-4480-918a-c3a6d89fb6ef"
+        }
+    ],
+    "routes": [
+        {
+            "@type": "WorkflowRoute",
+            "name": "action_ids -> find actions",
+            "targetStep": "\/api\/3\/workflow_steps\/df5e61ba-681c-4ace-a883-088259211876",
+            "sourceStep": "\/api\/3\/workflow_steps\/79fbf599-6956-4784-a869-a425f23fb0cd",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "f80d2eea-cb4f-4ab4-9a0e-32c8ec5d237b"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "find actions -> setup vars",
+            "targetStep": "\/api\/3\/workflow_steps\/eac062ef-8147-4beb-b0c1-0b64de4ae1ba",
+            "sourceStep": "\/api\/3\/workflow_steps\/df5e61ba-681c-4ace-a883-088259211876",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "7ba706dd-68db-4669-8e47-c14c7bd899b8"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "find rungroup -> find steps",
+            "targetStep": "\/api\/3\/workflow_steps\/e60b882e-6b88-4886-b5b0-9f4daa21e76a",
+            "sourceStep": "\/api\/3\/workflow_steps\/e1e5f53a-6b3b-455e-8a3e-ad3126a1d69a",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "c678ccaf-b8c7-4baf-b5bc-897ab8ffe9ec"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "find steps -> action_ids",
+            "targetStep": "\/api\/3\/workflow_steps\/79fbf599-6956-4784-a869-a425f23fb0cd",
+            "sourceStep": "\/api\/3\/workflow_steps\/e60b882e-6b88-4886-b5b0-9f4daa21e76a",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "8fea4406-7d6b-4770-ac51-2d1fd8d0106f"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "setup vars -> update devices",
+            "targetStep": "\/api\/3\/workflow_steps\/e42e5069-8e81-4480-918a-c3a6d89fb6ef",
+            "sourceStep": "\/api\/3\/workflow_steps\/eac062ef-8147-4beb-b0c1-0b64de4ae1ba",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "643e1761-751e-4c54-9471-f6a47183b45b"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Start -> find rungroup",
+            "targetStep": "\/api\/3\/workflow_steps\/e1e5f53a-6b3b-455e-8a3e-ad3126a1d69a",
+            "sourceStep": "\/api\/3\/workflow_steps\/455f7588-272f-4274-b8a8-d15fbba06095",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "93d858ac-519c-4c73-aae2-5a0077288767"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "update devices -> run next automation step in queue",
+            "targetStep": "\/api\/3\/workflow_steps\/7e57fa1d-02b4-4c65-9984-d21546b7a3b3",
+            "sourceStep": "\/api\/3\/workflow_steps\/e42e5069-8e81-4480-918a-c3a6d89fb6ef",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "d42224ae-66af-4e30-b191-9955520f68f8"
+        }
+    ],
+    "groups": [
+        {
+            "@type": "WorkflowGroup",
+            "name": "Details",
+            "description": "Find steps and devices in the run group and toggle the ztpfRunning flag. \nThen kick off the next step in the queue by group.\n\nThe ztpfArtifact data is currently deprecated.",
+            "type": "note",
+            "isCollapsed": false,
+            "hasTriggerStep": false,
+            "hideInLogs": false,
+            "metadata": [],
+            "reusable": false,
+            "top": "120",
+            "left": "40",
+            "height": "144",
+            "width": "498",
+            "uuid": "589e4827-95ca-47cf-a294-9e9c89750398",
+            "recordTags": []
+        }
+    ],
+    "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+    "playbookOrigin": "\/api\/3\/picklists\/b6d710a9-a8ec-41ec-8817-fe9fa062fcdd",
+    "isEditable": false,
+    "uuid": "cbdaa8de-e983-4006-92cd-fd332703d2c4",
+    "owners": [],
+    "isPrivate": false,
+    "deletedAt": null,
+    "recordTags": [
+        "ztpfDevice",
+        "ztpfDeviceAutomationStep",
+        "ztpfRunGroup"
+    ]
+}

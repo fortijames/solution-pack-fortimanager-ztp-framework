@@ -1,0 +1,279 @@
+{
+    "@type": "Workflow",
+    "triggerLimit": null,
+    "name": "> create exec delete device manager script on devices",
+    "aliasName": null,
+    "tag": null,
+    "description": "Full process commonly handled scripts via the device manager in FMG on a device list in the form of fg1,fg2,fg3 or fg1:vdom1,fg2:vdom1,fg3:vdom1 or fg1:vdom1,fg2,fg3.",
+    "isActive": true,
+    "debug": false,
+    "singleRecordExecution": false,
+    "remoteExecutableFlag": false,
+    "parameters": [
+        "connector_config",
+        "adom",
+        "script_name",
+        "script_type",
+        "script_contents",
+        "fmg_version",
+        "devices",
+        "skip_delete"
+    ],
+    "synchronous": false,
+    "collection": "\/api\/3\/workflow_collections\/c15a8515-33ae-46d2-9166-fa6fa47ac762",
+    "versions": [],
+    "triggerStep": "\/api\/3\/workflow_steps\/f95b5e26-6f09-4c90-8f2c-0e518d912a69",
+    "steps": [
+        {
+            "@type": "WorkflowStep",
+            "name": "create script",
+            "description": null,
+            "arguments": {
+                "arguments": {
+                    "adom": "{{vars.input.params.adom}}",
+                    "fmg_version": "{{vars.input.params['fmg_version']}}",
+                    "script_name": "{{vars.input.params['script_name']}}",
+                    "script_type": "{{vars.input.params['script_type']}}",
+                    "script_contents": "{{vars.input.params['script_contents']}}",
+                    "connector_config": "{{vars.input.params['connector_config']}}"
+                },
+                "apply_async": false,
+                "step_variables": [],
+                "pass_parent_env": false,
+                "pass_input_record": false,
+                "workflowReference": "\/api\/3\/workflows\/8a20be86-58da-4fd7-bd6f-248e43dd8e01"
+            },
+            "status": null,
+            "top": "120",
+            "left": "500",
+            "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
+            "group": null,
+            "uuid": "c9e7be09-b023-4a7d-9b67-557b2191011b"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "delete script",
+            "description": null,
+            "arguments": {
+                "when": "{{vars.skip_delete != True}}",
+                "arguments": {
+                    "adom": "{{vars.input.params.adom}}",
+                    "fmg_version": "{{vars.input.params['fmg_version']}}",
+                    "script_name": "{{vars.input.params['script_name']}}",
+                    "connector_config": "{{vars.input.params['connector_config']}}"
+                },
+                "apply_async": false,
+                "step_variables": [],
+                "pass_parent_env": false,
+                "pass_input_record": false,
+                "workflowReference": "\/api\/3\/workflows\/c8542bc8-f5eb-485b-99db-ff1aa00178b9"
+            },
+            "status": null,
+            "top": "300",
+            "left": "360",
+            "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
+            "group": null,
+            "uuid": "672dc5e4-47c0-4f4a-b75b-403ad018da53"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "exec script",
+            "description": null,
+            "arguments": {
+                "arguments": {
+                    "adom": "{{vars.input.params.adom}}",
+                    "devices": "{{vars.input.params.devices}}",
+                    "script_name": "{{vars.input.params['script_name']}}",
+                    "connector_config": "{{vars.input.params['connector_config']}}"
+                },
+                "apply_async": false,
+                "step_variables": {
+                    "fmg_task_id": "{{vars.steps.exec_script.output['task_id']}}"
+                },
+                "pass_parent_env": false,
+                "pass_input_record": false,
+                "workflowReference": "\/api\/3\/workflows\/6c83b626-12ef-43f9-b323-396fa1b469eb"
+            },
+            "status": null,
+            "top": "220",
+            "left": "700",
+            "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
+            "group": null,
+            "uuid": "816dad1f-7120-4689-8b74-bba7a7e40ab9"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "get script logs",
+            "description": null,
+            "arguments": {
+                "for_each": {
+                    "item": "{{vars.device_list}}",
+                    "parallel": false,
+                    "condition": ""
+                },
+                "arguments": {
+                    "adom": "{{vars.input.params.adom}}",
+                    "device": "{{vars.item}}",
+                    "fmg_task_id": "{{vars.fmg_task_id}}",
+                    "script_type": "{{vars.input.params['script_type']}}",
+                    "connector_config": "{{vars.input.params['connector_config']}}"
+                },
+                "apply_async": false,
+                "step_variables": [],
+                "pass_parent_env": false,
+                "pass_input_record": false,
+                "workflowReference": "\/api\/3\/workflows\/1bd0be52-0205-4eb2-8e9f-699979891cf9"
+            },
+            "status": null,
+            "top": "380",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
+            "group": null,
+            "uuid": "49afe1c7-be9d-4478-83a0-33f8c7c727a2"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "return",
+            "description": null,
+            "arguments": {
+                "output": "{%- set ret = {\n  \"exec_script\": vars.steps.exec_script,\n  \"script_log\": vars.steps.get_script_logs\n} -%}\n{{ret}}",
+                "params": "{{vars.input.params}}",
+                "status": "{%- set stat = {\n  \"error\": vars.steps.exec_script.output.error,\n  \"msg\":\"Task \" + vars.fmg_task_id|string\n} -%}\n{{stat}}"
+            },
+            "status": null,
+            "top": "240",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "e9dcf51e-b20a-4dd1-8efe-b81f5a5bc2bb"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "setup vars",
+            "description": null,
+            "arguments": {
+                "device_list": "{{vars.input.params.devices.split(\",\")}}",
+                "skip_delete": "{%- set ret = vars.input.params['skip_delete'] -%}\n{%- if ret in [None,''] -%}\n{%- set ret = True -%}\n{%- endif -%}\n{{ret}}"
+            },
+            "status": null,
+            "top": "40",
+            "left": "340",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "8dea5468-04bd-4aa2-94a2-d37116704453"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Start",
+            "description": null,
+            "arguments": {
+                "__triggerLimit": true,
+                "step_variables": {
+                    "input": {
+                        "params": []
+                    }
+                },
+                "triggerOnSource": true,
+                "triggerOnReplicate": false
+            },
+            "status": null,
+            "top": "40",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/b348f017-9a94-471f-87f8-ce88b6a7ad62",
+            "group": null,
+            "uuid": "f95b5e26-6f09-4c90-8f2c-0e518d912a69"
+        }
+    ],
+    "routes": [
+        {
+            "@type": "WorkflowRoute",
+            "name": "create script -> exec script",
+            "targetStep": "\/api\/3\/workflow_steps\/816dad1f-7120-4689-8b74-bba7a7e40ab9",
+            "sourceStep": "\/api\/3\/workflow_steps\/c9e7be09-b023-4a7d-9b67-557b2191011b",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "11590358-112d-4557-92b4-3612d6ea0c44"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "delete script -> get script logs",
+            "targetStep": "\/api\/3\/workflow_steps\/49afe1c7-be9d-4478-83a0-33f8c7c727a2",
+            "sourceStep": "\/api\/3\/workflow_steps\/672dc5e4-47c0-4f4a-b75b-403ad018da53",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "a3c91fff-78d1-4a59-ba67-31a7334cd7e7"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "exec script -> delete script",
+            "targetStep": "\/api\/3\/workflow_steps\/672dc5e4-47c0-4f4a-b75b-403ad018da53",
+            "sourceStep": "\/api\/3\/workflow_steps\/816dad1f-7120-4689-8b74-bba7a7e40ab9",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "9c0cb356-eefb-4213-b46f-7285020a2d8b"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "get script logs -> return",
+            "targetStep": "\/api\/3\/workflow_steps\/e9dcf51e-b20a-4dd1-8efe-b81f5a5bc2bb",
+            "sourceStep": "\/api\/3\/workflow_steps\/49afe1c7-be9d-4478-83a0-33f8c7c727a2",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "c8959cab-d12c-4eec-856a-6c557d966fd1"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "setup vars -> create script",
+            "targetStep": "\/api\/3\/workflow_steps\/c9e7be09-b023-4a7d-9b67-557b2191011b",
+            "sourceStep": "\/api\/3\/workflow_steps\/8dea5468-04bd-4aa2-94a2-d37116704453",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "860dee98-41d9-4b70-8cac-ea12e50af101"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Start -> setup vars",
+            "targetStep": "\/api\/3\/workflow_steps\/8dea5468-04bd-4aa2-94a2-d37116704453",
+            "sourceStep": "\/api\/3\/workflow_steps\/f95b5e26-6f09-4c90-8f2c-0e518d912a69",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "70b31a7f-39dd-4c6f-b587-bd98898e17df"
+        }
+    ],
+    "groups": [
+        {
+            "@type": "WorkflowGroup",
+            "name": "Details",
+            "description": "Create the script, Execute the script, Delete the script if flagged, and get logs from the device(s) in the task.",
+            "type": "note",
+            "isCollapsed": false,
+            "hasTriggerStep": false,
+            "hideInLogs": false,
+            "metadata": [],
+            "reusable": false,
+            "top": "120",
+            "left": "40",
+            "height": "96",
+            "width": "453",
+            "uuid": "5d101d07-b039-4dab-bc31-5430037ec1ab",
+            "recordTags": []
+        }
+    ],
+    "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+    "playbookOrigin": "\/api\/3\/picklists\/b6d710a9-a8ec-41ec-8817-fe9fa062fcdd",
+    "isEditable": false,
+    "uuid": "e8bd1b7e-d9fb-4064-8a0f-501697f48e5b",
+    "owners": [],
+    "isPrivate": false,
+    "deletedAt": null,
+    "recordTags": [
+        "fmg_api",
+        "routine"
+    ]
+}

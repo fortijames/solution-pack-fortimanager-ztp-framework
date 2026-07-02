@@ -1,21 +1,21 @@
 {
     "@type": "Workflow",
     "triggerLimit": null,
-    "name": "> create metadata source data - fmg api",
+    "name": "> create metadata source script yaml - fmg api",
     "aliasName": null,
     "tag": null,
-    "description": "Create the standard payload for this metadata source type.",
+    "description": "Create the standard script payload for this metadata source type.",
     "isActive": true,
     "debug": false,
     "singleRecordExecution": false,
     "remoteExecutableFlag": false,
     "parameters": [
-        "api_resource",
-        "api_filter",
-        "api_options",
-        "api_fields",
         "record_id",
-        "api_method"
+        "api_resource",
+        "api_loadsub",
+        "api_fields",
+        "api_filter",
+        "api_options"
     ],
     "synchronous": false,
     "collection": "\/api\/3\/workflow_collections\/517fb52d-36f5-4bac-a344-7d4599d7dec6",
@@ -51,21 +51,21 @@
             },
             "status": null,
             "top": "40",
-            "left": "360",
+            "left": "500",
             "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928770",
             "group": null,
             "uuid": "aec4ad05-3860-4806-bb1d-f8b8bad44c8f"
         },
         {
             "@type": "WorkflowStep",
-            "name": "setup data_payload",
+            "name": "script_payload yaml",
             "description": null,
             "arguments": {
-                "data_payload": "{%- set ret = { \n  \"url\":vars.api_resource,\n  \"method\":vars.api_method\n} -%}\n\n{%- if vars.api_fields -%}\n  {%- do ret.update({\"api_fields\":vars.api_fields}) -%}\n{%- endif -%}\n\n{{ret}}"
+                "script_payload": "{%- if vars.api_resource not in vars.empty %}\nurl: {{vars.api_resource}}\n{%- endif %}\n{%- if vars.api_loadsub not in vars.empty %}\nloadsub: 0\n{%- endif %}\n{%- if vars.api_options not in vars.empty %}\noptions:\n  - {{vars.api_options|join(' \\n  - ')}}\n{%- endif %}\n{%- if vars.api_fields not in vars.empty %}\nfields:\n  - {{vars.api_fields|join(' \\n  - ')}}\n{%- endif %}\n{%- if vars.api_filter not in vars.empty %}\nfilter:\n  - {{vars.api_filter|join(' \\n  - ')}}\n{%- endif %}"
             },
             "status": null,
             "top": "120",
-            "left": "360",
+            "left": "500",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
             "uuid": "8a35bad2-38e9-4037-bf71-631fac0a2a65"
@@ -78,13 +78,14 @@
                 "api_fields": "{{vars.input.params['api_fields']}}",
                 "api_filter": "{{vars.input.params['api_filter']}}",
                 "api_method": "{%- set ret = vars.input.params['api_method'] -%}\n{%- if ret in vars.empty -%}\n  {%- set ret = 'get' -%}\n{%- endif -%}\n{{ret}}",
+                "api_loadsub": "{{vars.input.params['api_loadsub']}}",
                 "api_options": "{{vars.input.params['api_options']}}",
                 "record_fqid": "{{vars.steps.find_record[0]['@id']}}",
                 "api_resource": "{%- set ret = vars.input.params['api_resource'] -%}\n{%- if ret in vars.empty -%}\n  {%- set ret = '<Enter API URL>' -%}\n{%- endif -%}\n{{ret}}"
             },
             "status": null,
             "top": "80",
-            "left": "700",
+            "left": "1000",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
             "uuid": "4141d7fd-994d-4da3-a7bf-b1423d10064f"
@@ -117,7 +118,7 @@
             "description": null,
             "arguments": {
                 "resource": {
-                    "data": "{{vars.data_payload}}"
+                    "script": "{{vars.script_payload|trim}}"
                 },
                 "operation": "Append",
                 "collection": "{{vars.record_fqid}}",
@@ -190,7 +191,7 @@
             "metadata": [],
             "reusable": false,
             "top": "200",
-            "left": "140",
+            "left": "240",
             "height": "120",
             "width": "354",
             "uuid": "5cba6c2b-76fe-44a6-9853-d90832547738",

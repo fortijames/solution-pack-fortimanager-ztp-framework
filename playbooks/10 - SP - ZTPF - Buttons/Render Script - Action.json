@@ -171,7 +171,7 @@
                                 "dataType": "checkbox",
                                 "formType": "checkbox",
                                 "required": false,
-                                "_expanded": true,
+                                "_expanded": false,
                                 "mmdUpdate": true,
                                 "collection": false,
                                 "searchable": true,
@@ -197,10 +197,9 @@
                             {
                                 "name": "inputParameters",
                                 "type": "string",
-                                "label": "Input Parameters",
+                                "label": "Input Paramters",
                                 "title": "Text Area",
                                 "usable": false,
-                                "options": "{{vars.input.records[0].inputParameters.split(\"\\n\")}}",
                                 "tooltip": "",
                                 "dataType": "text",
                                 "formType": "textarea",
@@ -210,8 +209,9 @@
                                 "collection": false,
                                 "searchable": false,
                                 "templateUrl": "app\/components\/form\/fields\/json.html",
-                                "defaultValue": "input:\n{%- for f in vars.input.records[0].inputParameters.split(\"\\n\") %}\n  {{f}}:\n{%- endfor %}",
-                                "_previousName": "inputFields",
+                                "_nameTouched": true,
+                                "defaultValue": "input:\n{%- for f in vars.action_input_params %}\n  {{f}}:\n{%- endfor %}",
+                                "_previousName": "inputParamters",
                                 "playbookField": true,
                                 "visibilityQuery": {
                                     "sort": [],
@@ -396,7 +396,8 @@
             "description": null,
             "arguments": {
                 "action_id": "{{vars.input.records[0].id}}",
-                "template_id": "{{vars.input.records[0].ztpfTemplates.id}}"
+                "template_id": "{{vars.input.records[0].ztpfTemplates.id}}",
+                "action_input_params": "{%- set ret = [] -%}\n{%- set in = vars.input.records[0].inputParameters -%}\n\n{%- if in not in [None,''] -%}\n{%- for i in in.split(\"\\n\") -%}\n{%- do ret.append(i) -%}\n{%- endfor -%}\n{%- endif -%}\n\n{{ret}}"
             },
             "status": null,
             "top": "40",
@@ -598,7 +599,7 @@
             "hideInLogs": false,
             "metadata": [],
             "reusable": false,
-            "top": "220",
+            "top": "240",
             "left": "100",
             "height": "143",
             "width": "498",

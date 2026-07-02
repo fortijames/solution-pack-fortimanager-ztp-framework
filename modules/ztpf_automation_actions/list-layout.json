@@ -232,7 +232,7 @@
                                     "assignedToSetting": "all",
                                     "aggregate": true,
                                     "viewType": "chart",
-                                    "title": "Category and Type",
+                                    "title": "Action Type Count by Category",
                                     "resource": "ztpf_automation_actions",
                                     "chart": "bar"
                                 }
@@ -251,11 +251,11 @@
                                     "query": {
                                         "sort": [
                                             {
-                                                "field": "type.orderIndex",
+                                                "field": "ztpfTemplates.name",
                                                 "direction": "ASC"
                                             },
                                             {
-                                                "field": "ztpfTemplates.name",
+                                                "field": "type.orderIndex",
                                                 "direction": "ASC"
                                             }
                                         ],
@@ -281,16 +281,6 @@
                                                 "alias": "total"
                                             },
                                             {
-                                                "operator": "groupby",
-                                                "alias": "type",
-                                                "field": "type.itemValue"
-                                            },
-                                            {
-                                                "operator": "groupby",
-                                                "alias": "firstOrderIndex",
-                                                "field": "type.orderIndex"
-                                            },
-                                            {
                                                 "operator": "select",
                                                 "alias": "ztpfTemplates__name",
                                                 "field": "ztpfTemplates.name"
@@ -299,17 +289,32 @@
                                                 "operator": "groupby",
                                                 "alias": "ztpfTemplates__uuid",
                                                 "field": "ztpfTemplates.uuid"
+                                            },
+                                            {
+                                                "operator": "groupby",
+                                                "alias": "type",
+                                                "field": "type.itemValue"
+                                            },
+                                            {
+                                                "operator": "groupby",
+                                                "alias": "secondOrderIndex",
+                                                "field": "type.orderIndex"
+                                            },
+                                            {
+                                                "operator": "groupby",
+                                                "alias": "color",
+                                                "field": "type.color"
                                             }
                                         ]
                                     },
                                     "mapping": {
-                                        "firstGrouping": "type",
-                                        "secondGrouping": "ztpfTemplates"
+                                        "firstGrouping": "ztpfTemplates",
+                                        "secondGrouping": "type"
                                     },
                                     "assignedToSetting": "all",
                                     "aggregate": true,
                                     "viewType": "chart",
-                                    "title": "Types Templates",
+                                    "title": "Templates in Use by Action",
                                     "resource": "ztpf_automation_actions",
                                     "chart": "bar"
                                 }
@@ -349,6 +354,14 @@
                                         {
                                             "openTab": false,
                                             "name": "script"
+                                        },
+                                        {
+                                            "openTab": false,
+                                            "name": "exampleJinjaVars"
+                                        },
+                                        {
+                                            "openTab": false,
+                                            "name": "exampleScriptRendered"
                                         }
                                     ],
                                     "relationshipField": [],

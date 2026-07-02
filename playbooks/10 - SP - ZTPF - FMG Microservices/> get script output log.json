@@ -1,0 +1,190 @@
+{
+    "@type": "Workflow",
+    "triggerLimit": null,
+    "name": "> get script output log",
+    "aliasName": null,
+    "tag": null,
+    "description": "Get the script output log for the local or remote scripts.",
+    "isActive": true,
+    "debug": false,
+    "singleRecordExecution": false,
+    "remoteExecutableFlag": false,
+    "parameters": [
+        "fmg_task_id",
+        "script_type",
+        "connector_config",
+        "adom",
+        "device"
+    ],
+    "synchronous": false,
+    "collection": "\/api\/3\/workflow_collections\/c15a8515-33ae-46d2-9166-fa6fa47ac762",
+    "versions": [],
+    "triggerStep": "\/api\/3\/workflow_steps\/1ccc0c7e-1b81-491c-b5ea-67992454fbff",
+    "steps": [
+        {
+            "@type": "WorkflowStep",
+            "name": "api_payload",
+            "description": null,
+            "arguments": {
+                "api_url": "{%- if \"policy\" in vars.input.params['script_type']|lower -%}\n\/dvmdb\/adom\/{{vars.adom}}\/script\/log\/output\/logid\/{{vars.log_id}}\n{%- else -%}\n\/dvmdb\/adom\/{{vars.adom}}\/script\/log\/output\/device\/{{vars.device}}\/logid\/{{vars.log_id}}\n{%- endif -%}",
+                "api_payload": "{\"data\":{}}"
+            },
+            "status": null,
+            "top": "180",
+            "left": "540",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "d19628ad-4ade-466c-9317-4938d4f2c5f2"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "fmg_api",
+            "description": null,
+            "arguments": {
+                "name": "Fortinet FortiManager JSON RPC",
+                "config": "{{vars.connector_config}}",
+                "params": {
+                    "url": "{{vars.api_url}}",
+                    "data": "{{vars.api_payload}}"
+                },
+                "version": "1.1.0",
+                "connector": "fortinet-fortimanager-json-rpc",
+                "operation": "json_rpc_get",
+                "operationTitle": "JSON RPC Get",
+                "pickFromTenant": false,
+                "step_variables": []
+            },
+            "status": null,
+            "top": "320",
+            "left": "540",
+            "stepType": "\/api\/3\/workflow_step_types\/0bfed618-0316-11e7-93ae-92361f002671",
+            "group": null,
+            "uuid": "630fa9d8-86ce-4697-b1e4-080162c11229"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "return",
+            "description": null,
+            "arguments": {
+                "output": "{{vars.steps.fmg_api}}",
+                "params": "{{vars.input.params}}",
+                "status": "{%- set stat = {\n  \"error\":false,\n  \"message\":\"Success\"\n}\n-%}\n\n{%- if vars.steps.fmg_api.data.status != 0 -%}\n{%- do stat.update({\n  \"error\":true,\n  \"msg\":vars.steps.fmg_api.message\n}) -%}\n{%- endif -%}\n\n{{stat}}"
+            },
+            "status": null,
+            "top": "320",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "91378e06-0ea7-4d9c-936a-88bc65e0f2a2"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "setup vars",
+            "description": null,
+            "arguments": {
+                "adom": "{{vars.input.params.adom}}",
+                "device": "{{vars.input.params.device}}",
+                "log_id": "{%- set suffix = 1 -%}\n{%- if \"remote\" in vars.input.params['script_type']|lower -%}\n  {%- set suffix = 0 -%}\n{%- endif -%}\n{{vars.input.params['fmg_task_id']}}{{suffix}}",
+                "connector_config": "{{vars.input.params['connector_config']}}"
+            },
+            "status": null,
+            "top": "40",
+            "left": "540",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "ca8b1d53-dfea-49fc-856d-1bd100807b45"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Start",
+            "description": null,
+            "arguments": {
+                "__triggerLimit": true,
+                "step_variables": {
+                    "input": {
+                        "params": []
+                    }
+                },
+                "triggerOnSource": true,
+                "triggerOnReplicate": false
+            },
+            "status": null,
+            "top": "40",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/b348f017-9a94-471f-87f8-ce88b6a7ad62",
+            "group": null,
+            "uuid": "1ccc0c7e-1b81-491c-b5ea-67992454fbff"
+        }
+    ],
+    "routes": [
+        {
+            "@type": "WorkflowRoute",
+            "name": "api_payload -> fmg_api",
+            "targetStep": "\/api\/3\/workflow_steps\/630fa9d8-86ce-4697-b1e4-080162c11229",
+            "sourceStep": "\/api\/3\/workflow_steps\/d19628ad-4ade-466c-9317-4938d4f2c5f2",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "28653aa3-1f71-4064-8856-ecf8ab0f80a7"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "fmg_api -> return",
+            "targetStep": "\/api\/3\/workflow_steps\/91378e06-0ea7-4d9c-936a-88bc65e0f2a2",
+            "sourceStep": "\/api\/3\/workflow_steps\/630fa9d8-86ce-4697-b1e4-080162c11229",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "40de93dd-fd4e-4fd2-9485-f7d560a35a84"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "setup vars -> api_payload",
+            "targetStep": "\/api\/3\/workflow_steps\/d19628ad-4ade-466c-9317-4938d4f2c5f2",
+            "sourceStep": "\/api\/3\/workflow_steps\/ca8b1d53-dfea-49fc-856d-1bd100807b45",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "0210f308-eb0b-434c-97c1-5a45676db9ff"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Start -> setup vars",
+            "targetStep": "\/api\/3\/workflow_steps\/ca8b1d53-dfea-49fc-856d-1bd100807b45",
+            "sourceStep": "\/api\/3\/workflow_steps\/1ccc0c7e-1b81-491c-b5ea-67992454fbff",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "654e26ac-6334-4298-a744-f72535f582a8"
+        }
+    ],
+    "groups": [
+        {
+            "@type": "WorkflowGroup",
+            "name": "Details",
+            "description": "Use the logic to build the log ID from the task_id and the script type. Use the task_id and then concatenate 1 for local and 0 for remote.\n\nThe URL is \/script\/log\/output\/logid\/ or \/script\/log\/output\/device\/[device]\/logid\/ depending on the script type.",
+            "type": "note",
+            "isCollapsed": false,
+            "hasTriggerStep": false,
+            "hideInLogs": false,
+            "metadata": [],
+            "reusable": false,
+            "top": "120",
+            "left": "60",
+            "height": "169",
+            "width": "459",
+            "uuid": "f33f3689-251b-42c4-8d9c-6ac2fb235e6e",
+            "recordTags": []
+        }
+    ],
+    "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+    "playbookOrigin": "\/api\/3\/picklists\/b6d710a9-a8ec-41ec-8817-fe9fa062fcdd",
+    "isEditable": false,
+    "uuid": "1bd0be52-0205-4eb2-8e9f-699979891cf9",
+    "owners": [],
+    "isPrivate": false,
+    "deletedAt": null,
+    "recordTags": [
+        "TODO"
+    ]
+}

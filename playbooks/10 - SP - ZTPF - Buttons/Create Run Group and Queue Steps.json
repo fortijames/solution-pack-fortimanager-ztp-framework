@@ -1,0 +1,126 @@
+{
+    "@type": "Workflow",
+    "triggerLimit": null,
+    "name": "Create Run Group and Queue Steps",
+    "aliasName": null,
+    "tag": null,
+    "description": "Queue Pending Action Steps on a Device",
+    "isActive": true,
+    "debug": false,
+    "singleRecordExecution": false,
+    "remoteExecutableFlag": false,
+    "parameters": [],
+    "synchronous": false,
+    "collection": "\/api\/3\/workflow_collections\/f0b56dc0-6c1e-4f5b-9199-c807800f028a",
+    "versions": [],
+    "triggerStep": "\/api\/3\/workflow_steps\/21b65aa9-082e-4aac-8911-ae521e1685a8",
+    "steps": [
+        {
+            "@type": "WorkflowStep",
+            "name": "create run group",
+            "description": null,
+            "arguments": {
+                "arguments": {
+                    "device_ids": "{{vars.input.records|json_query('[].id')}}"
+                },
+                "apply_async": false,
+                "step_variables": [],
+                "pass_parent_env": false,
+                "pass_input_record": false,
+                "workflowReference": "\/api\/3\/workflows\/74daec60-01f3-4df9-af50-4a5ff3c8c3e6"
+            },
+            "status": null,
+            "top": "140",
+            "left": "460",
+            "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
+            "group": null,
+            "uuid": "35405646-59a8-4e74-9a70-be1306a0cb4a"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Start",
+            "description": null,
+            "arguments": {
+                "route": "67b5b7d8-9795-497e-ad7d-4ded78cb8bca",
+                "title": "Create Run Group and Queue Steps",
+                "resources": [
+                    "ztpf_devices"
+                ],
+                "__triggerLimit": true,
+                "inputVariables": [],
+                "step_variables": {
+                    "input": {
+                        "params": [],
+                        "records": "{{vars.input.records}}"
+                    }
+                },
+                "triggerOnSource": true,
+                "displayConditions": {
+                    "ztpf_devices": {
+                        "sort": [],
+                        "limit": 30,
+                        "logic": "AND",
+                        "filters": []
+                    }
+                },
+                "executeButtonText": "Execute",
+                "noRecordExecution": false,
+                "showToasterMessage": {
+                    "visible": false,
+                    "messageVisible": true
+                },
+                "triggerOnReplicate": false,
+                "singleRecordExecution": false
+            },
+            "status": null,
+            "top": "40",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/f414d039-bb0d-4e59-9c39-a8f1e880b18a",
+            "group": null,
+            "uuid": "21b65aa9-082e-4aac-8911-ae521e1685a8"
+        }
+    ],
+    "routes": [
+        {
+            "@type": "WorkflowRoute",
+            "name": "Start -> queue to run pending steps",
+            "targetStep": "\/api\/3\/workflow_steps\/35405646-59a8-4e74-9a70-be1306a0cb4a",
+            "sourceStep": "\/api\/3\/workflow_steps\/21b65aa9-082e-4aac-8911-ae521e1685a8",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "54062c89-5a69-4e13-b8ba-e7b6ef532e09"
+        }
+    ],
+    "groups": [
+        {
+            "@type": "WorkflowGroup",
+            "name": "Details",
+            "description": "Create run group for pending steps on selected devices.",
+            "type": "note",
+            "isCollapsed": false,
+            "hasTriggerStep": false,
+            "hideInLogs": false,
+            "metadata": [],
+            "reusable": false,
+            "top": "120",
+            "left": "80",
+            "height": "132",
+            "width": "281",
+            "uuid": "31e13f1f-8b65-4264-913b-2ddebc36c871",
+            "recordTags": []
+        }
+    ],
+    "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+    "playbookOrigin": "\/api\/3\/picklists\/b6d710a9-a8ec-41ec-8817-fe9fa062fcdd",
+    "isEditable": false,
+    "uuid": "959638c2-2584-479f-80b7-368ae94bdc07",
+    "owners": [],
+    "isPrivate": false,
+    "deletedAt": null,
+    "recordTags": [
+        "TODO",
+        "ztpfDevice",
+        "ztpfDeviceAutomationStep"
+    ]
+}

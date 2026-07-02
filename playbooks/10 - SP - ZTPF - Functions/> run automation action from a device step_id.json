@@ -1,0 +1,832 @@
+{
+    "@type": "Workflow",
+    "triggerLimit": null,
+    "name": "> run automation action from a device step_id",
+    "aliasName": null,
+    "tag": null,
+    "description": "Run the automation action.",
+    "isActive": true,
+    "debug": false,
+    "singleRecordExecution": false,
+    "remoteExecutableFlag": false,
+    "parameters": [
+        "device_step_id"
+    ],
+    "synchronous": false,
+    "collection": "\/api\/3\/workflow_collections\/517fb52d-36f5-4bac-a344-7d4599d7dec6",
+    "versions": [],
+    "triggerStep": "\/api\/3\/workflow_steps\/e3e4631a-2812-465d-a4ac-49b219c1b3ab",
+    "steps": [
+        {
+            "@type": "WorkflowStep",
+            "name": "action category",
+            "description": null,
+            "arguments": {
+                "conditions": [
+                    {
+                        "option": "uknown",
+                        "default": true,
+                        "step_iri": "\/api\/3\/workflow_steps\/fc9f7e25-b9f0-4b0d-b518-41635a179383",
+                        "step_name": "uknown category"
+                    },
+                    {
+                        "step_iri": "\/api\/3\/workflow_steps\/463d4af8-937b-4be3-8360-fb8d15fd05fe",
+                        "condition": "{{ vars.action_category|lower == \"fortimanager\" }}",
+                        "step_name": "fortimanager"
+                    },
+                    {
+                        "step_iri": "\/api\/3\/workflow_steps\/95958e48-7e06-4e5f-8a3a-4fcc558c1cae",
+                        "condition": "{{ vars.action_category|lower == \"fortisoar\" }}",
+                        "step_name": "fortisoar"
+                    },
+                    {
+                        "step_iri": "\/api\/3\/workflow_steps\/891b6d82-c6d7-4f9a-9d8e-be1ebb7d99a0",
+                        "condition": "{{ vars.action_category|lower == \"ztpf\" }}",
+                        "step_name": "ztpf"
+                    }
+                ],
+                "step_variables": []
+            },
+            "status": null,
+            "top": "200",
+            "left": "60",
+            "stepType": "\/api\/3\/workflow_step_types\/12254cf5-5db7-4b1a-8cb1-3af081924b28",
+            "group": null,
+            "uuid": "781b0a14-af52-4ea9-a03f-c9d604a00f89"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Authorize Device",
+            "description": null,
+            "arguments": [],
+            "status": null,
+            "top": "40",
+            "left": "1340",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "187fb244-dc22-4111-b117-3a20fbeb82a2"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "DeviceDB",
+            "description": null,
+            "arguments": [],
+            "status": null,
+            "top": "100",
+            "left": "1340",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "606c5a5e-e1e7-442c-8853-cd7dcfe1c25f"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "find action",
+            "description": null,
+            "arguments": {
+                "query": {
+                    "sort": [],
+                    "limit": 30,
+                    "logic": "AND",
+                    "filters": [
+                        {
+                            "type": "primitive",
+                            "field": "id",
+                            "value": "{{vars.steps.find_step[0].ztpfAutomationActions.id}}",
+                            "operator": "eq",
+                            "_operator": "eq"
+                        }
+                    ],
+                    "__selectFields": [
+                        "id",
+                        "name",
+                        "category",
+                        "type"
+                    ]
+                },
+                "module": "ztpf_automation_actions?$limit=1",
+                "checkboxFields": true,
+                "step_variables": []
+            },
+            "status": null,
+            "top": "80",
+            "left": "660",
+            "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928770",
+            "group": null,
+            "uuid": "971d63eb-95d1-4f0f-ab67-65562690ef0a"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "find step",
+            "description": null,
+            "arguments": {
+                "query": {
+                    "sort": [],
+                    "limit": 30,
+                    "logic": "AND",
+                    "filters": [
+                        {
+                            "type": "primitive",
+                            "field": "id",
+                            "value": "{{vars.input.params['device_step_id']}}",
+                            "operator": "eq",
+                            "_operator": "eq"
+                        }
+                    ],
+                    "__selectFields": [
+                        "ztpfAutomationActions",
+                        "script",
+                        "id"
+                    ]
+                },
+                "module": "ztpf_device_automation_steps?$limit=1",
+                "checkboxFields": true,
+                "step_variables": []
+            },
+            "status": null,
+            "top": "40",
+            "left": "360",
+            "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928770",
+            "group": null,
+            "uuid": "c6aa6392-e6b7-4999-a37a-5662189d14fd"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "fortimanager",
+            "description": null,
+            "arguments": [],
+            "status": null,
+            "top": "260",
+            "left": "360",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "463d4af8-937b-4be3-8360-fb8d15fd05fe"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "fortimanager action",
+            "description": null,
+            "arguments": {
+                "conditions": [
+                    {
+                        "default": true,
+                        "step_iri": "\/api\/3\/workflow_steps\/ecd7d1bd-7528-4e5c-88fb-13a1381678fe",
+                        "step_name": "unknown action"
+                    },
+                    {
+                        "step_iri": "\/api\/3\/workflow_steps\/187fb244-dc22-4111-b117-3a20fbeb82a2",
+                        "condition": "{{ vars.action == \"Authorize Device\" }}",
+                        "step_name": "Authorize Device"
+                    },
+                    {
+                        "step_iri": "\/api\/3\/workflow_steps\/606c5a5e-e1e7-442c-8853-cd7dcfe1c25f",
+                        "condition": "{{ vars.action == \"DeviceDB\" }}",
+                        "step_name": "DeviceDB"
+                    },
+                    {
+                        "step_iri": "\/api\/3\/workflow_steps\/14f6261b-7d7a-4ba6-990a-519fafc808b7",
+                        "condition": "{{ vars.action == \"PolicyDB\" }}",
+                        "step_name": "PolicyDB"
+                    }
+                ],
+                "step_variables": []
+            },
+            "status": null,
+            "top": "320",
+            "left": "780",
+            "stepType": "\/api\/3\/workflow_step_types\/12254cf5-5db7-4b1a-8cb1-3af081924b28",
+            "group": null,
+            "uuid": "151a6e7f-5674-4a83-b370-3bf9f6131b1b"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "fortisoar",
+            "description": null,
+            "arguments": [],
+            "status": null,
+            "top": "380",
+            "left": "360",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "95958e48-7e06-4e5f-8a3a-4fcc558c1cae"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "fortisoar action",
+            "description": null,
+            "arguments": {
+                "conditions": [
+                    {
+                        "default": true,
+                        "step_iri": "\/api\/3\/workflow_steps\/ecd7d1bd-7528-4e5c-88fb-13a1381678fe",
+                        "step_name": "unknown action"
+                    },
+                    {
+                        "step_iri": "\/api\/3\/workflow_steps\/90f86a80-963b-4ca2-b38e-0d574cc0890b",
+                        "condition": "{{ vars.action == \"Playbook\" }}",
+                        "step_name": "Playbook"
+                    }
+                ],
+                "step_variables": []
+            },
+            "status": null,
+            "top": "480",
+            "left": "700",
+            "stepType": "\/api\/3\/workflow_step_types\/12254cf5-5db7-4b1a-8cb1-3af081924b28",
+            "group": null,
+            "uuid": "8c04d563-e3db-44bf-a9c7-7d92ed3ef4b5"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Install Device Config",
+            "description": null,
+            "arguments": [],
+            "status": null,
+            "top": "460",
+            "left": "1340",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "ca394bb3-143f-4e6a-9afc-529a611b23d7"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Install Policy Package",
+            "description": null,
+            "arguments": [],
+            "status": null,
+            "top": "520",
+            "left": "1340",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "cf141f33-37b4-4b9c-8072-d2c22328fefe"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Playbook",
+            "description": null,
+            "arguments": [],
+            "status": null,
+            "top": "960",
+            "left": "1340",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "90f86a80-963b-4ca2-b38e-0d574cc0890b"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "PolicyDB",
+            "description": null,
+            "arguments": [],
+            "status": null,
+            "top": "160",
+            "left": "1340",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "14f6261b-7d7a-4ba6-990a-519fafc808b7"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Provisioning CLI Teamplate",
+            "description": null,
+            "arguments": [],
+            "status": null,
+            "top": "340",
+            "left": "1340",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "8f914ad5-ae11-4259-82de-174e6360461b"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Provisioning Jinja Teamplate",
+            "description": null,
+            "arguments": [],
+            "status": null,
+            "top": "580",
+            "left": "1340",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "8b9e05e0-dbc9-42d6-9f6b-6f3e30dcf075"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Refresh Device",
+            "description": null,
+            "arguments": [],
+            "status": null,
+            "top": "400",
+            "left": "1340",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "33b6a48f-c6dc-4fe4-979e-5b6d0d2c8adb"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Reinstall Policy Package",
+            "description": null,
+            "arguments": [],
+            "status": null,
+            "top": "640",
+            "left": "1340",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "d4b98325-2c71-44e5-b1f0-79968f182139"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Remote CLI",
+            "description": null,
+            "arguments": [],
+            "status": null,
+            "top": "220",
+            "left": "1340",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "8e1e5d15-261a-4f69-9b66-ae8c1416d2f2"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Remote TCL",
+            "description": null,
+            "arguments": [],
+            "status": null,
+            "top": "280",
+            "left": "1340",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "167f3f44-5f1d-4cfa-85d4-514a7b18be21"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Report Markdown",
+            "description": null,
+            "arguments": [],
+            "status": null,
+            "top": "860",
+            "left": "1340",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "aab4f3fa-c580-4e8d-85d4-80e732e8b0b9"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "run device script",
+            "description": null,
+            "arguments": {
+                "arguments": {
+                    "script_type": "{{vars.action}}",
+                    "device_step_id": "{{vars.device_step_id}}"
+                },
+                "apply_async": false,
+                "step_variables": [],
+                "pass_parent_env": false,
+                "pass_input_record": false,
+                "workflowReference": "\/api\/3\/workflows\/9339cf20-07e5-419c-b995-68d4d897d525"
+            },
+            "status": null,
+            "top": "100",
+            "left": "1640",
+            "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
+            "group": null,
+            "uuid": "fcc2101d-4495-4531-9c8f-c79900bb0489"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "setup vars",
+            "description": null,
+            "arguments": {
+                "action": "{{vars.steps.find_action[0].type.itemValue}}",
+                "step_script": "{{vars.steps.find_step[0].script}}",
+                "device_step_id": "{{vars.steps.find_step[0].id}}",
+                "action_category": "{{vars.steps.find_action[0].category.itemValue}}"
+            },
+            "status": null,
+            "top": "120",
+            "left": "360",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "e599c818-f0a0-4b6b-a2c9-d11d8c0d923b"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Start",
+            "description": null,
+            "arguments": {
+                "__triggerLimit": true,
+                "step_variables": {
+                    "input": {
+                        "params": []
+                    }
+                },
+                "triggerOnSource": true,
+                "triggerOnReplicate": false
+            },
+            "status": null,
+            "top": "40",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/b348f017-9a94-471f-87f8-ce88b6a7ad62",
+            "group": null,
+            "uuid": "e3e4631a-2812-465d-a4ac-49b219c1b3ab"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "uknown category",
+            "description": null,
+            "arguments": [],
+            "status": null,
+            "top": "420",
+            "left": "60",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "fc9f7e25-b9f0-4b0d-b518-41635a179383"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "unknown action",
+            "description": null,
+            "arguments": [],
+            "status": null,
+            "top": "220",
+            "left": "800",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "ecd7d1bd-7528-4e5c-88fb-13a1381678fe"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Validate Step Output",
+            "description": null,
+            "arguments": [],
+            "status": null,
+            "top": "800",
+            "left": "1340",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "2481657b-8cde-4d7e-9972-8873863815a8"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Wait for Condition",
+            "description": null,
+            "arguments": [],
+            "status": null,
+            "top": "740",
+            "left": "1340",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "7aeb9043-ff42-43cf-a290-244f426e2bff"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "ztpf",
+            "description": null,
+            "arguments": [],
+            "status": null,
+            "top": "320",
+            "left": "360",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "891b6d82-c6d7-4f9a-9d8e-be1ebb7d99a0"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "ztpf action",
+            "description": null,
+            "arguments": {
+                "conditions": [
+                    {
+                        "default": true,
+                        "step_iri": "\/api\/3\/workflow_steps\/ecd7d1bd-7528-4e5c-88fb-13a1381678fe",
+                        "step_name": "unknown action"
+                    },
+                    {
+                        "step_iri": "\/api\/3\/workflow_steps\/7aeb9043-ff42-43cf-a290-244f426e2bff",
+                        "condition": "{{ vars.action == \"Wait for Condition\" }}",
+                        "step_name": "Wait for Condition"
+                    }
+                ],
+                "step_variables": []
+            },
+            "status": null,
+            "top": "400",
+            "left": "740",
+            "stepType": "\/api\/3\/workflow_step_types\/12254cf5-5db7-4b1a-8cb1-3af081924b28",
+            "group": null,
+            "uuid": "32732d77-950b-4774-b4b9-6a55f051d4c7"
+        }
+    ],
+    "routes": [
+        {
+            "@type": "WorkflowRoute",
+            "name": "action category -> FortiManager",
+            "targetStep": "\/api\/3\/workflow_steps\/463d4af8-937b-4be3-8360-fb8d15fd05fe",
+            "sourceStep": "\/api\/3\/workflow_steps\/781b0a14-af52-4ea9-a03f-c9d604a00f89",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "6ecc604c-1e87-4788-9fce-7916d591d91d"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "action category -> FortiSOAR",
+            "targetStep": "\/api\/3\/workflow_steps\/95958e48-7e06-4e5f-8a3a-4fcc558c1cae",
+            "sourceStep": "\/api\/3\/workflow_steps\/781b0a14-af52-4ea9-a03f-c9d604a00f89",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "40489820-1a72-42ec-a8f1-03ac79bd518d"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "action category -> uknown",
+            "targetStep": "\/api\/3\/workflow_steps\/fc9f7e25-b9f0-4b0d-b518-41635a179383",
+            "sourceStep": "\/api\/3\/workflow_steps\/781b0a14-af52-4ea9-a03f-c9d604a00f89",
+            "label": "uknown",
+            "isExecuted": false,
+            "group": null,
+            "uuid": "a32727f1-027a-4cc4-857e-a8a42dbf1ee0"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "action category -> ZTPF",
+            "targetStep": "\/api\/3\/workflow_steps\/891b6d82-c6d7-4f9a-9d8e-be1ebb7d99a0",
+            "sourceStep": "\/api\/3\/workflow_steps\/781b0a14-af52-4ea9-a03f-c9d604a00f89",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "81e8d379-52fd-4451-8d85-4a17c6b4b50a"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "DeviceDB -> run device script",
+            "targetStep": "\/api\/3\/workflow_steps\/fcc2101d-4495-4531-9c8f-c79900bb0489",
+            "sourceStep": "\/api\/3\/workflow_steps\/606c5a5e-e1e7-442c-8853-cd7dcfe1c25f",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "dcb73eab-6160-4907-8402-7a6d0dc7df53"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "find action -> setup vars",
+            "targetStep": "\/api\/3\/workflow_steps\/e599c818-f0a0-4b6b-a2c9-d11d8c0d923b",
+            "sourceStep": "\/api\/3\/workflow_steps\/971d63eb-95d1-4f0f-ab67-65562690ef0a",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "97915977-8c2f-4b26-8f7f-6a801221ca92"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "find step -> find action",
+            "targetStep": "\/api\/3\/workflow_steps\/971d63eb-95d1-4f0f-ab67-65562690ef0a",
+            "sourceStep": "\/api\/3\/workflow_steps\/c6aa6392-e6b7-4999-a37a-5662189d14fd",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "84612851-a3b5-42bd-a1ca-2a2c8097613f"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "fortimanager -> fortimanager type",
+            "targetStep": "\/api\/3\/workflow_steps\/151a6e7f-5674-4a83-b370-3bf9f6131b1b",
+            "sourceStep": "\/api\/3\/workflow_steps\/463d4af8-937b-4be3-8360-fb8d15fd05fe",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "c521ead7-5bb7-44ba-bfa5-66c90323b9dd"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "fortimanager type -> Authorize Device",
+            "targetStep": "\/api\/3\/workflow_steps\/187fb244-dc22-4111-b117-3a20fbeb82a2",
+            "sourceStep": "\/api\/3\/workflow_steps\/151a6e7f-5674-4a83-b370-3bf9f6131b1b",
+            "label": "",
+            "isExecuted": false,
+            "group": null,
+            "uuid": "04158666-9be2-4fef-a7d3-7a080d150dc8"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "fortimanager type -> DeviceDB",
+            "targetStep": "\/api\/3\/workflow_steps\/606c5a5e-e1e7-442c-8853-cd7dcfe1c25f",
+            "sourceStep": "\/api\/3\/workflow_steps\/151a6e7f-5674-4a83-b370-3bf9f6131b1b",
+            "label": "",
+            "isExecuted": false,
+            "group": null,
+            "uuid": "d2f91cc9-da14-4776-832c-30121d02674b"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "fortimanager type -> Install Device Config",
+            "targetStep": "\/api\/3\/workflow_steps\/ca394bb3-143f-4e6a-9afc-529a611b23d7",
+            "sourceStep": "\/api\/3\/workflow_steps\/151a6e7f-5674-4a83-b370-3bf9f6131b1b",
+            "label": "",
+            "isExecuted": false,
+            "group": null,
+            "uuid": "9bf9e0d7-44a4-46ba-b968-c090b4ad55b3"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "fortimanager type -> Install Policy Package",
+            "targetStep": "\/api\/3\/workflow_steps\/cf141f33-37b4-4b9c-8072-d2c22328fefe",
+            "sourceStep": "\/api\/3\/workflow_steps\/151a6e7f-5674-4a83-b370-3bf9f6131b1b",
+            "label": "",
+            "isExecuted": false,
+            "group": null,
+            "uuid": "ff6eb948-6817-40bc-bb1b-19f3407afb8a"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "fortimanager type -> PolicyDB",
+            "targetStep": "\/api\/3\/workflow_steps\/14f6261b-7d7a-4ba6-990a-519fafc808b7",
+            "sourceStep": "\/api\/3\/workflow_steps\/151a6e7f-5674-4a83-b370-3bf9f6131b1b",
+            "label": "",
+            "isExecuted": false,
+            "group": null,
+            "uuid": "efafd260-4026-4205-bb45-c19e265e6037"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "fortimanager type -> Provisioning CLI Teamplate",
+            "targetStep": "\/api\/3\/workflow_steps\/8f914ad5-ae11-4259-82de-174e6360461b",
+            "sourceStep": "\/api\/3\/workflow_steps\/151a6e7f-5674-4a83-b370-3bf9f6131b1b",
+            "label": "",
+            "isExecuted": false,
+            "group": null,
+            "uuid": "87c200dc-1c3f-4e77-9456-cf48c29b6921"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "fortimanager type -> Provisioning Jinja Teamplate",
+            "targetStep": "\/api\/3\/workflow_steps\/8b9e05e0-dbc9-42d6-9f6b-6f3e30dcf075",
+            "sourceStep": "\/api\/3\/workflow_steps\/151a6e7f-5674-4a83-b370-3bf9f6131b1b",
+            "label": "",
+            "isExecuted": false,
+            "group": null,
+            "uuid": "6744e444-ba99-4bc1-a819-43c0d40f0aa0"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "fortimanager type -> Refresh Device",
+            "targetStep": "\/api\/3\/workflow_steps\/33b6a48f-c6dc-4fe4-979e-5b6d0d2c8adb",
+            "sourceStep": "\/api\/3\/workflow_steps\/151a6e7f-5674-4a83-b370-3bf9f6131b1b",
+            "label": "",
+            "isExecuted": false,
+            "group": null,
+            "uuid": "b91292ee-8443-4367-ae90-ce0be6e1fae4"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "fortimanager type -> Reinstall Policy Package",
+            "targetStep": "\/api\/3\/workflow_steps\/d4b98325-2c71-44e5-b1f0-79968f182139",
+            "sourceStep": "\/api\/3\/workflow_steps\/151a6e7f-5674-4a83-b370-3bf9f6131b1b",
+            "label": "",
+            "isExecuted": false,
+            "group": null,
+            "uuid": "41b2cebc-d354-40e2-b9ea-ee44656f5fea"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "fortimanager type -> Remote CLI",
+            "targetStep": "\/api\/3\/workflow_steps\/8e1e5d15-261a-4f69-9b66-ae8c1416d2f2",
+            "sourceStep": "\/api\/3\/workflow_steps\/151a6e7f-5674-4a83-b370-3bf9f6131b1b",
+            "label": "",
+            "isExecuted": false,
+            "group": null,
+            "uuid": "c663c026-7c0a-4e1f-8458-0b171ec749b2"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "fortimanager type -> Remote TCL",
+            "targetStep": "\/api\/3\/workflow_steps\/167f3f44-5f1d-4cfa-85d4-514a7b18be21",
+            "sourceStep": "\/api\/3\/workflow_steps\/151a6e7f-5674-4a83-b370-3bf9f6131b1b",
+            "label": "",
+            "isExecuted": false,
+            "group": null,
+            "uuid": "8f6c11fb-9d58-4e1c-a982-6ed89e08ac2c"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "fortimanager type -> unknown action",
+            "targetStep": "\/api\/3\/workflow_steps\/ecd7d1bd-7528-4e5c-88fb-13a1381678fe",
+            "sourceStep": "\/api\/3\/workflow_steps\/151a6e7f-5674-4a83-b370-3bf9f6131b1b",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "547e0f0c-d899-4e87-bf5d-f34e3bfa50bc"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "fortisoar -> Copy of ztpf type",
+            "targetStep": "\/api\/3\/workflow_steps\/8c04d563-e3db-44bf-a9c7-7d92ed3ef4b5",
+            "sourceStep": "\/api\/3\/workflow_steps\/95958e48-7e06-4e5f-8a3a-4fcc558c1cae",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "c91ae97c-5a2e-4fcf-8acd-3a30f01fe091"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "fortisoar type -> playbook",
+            "targetStep": "\/api\/3\/workflow_steps\/90f86a80-963b-4ca2-b38e-0d574cc0890b",
+            "sourceStep": "\/api\/3\/workflow_steps\/8c04d563-e3db-44bf-a9c7-7d92ed3ef4b5",
+            "label": "",
+            "isExecuted": false,
+            "group": null,
+            "uuid": "ba7d0772-0cd2-4e3b-b615-d3e8faa28eb5"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "fortisoar type -> unknown action",
+            "targetStep": "\/api\/3\/workflow_steps\/ecd7d1bd-7528-4e5c-88fb-13a1381678fe",
+            "sourceStep": "\/api\/3\/workflow_steps\/8c04d563-e3db-44bf-a9c7-7d92ed3ef4b5",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "ce6e3a3a-bc61-4ce8-80ae-2d563b2d32cb"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "setup vars -> action category",
+            "targetStep": "\/api\/3\/workflow_steps\/781b0a14-af52-4ea9-a03f-c9d604a00f89",
+            "sourceStep": "\/api\/3\/workflow_steps\/e599c818-f0a0-4b6b-a2c9-d11d8c0d923b",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "02a6cce3-b8b4-45a0-85a2-31bd355db64a"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Start -> find step",
+            "targetStep": "\/api\/3\/workflow_steps\/c6aa6392-e6b7-4999-a37a-5662189d14fd",
+            "sourceStep": "\/api\/3\/workflow_steps\/e3e4631a-2812-465d-a4ac-49b219c1b3ab",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "731bfcba-c14d-4642-86b0-1d52a17d40f0"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "ztpf type -> Report Markdown",
+            "targetStep": "\/api\/3\/workflow_steps\/aab4f3fa-c580-4e8d-85d4-80e732e8b0b9",
+            "sourceStep": "\/api\/3\/workflow_steps\/32732d77-950b-4774-b4b9-6a55f051d4c7",
+            "label": "",
+            "isExecuted": false,
+            "group": null,
+            "uuid": "279310ca-3fcf-457f-8855-e322c979a643"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "ztpf type -> unknown action",
+            "targetStep": "\/api\/3\/workflow_steps\/ecd7d1bd-7528-4e5c-88fb-13a1381678fe",
+            "sourceStep": "\/api\/3\/workflow_steps\/32732d77-950b-4774-b4b9-6a55f051d4c7",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "09569a3d-c6c5-46b8-9d23-0286afdf9de2"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "ztpf type -> Validate Step Output",
+            "targetStep": "\/api\/3\/workflow_steps\/2481657b-8cde-4d7e-9972-8873863815a8",
+            "sourceStep": "\/api\/3\/workflow_steps\/32732d77-950b-4774-b4b9-6a55f051d4c7",
+            "label": "",
+            "isExecuted": false,
+            "group": null,
+            "uuid": "1a8bc9e0-05e7-4aea-9765-6a393a9737ce"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "ztpf type -> Wait for Condition",
+            "targetStep": "\/api\/3\/workflow_steps\/7aeb9043-ff42-43cf-a290-244f426e2bff",
+            "sourceStep": "\/api\/3\/workflow_steps\/32732d77-950b-4774-b4b9-6a55f051d4c7",
+            "label": "",
+            "isExecuted": false,
+            "group": null,
+            "uuid": "73a1704a-07bf-4006-bdfb-fdf28596c467"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "ztpf -> ztpf type",
+            "targetStep": "\/api\/3\/workflow_steps\/32732d77-950b-4774-b4b9-6a55f051d4c7",
+            "sourceStep": "\/api\/3\/workflow_steps\/891b6d82-c6d7-4f9a-9d8e-be1ebb7d99a0",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "ac274aaf-7621-4fea-98ed-5f90aa9cbd0a"
+        }
+    ],
+    "groups": [],
+    "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+    "playbookOrigin": "\/api\/3\/picklists\/b6d710a9-a8ec-41ec-8817-fe9fa062fcdd",
+    "isEditable": false,
+    "uuid": "d089d16a-c383-43b0-a7d2-4a2ab1efb25a",
+    "owners": [],
+    "isPrivate": false,
+    "deletedAt": null,
+    "recordTags": [
+        "TODO",
+        "ztpfAutomationAction",
+        "ztpfDeviceAutomationStep"
+    ]
+}

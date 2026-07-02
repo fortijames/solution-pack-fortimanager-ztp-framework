@@ -73,12 +73,12 @@
                         }
                     ],
                     "__selectFields": [
-                        "name",
                         "orderPriority",
+                        "name",
                         "type",
                         "datakey",
                         "id",
-                        "data"
+                        "script"
                     ]
                 },
                 "module": "ztpf_metadata_sources?$limit=5000",
@@ -165,7 +165,7 @@
                     "type": "{{vars.item.type.itemValue}}",
                     "datakey": "{{vars.item.datakey}}",
                     "jinja_vars": "{{vars.jinja_vars}}",
-                    "source_data": "{{vars.item.data}}"
+                    "source_data": "{{vars.item.script}}"
                 },
                 "apply_async": false,
                 "step_variables": [],

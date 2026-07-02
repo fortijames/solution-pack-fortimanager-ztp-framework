@@ -54,14 +54,14 @@
                                 }
                             }
                         ],
-                        "style": "col-lg-6"
+                        "style": "col-lg-4"
                     },
                     {
                         "widgets": [
                             {
                                 "type": "chart",
                                 "config": {
-                                    "wid": "dbb1dace-b642-45fd-9613-ce3add15e44c",
+                                    "wid": "1b204a86-3a2f-4a1c-999a-9d873c8f190d",
                                     "widgetAlwaysDisplay": true,
                                     "showTabularData": false,
                                     "query": {
@@ -114,7 +114,49 @@
                                 }
                             }
                         ],
-                        "style": "col-lg-6"
+                        "style": "col-lg-4"
+                    },
+                    {
+                        "widgets": [
+                            {
+                                "type": "chart",
+                                "config": {
+                                    "wid": "dbb1dace-b642-45fd-9613-ce3add15e44c",
+                                    "widgetAlwaysDisplay": true,
+                                    "showTabularData": false,
+                                    "query": {
+                                        "sort": [],
+                                        "limit": 2147483647,
+                                        "logic": "AND",
+                                        "filters": [],
+                                        "aggregates": [
+                                            {
+                                                "operator": "countdistinct",
+                                                "field": "*",
+                                                "alias": "total"
+                                            },
+                                            {
+                                                "operator": "groupby",
+                                                "alias": "recordTags",
+                                                "field": "recordTags.uuid"
+                                            }
+                                        ]
+                                    },
+                                    "mapping": {
+                                        "fieldName": "recordTags"
+                                    },
+                                    "assignedToSetting": "all",
+                                    "aggregate": true,
+                                    "viewType": "chart",
+                                    "title": "Device Tags",
+                                    "resource": "ztpf_devices",
+                                    "chart": "donut",
+                                    "showCount": true,
+                                    "widgetAlwaysExpanded": true
+                                }
+                            }
+                        ],
+                        "style": "col-lg-4"
                     }
                 ],
                 "wid": "ae44543c-1706-46dc-b66e-06869f783bae",
@@ -225,7 +267,8 @@
                                         "name",
                                         "platform",
                                         "firmware",
-                                        "status"
+                                        "status",
+                                        "recordTags"
                                     ],
                                     "expandableCol": [],
                                     "relationshipField": [],

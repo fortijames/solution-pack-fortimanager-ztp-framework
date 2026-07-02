@@ -103,6 +103,47 @@
         },
         {
             "@type": "WorkflowStep",
+            "name": "find metadata",
+            "description": null,
+            "arguments": {
+                "query": {
+                    "sort": [],
+                    "limit": 30,
+                    "logic": "AND",
+                    "filters": [
+                        {
+                            "type": "object",
+                            "field": "ztpfDevices",
+                            "value": "{{vars.steps.find_device[0]['@id']}}",
+                            "_value": {
+                                "@id": "{{vars.steps.find_device[0]['@id']}}",
+                                "display": "",
+                                "itemValue": ""
+                            },
+                            "operator": "eq"
+                        }
+                    ],
+                    "__selectFields": [
+                        "id",
+                        "name",
+                        "dataText",
+                        "dataJSON",
+                        "dataSecret"
+                    ]
+                },
+                "module": "ztpf_metadata_devices?$limit=5000",
+                "checkboxFields": true,
+                "step_variables": []
+            },
+            "status": null,
+            "top": "540",
+            "left": "440",
+            "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928770",
+            "group": null,
+            "uuid": "e09d2ca0-d3c5-4adb-9f8f-980a9b818796"
+        },
+        {
+            "@type": "WorkflowStep",
             "name": "jinja_vars for device",
             "description": "Find vars matching record_dev_ and update jinja_vars.record.device.",
             "arguments": {
@@ -114,6 +155,20 @@
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
             "uuid": "6a900200-6dd9-4428-b49a-757da6810789"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "jinja_vars for device metadata",
+            "description": null,
+            "arguments": {
+                "jinja_vars_test": "{%- set ret = vars.jinja_vars -%}\n\n{%- for m in vars.steps.find_metadata -%}\n{%- set v = m.dataText or m.dataJSON -%}\n{%- do ret.record.metadata.update({\n  m.name:v\n}) -%}\n{%- endfor -%}\n{{ret}}"
+            },
+            "status": null,
+            "top": "540",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "23b20b58-150a-484c-9421-3905a220ada1"
         },
         {
             "@type": "WorkflowStep",
@@ -149,7 +204,7 @@
             "description": null,
             "arguments": {
                 "device_id": "{{vars.input.params['device_id']}}",
-                "jinja_vars": "{\n  \"record\":{\n    \"device\":{},\n    \"manager\":{}\n  }\n}"
+                "jinja_vars": "{\n  \"record\":{\n    \"device\":{},\n    \"manager\":{},\n    \"metadata\":{}\n  }\n}"
             },
             "status": null,
             "top": "40",
@@ -203,13 +258,33 @@
         },
         {
             "@type": "WorkflowRoute",
-            "name": "jinja_vars for manager -> return",
+            "name": "find metadata -> jinja_vars for device metadata",
+            "targetStep": "\/api\/3\/workflow_steps\/23b20b58-150a-484c-9421-3905a220ada1",
+            "sourceStep": "\/api\/3\/workflow_steps\/e09d2ca0-d3c5-4adb-9f8f-980a9b818796",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "93ecfdd2-17a8-43bc-b6f6-9b22e9bf9b50"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "jinja_vars for device metadata -> return",
             "targetStep": "\/api\/3\/workflow_steps\/933b40a0-bef8-43e8-a8a4-5c8406c4b091",
+            "sourceStep": "\/api\/3\/workflow_steps\/23b20b58-150a-484c-9421-3905a220ada1",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "3a8b86dd-8183-4ef0-aad2-52b8b528e887"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "jinja_vars for manager -> find metadata",
+            "targetStep": "\/api\/3\/workflow_steps\/e09d2ca0-d3c5-4adb-9f8f-980a9b818796",
             "sourceStep": "\/api\/3\/workflow_steps\/15a7c092-d27f-44e2-a71a-b3a36173a450",
             "label": null,
             "isExecuted": false,
             "group": null,
-            "uuid": "3a786ec7-4b31-4690-bd0e-bce9e330dea7"
+            "uuid": "da4d0041-c191-4f3d-b109-e22735d47ec9"
         },
         {
             "@type": "WorkflowRoute",
@@ -243,6 +318,23 @@
         }
     ],
     "groups": [
+        {
+            "@type": "WorkflowGroup",
+            "name": "Metadata",
+            "description": "Search for Metadata Records on this device and populate jinja_vars.",
+            "type": "note",
+            "isCollapsed": false,
+            "hasTriggerStep": false,
+            "hideInLogs": false,
+            "metadata": [],
+            "reusable": false,
+            "top": "440",
+            "left": "220",
+            "height": "0",
+            "width": "300",
+            "uuid": "8542240b-6c70-4de3-a535-be9d6dfa1942",
+            "recordTags": []
+        },
         {
             "@type": "WorkflowGroup",
             "name": "Record Data",

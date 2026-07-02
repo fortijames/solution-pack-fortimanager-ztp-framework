@@ -324,6 +324,70 @@
                                                                 {
                                                                     "widgets": [
                                                                         {
+                                                                            "type": "playbookButtons-1.1.1",
+                                                                            "config": {
+                                                                                "wid": "5dd590d1-d927-44ab-b6f9-12f7dcbb2072",
+                                                                                "widgetName": "Playbook Execution Wizard",
+                                                                                "selectedPlaybooksWithRecord": [
+                                                                                    {
+                                                                                        "name": "Add Action to Device",
+                                                                                        "uuid": "3ebf17b8-3554-4e63-baf9-5b6b3ee2571d",
+                                                                                        "actionTriggerName": "Add Action",
+                                                                                        "collectionName": "10 - SP - ZTPF - Buttons",
+                                                                                        "icon": "icon icon-add"
+                                                                                    },
+                                                                                    {
+                                                                                        "name": "Create Run Group and Queue Steps",
+                                                                                        "uuid": "959638c2-2584-479f-80b7-368ae94bdc07",
+                                                                                        "actionTriggerName": "Create Run Group and Queue Steps",
+                                                                                        "collectionName": "10 - SP - ZTPF - Buttons",
+                                                                                        "icon": "icon icon-queue_rules"
+                                                                                    }
+                                                                                ]
+                                                                            }
+                                                                        }
+                                                                    ],
+                                                                    "style": "col-lg-6"
+                                                                },
+                                                                {
+                                                                    "widgets": [
+                                                                        {
+                                                                            "type": "editableFormGroup",
+                                                                            "config": {
+                                                                                "wid": "a11021e4-fffd-4f18-a8f0-11857c61ff6e",
+                                                                                "rows": [
+                                                                                    {
+                                                                                        "columns": [
+                                                                                            {
+                                                                                                "fields": [
+                                                                                                    {
+                                                                                                        "name": "ztpfRunning",
+                                                                                                        "highlightMode": true,
+                                                                                                        "linky": true,
+                                                                                                        "readOnly": true
+                                                                                                    }
+                                                                                                ],
+                                                                                                "style": "col-lg-12"
+                                                                                            }
+                                                                                        ]
+                                                                                    }
+                                                                                ]
+                                                                            }
+                                                                        }
+                                                                    ],
+                                                                    "style": "col-lg-6"
+                                                                }
+                                                            ],
+                                                            "wid": "78154498-8444-493b-bb83-e55f3528ffe4",
+                                                            "_collapsed": false,
+                                                            "collapsible": false,
+                                                            "collapsibleIndex": 0
+                                                        },
+                                                        {
+                                                            "columns": [
+                                                                {
+                                                                    "widgets": [
+                                                                        {
                                                                             "type": "sectionHeader",
                                                                             "config": {
                                                                                 "wid": "47a833c4-4a18-4da0-bfad-c17c3368747a",
@@ -339,7 +403,7 @@
                                                                         {
                                                                             "type": "relationship.subtab",
                                                                             "config": {
-                                                                                "wid": "081a7d09-8a96-4f5c-bff9-f55272992ac1",
+                                                                                "wid": "47f81fe2-c279-4896-b253-188728292e46",
                                                                                 "excludes": [],
                                                                                 "selectionType": "include",
                                                                                 "actionButtons": [],
@@ -347,6 +411,15 @@
                                                                                     "ztpfDeviceAutomtionSteps": {
                                                                                         "columns": [],
                                                                                         "checkBox": false
+                                                                                    },
+                                                                                    "ztpfDeviceAutomationSteps": {
+                                                                                        "columns": [
+                                                                                            {
+                                                                                                "openTab": false,
+                                                                                                "name": "outputMarkdown"
+                                                                                            }
+                                                                                        ],
+                                                                                        "checkBox": true
                                                                                     }
                                                                                 },
                                                                                 "enableHorizontalScroll": [],
@@ -356,6 +429,13 @@
                                                                                 "queryFilters": {
                                                                                     "ztpf_device_automation_steps": {
                                                                                         "sort": [
+                                                                                            {
+                                                                                                "direction": "DESC",
+                                                                                                "field": "stepStopTimestamp",
+                                                                                                "sort": {
+                                                                                                    "direction": "DESC"
+                                                                                                }
+                                                                                            },
                                                                                             {
                                                                                                 "direction": "ASC",
                                                                                                 "field": "stepNumber",
@@ -380,10 +460,13 @@
                                                                             }
                                                                         }
                                                                     ],
-                                                                    "style": "col-lg-12"
+                                                                    "style": "col-lg-12",
+                                                                    "collapsedText": "ZTPF"
                                                                 }
                                                             ],
-                                                            "wid": "16ac4954-4953-4983-806c-bdee8aef61c9",
+                                                            "wid": "1fdaba0f-e32e-4b7e-970d-035f4ab4a96b",
+                                                            "collapsible": false,
+                                                            "collapsibleIndex": 0,
                                                             "_collapsed": false
                                                         },
                                                         {
@@ -406,7 +489,7 @@
                                                                         {
                                                                             "type": "relationship.subtab",
                                                                             "config": {
-                                                                                "wid": "47f81fe2-c279-4896-b253-188728292e46",
+                                                                                "wid": "11f9f956-23c6-4767-9e59-e164a67f36dc",
                                                                                 "excludes": [],
                                                                                 "selectionType": "include",
                                                                                 "actionButtons": [],
@@ -416,8 +499,13 @@
                                                                                         "checkBox": false
                                                                                     },
                                                                                     "ztpfDeviceAutomationSteps": {
-                                                                                        "columns": [],
-                                                                                        "checkBox": false
+                                                                                        "columns": [
+                                                                                            {
+                                                                                                "openTab": false,
+                                                                                                "name": "outputMarkdown"
+                                                                                            }
+                                                                                        ],
+                                                                                        "checkBox": true
                                                                                     }
                                                                                 },
                                                                                 "enableHorizontalScroll": [],
@@ -427,6 +515,13 @@
                                                                                 "queryFilters": {
                                                                                     "ztpf_device_automation_steps": {
                                                                                         "sort": [
+                                                                                            {
+                                                                                                "direction": "DESC",
+                                                                                                "field": "stepStopTimestamp",
+                                                                                                "sort": {
+                                                                                                    "direction": "DESC"
+                                                                                                }
+                                                                                            },
                                                                                             {
                                                                                                 "direction": "ASC",
                                                                                                 "field": "stepNumber",

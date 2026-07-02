@@ -1,0 +1,226 @@
+{
+    "@type": "Workflow",
+    "triggerLimit": null,
+    "name": "> delete device manager script",
+    "aliasName": null,
+    "tag": null,
+    "description": "Delete a dvmdb\/script based on the FMG version.",
+    "isActive": true,
+    "debug": false,
+    "singleRecordExecution": false,
+    "remoteExecutableFlag": false,
+    "parameters": [
+        "connector_config",
+        "adom",
+        "script_name",
+        "fmg_version"
+    ],
+    "synchronous": false,
+    "collection": "\/api\/3\/workflow_collections\/c15a8515-33ae-46d2-9166-fa6fa47ac762",
+    "versions": [],
+    "triggerStep": "\/api\/3\/workflow_steps\/719d2bd5-472a-4526-8591-60a9dab3a7a1",
+    "steps": [
+        {
+            "@type": "WorkflowStep",
+            "name": "create_script",
+            "description": null,
+            "arguments": {
+                "name": "Fortinet FortiManager JSON-RPC",
+                "config": "{{vars.input.params['connector_config']}}",
+                "params": {
+                    "url": "{{vars.url}}",
+                    "data": "{{vars.script_payload}}"
+                },
+                "version": "1.1.0",
+                "connector": "fortinet-fortimanager-json-rpc",
+                "operation": "json_rpc_delete",
+                "operationTitle": "JSON RPC Delete",
+                "pickFromTenant": false,
+                "step_variables": []
+            },
+            "status": null,
+            "top": "380",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/0bfed618-0316-11e7-93ae-92361f002671",
+            "group": null,
+            "uuid": "885d67ae-ef27-4e3e-8cc4-d8c6a5c16c7e"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "get fmg version matrix",
+            "description": null,
+            "arguments": {
+                "when": "{{vars.input.params['fmg_version']}}",
+                "arguments": {
+                    "version": "{{vars.input.params['fmg_version']}}",
+                    "find_version_list": "[\n\"<= 7.6.4\"\n]"
+                },
+                "apply_async": false,
+                "step_variables": {
+                    "fmg_legacyversion_scripts_check": "{{vars.steps.get_fmg_version_matrix.output['version_check']}}"
+                },
+                "pass_parent_env": false,
+                "pass_input_record": false,
+                "workflowReference": "\/api\/3\/workflows\/99a05d7e-1a17-4375-b475-b315e14cdd1f"
+            },
+            "status": null,
+            "top": "40",
+            "left": "380",
+            "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
+            "group": null,
+            "uuid": "e2b13b50-0aa3-4542-a0ef-6ce02f089d17"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "return",
+            "description": null,
+            "arguments": {
+                "output": "{{vars.steps.create_script}}",
+                "params": "{{vars.input.params}}",
+                "status": "{%- set stat = vars.status -%}\n\n{%- set res = vars.steps.create_script.data -%}\n{%- if res.status != 0 -%}\n  {%- do stat.update({\n    \"error\":true,\n    \"message\": res.add_response.status.message\n  }) -%}\n{%- endif -%}\n\n{{stat}}"
+            },
+            "status": null,
+            "top": "120",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "b5f9aca5-c73f-4e86-8794-ee16a520dd7b"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "setup payload and url",
+            "description": null,
+            "arguments": {
+                "url": "{# \n# matches legacy version use \/dvmdb\/adom\/<adom>\/script\/\n#  default to \/pm\/config\/adom\/<adom>\/obj\/fmg\/script\/\n#}\n{%- if true in vars.fmg_legacyversion_scripts_check.values() | list -%}\n\/dvmdb\/adom\/{{vars.input.params.adom}}\/script\/{{vars.script_name}}\n{%- else -%}\n\/pm\/config\/adom\/{{vars.input.params.adom}}\/obj\/fmg\/script\/{{vars.script_name}}\n{%- endif -%}",
+                "script_payload": "{%- set payload = {\"data\":{}} -%}\n{{payload}}"
+            },
+            "status": null,
+            "top": "380",
+            "left": "760",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "70d8746a-5316-491e-b9ee-8a7c6bd2922d"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "setup vars data",
+            "description": null,
+            "arguments": {
+                "status": "{# Set a default status #}\n{%- set ret = {} -%}\n{%- do ret.update({\n  \"error\":false,\n  \"message\":\"\"\n}) -%}\n{{ret}}",
+                "script_name": "{{vars.input.params['script_name']}}",
+                "connector_config": "{{vars.input.params['connector_config']}}"
+            },
+            "status": null,
+            "top": "120",
+            "left": "760",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "17227133-3030-414f-9a7e-c40919f425b3"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Start",
+            "description": null,
+            "arguments": {
+                "__triggerLimit": true,
+                "step_variables": {
+                    "input": {
+                        "params": []
+                    },
+                    "fmg_legacyversion_scripts_check": "{}"
+                },
+                "triggerOnSource": true,
+                "triggerOnReplicate": false
+            },
+            "status": null,
+            "top": "40",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/b348f017-9a94-471f-87f8-ce88b6a7ad62",
+            "group": null,
+            "uuid": "719d2bd5-472a-4526-8591-60a9dab3a7a1"
+        }
+    ],
+    "routes": [
+        {
+            "@type": "WorkflowRoute",
+            "name": "create_script -> extract_fmg_data",
+            "targetStep": "\/api\/3\/workflow_steps\/b5f9aca5-c73f-4e86-8794-ee16a520dd7b",
+            "sourceStep": "\/api\/3\/workflow_steps\/885d67ae-ef27-4e3e-8cc4-d8c6a5c16c7e",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "fb5b7e39-1297-4fab-ac0a-776eec0ba43c"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "get fmg version matrix -> setup_vars_data",
+            "targetStep": "\/api\/3\/workflow_steps\/17227133-3030-414f-9a7e-c40919f425b3",
+            "sourceStep": "\/api\/3\/workflow_steps\/e2b13b50-0aa3-4542-a0ef-6ce02f089d17",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "4ea29e61-485b-4232-849e-49e7aec20761"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "setup payload and url -> create_script",
+            "targetStep": "\/api\/3\/workflow_steps\/885d67ae-ef27-4e3e-8cc4-d8c6a5c16c7e",
+            "sourceStep": "\/api\/3\/workflow_steps\/70d8746a-5316-491e-b9ee-8a7c6bd2922d",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "3aa58cb9-8ee6-4aa9-98df-0a6a5209d688"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "setup_vars_data -> setup_payload",
+            "targetStep": "\/api\/3\/workflow_steps\/70d8746a-5316-491e-b9ee-8a7c6bd2922d",
+            "sourceStep": "\/api\/3\/workflow_steps\/17227133-3030-414f-9a7e-c40919f425b3",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "e71e4073-9883-469f-a572-02ba91ef6cd9"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Start -> get fmg version matrix",
+            "targetStep": "\/api\/3\/workflow_steps\/e2b13b50-0aa3-4542-a0ef-6ce02f089d17",
+            "sourceStep": "\/api\/3\/workflow_steps\/719d2bd5-472a-4526-8591-60a9dab3a7a1",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "35831cec-1b0b-4b59-9509-d6090765d6ff"
+        }
+    ],
+    "groups": [
+        {
+            "@type": "WorkflowGroup",
+            "name": "Details",
+            "description": "Requires the FMG version if the version might need a legacy API call.\n\nDelete a device manager script.",
+            "type": "note",
+            "isCollapsed": false,
+            "hasTriggerStep": false,
+            "hideInLogs": false,
+            "metadata": [],
+            "reusable": false,
+            "top": "200",
+            "left": "320",
+            "height": "144",
+            "width": "381",
+            "uuid": "aa65dbf9-bd38-4431-ba68-e402f2f5a871",
+            "recordTags": []
+        }
+    ],
+    "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+    "playbookOrigin": "\/api\/3\/picklists\/b6d710a9-a8ec-41ec-8817-fe9fa062fcdd",
+    "isEditable": false,
+    "uuid": "c8542bc8-f5eb-485b-99db-ff1aa00178b9",
+    "owners": [],
+    "isPrivate": false,
+    "deletedAt": null,
+    "recordTags": [
+        "delete",
+        "fmg_api",
+        "version_matrix"
+    ]
+}

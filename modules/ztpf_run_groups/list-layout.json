@@ -11,16 +11,13 @@
                             {
                                 "type": "grid",
                                 "config": {
-                                    "wid": "ade75c76-7202-4d98-9d47-8e4d535d3fde",
-                                    "module": "ztpf_metadata_devices",
+                                    "wid": "891c904a-9fdb-4a0f-88ec-4b81d4ed419f",
+                                    "module": "ztpf_run_groups",
                                     "columns": [
-                                        "ztpfDevices",
+                                        "id",
                                         "name",
-                                        "type",
-                                        "dataText",
-                                        "dataJSON",
-                                        "dataSecret",
-                                        "id"
+                                        "createDate",
+                                        "modifyDate"
                                     ],
                                     "expandableCol": [],
                                     "relationshipField": [],
@@ -28,7 +25,14 @@
                                     "editableFields": false,
                                     "actionButtons": [],
                                     "query": {
-                                        "sort": [],
+                                        "sort": [
+                                            {
+                                                "direction": "DESC",
+                                                "field": "createDate",
+                                                "_fieldTitle": "Created On",
+                                                "_fieldName": "createDate"
+                                            }
+                                        ],
                                         "limit": 30,
                                         "logic": "AND",
                                         "filters": []
@@ -39,23 +43,23 @@
                         "style": "col-lg-12"
                     }
                 ],
-                "wid": "0818a28a-51c1-4a41-995b-1dafa51cff46",
+                "wid": "ba85de7c-b227-4f36-a316-4b9398a154b8",
                 "_collapsed": false
             }
         ],
-        "wid": "8ab8792d-38a4-4d3e-aef4-2138a3b6d8d9",
+        "wid": "0630c734-c267-4736-983f-fbe55b4ffc93",
         "metadata": {
-            "customTemplateTitle": "Device Metadata",
-            "originalTemplateTitle": "ztpfMetadataDevices"
+            "customTemplateTitle": "ztpfRunGroups",
+            "originalTemplateTitle": "ztpfRunGroups"
         }
     },
-    "module": "ztpf_metadata_devices",
+    "module": "ztpf_run_groups",
     "filters": [],
     "isDefault": true,
     "visible": true,
     "viewOptions": "list",
     "name": "Base Template",
-    "system": true,
-    "uuid": "modules-ztpf_metadata_devices-list",
-    "newUuid": "9982fffa-227e-4aef-ab6b-6447f8582dc8"
+    "system": false,
+    "uuid": "modules-ztpf_run_groups-list",
+    "newUuid": "290fe3fd-e181-4d38-9d94-d1443c3fae1c"
 }

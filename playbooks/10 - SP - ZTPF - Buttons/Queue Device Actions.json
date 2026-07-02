@@ -1,0 +1,139 @@
+{
+    "@type": "Workflow",
+    "triggerLimit": null,
+    "name": "Queue Device Actions",
+    "aliasName": null,
+    "tag": null,
+    "description": "Queue Pending Action Steps on a Device",
+    "isActive": false,
+    "debug": false,
+    "singleRecordExecution": false,
+    "remoteExecutableFlag": false,
+    "parameters": [],
+    "synchronous": false,
+    "collection": "\/api\/3\/workflow_collections\/f0b56dc0-6c1e-4f5b-9199-c807800f028a",
+    "versions": [],
+    "triggerStep": "\/api\/3\/workflow_steps\/afb43dcf-5313-4cd2-a20e-e54dc78f8066",
+    "steps": [
+        {
+            "@type": "WorkflowStep",
+            "name": "queue to run pending steps",
+            "description": null,
+            "arguments": {
+                "for_each": {
+                    "item": "{{vars.input.records}}",
+                    "parallel": false,
+                    "condition": ""
+                },
+                "arguments": {
+                    "device_id": "{{vars.item.id}}"
+                },
+                "apply_async": false,
+                "step_variables": [],
+                "pass_parent_env": false,
+                "pass_input_record": false,
+                "workflowReference": "\/api\/3\/workflows\/d707ea8f-fed1-44bf-9413-6ad1781927ff"
+            },
+            "status": null,
+            "top": "160",
+            "left": "480",
+            "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
+            "group": null,
+            "uuid": "205add97-df24-494f-849b-f381705d6ec3"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Start",
+            "description": null,
+            "arguments": {
+                "route": "f07de56a-49fc-4811-8a9d-84af720b3db9",
+                "title": "Queue and Run Actions",
+                "resources": [
+                    "ztpf_devices"
+                ],
+                "__triggerLimit": true,
+                "inputVariables": [],
+                "step_variables": {
+                    "input": {
+                        "params": [],
+                        "records": "{{vars.input.records}}"
+                    }
+                },
+                "triggerOnSource": true,
+                "displayConditions": {
+                    "ztpf_devices": {
+                        "sort": [],
+                        "limit": 30,
+                        "logic": "AND",
+                        "filters": [
+                            {
+                                "type": "primitive",
+                                "field": "ztpfRunning",
+                                "value": true,
+                                "operator": "neq",
+                                "_operator": "neq"
+                            }
+                        ]
+                    }
+                },
+                "executeButtonText": "Execute",
+                "noRecordExecution": false,
+                "showToasterMessage": {
+                    "visible": false,
+                    "messageVisible": true
+                },
+                "triggerOnReplicate": false,
+                "singleRecordExecution": true
+            },
+            "status": null,
+            "top": "40",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/f414d039-bb0d-4e59-9c39-a8f1e880b18a",
+            "group": null,
+            "uuid": "afb43dcf-5313-4cd2-a20e-e54dc78f8066"
+        }
+    ],
+    "routes": [
+        {
+            "@type": "WorkflowRoute",
+            "name": "Start -> queue to run pending steps",
+            "targetStep": "\/api\/3\/workflow_steps\/205add97-df24-494f-849b-f381705d6ec3",
+            "sourceStep": "\/api\/3\/workflow_steps\/afb43dcf-5313-4cd2-a20e-e54dc78f8066",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "3bb3f52f-3ada-41d8-abd6-7b1f671bf62f"
+        }
+    ],
+    "groups": [
+        {
+            "@type": "WorkflowGroup",
+            "name": "Details",
+            "description": "Queue added steps from a device by updating the device and pending step records for the ZTPF flow.",
+            "type": "note",
+            "isCollapsed": false,
+            "hasTriggerStep": false,
+            "hideInLogs": false,
+            "metadata": [],
+            "reusable": false,
+            "top": "120",
+            "left": "80",
+            "height": "132",
+            "width": "281",
+            "uuid": "bccae9f8-6ce0-4652-af4a-babc284eeeb3",
+            "recordTags": []
+        }
+    ],
+    "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+    "playbookOrigin": "\/api\/3\/picklists\/b6d710a9-a8ec-41ec-8817-fe9fa062fcdd",
+    "isEditable": false,
+    "uuid": "e6cda0b5-63ea-4e39-813a-2b37cf7e5e13",
+    "owners": [],
+    "isPrivate": false,
+    "deletedAt": null,
+    "recordTags": [
+        "TODO",
+        "ztpfDevice",
+        "ztpfDeviceAutomationStep"
+    ]
+}

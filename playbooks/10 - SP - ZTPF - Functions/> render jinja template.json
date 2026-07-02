@@ -11,7 +11,8 @@
     "remoteExecutableFlag": false,
     "parameters": [
         "script_vars",
-        "script_template"
+        "script_template",
+        "yaml2json_flag"
     ],
     "synchronous": false,
     "collection": "\/api\/3\/workflow_collections\/517fb52d-36f5-4bac-a344-7d4599d7dec6",
@@ -40,8 +41,8 @@
                 "step_variables": []
             },
             "status": null,
-            "top": "240",
-            "left": "440",
+            "top": "280",
+            "left": "540",
             "stepType": "\/api\/3\/workflow_step_types\/12254cf5-5db7-4b1a-8cb1-3af081924b28",
             "group": null,
             "uuid": "b3e774e4-4be6-4384-abca-213694d77383"
@@ -64,8 +65,8 @@
                 "step_variables": []
             },
             "status": null,
-            "top": "140",
-            "left": "440",
+            "top": "180",
+            "left": "540",
             "stepType": "\/api\/3\/workflow_step_types\/0109f35d-090b-4a2b-bd8a-94cbc3508562",
             "group": null,
             "uuid": "e6347f1a-29fb-4060-9edf-40b5a3d6c5a6"
@@ -78,39 +79,121 @@
                 "post_data": "{%- set t = vars.input.params[\"script_template\"]|tojson -%}\n{%- set v = vars.input.params['script_vars'] or {} -%}\n{\n  \"template\": '{{t}}', \n  \"values\": {{v}}\n}"
             },
             "status": null,
-            "top": "40",
-            "left": "440",
+            "top": "80",
+            "left": "540",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
             "uuid": "607a1b50-5be9-46f9-b515-eceb68c82527"
         },
         {
             "@type": "WorkflowStep",
+            "name": "create yaml2json",
+            "description": null,
+            "arguments": {
+                "when": "{{vars.extract_results_type == \"TEXT\" and vars.input.params['yaml2json_flag'] == True}}",
+                "arguments": {
+                    "yaml": "{{vars.extract_results}}"
+                },
+                "apply_async": false,
+                "step_variables": {
+                    "extract_results": "{{vars.steps.create_yaml2json.output}}"
+                },
+                "pass_parent_env": false,
+                "pass_input_record": false,
+                "workflowReference": "\/api\/3\/workflows\/e8a9ca65-8ba2-4da5-993a-e98d1e22283c"
+            },
+            "status": null,
+            "top": "500",
+            "left": "540",
+            "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
+            "group": null,
+            "uuid": "9f2c7ed0-8141-4ee2-b596-a77f3cf4d4de"
+        },
+        {
+            "@type": "WorkflowStep",
             "name": "extract_results",
             "description": null,
             "arguments": {
-                "error": "False",
-                "output": "{%- set output = vars.steps.Convert_Jinja_to_String.data.result -%}\n\n{%- if output is not defined or output is none -%}\n  {{ \"Error: No output found\" }}\n{%- elif (output | type_debug == \"dict\") or (output | type_debug == \"list\") -%}\n  {{ output }}\n{%- elif output | type_debug == \"str\" -%}\n  {%- if output.strip().startswith('\"{\"') or output.strip().startswith('\"{') -%}\n    {%- set cleaned_str = output.strip('\"').replace('\\\\n', ' ').replace('\\\\\"', '\"') -%}\n    {%- if cleaned_str.strip().startswith('{') and cleaned_str.strip().endswith('}') -%}\n      {{ cleaned_str | toDict }}\n    {%- else -%}\n      {{ output }}\n    {%- endif -%}\n  {%- else -%}\n    {{ output }}\n  {%- endif -%}\n{%- else -%}\n  {{ \"Error: Unexpected data type: \" + (output | type_debug) }}\n{%- endif -%}"
+                "extract_results": "{%- set output = vars.steps.Convert_Jinja_to_String.data.result -%}\n\n{%- if output is not defined or output is none -%}\n  {{ \"Error: No output found\" }}\n{%- elif (output | type_debug == \"dict\") or (output | type_debug == \"list\") -%}\n  {{ output }}\n{%- elif output | type_debug == \"str\" -%}\n  {%- if output.strip().startswith('\"{\"') or output.strip().startswith('\"{') -%}\n    {%- set cleaned_str = output.strip('\"').replace('\\\\n', ' ').replace('\\\\\"', '\"') -%}\n    {%- if cleaned_str.strip().startswith('{') and cleaned_str.strip().endswith('}') -%}\n      {{ cleaned_str | toDict }}\n    {%- else -%}\n      {{ output }}\n    {%- endif -%}\n  {%- else -%}\n    {{ output }}\n  {%- endif -%}\n{%- else -%}\n  {{ \"Error: Unexpected data type: \" + (output | type_debug) }}\n{%- endif -%}",
+                "extract_results_msg": "ok",
+                "extract_results_error": "False"
             },
             "status": null,
-            "top": "320",
-            "left": "100",
+            "top": "380",
+            "left": "180",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
             "uuid": "7a018d89-216f-4bab-82df-6abf200ab803"
         },
         {
             "@type": "WorkflowStep",
+            "name": "result flag",
+            "description": null,
+            "arguments": {
+                "conditions": [
+                    {
+                        "default": true,
+                        "step_iri": "\/api\/3\/workflow_steps\/c6aff749-6b4e-44de-a76a-deee227862f7",
+                        "step_name": "return"
+                    },
+                    {
+                        "option": "convert results",
+                        "step_iri": "\/api\/3\/workflow_steps\/609fd6d6-a62c-4cfb-a1d7-c47105dfe108",
+                        "condition": "{{ vars.input.params['yaml2json_flag'] == True }}",
+                        "step_name": "results_type"
+                    }
+                ],
+                "step_variables": []
+            },
+            "status": null,
+            "top": "480",
+            "left": "180",
+            "stepType": "\/api\/3\/workflow_step_types\/12254cf5-5db7-4b1a-8cb1-3af081924b28",
+            "group": null,
+            "uuid": "9bcfdd0e-3c39-41dd-995b-55092a55ce80"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "results_type",
+            "description": null,
+            "arguments": {
+                "extract_results_type": "{%- set v = vars.extract_results -%}\n{%- set ret = \"TEXT\" -%}\n{%- if v is mapping -%}\n    {%- set ret = \"dict\" -%}\n{%- elif v is sequence and v is not string -%}\n    {%- set ret = \"list\" -%}\n{%- endif -%}\n{{ret}}"
+            },
+            "status": null,
+            "top": "400",
+            "left": "540",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "609fd6d6-a62c-4cfb-a1d7-c47105dfe108"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "return",
+            "description": null,
+            "arguments": {
+                "output": "{{vars.extract_results}}",
+                "params": "{{vars.input.params}}",
+                "status": "{\n  \"error\":{{vars.extract_results_error}},\n  \"msg\":{{vars.extract_results_msg}}\n}"
+            },
+            "status": null,
+            "top": "600",
+            "left": "540",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "c6aff749-6b4e-44de-a76a-deee227862f7"
+        },
+        {
+            "@type": "WorkflowStep",
             "name": "return_error",
             "description": null,
             "arguments": {
-                "error": "True",
-                "output": "{}",
-                "error_details": "ERROR: Tried to render Jinja Template:\n\n```\n{{vars.input.params['script_template']}}\n```\n\nwith variables:\n```\n{{vars.input.params['script_vars']| to_nice_json}}\n```\n\nbut got Error: \n{% set matches = vars.steps.Convert_Jinja_to_String[\"Error message\"] | regex_findall(\"'message': \\\"(.*?)\\\"\") -%}\n{{ matches[0] if matches else 'Unable to parse clean error message. {}'.format(vars.steps.Convert_Jinja_to_String[\"Error message\"]) }}"
+                "extract_results_msg": "ERROR: Tried to render Jinja Template:\n\n```\n{{vars.input.params['script_template']}}\n```\n\nwith variables:\n```\n{{vars.input.params['script_vars']| to_nice_json}}\n```\n\nbut got Error: \n{% set matches = vars.steps.Convert_Jinja_to_String[\"Error message\"] | regex_findall(\"'message': \\\"(.*?)\\\"\") -%}\n{{ matches[0] if matches else 'Unable to parse clean error message. {}'.format(vars.steps.Convert_Jinja_to_String[\"Error message\"]) }}",
+                "extract_results_error": "True",
+                "extract_results_output": "{}"
             },
             "status": null,
-            "top": "320",
-            "left": "780",
+            "top": "380",
+            "left": "920",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
             "uuid": "eea3d0a1-10cd-4594-bb26-2e9cbab4dba1"
@@ -180,6 +263,66 @@
         },
         {
             "@type": "WorkflowRoute",
+            "name": "create yaml2json -> return",
+            "targetStep": "\/api\/3\/workflow_steps\/c6aff749-6b4e-44de-a76a-deee227862f7",
+            "sourceStep": "\/api\/3\/workflow_steps\/9f2c7ed0-8141-4ee2-b596-a77f3cf4d4de",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "bc9d3327-c94d-4b9f-809b-525c52c87f99"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "extract_results -> result flag",
+            "targetStep": "\/api\/3\/workflow_steps\/9bcfdd0e-3c39-41dd-995b-55092a55ce80",
+            "sourceStep": "\/api\/3\/workflow_steps\/7a018d89-216f-4bab-82df-6abf200ab803",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "3d03c551-1704-42fb-b6ed-690498ab2a13"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "result flag -> results_type",
+            "targetStep": "\/api\/3\/workflow_steps\/609fd6d6-a62c-4cfb-a1d7-c47105dfe108",
+            "sourceStep": "\/api\/3\/workflow_steps\/9bcfdd0e-3c39-41dd-995b-55092a55ce80",
+            "label": "convert results",
+            "isExecuted": false,
+            "group": null,
+            "uuid": "ede65f13-3c39-44cd-ba16-1c41e04d10d4"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "result flag -> return",
+            "targetStep": "\/api\/3\/workflow_steps\/c6aff749-6b4e-44de-a76a-deee227862f7",
+            "sourceStep": "\/api\/3\/workflow_steps\/9bcfdd0e-3c39-41dd-995b-55092a55ce80",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "a897a66b-5a7d-47a0-b508-13e1ec8e7756"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "results_type -> create yaml2json",
+            "targetStep": "\/api\/3\/workflow_steps\/9f2c7ed0-8141-4ee2-b596-a77f3cf4d4de",
+            "sourceStep": "\/api\/3\/workflow_steps\/609fd6d6-a62c-4cfb-a1d7-c47105dfe108",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "4327bed9-69a1-4481-a7bf-81ecd57525b3"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "return_error -> return",
+            "targetStep": "\/api\/3\/workflow_steps\/c6aff749-6b4e-44de-a76a-deee227862f7",
+            "sourceStep": "\/api\/3\/workflow_steps\/eea3d0a1-10cd-4594-bb26-2e9cbab4dba1",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "0e92117c-00e6-4a41-9c22-debed274b27c"
+        },
+        {
+            "@type": "WorkflowRoute",
             "name": "Start -> create_post_data",
             "targetStep": "\/api\/3\/workflow_steps\/607a1b50-5be9-46f9-b515-eceb68c82527",
             "sourceStep": "\/api\/3\/workflow_steps\/5091a4b4-20d6-459b-b709-11b312fddc87",
@@ -193,15 +336,15 @@
         {
             "@type": "WorkflowGroup",
             "name": "Details",
-            "description": "Taking an input of a jinja template with jinja_vars use the FortiSOAR API ( \/api\/wf\/api\/jinja-editor\/ ) to render the results.\n\nReturns:\nerror: Boolean\noutput: Text\nerror_msg: Text",
+            "description": "Taking an input of a jinja template with jinja_vars use the FortiSOAR API ( \/api\/wf\/api\/jinja-editor\/ ) to render the results.\n\nIf yaml2json is set and the results is not JSON then run yaml2json and return the results.",
             "type": "note",
             "isCollapsed": false,
             "hasTriggerStep": false,
             "hideInLogs": false,
             "metadata": [],
             "reusable": false,
-            "top": "420",
-            "left": "360",
+            "top": "140",
+            "left": "40",
             "height": "214",
             "width": "400",
             "uuid": "dbcd0b78-1b3b-4112-899d-50312c6a8349",

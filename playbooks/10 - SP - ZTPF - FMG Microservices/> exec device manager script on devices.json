@@ -4,7 +4,7 @@
     "name": "> exec device manager script on devices",
     "aliasName": null,
     "tag": null,
-    "description": "Exec an existing script on a device list in the form of fg1,fg2,fg3 or fg1:vdom1,fg2:vdom1,fg3:vdoma or fg1:vdom1,fg2,fg3",
+    "description": "Exec an existing script on a device list in the form of fg1,fg2,fg3 or fg1:vdom1,fg2:vdom1,fg3:vdom1 or fg1:vdom1,fg2,fg3",
     "isActive": true,
     "debug": false,
     "singleRecordExecution": false,
@@ -29,8 +29,8 @@
                 "device_scope_test": "{\n      \"name\": \"FG1\",\n      \"vdom\": \"root\"\n    },\n    {\n      \"name\": \"FG2\",\n      \"vdom\": \"root\"\n    },\n    {\n      \"name\": \"FG3\",\n      \"vdom\": \"root\"\n    }"
             },
             "status": null,
-            "top": "120",
-            "left": "440",
+            "top": "140",
+            "left": "740",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
             "uuid": "6c13dc6c-a095-4a3b-b368-7487dd67721e"
@@ -44,8 +44,8 @@
                 "data_payload": "{\n  \"data\": {    \n    \"adom\": \"{{vars.adom}}\", \n    \"script\": \"{{vars.script_name}}\", \n    \"scope\": {{vars.device_scope}}\n  }\n}"
             },
             "status": null,
-            "top": "200",
-            "left": "440",
+            "top": "240",
+            "left": "740",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
             "uuid": "61a5c011-14dc-41a2-9511-5260bbfd3174"
@@ -67,8 +67,8 @@
                 "workflowReference": "\/api\/3\/workflows\/ec1c9a17-98b1-40c3-bda5-7e3a9b315e70"
             },
             "status": null,
-            "top": "280",
-            "left": "440",
+            "top": "240",
+            "left": "240",
             "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
             "group": null,
             "uuid": "07ffc300-d534-417c-99e1-d60159d0a41a"
@@ -102,7 +102,7 @@
             },
             "status": null,
             "top": "40",
-            "left": "440",
+            "left": "740",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
             "uuid": "e7bc455c-136b-48ee-947e-233e94ad6ac1"
@@ -158,7 +158,7 @@
             "label": null,
             "isExecuted": false,
             "group": null,
-            "uuid": "b5f7f2f4-4af1-4269-b016-7e88639b8b3c"
+            "uuid": "8ce07768-b1a2-465d-83c5-d5ad23904597"
         },
         {
             "@type": "WorkflowRoute",
@@ -181,7 +181,25 @@
             "uuid": "d54ad5c0-27f2-4500-9f9e-3bd547f9bdea"
         }
     ],
-    "groups": [],
+    "groups": [
+        {
+            "@type": "WorkflowGroup",
+            "name": "Details",
+            "description": "Create a payload to run against \/dvmdb\/adom\/[adom]\/script\/execute using the playbook *fmg exec task - return standard output of results*.",
+            "type": "note",
+            "isCollapsed": false,
+            "hasTriggerStep": false,
+            "hideInLogs": false,
+            "metadata": [],
+            "reusable": false,
+            "top": "100",
+            "left": "320",
+            "height": "124",
+            "width": "391",
+            "uuid": "7f0d67fb-b31f-49a4-be8c-4be9a14d566d",
+            "recordTags": []
+        }
+    ],
     "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
     "playbookOrigin": "\/api\/3\/picklists\/b6d710a9-a8ec-41ec-8817-fe9fa062fcdd",
     "isEditable": false,
@@ -190,7 +208,6 @@
     "isPrivate": false,
     "deletedAt": null,
     "recordTags": [
-        "fmg_api",
-        "TODO"
+        "fmg_api"
     ]
 }

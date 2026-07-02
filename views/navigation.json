@@ -84,7 +84,15 @@
                             }
                         },
                         "title": "Profile Steps"
-                    },
+                    }
+                ],
+                "mergeType": "merge",
+                "title": "ZTP Templates"
+            },
+            {
+                "editMode": false,
+                "icon": "icon icon-assets",
+                "items": [
                     {
                         "editMode": false,
                         "icon": "icon icon-queue-management",
@@ -159,10 +167,24 @@
                             }
                         },
                         "title": "Device Steps"
+                    },
+                    {
+                        "editMode": false,
+                        "icon": "icon icon-editable-form-group",
+                        "require": {
+                            "action": "read",
+                            "module": "ztpf_run_groups"
+                        },
+                        "state": {
+                            "name": "main.modules.list",
+                            "parameters": {
+                                "module": "ztpf_run_groups"
+                            }
+                        },
+                        "title": "Run Groups"
                     }
                 ],
-                "mergeType": "merge",
-                "title": "ZTP Flow"
+                "title": "ZTPF Assets"
             }
         ]
     },
