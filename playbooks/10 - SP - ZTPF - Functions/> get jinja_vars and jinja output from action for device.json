@@ -214,6 +214,7 @@
             "arguments": {
                 "arguments": {
                     "device_id": "{{vars.device_id}}",
+                    "input_yaml": "{{vars.input_yaml}}",
                     "template_id": "{{vars.steps.find_template[0].id}}"
                 },
                 "apply_async": false,
@@ -246,8 +247,10 @@
             "name": "render jinja",
             "description": null,
             "arguments": {
+                "when": "{{vars.steps.find_action[0].script}}",
                 "arguments": {
                     "script_vars": "{{vars.jinja_vars}}",
+                    "yaml2json_flag": "",
                     "script_template": "{{vars.steps.find_action[0].script}}"
                 },
                 "apply_async": false,
@@ -268,7 +271,7 @@
             "name": "return",
             "description": null,
             "arguments": {
-                "output": "{%- set ret = {\n  \"jinja_vars\": vars.jinja_vars,\n  \"script_rendered\": vars.steps.render_jinja.output\n    |regex_replace('^\"','')\n    |regex_replace('\"$','')\n} -%}\n{{ret}}",
+                "output": "{%- set script = '*No Action Payload for Step*' -%}\n{%- if 'output' in vars.steps.render_jinja -%}\n  {%- set script = vars.steps.render_jinja.output -%}\n{%- endif -%}\n\n{%- set ret = {\n  \"jinja_vars\": vars.jinja_vars,\n  \"script_rendered\": script\n    |regex_replace('^\"','')\n    |regex_replace('\"$','')\n} -%}\n{{ret}}",
                 "params": "{{vars.input.params}}",
                 "status": "{ \"error\": {{vars.steps.render_jinja.error}} }"
             },

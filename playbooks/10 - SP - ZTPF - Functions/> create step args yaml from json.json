@@ -1,0 +1,124 @@
+{
+    "@type": "Workflow",
+    "triggerLimit": null,
+    "name": "> create step args yaml from json",
+    "aliasName": null,
+    "tag": null,
+    "description": "Using a json with input and config build a YAML output to be stored on a step record.",
+    "isActive": true,
+    "debug": false,
+    "singleRecordExecution": false,
+    "remoteExecutableFlag": false,
+    "parameters": [
+        "step_args"
+    ],
+    "synchronous": false,
+    "collection": "\/api\/3\/workflow_collections\/517fb52d-36f5-4bac-a344-7d4599d7dec6",
+    "versions": [],
+    "triggerStep": "\/api\/3\/workflow_steps\/fb409b67-ad7a-4fd0-aca9-9aebf4f62ae3",
+    "steps": [
+        {
+            "@type": "WorkflowStep",
+            "name": "create step_args_yaml",
+            "description": null,
+            "arguments": {
+                "step_args_yaml": "{%- set args = vars.input.params['step_args'] -%}\n\n{%- macro render_section(name, data) -%}\n{%- set out = [] -%}\n{%- if data -%}\n{{ name }}:\n{%- for key, value in data.items() %}\n{%- if value in [None,''] -%}\n{%- set value = \"<INPUT NEEDED>\" -%}\n{%- endif -%}\n{%- do out.append(\"  \" + key + \": \" + value|string) -%}\n{%- endfor %}\n{{out|sort|join(\"\\n\")}}\n{%- endif -%}\n{%- endmacro -%}\n\n{{ render_section(\"input\", args.get(\"input\")) }}\n{{ render_section(\"config\", args.get(\"config\")) }}"
+            },
+            "status": null,
+            "top": "140",
+            "left": "600",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "2704a580-08ac-46cb-aed8-4c3c6f716c73"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "return",
+            "description": null,
+            "arguments": {
+                "output": "{{vars.step_args_yaml}}",
+                "params": "{{vars.input.params}}",
+                "status": "{%- set status = {\"error\":false,\"msg\":\"ok\"} -%}\n{%- if steps_args_yaml|length == 0 -%}\n  {%- do status.update({\"error\":true,\"msg\":\"steps_args_yaml empty\"}) -%}\n{%- endif -%}"
+            },
+            "status": null,
+            "top": "320",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "223ae767-c17e-4538-b40c-e6dd9e128e06"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Start",
+            "description": null,
+            "arguments": {
+                "__triggerLimit": true,
+                "step_variables": {
+                    "input": {
+                        "params": []
+                    }
+                },
+                "triggerOnSource": true,
+                "triggerOnReplicate": false
+            },
+            "status": null,
+            "top": "40",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/b348f017-9a94-471f-87f8-ce88b6a7ad62",
+            "group": null,
+            "uuid": "fb409b67-ad7a-4fd0-aca9-9aebf4f62ae3"
+        }
+    ],
+    "routes": [
+        {
+            "@type": "WorkflowRoute",
+            "name": "create step_args_yaml -> return",
+            "targetStep": "\/api\/3\/workflow_steps\/223ae767-c17e-4538-b40c-e6dd9e128e06",
+            "sourceStep": "\/api\/3\/workflow_steps\/2704a580-08ac-46cb-aed8-4c3c6f716c73",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "9b2f592e-583e-4a3c-aca6-cebb491aad4e"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Start -> create step_args_yaml",
+            "targetStep": "\/api\/3\/workflow_steps\/2704a580-08ac-46cb-aed8-4c3c6f716c73",
+            "sourceStep": "\/api\/3\/workflow_steps\/fb409b67-ad7a-4fd0-aca9-9aebf4f62ae3",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "96a5ba82-0102-4d39-a7e5-e16c0db80c3b"
+        }
+    ],
+    "groups": [
+        {
+            "@type": "WorkflowGroup",
+            "name": "Details",
+            "description": "Create a standard YAML format with inputs and config for profile and device steps.\n\n{\n  'config':{},\n  'input':{}\n}",
+            "type": "note",
+            "isCollapsed": false,
+            "hasTriggerStep": false,
+            "hideInLogs": false,
+            "metadata": [],
+            "reusable": false,
+            "top": "120",
+            "left": "40",
+            "height": "185",
+            "width": "383",
+            "uuid": "29e93034-9a4c-4649-9976-2ffa0b73825b",
+            "recordTags": []
+        }
+    ],
+    "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+    "playbookOrigin": "\/api\/3\/picklists\/b6d710a9-a8ec-41ec-8817-fe9fa062fcdd",
+    "isEditable": false,
+    "uuid": "4af18fe1-5248-4f94-a595-131de9c6a913",
+    "owners": [],
+    "isPrivate": false,
+    "deletedAt": null,
+    "recordTags": [
+        "ztpfAutomationProfileStep",
+        "ztpfDeviceAutomationStep"
+    ]
+}

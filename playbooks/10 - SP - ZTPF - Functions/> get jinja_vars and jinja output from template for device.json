@@ -11,7 +11,8 @@
     "remoteExecutableFlag": false,
     "parameters": [
         "device_id",
-        "template_id"
+        "template_id",
+        "input_yaml"
     ],
     "synchronous": false,
     "collection": "\/api\/3\/workflow_collections\/517fb52d-36f5-4bac-a344-7d4599d7dec6",
@@ -149,6 +150,7 @@
                 "when": "{{vars.device_id}}",
                 "arguments": {
                     "device_id": "{{vars.device_id}}",
+                    "input_yaml": "{{vars.input.params['input_yaml']}}",
                     "metadata_source_ids": "{{vars.metadata_source_ids}}"
                 },
                 "apply_async": false,

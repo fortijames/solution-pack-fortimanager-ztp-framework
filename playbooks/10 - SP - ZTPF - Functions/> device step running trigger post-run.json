@@ -23,7 +23,11 @@
             "description": null,
             "arguments": {
                 "resource": {
-                    "stepDone": true
+                    "status": "{{\"ztpfDeviceStepStatus\" | picklist(vars.step_status, \"@id\")}}",
+                    "stepDone": false,
+                    "stepTime": "{{vars.step_time}}",
+                    "queueStatus": "{{\"ztpfDeviceStepStatus\" | picklist(vars.step_status, \"@id\")}}",
+                    "stepTimeSeconds": "{{vars.step_time_seconds}}"
                 },
                 "operation": "Append",
                 "collection": "{{vars.device_step_fqid}}",
@@ -35,11 +39,27 @@
                 "step_variables": []
             },
             "status": null,
-            "top": "280",
-            "left": "400",
+            "top": "340",
+            "left": "460",
             "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928722",
             "group": null,
             "uuid": "e1f64272-c2df-4dd8-a41a-0dd4ba96dbdc"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "post vars",
+            "description": null,
+            "arguments": {
+                "step_time": "{% macro human_time(total_seconds) -%}\n    {%- set total_seconds = total_seconds | int -%}\n    {%- set days = total_seconds \/\/ 86400 -%}\n    {%- set hours = (total_seconds % 86400) \/\/ 3600 -%}\n    {%- set minutes = (total_seconds % 3600) \/\/ 60 -%}\n    {%- set seconds = total_seconds % 60 -%}\n\n    {%- set out = [] -%}\n\n    {%- if days > 0 -%}\n        {%- set _ = out.append(days ~ \"d\") -%}\n    {%- endif -%}\n\n    {%- if hours > 0 -%}\n        {%- set _ = out.append(hours ~ \"h\") -%}\n    {%- endif -%}\n\n    {%- if minutes > 0 -%}\n        {%- set _ = out.append(minutes ~ \"m\") -%}\n    {%- endif -%}\n\n    {%- if total_seconds < 600 and seconds > 0 -%}\n        {%- set _ = out.append(seconds ~ \"s\") -%}\n    {%- endif -%}\n\n    {%- if out | length == 0 -%}\n        0s\n    {%- else -%}\n        {{ out | join(\" \") }}\n    {%- endif -%}\n{%- endmacro %}\n\n{%- set step_seconds = vars.steps.update_step_stop.stepStopTimestamp\n - vars.steps.update_step_stop.stepStartTimestamp -%}\n\n{%- set total_seconds = step_seconds -%}\n{{human_time(total_seconds )}}",
+                "step_status": "{%- set ret = \"Complete\" -%}\n{%- if vars.steps.update_step_stop.outputSourceData.output.error -%}\n{%- set ret = \"Fail\" -%}\n{%- endif -%}\n{{ret}}",
+                "step_time_seconds": "{%- set step_seconds = vars.steps.update_step_stop.stepStopTimestamp\n - vars.steps.update_step_stop.stepStartTimestamp \n-%}\n\n{{step_seconds}}"
+            },
+            "status": null,
+            "top": "280",
+            "left": "880",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "8c814a32-3f5f-4ed7-a83b-05edb1d40973"
         },
         {
             "@type": "WorkflowStep",
@@ -56,7 +76,7 @@
                 "workflowReference": "\/api\/3\/workflows\/28a1b591-dd4f-43f7-8f45-cbe21781f883"
             },
             "status": null,
-            "top": "160",
+            "top": "140",
             "left": "860",
             "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
             "group": null,
@@ -72,7 +92,7 @@
                 "status": "{\"error\":false,\"msg\":\"ok\"}"
             },
             "status": null,
-            "top": "140",
+            "top": "120",
             "left": "40",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
@@ -93,7 +113,7 @@
                 "workflowReference": "\/api\/3\/workflows\/3bcc3bbf-7003-4676-9d49-abdcd4f5913b"
             },
             "status": null,
-            "top": "240",
+            "top": "260",
             "left": "40",
             "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
             "group": null,
@@ -175,13 +195,23 @@
         },
         {
             "@type": "WorkflowRoute",
-            "name": "render action output -> complete step",
+            "name": "post vars -> complete step",
             "targetStep": "\/api\/3\/workflow_steps\/e1f64272-c2df-4dd8-a41a-0dd4ba96dbdc",
+            "sourceStep": "\/api\/3\/workflow_steps\/8c814a32-3f5f-4ed7-a83b-05edb1d40973",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "29a56943-a2b4-4deb-8ae4-6eeec62ae591"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "render action output -> post vars",
+            "targetStep": "\/api\/3\/workflow_steps\/8c814a32-3f5f-4ed7-a83b-05edb1d40973",
             "sourceStep": "\/api\/3\/workflow_steps\/50902f0b-7175-4295-b773-daa0749cfd95",
             "label": null,
             "isExecuted": false,
             "group": null,
-            "uuid": "9d673b26-9812-4876-8c42-9fa133c2b7de"
+            "uuid": "94a308fb-b1b0-4048-9153-c6e14c424d82"
         },
         {
             "@type": "WorkflowRoute",
@@ -228,7 +258,7 @@
         {
             "@type": "WorkflowGroup",
             "name": "Details",
-            "description": "Update step stop time and then render the results of the action before completing the step.",
+            "description": "Update step stop time and then render the results of the action before completing the step. We do not set the step done because the RunGroup record will do this. \n\nFinish by kicking off the run next step playbooks.",
             "type": "note",
             "isCollapsed": false,
             "hasTriggerStep": false,
@@ -236,9 +266,9 @@
             "metadata": [],
             "reusable": false,
             "top": "120",
-            "left": "340",
-            "height": "134",
-            "width": "380",
+            "left": "380",
+            "height": "163",
+            "width": "442",
             "uuid": "d1874191-ed1f-40ab-94e5-ba21cca9ff7b",
             "recordTags": []
         }

@@ -35,19 +35,6 @@
                                                                                             {
                                                                                                 "widgets": [
                                                                                                     {
-                                                                                                        "type": "sectionHeader",
-                                                                                                        "config": {
-                                                                                                            "wid": "15bc5b6a-bb94-4a98-9f25-0f335a3ef1b7",
-                                                                                                            "query": {
-                                                                                                                "filters": [],
-                                                                                                                "sort": [],
-                                                                                                                "limit": 10
-                                                                                                            },
-                                                                                                            "editorType": "html",
-                                                                                                            "sectionText": "<p style=\"text-align: center;\"><strong>ZTPF Run Group<\/strong><\/p>"
-                                                                                                        }
-                                                                                                    },
-                                                                                                    {
                                                                                                         "type": "editableFormGroup",
                                                                                                         "config": {
                                                                                                             "wid": "770ef2db-0315-45f4-9876-35d3b89ec462",
@@ -60,14 +47,79 @@
                                                                                                                                     "name": "name",
                                                                                                                                     "highlightMode": true,
                                                                                                                                     "linky": true,
+                                                                                                                                    "readOnly": false
+                                                                                                                                }
+                                                                                                                            ],
+                                                                                                                            "style": "col-lg-4"
+                                                                                                                        },
+                                                                                                                        {
+                                                                                                                            "fields": [
+                                                                                                                                {
+                                                                                                                                    "name": "ztpfRunning",
+                                                                                                                                    "highlightMode": true,
+                                                                                                                                    "linky": true,
+                                                                                                                                    "readOnly": true
+                                                                                                                                },
+                                                                                                                                {
+                                                                                                                                    "name": "status",
+                                                                                                                                    "highlightMode": true,
+                                                                                                                                    "linky": true,
+                                                                                                                                    "readOnly": true
+                                                                                                                                },
+                                                                                                                                {
+                                                                                                                                    "name": "totalDevices",
+                                                                                                                                    "highlightMode": true,
+                                                                                                                                    "linky": true,
+                                                                                                                                    "readOnly": true
+                                                                                                                                },
+                                                                                                                                {
+                                                                                                                                    "name": "totalSteps",
+                                                                                                                                    "highlightMode": true,
+                                                                                                                                    "linky": true,
                                                                                                                                     "readOnly": true
                                                                                                                                 }
                                                                                                                             ],
-                                                                                                                            "style": "col-lg-12"
+                                                                                                                            "style": "col-lg-4"
+                                                                                                                        },
+                                                                                                                        {
+                                                                                                                            "fields": [
+                                                                                                                                {
+                                                                                                                                    "name": "totalStepsComplete",
+                                                                                                                                    "highlightMode": true,
+                                                                                                                                    "linky": true,
+                                                                                                                                    "readOnly": true
+                                                                                                                                },
+                                                                                                                                {
+                                                                                                                                    "name": "totalRunningTimeSeconds",
+                                                                                                                                    "highlightMode": true,
+                                                                                                                                    "linky": true,
+                                                                                                                                    "readOnly": true
+                                                                                                                                },
+                                                                                                                                {
+                                                                                                                                    "name": "totalRunningTime",
+                                                                                                                                    "highlightMode": true,
+                                                                                                                                    "linky": true,
+                                                                                                                                    "readOnly": true
+                                                                                                                                }
+                                                                                                                            ],
+                                                                                                                            "style": "col-lg-4"
                                                                                                                         }
                                                                                                                     ]
                                                                                                                 }
                                                                                                             ]
+                                                                                                        }
+                                                                                                    },
+                                                                                                    {
+                                                                                                        "type": "sectionHeader",
+                                                                                                        "config": {
+                                                                                                            "wid": "15bc5b6a-bb94-4a98-9f25-0f335a3ef1b7",
+                                                                                                            "query": {
+                                                                                                                "filters": [],
+                                                                                                                "sort": [],
+                                                                                                                "limit": 10
+                                                                                                            },
+                                                                                                            "editorType": "html",
+                                                                                                            "sectionText": "<p style=\"text-align: center;\"><strong>Devices<\/strong><\/p>"
                                                                                                         }
                                                                                                     },
                                                                                                     {
@@ -79,10 +131,82 @@
                                                                                                             "actionButtons": {
                                                                                                                 "ztpf_device_automation_steps": []
                                                                                                             },
+                                                                                                            "expandableCol": [],
+                                                                                                            "enableHorizontalScroll": [],
+                                                                                                            "queryFilters": {
+                                                                                                                "ztpf_device_automation_steps": {
+                                                                                                                    "sort": [
+                                                                                                                        {
+                                                                                                                            "direction": "DESC",
+                                                                                                                            "field": "stepStopTimestamp",
+                                                                                                                            "sort": {
+                                                                                                                                "direction": "DESC"
+                                                                                                                            }
+                                                                                                                        },
+                                                                                                                        {
+                                                                                                                            "direction": "ASC",
+                                                                                                                            "field": "stepNumber",
+                                                                                                                            "sort": {
+                                                                                                                                "direction": "ASC"
+                                                                                                                            }
+                                                                                                                        }
+                                                                                                                    ],
+                                                                                                                    "limit": 30,
+                                                                                                                    "logic": "AND",
+                                                                                                                    "filters": []
+                                                                                                                }
+                                                                                                            },
+                                                                                                            "includes": [
+                                                                                                                "ztpfDevices"
+                                                                                                            ]
+                                                                                                        }
+                                                                                                    }
+                                                                                                ],
+                                                                                                "style": "col-lg-12"
+                                                                                            }
+                                                                                        ],
+                                                                                        "wid": "02a8ebf8-c6c1-4ed6-9ba3-f9d99a267be6",
+                                                                                        "_collapsed": false
+                                                                                    },
+                                                                                    {
+                                                                                        "columns": [
+                                                                                            {
+                                                                                                "widgets": [
+                                                                                                    {
+                                                                                                        "type": "sectionHeader",
+                                                                                                        "config": {
+                                                                                                            "wid": "eb1c1509-916b-44e9-a205-0b42f3c37f1f",
+                                                                                                            "query": {
+                                                                                                                "filters": [],
+                                                                                                                "sort": [],
+                                                                                                                "limit": 10
+                                                                                                            },
+                                                                                                            "editorType": "html",
+                                                                                                            "sectionText": "<p style=\"text-align: center;\"><strong>Steps<\/strong><\/p>"
+                                                                                                        }
+                                                                                                    },
+                                                                                                    {
+                                                                                                        "type": "relationship.subtab",
+                                                                                                        "config": {
+                                                                                                            "wid": "6cc373d4-4e8c-4363-b064-8a141a3228c8",
+                                                                                                            "excludes": [],
+                                                                                                            "selectionType": "include",
+                                                                                                            "actionButtons": {
+                                                                                                                "ztpf_device_automation_steps": []
+                                                                                                            },
                                                                                                             "expandableCol": {
                                                                                                                 "ztpfDeviceAutomationSteps": {
-                                                                                                                    "columns": [],
-                                                                                                                    "checkBox": false
+                                                                                                                    "columns": [
+                                                                                                                        {
+                                                                                                                            "openTab": false,
+                                                                                                                            "name": "outputSourceData"
+                                                                                                                        },
+                                                                                                                        {
+                                                                                                                            "openTab": false,
+                                                                                                                            "name": "outputMarkdown"
+                                                                                                                        }
+                                                                                                                    ],
+                                                                                                                    "checkBox": true
                                                                                                                 }
                                                                                                             },
                                                                                                             "enableHorizontalScroll": [],
@@ -114,15 +238,20 @@
                                                                                                             ]
                                                                                                         }
                                                                                                     }
-                                                                                                ]
+                                                                                                ],
+                                                                                                "style": "col-lg-12"
                                                                                             }
                                                                                         ],
-                                                                                        "wid": "02a8ebf8-c6c1-4ed6-9ba3-f9d99a267be6"
+                                                                                        "wid": "10467b5c-7e44-46a5-8aa6-03864620329f",
+                                                                                        "_collapsed": false
                                                                                     }
                                                                                 ]
-                                                                            }
+                                                                            },
+                                                                            "visible": true
                                                                         },
-                                                                        "icon": "fa fa-file-text-o"
+                                                                        "icon": "fa fa-file-text-o",
+                                                                        "show": true,
+                                                                        "visible": true
                                                                     },
                                                                     {
                                                                         "title": "TEST",
@@ -131,17 +260,22 @@
                                                                             "type": "editableForm",
                                                                             "config": {
                                                                                 "wid": "c105fd3e-dca4-4472-85ec-ae13b5580951"
-                                                                            }
+                                                                            },
+                                                                            "visible": true
                                                                         },
-                                                                        "icon": "fa fa-none"
+                                                                        "icon": "fa fa-none",
+                                                                        "show": false,
+                                                                        "visible": true
                                                                     }
                                                                 ]
                                                             }
                                                         }
-                                                    ]
+                                                    ],
+                                                    "style": "col-lg-12"
                                                 }
                                             ],
-                                            "wid": "8511fc17-96ad-46a0-a630-3745f9644950"
+                                            "wid": "8511fc17-96ad-46a0-a630-3745f9644950",
+                                            "_collapsed": false
                                         },
                                         {
                                             "columns": [

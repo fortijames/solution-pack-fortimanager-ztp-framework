@@ -1,7 +1,7 @@
 {
     "@type": "Workflow",
     "triggerLimit": null,
-    "name": "Render Script - Action",
+    "name": "Render Script Payload - Action",
     "aliasName": null,
     "tag": null,
     "description": "From a record offer a button to render a jinja script.",
@@ -210,7 +210,7 @@
                                 "searchable": false,
                                 "templateUrl": "app\/components\/form\/fields\/json.html",
                                 "_nameTouched": true,
-                                "defaultValue": "input:\n{%- for f in vars.action_input_params %}\n  {{f}}:\n{%- endfor %}",
+                                "defaultValue": "input:\n{%- for f in vars.action_input_params %}\n  {{f}}: \n{%- endfor %}",
                                 "_previousName": "inputParamters",
                                 "playbookField": true,
                                 "visibilityQuery": {
@@ -243,7 +243,7 @@
                     "days": 0,
                     "hours": 0,
                     "minutes": 1,
-                    "step_iri": "\/api\/3\/workflow_steps\/9ee0298d-3bab-415b-a0ad-ca5eb1438940"
+                    "step_iri": "\/api\/3\/workflow_steps\/680e02fc-6aa1-4f91-8805-59d1a9d64e8e"
                 },
                 "agent_id": null,
                 "resources": "ztpf_templates",
@@ -397,7 +397,7 @@
             "arguments": {
                 "action_id": "{{vars.input.records[0].id}}",
                 "template_id": "{{vars.input.records[0].ztpfTemplates.id}}",
-                "action_input_params": "{%- set ret = [] -%}\n{%- set in = vars.input.records[0].inputParameters -%}\n\n{%- if in not in [None,''] -%}\n{%- for i in in.split(\"\\n\") -%}\n{%- do ret.append(i) -%}\n{%- endfor -%}\n{%- endif -%}\n\n{{ret}}"
+                "action_input_params": "{%- set ret = [] -%}\n{%- set in = vars.input.records[0].inputParameters -%}\n{%- set int = vars.input.records[0].ztpfTemplates.inputParameters -%}\n\n{%- if in not in [None,''] -%}\n  {%- for i in in.split(\"\\n\") -%}\n    {%- do ret.append(i) -%}\n  {%- endfor -%}\n{%- endif -%}\n\n{%- if int not in [None,''] -%}\n  {%- for i in int.split(\"\\n\") -%}\n    {%- do ret.append(i) -%}\n  {%- endfor -%}\n{%- endif -%}\n\n{{ret|unique}}"
             },
             "status": null,
             "top": "40",
@@ -409,10 +409,10 @@
         {
             "@type": "WorkflowStep",
             "name": "Start",
-            "description": "Select a device to render the jinja script using the variables from the device record, manager record, and\/or any linked metadata source records. Optionally save the results as example data on this record.",
+            "description": "Select a device to render the jinja payload script using the variables from the device record, manager record, and\/or any linked metadata source records. Optionally save the results as example data on this record.",
             "arguments": {
                 "route": "db38b96e-6117-42fb-bda9-ebe541d64909",
-                "title": "Render Jinja Script",
+                "title": "Render Jinja Payload Script",
                 "resources": [
                     "ztpf_automation_actions"
                 ],
@@ -632,6 +632,6 @@
     "isPrivate": false,
     "deletedAt": null,
     "recordTags": [
-        "ztpfTemplates"
+        "ztpfAutomationAction"
     ]
 }

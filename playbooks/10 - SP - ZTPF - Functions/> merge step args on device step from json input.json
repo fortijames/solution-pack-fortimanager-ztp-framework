@@ -1,0 +1,264 @@
+{
+    "@type": "Workflow",
+    "triggerLimit": null,
+    "name": "> merge step args on device step from json input",
+    "aliasName": null,
+    "tag": null,
+    "description": "Use the existing stepARGS field and merge an json payload with input or config.",
+    "isActive": true,
+    "debug": false,
+    "singleRecordExecution": false,
+    "remoteExecutableFlag": false,
+    "parameters": [
+        "devce_step_id",
+        "step_args"
+    ],
+    "synchronous": false,
+    "collection": "\/api\/3\/workflow_collections\/517fb52d-36f5-4bac-a344-7d4599d7dec6",
+    "versions": [],
+    "triggerStep": "\/api\/3\/workflow_steps\/8b661609-3ca1-4396-83fd-4f57bb766860",
+    "steps": [
+        {
+            "@type": "WorkflowStep",
+            "name": "current step_args",
+            "description": null,
+            "arguments": {
+                "arguments": {
+                    "yaml": "{{vars.steps.find_step[0].stepARGS}}"
+                },
+                "apply_async": false,
+                "step_variables": [],
+                "pass_parent_env": false,
+                "pass_input_record": false,
+                "workflowReference": "\/api\/3\/workflows\/e8a9ca65-8ba2-4da5-993a-e98d1e22283c"
+            },
+            "status": null,
+            "top": "200",
+            "left": "840",
+            "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
+            "group": null,
+            "uuid": "6989e07f-317b-4bca-a6cd-d792ee454466"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "find step",
+            "description": null,
+            "arguments": {
+                "query": {
+                    "sort": [],
+                    "limit": 30,
+                    "logic": "AND",
+                    "filters": [
+                        {
+                            "type": "primitive",
+                            "field": "id",
+                            "value": "{{vars.input.params['devce_step_id']}}",
+                            "operator": "eq",
+                            "_operator": "eq"
+                        }
+                    ],
+                    "__selectFields": [
+                        "name",
+                        "id",
+                        "stepARGS"
+                    ]
+                },
+                "module": "ztpf_device_automation_steps?$limit=1",
+                "checkboxFields": true,
+                "step_variables": []
+            },
+            "status": null,
+            "top": "40",
+            "left": "620",
+            "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928770",
+            "group": null,
+            "uuid": "a8c23d54-9c50-41d4-af6e-35d70cc433ae"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "get step_args yaml",
+            "description": null,
+            "arguments": {
+                "arguments": {
+                    "step_args": "{{vars.merged_step_args}}"
+                },
+                "apply_async": false,
+                "step_variables": [],
+                "pass_parent_env": false,
+                "pass_input_record": false,
+                "workflowReference": "\/api\/3\/workflows\/4af18fe1-5248-4f94-a595-131de9c6a913"
+            },
+            "status": null,
+            "top": "280",
+            "left": "380",
+            "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
+            "group": null,
+            "uuid": "0859877b-f436-40f6-81d3-d8f09ce3a37f"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "merge step_args_json",
+            "description": null,
+            "arguments": {
+                "merged_step_args": "{%- set inp = vars.input_step_args -%}\n{%- set ret = vars.steps.current_step_args.output -%}\n\n{% if inp is mapping %}\n  {% set ret = ret | combine(inp, recursive=True) %}\n{% endif %}\n\n{{ret}}"
+            },
+            "status": null,
+            "top": "140",
+            "left": "540",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "318f0061-0ebf-45e0-af25-01e9b36e5c91"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "setup vars",
+            "description": null,
+            "arguments": {
+                "input_step_args": "{%- set inp = vars.input.params['step_args'] -%}\n\n{%- set ret = {\n  \"input\":{},\n  \"config\":{}\n} -%}\n\n{% if inp is mapping %}\n  {% set ret = ret | combine(inp, recursive=True) -%}\n{% endif %}\n\n{{ret}}"
+            },
+            "status": null,
+            "top": "40",
+            "left": "320",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "cc063035-dfde-4dc2-8098-14b4fa4e9920"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Start",
+            "description": null,
+            "arguments": {
+                "__triggerLimit": true,
+                "step_variables": {
+                    "input": {
+                        "params": []
+                    }
+                },
+                "triggerOnSource": true,
+                "triggerOnReplicate": false
+            },
+            "status": null,
+            "top": "40",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/b348f017-9a94-471f-87f8-ce88b6a7ad62",
+            "group": null,
+            "uuid": "8b661609-3ca1-4396-83fd-4f57bb766860"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "update step",
+            "description": null,
+            "arguments": {
+                "resource": {
+                    "stepARGS": "{{vars.steps.get_step_args_yaml.output}}",
+                    "queueStatus": "\/api\/3\/picklists\/feea7c72-3743-49ad-baf8-46bf1f1fca0e"
+                },
+                "operation": "Append",
+                "collection": "{{vars.steps.find_step[0]['@id']}}",
+                "__recommend": [],
+                "collectionType": "\/api\/3\/ztpf_device_automation_steps",
+                "fieldOperation": {
+                    "recordTags": "Append"
+                },
+                "step_variables": []
+            },
+            "status": null,
+            "top": "280",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928722",
+            "group": null,
+            "uuid": "f4d52bdc-f16c-4482-81c2-56b415053798"
+        }
+    ],
+    "routes": [
+        {
+            "@type": "WorkflowRoute",
+            "name": "current step_args -> merge step_args",
+            "targetStep": "\/api\/3\/workflow_steps\/318f0061-0ebf-45e0-af25-01e9b36e5c91",
+            "sourceStep": "\/api\/3\/workflow_steps\/6989e07f-317b-4bca-a6cd-d792ee454466",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "9b849740-66be-48bf-90c5-aeb443e2b83b"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "find step -> current step_args",
+            "targetStep": "\/api\/3\/workflow_steps\/6989e07f-317b-4bca-a6cd-d792ee454466",
+            "sourceStep": "\/api\/3\/workflow_steps\/a8c23d54-9c50-41d4-af6e-35d70cc433ae",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "b39d95da-9e60-4b0a-91af-958bc3629a4f"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "get step_args yaml -> update step",
+            "targetStep": "\/api\/3\/workflow_steps\/f4d52bdc-f16c-4482-81c2-56b415053798",
+            "sourceStep": "\/api\/3\/workflow_steps\/0859877b-f436-40f6-81d3-d8f09ce3a37f",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "5633ae5f-a531-499f-a135-4cd4f43fb7e5"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "merge step_args_json -> get step_args yaml",
+            "targetStep": "\/api\/3\/workflow_steps\/0859877b-f436-40f6-81d3-d8f09ce3a37f",
+            "sourceStep": "\/api\/3\/workflow_steps\/318f0061-0ebf-45e0-af25-01e9b36e5c91",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "1e6563e7-b427-43eb-93b0-a1b34a309133"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "setup vars -> find step",
+            "targetStep": "\/api\/3\/workflow_steps\/a8c23d54-9c50-41d4-af6e-35d70cc433ae",
+            "sourceStep": "\/api\/3\/workflow_steps\/cc063035-dfde-4dc2-8098-14b4fa4e9920",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "12a9688a-ce6c-4dec-af4e-b2e9c8ba4c64"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Start -> setup vars",
+            "targetStep": "\/api\/3\/workflow_steps\/cc063035-dfde-4dc2-8098-14b4fa4e9920",
+            "sourceStep": "\/api\/3\/workflow_steps\/8b661609-3ca1-4396-83fd-4f57bb766860",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "e35596b9-ca86-417b-957f-e6d193d079bc"
+        }
+    ],
+    "groups": [
+        {
+            "@type": "WorkflowGroup",
+            "name": "Details",
+            "description": "Merge input step args as json with the current step args stored as yaml. Update the stepARGS field with the merged data as yaml.\n\nUpdate the state of the record to Preparing to trigger a input validation.",
+            "type": "note",
+            "isCollapsed": false,
+            "hasTriggerStep": false,
+            "hideInLogs": false,
+            "metadata": [],
+            "reusable": false,
+            "top": "120",
+            "left": "140",
+            "height": "122",
+            "width": "329",
+            "uuid": "bba97dda-b5ed-45e0-ac85-d2e843cf32db",
+            "recordTags": []
+        }
+    ],
+    "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+    "playbookOrigin": "\/api\/3\/picklists\/b6d710a9-a8ec-41ec-8817-fe9fa062fcdd",
+    "isEditable": false,
+    "uuid": "930338c9-25c8-406d-9edd-8f1682b7dad1",
+    "owners": [],
+    "isPrivate": false,
+    "deletedAt": null,
+    "recordTags": [
+        "ztpfDeviceAutomationStep"
+    ]
+}

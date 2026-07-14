@@ -10,7 +10,9 @@
     "singleRecordExecution": false,
     "remoteExecutableFlag": false,
     "parameters": [
-        "trigger_step_input_record"
+        "trigger_step_input_record",
+        "input_yaml",
+        "refresh_step_script"
     ],
     "synchronous": false,
     "collection": "\/api\/3\/workflow_collections\/517fb52d-36f5-4bac-a344-7d4599d7dec6",
@@ -37,8 +39,8 @@
                 "step_variables": []
             },
             "status": null,
-            "top": "280",
-            "left": "440",
+            "top": "400",
+            "left": "840",
             "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928722",
             "group": null,
             "uuid": "4e01df57-9373-4ec2-91d5-ba415f2290b3"
@@ -86,7 +88,7 @@
                 "arguments": {
                     "action_id": "{{vars.steps.find_action[0].id}}",
                     "device_id": "{{vars.device_id}}",
-                    "input_yaml": ""
+                    "input_yaml": "{{vars.input.params['input_yaml']}}"
                 },
                 "apply_async": false,
                 "step_variables": [],
@@ -95,8 +97,8 @@
                 "workflowReference": "\/api\/3\/workflows\/6ed8988b-5216-4fb3-94e5-0be09ec2ac0a"
             },
             "status": null,
-            "top": "180",
-            "left": "860",
+            "top": "320",
+            "left": "840",
             "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
             "group": null,
             "uuid": "e0c9e8dd-7e2b-497d-9153-36a9f96410ec"
@@ -124,7 +126,8 @@
             "arguments": {
                 "device_id": "{{vars.input.params['trigger_step_input_record']['ztpfDevices'].id}}",
                 "step_fqid": "{{vars.input.params['trigger_step_input_record']['@id']}}",
-                "automation_id": "{{vars.input.params['trigger_step_input_record']['ztpfAutomationActions'].id}}"
+                "automation_id": "{{vars.input.params['trigger_step_input_record']['ztpfAutomationActions'].id}}",
+                "refresh_step_script": "{%- set ret = false -%}\n{%- if vars.input.params['refresh_step_script'] in ['',None] -%}\n  {%- set ret = true -%}\n{%- endif -%}\n{{ret}}"
             },
             "status": null,
             "top": "40",
@@ -156,6 +159,44 @@
         },
         {
             "@type": "WorkflowStep",
+            "name": "step ready",
+            "description": null,
+            "arguments": [],
+            "status": null,
+            "top": "280",
+            "left": "340",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "65f82e95-951b-4325-b6ed-15b848bb2e4d"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "step script needed",
+            "description": null,
+            "arguments": {
+                "conditions": [
+                    {
+                        "default": true,
+                        "step_iri": "\/api\/3\/workflow_steps\/65f82e95-951b-4325-b6ed-15b848bb2e4d",
+                        "step_name": "step ready"
+                    },
+                    {
+                        "step_iri": "\/api\/3\/workflow_steps\/e0c9e8dd-7e2b-497d-9153-36a9f96410ec",
+                        "condition": "{{ vars.refresh_step_script }}",
+                        "step_name": "get jinja_vars and script"
+                    }
+                ],
+                "step_variables": []
+            },
+            "status": null,
+            "top": "120",
+            "left": "840",
+            "stepType": "\/api\/3\/workflow_step_types\/12254cf5-5db7-4b1a-8cb1-3af081924b28",
+            "group": null,
+            "uuid": "c85f6808-de4a-4648-a514-c365ef431db0"
+        },
+        {
+            "@type": "WorkflowStep",
             "name": "update step start",
             "description": null,
             "arguments": {
@@ -182,23 +223,23 @@
     "routes": [
         {
             "@type": "WorkflowRoute",
-            "name": "add vars and script to step -> update step start",
-            "targetStep": "\/api\/3\/workflow_steps\/2c4ea334-993c-4aaa-a263-a47e562f0c87",
+            "name": "add vars and script to step -> step ready",
+            "targetStep": "\/api\/3\/workflow_steps\/65f82e95-951b-4325-b6ed-15b848bb2e4d",
             "sourceStep": "\/api\/3\/workflow_steps\/4e01df57-9373-4ec2-91d5-ba415f2290b3",
             "label": null,
             "isExecuted": false,
             "group": null,
-            "uuid": "fdc317a9-a204-4511-9e75-386a5bbaeab4"
+            "uuid": "8a620ce8-e6b3-422e-b37b-4b8022969c5e"
         },
         {
             "@type": "WorkflowRoute",
-            "name": "find action -> get jinja_vars and script",
-            "targetStep": "\/api\/3\/workflow_steps\/e0c9e8dd-7e2b-497d-9153-36a9f96410ec",
+            "name": "find action -> step script needed",
+            "targetStep": "\/api\/3\/workflow_steps\/c85f6808-de4a-4648-a514-c365ef431db0",
             "sourceStep": "\/api\/3\/workflow_steps\/0bf2ab7b-e1ad-4dff-89d9-507a43af7d88",
             "label": null,
             "isExecuted": false,
             "group": null,
-            "uuid": "425b2d08-e9c6-490b-a731-4f68e3465ff2"
+            "uuid": "4fa5f163-940f-4cf5-9799-ebfa5b2aef11"
         },
         {
             "@type": "WorkflowRoute",
@@ -232,6 +273,36 @@
         },
         {
             "@type": "WorkflowRoute",
+            "name": "step ready -> update step start",
+            "targetStep": "\/api\/3\/workflow_steps\/2c4ea334-993c-4aaa-a263-a47e562f0c87",
+            "sourceStep": "\/api\/3\/workflow_steps\/65f82e95-951b-4325-b6ed-15b848bb2e4d",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "b4cc0bde-92ab-4530-9b1e-16388f273f4f"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "step script needed -> get jinja_vars and script",
+            "targetStep": "\/api\/3\/workflow_steps\/e0c9e8dd-7e2b-497d-9153-36a9f96410ec",
+            "sourceStep": "\/api\/3\/workflow_steps\/c85f6808-de4a-4648-a514-c365ef431db0",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "535eec00-186d-453c-943d-f592e435fb9e"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "step script needed -> step ready",
+            "targetStep": "\/api\/3\/workflow_steps\/65f82e95-951b-4325-b6ed-15b848bb2e4d",
+            "sourceStep": "\/api\/3\/workflow_steps\/c85f6808-de4a-4648-a514-c365ef431db0",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "ba87b451-90e5-406c-9cfa-1f78d5c4e940"
+        },
+        {
+            "@type": "WorkflowRoute",
             "name": "update step start -> return",
             "targetStep": "\/api\/3\/workflow_steps\/f3bcf02f-50e4-4b84-84dc-640bfcbebb5e",
             "sourceStep": "\/api\/3\/workflow_steps\/2c4ea334-993c-4aaa-a263-a47e562f0c87",
@@ -253,7 +324,7 @@
             "metadata": [],
             "reusable": false,
             "top": "120",
-            "left": "380",
+            "left": "300",
             "height": "134",
             "width": "380",
             "uuid": "6ce1758f-0bf1-4669-8e63-1d957a5a9186",

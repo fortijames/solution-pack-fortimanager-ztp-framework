@@ -60,10 +60,9 @@
             "name": "output vars",
             "description": null,
             "arguments": {
-                "output_html": "{%- if \"html\" in vars.output_type|lower -%}\n{{vars.steps.render_jinja.output| regex_replace('^\"|\"$', '')}}\n{%- endif -%}",
-                "output_json": "{%- if \"json\" in vars.output_type|lower -%}\n{{vars.steps.render_jinja.output}}\n{%- endif -%}",
-                "output_text": "{{vars.steps.render_jinja.output}}",
-                "output_markdown": "{%- if \"markdown\" in vars.output_type|lower -%}\n{{vars.steps.render_jinja.output| regex_replace('^\"|\"$', '')}}\n{%- endif -%}"
+                "output_html": "{%- set rout = vars.steps.render_jinja_HTML -%}\n\n{%- if rout -%}\n{{rout.output| regex_replace('^\"|\"$', '')}}\n{%- endif -%}",
+                "output_json": "{%- set rout = vars.steps.render_jinja_JSON -%}\n\n{%- if rout -%}\n{{rout.output}}\n{%- endif -%}",
+                "output_markdown": "{%- set rout = vars.steps.render_jinja_MARKDOWN -%}\n\n{%- if rout -%}\n{{rout.output| regex_replace('^\"|\"$', '')}}\n{%- endif -%}"
             },
             "status": null,
             "top": "240",
@@ -74,13 +73,62 @@
         },
         {
             "@type": "WorkflowStep",
-            "name": "render jinja",
+            "name": "render jinja HTML",
             "description": null,
             "arguments": {
+                "when": "{{vars.steps.find_step[0].ztpfAutomationActions.outputTemplateHTML}}",
                 "arguments": {
                     "script_vars": "{{vars.jinja_vars}}",
                     "yaml2json_flag": "",
-                    "script_template": "{{vars.steps.find_step[0].ztpfAutomationActions.actionOutputTemplate}}"
+                    "script_template": "{{vars.steps.find_step[0].ztpfAutomationActions.outputTemplateHTML}}"
+                },
+                "apply_async": false,
+                "step_variables": [],
+                "pass_parent_env": false,
+                "pass_input_record": false,
+                "workflowReference": "\/api\/3\/workflows\/b9e9fe1a-4964-4631-ba81-97987676884d"
+            },
+            "status": null,
+            "top": "240",
+            "left": "640",
+            "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
+            "group": null,
+            "uuid": "665f594e-58b9-4186-8628-f3740497159e"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "render jinja JSON",
+            "description": null,
+            "arguments": {
+                "when": "{{vars.steps.find_step[0].ztpfAutomationActions.outputTemplateJSON}}",
+                "arguments": {
+                    "script_vars": "{{vars.jinja_vars}}",
+                    "yaml2json_flag": "",
+                    "script_template": "{{vars.steps.find_step[0].ztpfAutomationActions.outputTemplateJSON}}"
+                },
+                "apply_async": false,
+                "step_variables": [],
+                "pass_parent_env": false,
+                "pass_input_record": false,
+                "workflowReference": "\/api\/3\/workflows\/b9e9fe1a-4964-4631-ba81-97987676884d"
+            },
+            "status": null,
+            "top": "320",
+            "left": "640",
+            "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
+            "group": null,
+            "uuid": "864b10f0-f8c5-4869-bc33-2bc3ec330957"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "render jinja MARKDOWN",
+            "description": null,
+            "arguments": {
+                "when": "{{vars.steps.find_step[0].ztpfAutomationActions.outputTemplateMarkdown}}",
+                "arguments": {
+                    "script_vars": "{{vars.jinja_vars}}",
+                    "yaml2json_flag": "",
+                    "script_template": "{{vars.steps.find_step[0].ztpfAutomationActions.outputTemplateMarkdown}}"
                 },
                 "apply_async": false,
                 "step_variables": [],
@@ -90,7 +138,7 @@
             },
             "status": null,
             "top": "160",
-            "left": "500",
+            "left": "640",
             "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
             "group": null,
             "uuid": "d1dfc551-1b67-4793-8cc1-301b4329b816"
@@ -101,12 +149,11 @@
             "description": null,
             "arguments": {
                 "step_fqid": "{{vars.steps.find_step[0]['@id']}}",
-                "jinja_vars": "{%- set ret = vars.steps.find_step[0].jinjaVars -%}\n{%- do ret.update({\"source\":vars.steps.find_step[0].outputSourceData}) -%}\n{{ret}}",
-                "output_type": "{{vars.steps.find_step[0].outputType.itemValue}}"
+                "jinja_vars": "{%- set ret = vars.steps.find_step[0].jinjaVars -%}\n{%- do ret.update({\"source\":vars.steps.find_step[0].outputSourceData}) -%}\n{{ret}}"
             },
             "status": null,
-            "top": "60",
-            "left": "660",
+            "top": "40",
+            "left": "640",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
             "uuid": "85d3a526-d57e-4c51-bd8a-22e4df19613d"
@@ -140,7 +187,6 @@
                 "resource": {
                     "outputHTML": "<p>{{vars.output_html}}<\/p>",
                     "outputJSON": "{{vars.output_json}}",
-                    "outputText": "{{vars.output_text}}",
                     "outputMarkdown": "{{vars.output_markdown}}"
                 },
                 "operation": "Append",
@@ -163,6 +209,16 @@
     "routes": [
         {
             "@type": "WorkflowRoute",
+            "name": "Copy of render jinja MARKDOWN -> Copy of Copy of render jinja MARKDOWN",
+            "targetStep": "\/api\/3\/workflow_steps\/864b10f0-f8c5-4869-bc33-2bc3ec330957",
+            "sourceStep": "\/api\/3\/workflow_steps\/665f594e-58b9-4186-8628-f3740497159e",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "34fa1ce1-ba1d-4c60-9c92-ef222c2b45a0"
+        },
+        {
+            "@type": "WorkflowRoute",
             "name": "find step -> update jinja_vars",
             "targetStep": "\/api\/3\/workflow_steps\/85d3a526-d57e-4c51-bd8a-22e4df19613d",
             "sourceStep": "\/api\/3\/workflow_steps\/80ea339e-cc09-4c50-9729-3de7a8a9dbfc",
@@ -183,13 +239,23 @@
         },
         {
             "@type": "WorkflowRoute",
-            "name": "render jinja -> output vars",
+            "name": "render jinja JSON -> output vars",
             "targetStep": "\/api\/3\/workflow_steps\/7bb60fd8-fc32-4881-b845-3a6c63ff366a",
+            "sourceStep": "\/api\/3\/workflow_steps\/864b10f0-f8c5-4869-bc33-2bc3ec330957",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "7a20df01-0403-4e63-a1d0-ce9ea0a36ab8"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "render jinja MARKDOWN -> Copy of render jinja MARKDOWN",
+            "targetStep": "\/api\/3\/workflow_steps\/665f594e-58b9-4186-8628-f3740497159e",
             "sourceStep": "\/api\/3\/workflow_steps\/d1dfc551-1b67-4793-8cc1-301b4329b816",
             "label": null,
             "isExecuted": false,
             "group": null,
-            "uuid": "3d15928e-a0dd-4909-9c3e-f8dbef535942"
+            "uuid": "0a3c80e9-0c41-41a9-875f-59bbc7083d79"
         },
         {
             "@type": "WorkflowRoute",
@@ -216,7 +282,7 @@
         {
             "@type": "WorkflowGroup",
             "name": "Details",
-            "description": "Render step output from jinja_vars, source data, and action template.",
+            "description": "Find the output templates for Markdown, HTML, and JSON from the Action on the Step. Render each format if needed and update the step with the results.",
             "type": "note",
             "isCollapsed": false,
             "hasTriggerStep": false,
@@ -224,9 +290,9 @@
             "metadata": [],
             "reusable": false,
             "top": "120",
-            "left": "80",
-            "height": "107",
-            "width": "359",
+            "left": "100",
+            "height": "104",
+            "width": "469",
             "uuid": "4a647dde-b522-4534-a04c-e9a82bbc2f0b",
             "recordTags": []
         }

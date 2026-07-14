@@ -1,0 +1,350 @@
+{
+    "@type": "Workflow",
+    "triggerLimit": null,
+    "name": "Add Steps to Device from Profile",
+    "aliasName": null,
+    "tag": null,
+    "description": "Add Step Actions from Profile to a Device",
+    "isActive": true,
+    "debug": false,
+    "singleRecordExecution": false,
+    "remoteExecutableFlag": false,
+    "parameters": [],
+    "synchronous": false,
+    "collection": "\/api\/3\/workflow_collections\/f0b56dc0-6c1e-4f5b-9199-c807800f028a",
+    "versions": [],
+    "triggerStep": "\/api\/3\/workflow_steps\/50db8b3b-74ad-4676-bb31-daa24a89d6f0",
+    "steps": [
+        {
+            "@type": "WorkflowStep",
+            "name": "create steps from profile",
+            "description": null,
+            "arguments": {
+                "for_each": {
+                    "item": "{{vars.input.records}}",
+                    "__bulk": false,
+                    "parallel": true,
+                    "condition": ""
+                },
+                "arguments": {
+                    "device_id": "{{vars.item.id}}",
+                    "profile_id": "{{vars.profile_selected[0].id}}"
+                },
+                "apply_async": false,
+                "step_variables": [],
+                "pass_parent_env": false,
+                "pass_input_record": false,
+                "workflowReference": "\/api\/3\/workflows\/6d3e2df8-cb50-44a8-a3c4-f988f7546689"
+            },
+            "status": null,
+            "top": "280",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
+            "group": null,
+            "uuid": "942a07a1-cace-4f38-8496-b15caa3ed0bc"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Find Profiles",
+            "description": null,
+            "arguments": {
+                "query": {
+                    "sort": [],
+                    "limit": 30,
+                    "logic": "AND",
+                    "filters": [],
+                    "__selectFields": [
+                        "id",
+                        "name"
+                    ]
+                },
+                "module": "ztpf_automation_profiles?$limit=5000",
+                "checkboxFields": true,
+                "step_variables": []
+            },
+            "status": null,
+            "top": "40",
+            "left": "340",
+            "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928770",
+            "group": null,
+            "uuid": "0364ab77-4752-447a-b67a-0cfcf2fe0765"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "profile_options",
+            "description": null,
+            "arguments": {
+                "profile": "{%- set recs = vars.steps.Find_Profiles -%}\n{%- set opts = [] -%}\n{%- for r in recs -%}\n{%- set o = r -%}\n{%- set on = r.name -%}\n{%- do o.update({\n  \"_option\": on\n}) -%}\n{%- do opts.append(o) -%}\n{%- endfor -%}\n{\n  \"records\": {{opts}},\n  \"options\": {{opts|json_query('[]._option')|sort}}\n}"
+            },
+            "status": null,
+            "top": "120",
+            "left": "660",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "4f6e207e-fa41-482b-854b-6b0526bbe3d5"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "profile selected",
+            "description": null,
+            "arguments": {
+                "profile_selected": "{{vars.profile.records\n  | json_query('[?_option==`{}`]'\n    .format(vars.steps.select_profile.input.profile)\n)\n}}"
+            },
+            "status": null,
+            "top": "280",
+            "left": "660",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "14e4b543-277a-4163-8937-50528c944cbd"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "select profile",
+            "description": null,
+            "arguments": {
+                "type": "InputBased",
+                "input": {
+                    "schema": {
+                        "title": "Select Action",
+                        "description": "Select a profile to add.",
+                        "inputVariables": [
+                            {
+                                "name": "profile",
+                                "type": "array",
+                                "label": "Profile",
+                                "title": "Dynamic List",
+                                "usable": true,
+                                "options": "{{vars.profile.options}}",
+                                "tooltip": "",
+                                "dataType": "dynamicList",
+                                "formType": "dynamicList",
+                                "required": false,
+                                "_expanded": true,
+                                "mmdUpdate": true,
+                                "collection": false,
+                                "searchable": false,
+                                "templateUrl": "app\/components\/form\/fields\/dynamicList.html",
+                                "defaultValue": null,
+                                "_previousName": "action",
+                                "playbookField": true,
+                                "lengthConstraint": true,
+                                "allowedGridColumn": false,
+                                "requiredCondition": "notrequired",
+                                "jinjaExpressionView": true,
+                                "useRecordFieldDefault": false,
+                                "_addRequiredConditions": false
+                            }
+                        ]
+                    }
+                },
+                "record": "",
+                "timeout": {
+                    "days": 0,
+                    "hours": 0,
+                    "minutes": 1,
+                    "step_iri": "\/api\/3\/workflow_steps\/53f84930-f827-4062-8610-6f1f98f3bd7d"
+                },
+                "agent_id": null,
+                "resources": "ztpf_devices",
+                "is_approval": false,
+                "owner_detail": {
+                    "isAssigned": false,
+                    "emailRecipients": ""
+                },
+                "isRecordLinked": false,
+                "step_variables": [],
+                "response_mapping": {
+                    "options": [
+                        {
+                            "option": "Ok",
+                            "primary": true,
+                            "step_iri": "\/api\/3\/workflow_steps\/14e4b543-277a-4163-8937-50528c944cbd"
+                        },
+                        {
+                            "option": "Cancel",
+                            "step_iri": "\/api\/3\/workflow_steps\/53f84930-f827-4062-8610-6f1f98f3bd7d"
+                        }
+                    ],
+                    "duplicateOption": false,
+                    "customSuccessMessage": "Awaiting Playbook resumed successfully."
+                },
+                "email_notification": {
+                    "enabled": false,
+                    "smtpParameters": []
+                },
+                "customEmailExternal": false,
+                "inline_channel_list": [],
+                "external_channel_list": [],
+                "unauthenticated_input": false,
+                "external_email_subject": null,
+                "internal_email_subject": "A FortiSOAR playbook is requesting your input",
+                "custom_email_body_external": null,
+                "external_email_attachments": null
+            },
+            "status": null,
+            "top": "200",
+            "left": "660",
+            "stepType": "\/api\/3\/workflow_step_types\/fc04082a-d7dc-4299-96fb-6837b1baa0fe",
+            "group": null,
+            "uuid": "d525de41-62d8-4409-adf9-c4b051a1abd8"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Start",
+            "description": null,
+            "arguments": {
+                "route": "15329e8f-37a2-4d18-873c-cc8bd63a6361",
+                "title": "Add Steps from Profile",
+                "resources": [
+                    "ztpf_devices"
+                ],
+                "__triggerLimit": true,
+                "inputVariables": [],
+                "step_variables": {
+                    "input": {
+                        "params": [],
+                        "records": "{{vars.input.records}}"
+                    }
+                },
+                "_promptexpanded": false,
+                "triggerOnSource": true,
+                "displayConditions": {
+                    "ztpf_devices": {
+                        "sort": [],
+                        "limit": 30,
+                        "logic": "AND",
+                        "filters": [
+                            {
+                                "type": "primitive",
+                                "field": "ztpfRunning",
+                                "value": true,
+                                "operator": "neq",
+                                "_operator": "neq"
+                            }
+                        ]
+                    }
+                },
+                "executeButtonText": "Execute",
+                "noRecordExecution": false,
+                "showToasterMessage": {
+                    "message": "Adding Steps from Profile",
+                    "visible": true,
+                    "messageVisible": true
+                },
+                "triggerOnReplicate": false,
+                "singleRecordExecution": false
+            },
+            "status": null,
+            "top": "40",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/f414d039-bb0d-4e59-9c39-a8f1e880b18a",
+            "group": null,
+            "uuid": "50db8b3b-74ad-4676-bb31-daa24a89d6f0"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "timeout or cancel",
+            "description": null,
+            "arguments": [],
+            "status": null,
+            "top": "120",
+            "left": "980",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "53f84930-f827-4062-8610-6f1f98f3bd7d"
+        }
+    ],
+    "routes": [
+        {
+            "@type": "WorkflowRoute",
+            "name": "Copy of select action -> timeout or cancel",
+            "targetStep": "\/api\/3\/workflow_steps\/53f84930-f827-4062-8610-6f1f98f3bd7d",
+            "sourceStep": "\/api\/3\/workflow_steps\/d525de41-62d8-4409-adf9-c4b051a1abd8",
+            "label": "Cancel",
+            "isExecuted": false,
+            "group": null,
+            "uuid": "e04952f4-2eef-4df2-ab50-69f05a483286"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Find Profiles -> profile_options",
+            "targetStep": "\/api\/3\/workflow_steps\/4f6e207e-fa41-482b-854b-6b0526bbe3d5",
+            "sourceStep": "\/api\/3\/workflow_steps\/0364ab77-4752-447a-b67a-0cfcf2fe0765",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "0ea9e427-14cf-4782-bf3c-d7cd742157c0"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "profile_options -> Copy of select action",
+            "targetStep": "\/api\/3\/workflow_steps\/d525de41-62d8-4409-adf9-c4b051a1abd8",
+            "sourceStep": "\/api\/3\/workflow_steps\/4f6e207e-fa41-482b-854b-6b0526bbe3d5",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "db3a5141-97e7-421f-a3c2-3e72a45dfe1e"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "profile selected -> create steps from profile",
+            "targetStep": "\/api\/3\/workflow_steps\/942a07a1-cace-4f38-8496-b15caa3ed0bc",
+            "sourceStep": "\/api\/3\/workflow_steps\/14e4b543-277a-4163-8937-50528c944cbd",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "182b95f8-828b-4b35-a84b-acc926470656"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "select profile -> profile selected",
+            "targetStep": "\/api\/3\/workflow_steps\/14e4b543-277a-4163-8937-50528c944cbd",
+            "sourceStep": "\/api\/3\/workflow_steps\/d525de41-62d8-4409-adf9-c4b051a1abd8",
+            "label": "Ok",
+            "isExecuted": false,
+            "group": null,
+            "uuid": "cc4b4d5b-2c7e-45cb-a1d7-4614b341f65c"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Start -> Find Profiles",
+            "targetStep": "\/api\/3\/workflow_steps\/0364ab77-4752-447a-b67a-0cfcf2fe0765",
+            "sourceStep": "\/api\/3\/workflow_steps\/50db8b3b-74ad-4676-bb31-daa24a89d6f0",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "e161e942-5feb-4df0-b651-089e6512967e"
+        }
+    ],
+    "groups": [
+        {
+            "@type": "WorkflowGroup",
+            "name": "Details",
+            "description": "Prompt the user to add a profile and create a new action record on the device.",
+            "type": "note",
+            "isCollapsed": false,
+            "hasTriggerStep": false,
+            "hideInLogs": false,
+            "metadata": [],
+            "reusable": false,
+            "top": "120",
+            "left": "100",
+            "height": "114",
+            "width": "438",
+            "uuid": "c17fa927-290c-40d6-8951-a091198b19e7",
+            "recordTags": []
+        }
+    ],
+    "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+    "playbookOrigin": "\/api\/3\/picklists\/b6d710a9-a8ec-41ec-8817-fe9fa062fcdd",
+    "isEditable": false,
+    "uuid": "8fb90083-a8b7-4e03-aa5b-87b87e1bee92",
+    "owners": [],
+    "isPrivate": false,
+    "deletedAt": null,
+    "recordTags": [
+        "TODO",
+        "ztpfAutomationAction",
+        "ztpfDevice"
+    ]
+}

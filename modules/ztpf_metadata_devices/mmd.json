@@ -126,7 +126,7 @@
         {
             "@type": "AttributeMetadata",
             "type": "picklists",
-            "name": "type",
+            "name": "status",
             "length": null,
             "formType": "picklist",
             "dataSource": {
@@ -137,7 +137,7 @@
                         {
                             "field": "listName__name",
                             "operator": "eq",
-                            "value": "ztpfMetadataType"
+                            "value": "ztpfMetadataDeviceStatus"
                         }
                     ],
                     "sort": [
@@ -148,19 +148,15 @@
                     ]
                 },
                 "displayConditions": {
-                    "36b18f9c-fd7b-4022-b00f-9525101a6317": {
+                    "0756e660-31a7-4998-a20d-48e1aded39d1": {
                         "visibility": "visible",
                         "conditions": null
                     },
-                    "c373cd17-df08-428c-b042-b07b5fad9038": {
+                    "589e0a44-3aa9-4e49-ae62-e28199344659": {
                         "visibility": "visible",
                         "conditions": null
                     },
-                    "cdd4a3b0-424d-4941-b2c0-1b4ae05ccdf8": {
-                        "visibility": "visible",
-                        "conditions": null
-                    },
-                    "0a30efac-b341-4693-bddc-36342fc7f41f": {
+                    "44c955f2-cf89-4907-bf48-c68bd82aeba9": {
                         "visibility": "visible",
                         "conditions": null
                     }
@@ -175,7 +171,7 @@
             "inversedField": null,
             "ownsRelationship": false,
             "validation": {
-                "required": true,
+                "required": false,
                 "minlength": 0,
                 "maxlength": 10485761,
                 "_enableRange": false
@@ -187,8 +183,8 @@
                 "buttonClass": "btn btn-default btn-sm"
             },
             "dataSourceFilters": null,
-            "defaultValue": "\/api\/3\/picklists\/36b18f9c-fd7b-4022-b00f-9525101a6317",
-            "tooltip": "Type of Metadata",
+            "defaultValue": "\/api\/3\/picklists\/0756e660-31a7-4998-a20d-48e1aded39d1",
+            "tooltip": null,
             "visibility": true,
             "htmlEscape": false,
             "orphanRemoval": null,
@@ -198,9 +194,9 @@
             "unique": false,
             "recommend": false,
             "skipSerialization": false,
-            "displayName": "{{ type }}",
+            "displayName": "{{ status }}",
             "descriptions": {
-                "singular": "Type"
+                "singular": "Status"
             }
         },
         {
@@ -396,6 +392,86 @@
             "displayName": "{{ dataSecret }}",
             "descriptions": {
                 "singular": "Data Secret"
+            }
+        },
+        {
+            "@type": "AttributeMetadata",
+            "type": "picklists",
+            "name": "type",
+            "length": null,
+            "formType": "picklist",
+            "dataSource": {
+                "model": "picklists",
+                "query": {
+                    "logic": "AND",
+                    "filters": [
+                        {
+                            "field": "listName__name",
+                            "operator": "eq",
+                            "value": "ztpfMetadataType"
+                        }
+                    ],
+                    "sort": [
+                        {
+                            "field": "orderIndex",
+                            "direction": "ASC"
+                        }
+                    ]
+                },
+                "displayConditions": {
+                    "36b18f9c-fd7b-4022-b00f-9525101a6317": {
+                        "visibility": "visible",
+                        "conditions": null
+                    },
+                    "c373cd17-df08-428c-b042-b07b5fad9038": {
+                        "visibility": "visible",
+                        "conditions": null
+                    },
+                    "cdd4a3b0-424d-4941-b2c0-1b4ae05ccdf8": {
+                        "visibility": "visible",
+                        "conditions": null
+                    },
+                    "0a30efac-b341-4693-bddc-36342fc7f41f": {
+                        "visibility": "visible",
+                        "conditions": null
+                    }
+                }
+            },
+            "searchable": false,
+            "peerReplicable": true,
+            "system": false,
+            "encrypted": false,
+            "gridColumn": true,
+            "collection": false,
+            "inversedField": null,
+            "ownsRelationship": false,
+            "validation": {
+                "required": true,
+                "minlength": 0,
+                "maxlength": 10485761,
+                "_enableRange": false
+            },
+            "bulkAction": {
+                "allow": false,
+                "buttonText": "",
+                "buttonIcon": "",
+                "buttonClass": "btn btn-default btn-sm"
+            },
+            "dataSourceFilters": null,
+            "defaultValue": "\/api\/3\/picklists\/36b18f9c-fd7b-4022-b00f-9525101a6317",
+            "tooltip": "Type of Metadata",
+            "visibility": true,
+            "htmlEscape": false,
+            "orphanRemoval": null,
+            "readable": true,
+            "writeable": true,
+            "identifier": null,
+            "unique": false,
+            "recommend": false,
+            "skipSerialization": false,
+            "displayName": "{{ type }}",
+            "descriptions": {
+                "singular": "Type"
             }
         }
     ],

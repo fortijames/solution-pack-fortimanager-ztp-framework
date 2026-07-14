@@ -1,0 +1,361 @@
+{
+    "@type": "Workflow",
+    "triggerLimit": null,
+    "name": "> create device automation steps from profile",
+    "aliasName": null,
+    "tag": null,
+    "description": "Create automation steps for a device record from a profile",
+    "isActive": true,
+    "debug": false,
+    "singleRecordExecution": false,
+    "remoteExecutableFlag": false,
+    "parameters": [
+        "device_id",
+        "profile_id"
+    ],
+    "synchronous": false,
+    "collection": "\/api\/3\/workflow_collections\/517fb52d-36f5-4bac-a344-7d4599d7dec6",
+    "versions": [],
+    "triggerStep": "\/api\/3\/workflow_steps\/ebcdd36e-76ee-454a-b5f3-4ad3182280d3",
+    "steps": [
+        {
+            "@type": "WorkflowStep",
+            "name": "create step",
+            "description": null,
+            "arguments": {
+                "for_each": {
+                    "item": "{{vars.steps.find_profile_steps}}",
+                    "parallel": false,
+                    "condition": ""
+                },
+                "arguments": {
+                    "stepARGS": "{{vars.item.stepARGS}}",
+                    "action_id": "{{vars.item.ztpfAutomationActions.id}}",
+                    "device_id": "{{vars.input.params['device_id']}}",
+                    "step_name": "{{vars.item.name}}",
+                    "jinja_vars": "{{vars.steps.get_jinja_vars.output}}"
+                },
+                "apply_async": false,
+                "step_variables": [],
+                "pass_parent_env": false,
+                "pass_input_record": false,
+                "workflowReference": "\/api\/3\/workflows\/6839c219-b88a-413c-9cdd-e38b0b764163"
+            },
+            "status": null,
+            "top": "360",
+            "left": "640",
+            "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
+            "group": null,
+            "uuid": "3a61793e-cab9-4d54-8d60-e1b1212ae277"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "find profile",
+            "description": null,
+            "arguments": {
+                "query": {
+                    "sort": [],
+                    "limit": 30,
+                    "logic": "AND",
+                    "filters": [
+                        {
+                            "type": "primitive",
+                            "field": "id",
+                            "value": "{{vars.input.params['profile_id']}}",
+                            "operator": "eq",
+                            "_operator": "eq"
+                        }
+                    ],
+                    "__selectFields": [
+                        "id",
+                        "name"
+                    ]
+                },
+                "module": "ztpf_automation_profiles?$limit=1",
+                "checkboxFields": true,
+                "step_variables": []
+            },
+            "status": null,
+            "top": "40",
+            "left": "340",
+            "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928770",
+            "group": null,
+            "uuid": "1e5f4119-af4b-40b2-88e2-4d24d57b1aa8"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "find profile steps",
+            "description": null,
+            "arguments": {
+                "query": {
+                    "sort": [
+                        {
+                            "field": "stepSequence",
+                            "direction": "ASC",
+                            "_fieldName": "stepSequence",
+                            "_fieldTitle": "Step Number"
+                        },
+                        {
+                            "field": "modifyDate",
+                            "direction": "ASC"
+                        }
+                    ],
+                    "limit": 30,
+                    "logic": "AND",
+                    "filters": [
+                        {
+                            "type": "object",
+                            "field": "ztpfAutomationProfiles",
+                            "value": "{{vars.steps.find_profile[0]['@id']}}",
+                            "_value": {
+                                "@id": "{{vars.steps.find_profile[0]['@id']}}",
+                                "display": "",
+                                "itemValue": ""
+                            },
+                            "operator": "eq"
+                        }
+                    ],
+                    "__selectFields": [
+                        "name",
+                        "ztpfAutomationActions",
+                        "id",
+                        "stepARGS"
+                    ]
+                },
+                "module": "ztpf_automation_profile_steps?$limit=5000",
+                "checkboxFields": true,
+                "step_variables": []
+            },
+            "status": null,
+            "top": "40",
+            "left": "640",
+            "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928770",
+            "group": null,
+            "uuid": "e824c2a3-536e-42db-b3db-babbbc71f12c"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "get jinja_vars",
+            "description": null,
+            "arguments": {
+                "arguments": {
+                    "device_id": "{{vars.input.params['device_id']}}"
+                },
+                "apply_async": false,
+                "step_variables": [],
+                "pass_parent_env": false,
+                "pass_input_record": false,
+                "workflowReference": "\/api\/3\/workflows\/7b1c12a7-a422-45f4-87e4-96f01a4c03f2"
+            },
+            "status": null,
+            "top": "280",
+            "left": "640",
+            "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
+            "group": null,
+            "uuid": "e9eb657e-a1d1-4c5e-897f-fcf4e3281e69"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "no steps",
+            "description": null,
+            "arguments": [],
+            "status": null,
+            "top": "40",
+            "left": "940",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "11c7a6e6-6739-4ee2-a5a4-0f7184a992da"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "profile_steps",
+            "description": null,
+            "arguments": {
+                "profile_steps": "{{vars.steps.find_profile_steps}}"
+            },
+            "status": null,
+            "top": "200",
+            "left": "640",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "dad6e39a-02ca-4945-a27b-2d3a69a8adf6"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "return",
+            "description": null,
+            "arguments": {
+                "output": "",
+                "params": "",
+                "status": ""
+            },
+            "status": null,
+            "top": "240",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "e4d18321-8c74-4fb8-827e-28a70dfd4629"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Start",
+            "description": null,
+            "arguments": {
+                "__triggerLimit": true,
+                "step_variables": {
+                    "input": {
+                        "params": []
+                    }
+                },
+                "triggerOnSource": true,
+                "triggerOnReplicate": false
+            },
+            "status": null,
+            "top": "40",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/b348f017-9a94-471f-87f8-ce88b6a7ad62",
+            "group": null,
+            "uuid": "ebcdd36e-76ee-454a-b5f3-4ad3182280d3"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "steps found",
+            "description": null,
+            "arguments": {
+                "conditions": [
+                    {
+                        "default": true,
+                        "step_iri": "\/api\/3\/workflow_steps\/11c7a6e6-6739-4ee2-a5a4-0f7184a992da",
+                        "step_name": "no steps"
+                    },
+                    {
+                        "step_iri": "\/api\/3\/workflow_steps\/dad6e39a-02ca-4945-a27b-2d3a69a8adf6",
+                        "condition": "{{ vars.steps.find_profile_steps|length > 0 }}",
+                        "step_name": "profile_steps"
+                    }
+                ],
+                "step_variables": []
+            },
+            "status": null,
+            "top": "120",
+            "left": "640",
+            "stepType": "\/api\/3\/workflow_step_types\/12254cf5-5db7-4b1a-8cb1-3af081924b28",
+            "group": null,
+            "uuid": "4bf6f34f-d6c7-4666-9874-ebaa86ca3930"
+        }
+    ],
+    "routes": [
+        {
+            "@type": "WorkflowRoute",
+            "name": "create step -> return",
+            "targetStep": "\/api\/3\/workflow_steps\/e4d18321-8c74-4fb8-827e-28a70dfd4629",
+            "sourceStep": "\/api\/3\/workflow_steps\/3a61793e-cab9-4d54-8d60-e1b1212ae277",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "472f52e3-ef31-4fc6-a6c4-d9469a93d097"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "find profile -> find profile steps",
+            "targetStep": "\/api\/3\/workflow_steps\/e824c2a3-536e-42db-b3db-babbbc71f12c",
+            "sourceStep": "\/api\/3\/workflow_steps\/1e5f4119-af4b-40b2-88e2-4d24d57b1aa8",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "19b92a03-c934-44eb-ae26-e674ecf7ca2f"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "find profile steps -> steps found",
+            "targetStep": "\/api\/3\/workflow_steps\/4bf6f34f-d6c7-4666-9874-ebaa86ca3930",
+            "sourceStep": "\/api\/3\/workflow_steps\/e824c2a3-536e-42db-b3db-babbbc71f12c",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "fd319616-9f2c-4cab-94bc-a9973aac3c5c"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "get jinja_vars -> create step",
+            "targetStep": "\/api\/3\/workflow_steps\/3a61793e-cab9-4d54-8d60-e1b1212ae277",
+            "sourceStep": "\/api\/3\/workflow_steps\/e9eb657e-a1d1-4c5e-897f-fcf4e3281e69",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "75d8e82d-f738-4cb2-bc5f-43c0de4e9b90"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "profile_steps -> get jinja_vars",
+            "targetStep": "\/api\/3\/workflow_steps\/e9eb657e-a1d1-4c5e-897f-fcf4e3281e69",
+            "sourceStep": "\/api\/3\/workflow_steps\/dad6e39a-02ca-4945-a27b-2d3a69a8adf6",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "bb022b06-6d00-4b81-962f-4016215aa02f"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Start -> find profile",
+            "targetStep": "\/api\/3\/workflow_steps\/1e5f4119-af4b-40b2-88e2-4d24d57b1aa8",
+            "sourceStep": "\/api\/3\/workflow_steps\/ebcdd36e-76ee-454a-b5f3-4ad3182280d3",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "7c51defc-805b-4de2-8a2a-5aaa19228f08"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "steps found -> no steps",
+            "targetStep": "\/api\/3\/workflow_steps\/11c7a6e6-6739-4ee2-a5a4-0f7184a992da",
+            "sourceStep": "\/api\/3\/workflow_steps\/4bf6f34f-d6c7-4666-9874-ebaa86ca3930",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "1f773edd-c3ce-41f0-abbb-85802a2f52ed"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "steps found -> profile_Steps",
+            "targetStep": "\/api\/3\/workflow_steps\/dad6e39a-02ca-4945-a27b-2d3a69a8adf6",
+            "sourceStep": "\/api\/3\/workflow_steps\/4bf6f34f-d6c7-4666-9874-ebaa86ca3930",
+            "label": "",
+            "isExecuted": false,
+            "group": null,
+            "uuid": "7502a081-07c3-42b0-89aa-da723b0bf23d"
+        }
+    ],
+    "groups": [
+        {
+            "@type": "WorkflowGroup",
+            "name": "Details",
+            "description": "Get the steps from a profile and create steps on a device with settings from the profile steps.",
+            "type": "note",
+            "isCollapsed": false,
+            "hasTriggerStep": false,
+            "hideInLogs": false,
+            "metadata": [],
+            "reusable": false,
+            "top": "120",
+            "left": "160",
+            "height": "101",
+            "width": "391",
+            "uuid": "65310eae-5a8a-4fb0-a1f4-c6b56d68ba2f",
+            "recordTags": []
+        }
+    ],
+    "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+    "playbookOrigin": "\/api\/3\/picklists\/b6d710a9-a8ec-41ec-8817-fe9fa062fcdd",
+    "isEditable": false,
+    "uuid": "6d3e2df8-cb50-44a8-a3c4-f988f7546689",
+    "owners": [],
+    "isPrivate": false,
+    "deletedAt": null,
+    "recordTags": [
+        "ztpfAutomationProfile",
+        "ztpfAutomationProfileStep",
+        "ztpfDevice",
+        "ztpfDeviceAutomationStep"
+    ]
+}

@@ -1,23 +1,47 @@
 {
     "@type": "Workflow",
     "triggerLimit": null,
-    "name": "> convert yaml to json",
+    "name": "> convert json to yaml",
     "aliasName": null,
     "tag": null,
-    "description": "Convert YAML to JSON via Python",
+    "description": "Convert JSON to YAML via Python",
     "isActive": true,
     "debug": false,
     "singleRecordExecution": false,
     "remoteExecutableFlag": false,
     "parameters": [
-        "yaml",
+        "json",
         "manual_test"
     ],
     "synchronous": false,
     "collection": "\/api\/3\/workflow_collections\/517fb52d-36f5-4bac-a344-7d4599d7dec6",
     "versions": [],
-    "triggerStep": "\/api\/3\/workflow_steps\/9ea8cbfe-ae31-4989-a438-401a02400877",
+    "triggerStep": "\/api\/3\/workflow_steps\/e6fd51af-2d30-4fcd-8a2a-7f0f0fdf5f4b",
     "steps": [
+        {
+            "@type": "WorkflowStep",
+            "name": "json2yaml",
+            "description": null,
+            "arguments": {
+                "config": "74c7e349-a99d-44ac-a576-8c1b158fc364",
+                "params": {
+                    "python_function": "import json\r\nimport re\r\nimport yaml\r\n\r\ndef json_to_yaml(data, indent=2, sort_keys=False):\r\n    \"\"\"\r\n    Convert JSON to YAML.\r\n\r\n    Args:\r\n        data: JSON string or Python dict\/list.\r\n        indent: YAML indentation.\r\n        sort_keys: Sort dictionary keys.\r\n\r\n    Returns:\r\n        YAML string.\r\n    \"\"\"\r\n\r\n    # If it's a string, parse it as JSON\r\n    if isinstance(data, str):\r\n        data = data.strip()\r\n\r\n        # Fix accidental \"key:value\" (no space) if someone passed YAML\r\n        data = re.sub(r'(^|\\n)([ \\t-]*[^:\\n]+):([^\\s])',\r\n                      r'\\1\\2: \\3',\r\n                      data)\r\n\r\n        try:\r\n            data = json.loads(data)\r\n        except json.JSONDecodeError:\r\n            # Maybe it's actually YAML\r\n            data = yaml.safe_load(data)\r\n\r\n    return yaml.safe_dump(\r\n        data,\r\n        indent=indent,\r\n        sort_keys=sort_keys,\r\n        default_flow_style=False,\r\n        allow_unicode=True\r\n    )\r\n\r\n\r\njson_data = '''\r\n{{vars.input.params.json}}\r\n'''\r\n\r\nj = json_to_yaml(json_data)\r\nprint(repr(j))"
+                },
+                "version": "2.1.5",
+                "connector": "code-snippet",
+                "operation": "python_inline_code_editor",
+                "operationTitle": "Execute Python Code",
+                "step_variables": {
+                    "yaml_output": "{{vars.steps.json2yaml.data['code_output']|replace(\"'\",\"\")}}"
+                }
+            },
+            "status": null,
+            "top": "160",
+            "left": "480",
+            "stepType": "\/api\/3\/workflow_step_types\/1fdd14cc-d6b4-4335-a3af-ab49c8ed2fd8",
+            "group": null,
+            "uuid": "7de05436-59d4-4f6f-9e36-6560d066bc04"
+        },
         {
             "@type": "WorkflowStep",
             "name": "manual test",
@@ -27,7 +51,7 @@
                 "input": {
                     "schema": {
                         "title": "Data Generated",
-                        "description": "##### JSON Output\n\n```\n{{vars.json_output|tojson(indent=2)}}\n```",
+                        "description": "##### YAML Output\n\n```\n{{vars.yaml_output}}\n```",
                         "inputVariables": []
                     }
                 },
@@ -43,7 +67,7 @@
                         {
                             "option": "Ok",
                             "primary": true,
-                            "step_iri": "\/api\/3\/workflow_steps\/240af74e-0972-4c51-a7e1-1315d4fae4d7"
+                            "step_iri": "\/api\/3\/workflow_steps\/81e018b6-8e2f-4154-ae13-53dd9eed6944"
                         }
                     ],
                     "duplicateOption": false,
@@ -58,11 +82,11 @@
                 "unauthenticated_input": false
             },
             "status": null,
-            "top": "300",
-            "left": "500",
+            "top": "320",
+            "left": "480",
             "stepType": "\/api\/3\/workflow_step_types\/fc04082a-d7dc-4299-96fb-6837b1baa0fe",
             "group": null,
-            "uuid": "c530d3ab-efc0-481c-a5b1-c5c63803c521"
+            "uuid": "3d1f617f-9a70-486f-bd24-ec4f879a6a32"
         },
         {
             "@type": "WorkflowStep",
@@ -76,7 +100,7 @@
                         "step_name": "return"
                     },
                     {
-                        "step_iri": "\/api\/3\/workflow_steps\/c530d3ab-efc0-481c-a5b1-c5c63803c521",
+                        "step_iri": "\/api\/3\/workflow_steps\/3d1f617f-9a70-486f-bd24-ec4f879a6a32",
                         "condition": "{{ vars.input.params['manual_test'] in [true,1,\"y\",\"yes\"] }}",
                         "step_name": "manual test"
                     }
@@ -84,27 +108,27 @@
                 "step_variables": []
             },
             "status": null,
-            "top": "220",
-            "left": "500",
+            "top": "240",
+            "left": "480",
             "stepType": "\/api\/3\/workflow_step_types\/12254cf5-5db7-4b1a-8cb1-3af081924b28",
             "group": null,
-            "uuid": "b6fe721b-487a-4e8a-98a6-0b0629e59f68"
+            "uuid": "88b28131-e2ca-4d0a-ae76-f73300eb0d9d"
         },
         {
             "@type": "WorkflowStep",
             "name": "return",
             "description": null,
             "arguments": {
-                "output": "{{vars.json_output}}",
+                "output": "{{vars.yaml_output}}",
                 "params": "{{vars.input.params}}",
-                "status": "{%- set ret = {\"error\":false} -%}\n\n{%- if  vars.steps.yaml2json.status != \"Success\" -%}\n  {%- do ret.update({\n    \"error\":true,\n    \"message\":\"Status from yaml2json is \" + vars.steps.yaml2json.status\n  }) -%}\n{%- endif -%}\n\n{{ret}}"
+                "status": "{%- set ret = {\"error\":false} -%}\n\n{%- if  vars.steps.json2yaml.status != \"Success\" -%}\n  {%- do ret.update({\n    \"error\":true,\n    \"message\":\"Status from yaml2json is \" + vars.steps.json2yaml.status\n  }) -%}\n{%- endif -%}\n\n{{ret}}"
             },
             "status": null,
-            "top": "260",
+            "top": "300",
             "left": "40",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
-            "uuid": "0089f060-1f7f-439b-9887-d0b91cd4756d"
+            "uuid": "772dd020-27b4-466f-a49d-2314b309fd87"
         },
         {
             "@type": "WorkflowStep",
@@ -125,7 +149,7 @@
             "left": "40",
             "stepType": "\/api\/3\/workflow_step_types\/b348f017-9a94-471f-87f8-ce88b6a7ad62",
             "group": null,
-            "uuid": "9ea8cbfe-ae31-4989-a438-401a02400877"
+            "uuid": "e6fd51af-2d30-4fcd-8a2a-7f0f0fdf5f4b"
         },
         {
             "@type": "WorkflowStep",
@@ -133,94 +157,70 @@
             "description": null,
             "arguments": [],
             "status": null,
-            "top": "380",
-            "left": "500",
+            "top": "400",
+            "left": "480",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
-            "uuid": "240af74e-0972-4c51-a7e1-1315d4fae4d7"
-        },
-        {
-            "@type": "WorkflowStep",
-            "name": "yaml2json",
-            "description": null,
-            "arguments": {
-                "config": "74c7e349-a99d-44ac-a576-8c1b158fc364",
-                "params": {
-                    "python_function": "#!\/usr\/bin\/env python3\r\n\r\nimport json\r\nimport yaml\r\nimport re\r\n\r\n\r\ndef yaml_string_to_json(yaml_string):\r\n    data = yaml.safe_load(yaml_string)\r\n    return json.dumps(data, indent=2)\r\n\r\n# Example usage\r\nyaml_input = \"\"\"\r\n{{vars.input.params.yaml}}\r\n\"\"\"\r\n\r\nyaml_string = re.sub(\r\n    r'^([ \\t-]*[^:#\\n]+?):([^\\s])',\r\n    r'\\1: \\2',\r\n    yaml_input,\r\n    flags=re.MULTILINE\r\n)\r\n\r\nprint(yaml_string_to_json(yaml_string))"
-                },
-                "version": "2.1.5",
-                "connector": "code-snippet",
-                "operation": "python_inline_code_editor",
-                "operationTitle": "Execute Python Code",
-                "step_variables": {
-                    "json_output": "{{vars.steps.yaml2json.data['code_output']}}"
-                }
-            },
-            "status": null,
-            "top": "140",
-            "left": "500",
-            "stepType": "\/api\/3\/workflow_step_types\/1fdd14cc-d6b4-4335-a3af-ab49c8ed2fd8",
-            "group": null,
-            "uuid": "1bdd5598-9f28-4c07-bae8-f5de10e6f32a"
+            "uuid": "81e018b6-8e2f-4154-ae13-53dd9eed6944"
         }
     ],
     "routes": [
         {
             "@type": "WorkflowRoute",
-            "name": "manual test set -> manual test",
-            "targetStep": "\/api\/3\/workflow_steps\/c530d3ab-efc0-481c-a5b1-c5c63803c521",
-            "sourceStep": "\/api\/3\/workflow_steps\/b6fe721b-487a-4e8a-98a6-0b0629e59f68",
+            "name": "json2yaml -> manual test set",
+            "targetStep": "\/api\/3\/workflow_steps\/88b28131-e2ca-4d0a-ae76-f73300eb0d9d",
+            "sourceStep": "\/api\/3\/workflow_steps\/7de05436-59d4-4f6f-9e36-6560d066bc04",
             "label": null,
             "isExecuted": false,
             "group": null,
-            "uuid": "4bfe78a1-e327-4901-8bb2-343cfa669f4a"
+            "uuid": "c4d14abd-33f0-4f24-913c-1a4a9b7b8c7c"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Manually Test -> test complete",
+            "targetStep": "\/api\/3\/workflow_steps\/81e018b6-8e2f-4154-ae13-53dd9eed6944",
+            "sourceStep": "\/api\/3\/workflow_steps\/3d1f617f-9a70-486f-bd24-ec4f879a6a32",
+            "label": "Ok",
+            "isExecuted": false,
+            "group": null,
+            "uuid": "81ca1355-3614-45b9-8c55-f4a265de4895"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "manual test set -> manual test",
+            "targetStep": "\/api\/3\/workflow_steps\/3d1f617f-9a70-486f-bd24-ec4f879a6a32",
+            "sourceStep": "\/api\/3\/workflow_steps\/88b28131-e2ca-4d0a-ae76-f73300eb0d9d",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "285b6fba-fe53-48e5-b37c-58d28753b8ec"
         },
         {
             "@type": "WorkflowRoute",
             "name": "manual test set -> return",
-            "targetStep": "\/api\/3\/workflow_steps\/0089f060-1f7f-439b-9887-d0b91cd4756d",
-            "sourceStep": "\/api\/3\/workflow_steps\/b6fe721b-487a-4e8a-98a6-0b0629e59f68",
+            "targetStep": "\/api\/3\/workflow_steps\/772dd020-27b4-466f-a49d-2314b309fd87",
+            "sourceStep": "\/api\/3\/workflow_steps\/88b28131-e2ca-4d0a-ae76-f73300eb0d9d",
             "label": null,
             "isExecuted": false,
             "group": null,
-            "uuid": "4310bed5-1174-4310-b1cd-72575d080d3d"
-        },
-        {
-            "@type": "WorkflowRoute",
-            "name": "manual test -> test complete",
-            "targetStep": "\/api\/3\/workflow_steps\/240af74e-0972-4c51-a7e1-1315d4fae4d7",
-            "sourceStep": "\/api\/3\/workflow_steps\/c530d3ab-efc0-481c-a5b1-c5c63803c521",
-            "label": "Ok",
-            "isExecuted": false,
-            "group": null,
-            "uuid": "32173350-0c47-4308-9df0-0e10e9f4b39f"
+            "uuid": "bc6112e5-88c5-48d7-9716-17c57285f5af"
         },
         {
             "@type": "WorkflowRoute",
             "name": "Start -> yaml2json",
-            "targetStep": "\/api\/3\/workflow_steps\/1bdd5598-9f28-4c07-bae8-f5de10e6f32a",
-            "sourceStep": "\/api\/3\/workflow_steps\/9ea8cbfe-ae31-4989-a438-401a02400877",
+            "targetStep": "\/api\/3\/workflow_steps\/7de05436-59d4-4f6f-9e36-6560d066bc04",
+            "sourceStep": "\/api\/3\/workflow_steps\/e6fd51af-2d30-4fcd-8a2a-7f0f0fdf5f4b",
             "label": null,
             "isExecuted": false,
             "group": null,
-            "uuid": "611ac46f-955a-4223-82db-903a0dbfc049"
-        },
-        {
-            "@type": "WorkflowRoute",
-            "name": "yaml2json -> manual test set",
-            "targetStep": "\/api\/3\/workflow_steps\/b6fe721b-487a-4e8a-98a6-0b0629e59f68",
-            "sourceStep": "\/api\/3\/workflow_steps\/1bdd5598-9f28-4c07-bae8-f5de10e6f32a",
-            "label": null,
-            "isExecuted": false,
-            "group": null,
-            "uuid": "e7c91eae-3437-4b68-865c-15b614c955e8"
+            "uuid": "91739f93-5267-4656-8148-6c6bf51a437f"
         }
     ],
     "groups": [
         {
             "@type": "WorkflowGroup",
             "name": "Details",
-            "description": "Use python modules to convert yaml to json.\n\nSet manual_test to true, 1, y, or yes to test.",
+            "description": "Use python modules to convert json to yaml. We do not preserve data types so all values in json should be sent as a string to return properly.\n\nSet manual_test to true, 1, y, or yes to test.",
             "type": "note",
             "isCollapsed": false,
             "hasTriggerStep": false,
@@ -229,16 +229,16 @@
             "reusable": false,
             "top": "120",
             "left": "20",
-            "height": "106",
-            "width": "355",
-            "uuid": "1b1b2f0d-765d-4bca-801c-1c2bedf4d41d",
+            "height": "167",
+            "width": "350",
+            "uuid": "b68027e1-4e86-46c4-9a2a-ee78ae766597",
             "recordTags": []
         }
     ],
     "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
     "playbookOrigin": "\/api\/3\/picklists\/b6d710a9-a8ec-41ec-8817-fe9fa062fcdd",
     "isEditable": false,
-    "uuid": "e8a9ca65-8ba2-4da5-993a-e98d1e22283c",
+    "uuid": "f55012fc-f837-4759-87a1-4bdcc486f87b",
     "owners": [],
     "isPrivate": false,
     "deletedAt": null,

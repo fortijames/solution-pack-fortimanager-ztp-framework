@@ -9,9 +9,117 @@
                     {
                         "widgets": [
                             {
+                                "type": "chart",
+                                "config": {
+                                    "wid": "cc2a6aa5-4563-419a-9f9c-165e4192961d",
+                                    "widgetAlwaysDisplay": true,
+                                    "showTabularData": false,
+                                    "query": {
+                                        "sort": [
+                                            {
+                                                "field": "queueStatus.orderIndex",
+                                                "direction": "ASC"
+                                            }
+                                        ],
+                                        "limit": 2147483647,
+                                        "logic": "AND",
+                                        "filters": [],
+                                        "aggregates": [
+                                            {
+                                                "operator": "countdistinct",
+                                                "field": "*",
+                                                "alias": "total"
+                                            },
+                                            {
+                                                "operator": "groupby",
+                                                "alias": "queueStatus",
+                                                "field": "queueStatus.itemValue"
+                                            },
+                                            {
+                                                "operator": "groupby",
+                                                "alias": "color",
+                                                "field": "queueStatus.color"
+                                            },
+                                            {
+                                                "operator": "groupby",
+                                                "alias": "orderIndex",
+                                                "field": "queueStatus.orderIndex"
+                                            }
+                                        ]
+                                    },
+                                    "mapping": {
+                                        "fieldName": "queueStatus"
+                                    },
+                                    "assignedToSetting": "all",
+                                    "aggregate": true,
+                                    "viewType": "chart",
+                                    "title": "Status",
+                                    "resource": "ztpf_device_automation_steps",
+                                    "chart": "pie",
+                                    "showCount": true,
+                                    "widgetAlwaysExpanded": true
+                                }
+                            }
+                        ],
+                        "style": "col-lg-12"
+                    }
+                ],
+                "wid": "f9a16267-e477-451e-a07c-3bb63f96faaa",
+                "_collapsed": false
+            },
+            {
+                "columns": [
+                    {
+                        "widgets": [
+                            {
                                 "type": "grid",
                                 "config": {
-                                    "wid": "db1e2359-de16-4fbd-871a-cbf698f80fcd"
+                                    "wid": "db1e2359-de16-4fbd-871a-cbf698f80fcd",
+                                    "module": "ztpf_device_automation_steps",
+                                    "columns": [
+                                        "ztpfDevices",
+                                        "stepNumber",
+                                        "name",
+                                        "queueStatus",
+                                        "ztpfAutomationActions",
+                                        "stepStartTimestamp",
+                                        "stepStopTimestamp",
+                                        "ztpfRunGroups",
+                                        "id"
+                                    ],
+                                    "expandableCol": [
+                                        {
+                                            "openTab": false,
+                                            "name": "jinjaVars"
+                                        },
+                                        {
+                                            "openTab": false,
+                                            "name": "script"
+                                        }
+                                    ],
+                                    "relationshipField": [],
+                                    "checkboxStatus": true,
+                                    "editableFields": false,
+                                    "actionButtons": [],
+                                    "query": {
+                                        "sort": [
+                                            {
+                                                "direction": "ASC",
+                                                "field": "ztpfDevices.name",
+                                                "_fieldTitle": "Device",
+                                                "_fieldName": "ztpfDevices"
+                                            },
+                                            {
+                                                "direction": "ASC",
+                                                "field": "stepNumber",
+                                                "_fieldTitle": "Step Number",
+                                                "_fieldName": "stepNumber"
+                                            }
+                                        ],
+                                        "limit": 30,
+                                        "logic": "AND",
+                                        "filters": []
+                                    }
                                 }
                             }
                         ],

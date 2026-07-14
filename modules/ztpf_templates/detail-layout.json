@@ -146,6 +146,12 @@
                                                                                                         "highlightMode": true,
                                                                                                         "linky": true,
                                                                                                         "readOnly": true
+                                                                                                    },
+                                                                                                    {
+                                                                                                        "name": "inputParameters",
+                                                                                                        "highlightMode": true,
+                                                                                                        "linky": true,
+                                                                                                        "readOnly": false
                                                                                                     }
                                                                                                 ],
                                                                                                 "style": "col-lg-6"
@@ -154,7 +160,36 @@
                                                                                     }
                                                                                 ]
                                                                             }
-                                                                        },
+                                                                        }
+                                                                    ],
+                                                                    "style": "col-lg-9"
+                                                                }
+                                                            ],
+                                                            "wid": "7998a1eb-939e-46e2-9ea3-3fb5fad245f9",
+                                                            "collapsible": true,
+                                                            "collapsibleIndex": 0,
+                                                            "_collapsed": true
+                                                        }
+                                                    ]
+                                                },
+                                                "visible": true
+                                            },
+                                            "icon": "fa fa-bars",
+                                            "show": false,
+                                            "visible": true
+                                        },
+                                        {
+                                            "title": "Template Settings",
+                                            "active": 0,
+                                            "widget": {
+                                                "type": "rows",
+                                                "config": {
+                                                    "wid": "7b06b37a-adad-47b8-8b11-08038cbd1b76",
+                                                    "rows": [
+                                                        {
+                                                            "columns": [
+                                                                {
+                                                                    "widgets": [
                                                                         {
                                                                             "type": "sectionHeader",
                                                                             "config": {
@@ -165,30 +200,98 @@
                                                                                     "limit": 10
                                                                                 },
                                                                                 "editorType": "html",
-                                                                                "sectionText": "<p style=\"text-align: center;\"><span style=\"font-size: 14pt;\"><strong>Jinja Script<\/strong><\/span><\/p>"
+                                                                                "sectionText": "<p style=\"text-align: center;\"><span style=\"font-size: 14pt;\"><strong>Template Script<\/strong><\/span><\/p>"
+                                                                            }
+                                                                        },
+                                                                        {
+                                                                            "type": "playbookButtons-1.1.1",
+                                                                            "config": {
+                                                                                "wid": "3455fe6c-e308-4306-8a10-b834b8c7189c",
+                                                                                "widgetName": "Playbook Execution Wizard",
+                                                                                "selectedPlaybooksWithRecord": [
+                                                                                    {
+                                                                                        "name": "Configure Template Script",
+                                                                                        "uuid": "513f3db1-41b1-47b6-ab7f-3045fad2d2e6",
+                                                                                        "actionTriggerName": "Script Help",
+                                                                                        "collectionName": "10 - SP - ZTPF - Buttons",
+                                                                                        "icon": "icon icon-help"
+                                                                                    }
+                                                                                ]
                                                                             }
                                                                         },
                                                                         {
                                                                             "type": "editableFormGroup",
                                                                             "config": {
-                                                                                "wid": "3aae9c8b-09c3-4200-b26e-395b286dabd5",
+                                                                                "wid": "439c8aed-010b-4e85-9065-58754e352e74",
                                                                                 "rows": [
                                                                                     {
                                                                                         "columns": [
                                                                                             {
                                                                                                 "fields": [
                                                                                                     {
+                                                                                                        "name": "inputParameters",
+                                                                                                        "highlightMode": true,
+                                                                                                        "linky": true,
+                                                                                                        "readOnly": false
+                                                                                                    },
+                                                                                                    {
                                                                                                         "name": "script",
                                                                                                         "highlightMode": true,
                                                                                                         "linky": true,
-                                                                                                        "readOnly": false,
-                                                                                                        "renderWidgetHeight": 800
+                                                                                                        "readOnly": false
+                                                                                                    },
+                                                                                                    {
+                                                                                                        "name": "outputType",
+                                                                                                        "highlightMode": true,
+                                                                                                        "linky": true,
+                                                                                                        "readOnly": true
                                                                                                     }
-                                                                                                ]
+                                                                                                ],
+                                                                                                "style": "col-lg-12"
                                                                                             }
                                                                                         ]
                                                                                     }
                                                                                 ]
+                                                                            }
+                                                                        }
+                                                                    ],
+                                                                    "style": "col-lg-12"
+                                                                }
+                                                            ],
+                                                            "wid": "baf8b4ea-aac9-411e-8e1f-6017c25a0473",
+                                                            "_collapsed": false
+                                                        }
+                                                    ]
+                                                },
+                                                "visible": true
+                                            },
+                                            "icon": "icon icon-settings",
+                                            "show": true,
+                                            "visible": true
+                                        },
+                                        {
+                                            "title": "Test Template",
+                                            "active": 0,
+                                            "widget": {
+                                                "type": "rows",
+                                                "config": {
+                                                    "wid": "68d82040-f559-4ecc-974c-2ec025cf31fb",
+                                                    "rows": [
+                                                        {
+                                                            "columns": [
+                                                                {
+                                                                    "widgets": [
+                                                                        {
+                                                                            "type": "sectionHeader",
+                                                                            "config": {
+                                                                                "wid": "3388d31f-ef3c-4189-90e4-f53138bebfcb",
+                                                                                "query": {
+                                                                                    "filters": [],
+                                                                                    "sort": [],
+                                                                                    "limit": 10
+                                                                                },
+                                                                                "editorType": "html",
+                                                                                "sectionText": "<p style=\"text-align: center;\"><span style=\"font-size: 14pt;\"><strong>Test Template Output<\/strong><\/span><\/p>\n<p style=\"text-align: center;\"><span style=\"font-size: 12pt;\">Render the template using the jinja_vars collected from a device to create example data.&nbsp;<\/span><\/p>"
                                                                             }
                                                                         },
                                                                         {
@@ -222,41 +325,6 @@
                                                                                         "icon": "fa fa-picture-o"
                                                                                     }
                                                                                 ]
-                                                                            }
-                                                                        },
-                                                                        {
-                                                                            "type": "sectionHeader",
-                                                                            "config": {
-                                                                                "wid": "3388d31f-ef3c-4189-90e4-f53138bebfcb",
-                                                                                "query": {
-                                                                                    "filters": [],
-                                                                                    "sort": [],
-                                                                                    "limit": 10
-                                                                                },
-                                                                                "editorType": "html",
-                                                                                "sectionText": "<p style=\"text-align: center;\"><span style=\"font-size: 14pt;\"><strong>Metadata Source Data -&gt; Jinja Vars -&gt; Template Output<\/strong><\/span><\/p>\n<p style=\"text-align: center;\"><span style=\"font-size: 12pt;\">Below is an example output and jinja_vars used, including any metadata sources, leveraged from the template jinja script. This output can be used on actions to then run on Devices.&nbsp;<\/span><\/p>",
-                                                                                "visibility": {
-                                                                                    "conditionalVisibility": true,
-                                                                                    "filter": {
-                                                                                        "sort": [],
-                                                                                        "limit": 30,
-                                                                                        "logic": "AND",
-                                                                                        "filters": [
-                                                                                            {
-                                                                                                "field": "exampleJinjaVars",
-                                                                                                "operator": "isnull",
-                                                                                                "value": "false",
-                                                                                                "_value": {
-                                                                                                    "display": "",
-                                                                                                    "itemValue": "",
-                                                                                                    "@id": "false"
-                                                                                                },
-                                                                                                "type": "object",
-                                                                                                "display": ""
-                                                                                            }
-                                                                                        ]
-                                                                                    }
-                                                                                }
                                                                             }
                                                                         },
                                                                         {
@@ -300,18 +368,6 @@
                                                                                         "limit": 30,
                                                                                         "logic": "AND",
                                                                                         "filters": [
-                                                                                            {
-                                                                                                "field": "exampleJinjaVars",
-                                                                                                "operator": "isnull",
-                                                                                                "value": "false",
-                                                                                                "_value": {
-                                                                                                    "display": "",
-                                                                                                    "itemValue": "",
-                                                                                                    "@id": "false"
-                                                                                                },
-                                                                                                "type": "object",
-                                                                                                "display": ""
-                                                                                            },
                                                                                             {
                                                                                                 "field": "outputType",
                                                                                                 "operator": "eq",
@@ -371,18 +427,6 @@
                                                                                         "logic": "AND",
                                                                                         "filters": [
                                                                                             {
-                                                                                                "field": "exampleJinjaVars",
-                                                                                                "operator": "isnull",
-                                                                                                "value": "false",
-                                                                                                "_value": {
-                                                                                                    "display": "",
-                                                                                                    "itemValue": "",
-                                                                                                    "@id": "false"
-                                                                                                },
-                                                                                                "type": "object",
-                                                                                                "display": ""
-                                                                                            },
-                                                                                            {
                                                                                                 "field": "outputType",
                                                                                                 "operator": "eq",
                                                                                                 "value": "\/api\/3\/picklists\/93f7971d-50c3-4e9b-9c86-d1cf2aa41256",
@@ -439,18 +483,6 @@
                                                                                         "limit": 30,
                                                                                         "logic": "AND",
                                                                                         "filters": [
-                                                                                            {
-                                                                                                "field": "exampleJinjaVars",
-                                                                                                "operator": "isnull",
-                                                                                                "value": "false",
-                                                                                                "_value": {
-                                                                                                    "display": "",
-                                                                                                    "itemValue": "",
-                                                                                                    "@id": "false"
-                                                                                                },
-                                                                                                "type": "object",
-                                                                                                "display": ""
-                                                                                            },
                                                                                             {
                                                                                                 "field": "outputType",
                                                                                                 "operator": "eq",
@@ -509,18 +541,6 @@
                                                                                         "logic": "AND",
                                                                                         "filters": [
                                                                                             {
-                                                                                                "field": "exampleJinjaVars",
-                                                                                                "operator": "isnull",
-                                                                                                "value": "false",
-                                                                                                "_value": {
-                                                                                                    "display": "",
-                                                                                                    "itemValue": "",
-                                                                                                    "@id": "false"
-                                                                                                },
-                                                                                                "type": "object",
-                                                                                                "display": ""
-                                                                                            },
-                                                                                            {
                                                                                                 "field": "outputType",
                                                                                                 "operator": "eq",
                                                                                                 "value": "\/api\/3\/picklists\/a8bba5aa-e243-4f61-9b9e-c222fc368be6",
@@ -538,20 +558,18 @@
                                                                             }
                                                                         }
                                                                     ],
-                                                                    "style": "col-lg-9"
+                                                                    "style": "col-lg-12"
                                                                 }
                                                             ],
-                                                            "wid": "7998a1eb-939e-46e2-9ea3-3fb5fad245f9",
-                                                            "collapsible": true,
-                                                            "collapsibleIndex": 0,
-                                                            "_collapsed": true
+                                                            "wid": "53d4d5d4-0819-46e1-9cee-d2a493309947",
+                                                            "_collapsed": false
                                                         }
                                                     ]
                                                 },
                                                 "visible": true
                                             },
-                                            "icon": "fa fa-bars",
-                                            "show": true,
+                                            "icon": "icon icon-test-configuration",
+                                            "show": false,
                                             "visible": true
                                         },
                                         {
@@ -594,23 +612,15 @@
                                                                                         "columns": [
                                                                                             {
                                                                                                 "openTab": false,
-                                                                                                "name": "fortiManagerAPIFilter"
+                                                                                                "name": "script"
                                                                                             },
                                                                                             {
                                                                                                 "openTab": false,
-                                                                                                "name": "fortiManagerAPIResource"
+                                                                                                "name": "exampleJinjaVars"
                                                                                             },
                                                                                             {
                                                                                                 "openTab": false,
-                                                                                                "name": "playbookID"
-                                                                                            },
-                                                                                            {
-                                                                                                "openTab": false,
-                                                                                                "name": "playbookPayload"
-                                                                                            },
-                                                                                            {
-                                                                                                "openTab": false,
-                                                                                                "name": "staticData"
+                                                                                                "name": "exampleOutput"
                                                                                             }
                                                                                         ],
                                                                                         "checkBox": true
@@ -621,10 +631,10 @@
                                                                                     "ztpf_metadata_sources": {
                                                                                         "sort": [
                                                                                             {
-                                                                                                "direction": "ASC",
-                                                                                                "field": "name",
+                                                                                                "direction": "DESC",
+                                                                                                "field": "modifyDate",
                                                                                                 "sort": {
-                                                                                                    "direction": "ASC"
+                                                                                                    "direction": "DESC"
                                                                                                 }
                                                                                             }
                                                                                         ],
@@ -651,7 +661,7 @@
                                             "visible": true
                                         },
                                         {
-                                            "title": "Linked Actions",
+                                            "title": "Actions using this Template",
                                             "active": 0,
                                             "widget": {
                                                 "type": "rows",
@@ -695,10 +705,10 @@
                                                                                     "ztpf_automation_actions": {
                                                                                         "sort": [
                                                                                             {
-                                                                                                "direction": "ASC",
-                                                                                                "field": "name",
+                                                                                                "direction": "DESC",
+                                                                                                "field": "modifyDate",
                                                                                                 "sort": {
-                                                                                                    "direction": "ASC"
+                                                                                                    "direction": "DESC"
                                                                                                 }
                                                                                             }
                                                                                         ],
@@ -724,20 +734,6 @@
                                                 "visible": true
                                             },
                                             "icon": "fa fa-forward",
-                                            "show": false,
-                                            "visible": true
-                                        },
-                                        {
-                                            "title": "TEST",
-                                            "active": 0,
-                                            "widget": {
-                                                "type": "editableForm",
-                                                "config": {
-                                                    "wid": "857fa7e0-9534-40f5-af0f-29d645ec3918"
-                                                },
-                                                "visible": true
-                                            },
-                                            "icon": "fa fa-none",
                                             "show": false,
                                             "visible": true
                                         }

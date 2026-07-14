@@ -19,6 +19,40 @@
     "steps": [
         {
             "@type": "WorkflowStep",
+            "name": "add artfiacts to devices",
+            "description": null,
+            "arguments": {
+                "for_each": {
+                    "item": "{{vars.steps.find_device}}",
+                    "__bulk": true,
+                    "parallel": false,
+                    "condition": "",
+                    "batch_size": 100
+                },
+                "resource": {
+                    "__link": {
+                        "ztpfRunGroups": "{{vars.steps.create_run_group['@id']}}"
+                    },
+                    "ztpfArtifacts": "{{vars.step_records['artifacts']}}"
+                },
+                "operation": "Append",
+                "collection": "{{vars.item['@id']}}",
+                "__recommend": [],
+                "collectionType": "\/api\/3\/ztpf_devices",
+                "fieldOperation": {
+                    "recordTags": "Append"
+                },
+                "step_variables": []
+            },
+            "status": null,
+            "top": "480",
+            "left": "60",
+            "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928722",
+            "group": null,
+            "uuid": "3460b90b-aff7-4040-aaed-8f1df83f72c2"
+        },
+        {
+            "@type": "WorkflowStep",
             "name": "add steps to run group",
             "description": null,
             "arguments": {
@@ -30,6 +64,7 @@
                     "batch_size": 100
                 },
                 "resource": {
+                    "status": "\/api\/3\/picklists\/91ff63f2-78cd-4bb5-92e3-36c99ec4d2c1",
                     "triggerKey": "{{vars.item['action_category']}} {{vars.item['action_type']}}",
                     "queueStatus": "\/api\/3\/picklists\/91ff63f2-78cd-4bb5-92e3-36c99ec4d2c1",
                     "ztpfRunGroups": "{{vars.steps.create_run_group['@id']}}"
@@ -57,7 +92,9 @@
             "arguments": {
                 "resource": {
                     "name": "{{vars.ztpfGroup}}",
-                    "__replace": ""
+                    "status": "\/api\/3\/picklists\/1f7e18dc-5763-4bd7-955c-0dd728a2cb6e",
+                    "__replace": "",
+                    "ztpfRunning": true
                 },
                 "operation": "Overwrite",
                 "collection": "\/api\/3\/ztpf_run_groups",
@@ -79,7 +116,7 @@
             "name": "create step_records",
             "description": null,
             "arguments": {
-                "step_records": "{%- set artf = {\n  \"ztfGroup\":vars.ztpfGroup,\n  \"ztfGroup_id\":vars.steps.create_run_group['id'],\n  \"ztfGroup_fqid\":vars.steps.create_run_group['@id'],\n  \"steps\":[]\n} -%}\n\n{%- set steps = vars.steps.find_steps -%}\n{%- for s in steps -%}\n  {%- set rec = {} -%}\n  {%- set act_id = s.ztpfAutomationActions.id -%}\n  {%- set act = vars.steps.find_actions\n      |json_query('[?id==`{}`]'.format(act_id)) \n  -%}\n  {%- set dev = vars.steps.find_device\n      |json_query('[?id==`{}`]'.format(s.ztpfDevices.id)) \n  -%}\n  {%- do rec.update({\n    \"fqid\": s['@id'],\n    \"id\": s.id,\n    \"name\":s.name,\n    \"stepNumber\": s.stepNumber,\n    \"action_category\": act[0].category.itemValue,\n    \"action_type\": act[0].type.itemValue,\n    \"device_fqid\":dev[0]['@id'],\n    \"device_id\":dev[0].id,\n    \"device_name\":dev[0].name\n  }) -%}\n  {%- do artf.steps.append(rec) -%}\n{%- endfor -%}\n{{artf}}"
+                "step_records": "{%- set artf = {\n  \"artifacts\" : {\n    \"ztfGroup\":vars.ztpfGroup,\n    \"ztfGroup_id\":vars.steps.create_run_group['id'],\n    \"ztfGroup_fqid\":vars.steps.create_run_group['@id']\n  },\n  \"steps\":[]\n} -%}\n\n{%- set steps = vars.steps.find_steps -%}\n{%- for s in steps -%}\n  {%- set rec = {} -%}\n  {%- set act_id = s.ztpfAutomationActions.id -%}\n  {%- set act = vars.steps.find_actions\n      |json_query('[?id==`{}`]'.format(act_id)) \n  -%}\n  {%- set dev = vars.steps.find_device\n      |json_query('[?id==`{}`]'.format(s.ztpfDevices.id)) \n  -%}\n  {%- do rec.update({\n    \"fqid\": s['@id'],\n    \"id\": s.id,\n    \"name\":s.name,\n    \"stepNumber\": s.stepNumber,\n    \"action_category\": act[0].category.itemValue,\n    \"action_type\": act[0].type.itemValue,\n    \"device_fqid\":dev[0]['@id'],\n    \"device_id\":dev[0].id,\n    \"device_name\":dev[0].name\n  }) -%}\n  {%- do artf.steps.append(rec) -%}\n{%- endfor -%}\n{{artf}}"
             },
             "status": null,
             "top": "380",
@@ -196,12 +233,12 @@
                         },
                         {
                             "type": "object",
-                            "field": "queueStatus",
-                            "value": "\/api\/3\/picklists\/e9673983-4d60-4c01-b61f-d7d43361f9c3",
+                            "field": "status",
+                            "value": "\/api\/3\/picklists\/0102f438-8c8e-4a81-840d-a68a58e242d6",
                             "_value": {
-                                "@id": "\/api\/3\/picklists\/e9673983-4d60-4c01-b61f-d7d43361f9c3",
-                                "display": "Added",
-                                "itemValue": "Added"
+                                "@id": "\/api\/3\/picklists\/0102f438-8c8e-4a81-840d-a68a58e242d6",
+                                "display": "Ready",
+                                "itemValue": "Ready"
                             },
                             "operator": "eq"
                         }
@@ -252,7 +289,7 @@
                 "workflowReference": "\/api\/3\/workflows\/cbdaa8de-e983-4006-92cd-fd332703d2c4"
             },
             "status": null,
-            "top": "480",
+            "top": "580",
             "left": "60",
             "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
             "group": null,
@@ -324,13 +361,23 @@
     "routes": [
         {
             "@type": "WorkflowRoute",
-            "name": "add steps to run group -> run queued steps",
+            "name": "add artfiacts to devices -> run queued steps",
             "targetStep": "\/api\/3\/workflow_steps\/63c6f73b-3aa3-46b6-85c7-e0b76e585de2",
+            "sourceStep": "\/api\/3\/workflow_steps\/3460b90b-aff7-4040-aaed-8f1df83f72c2",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "31153d77-92e1-42fa-8bfd-c1ec6615e03d"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "add steps to run group -> add artfiacts to devices",
+            "targetStep": "\/api\/3\/workflow_steps\/3460b90b-aff7-4040-aaed-8f1df83f72c2",
             "sourceStep": "\/api\/3\/workflow_steps\/71fc5481-ab9d-4e85-a7eb-27bb95d4155a",
             "label": null,
             "isExecuted": false,
             "group": null,
-            "uuid": "546cc504-9b1a-4d76-800c-09453d264dfe"
+            "uuid": "6b6bff8e-6171-4c1e-afc0-9a16b8587f86"
         },
         {
             "@type": "WorkflowRoute",

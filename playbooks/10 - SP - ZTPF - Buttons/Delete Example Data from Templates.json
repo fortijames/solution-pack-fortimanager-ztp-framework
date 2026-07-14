@@ -234,12 +234,15 @@
                 "for_each": {
                     "item": "{{vars.input.records}}",
                     "__bulk": true,
+                    "parallel": false,
                     "condition": "",
                     "batch_size": 100
                 },
                 "resource": {
-                    "exampleJinjaVars": "{{vars.value_null}}",
-                    "exampleOutputText": "{{vars.value_empty}}"
+                    "exampleJinjaVars": "{{vars.value_empty_dict}}",
+                    "outputTemplateHTML": "{{vars.value_empty}}",
+                    "outputTemplateJSON": "{{vars.value_empty_dict}}",
+                    "outputTemplateMarkdown": "{{vars.value_empty}}"
                 },
                 "operation": "Append",
                 "collection": "{{vars.item['@id']}}",
@@ -271,7 +274,7 @@
                 },
                 "resource": {
                     "exampleOutput": "{{vars.value_null}}",
-                    "exampleJinjaVars": "{{vars.value_null}}"
+                    "exampleJinjaVars": "{{vars.value_empty_dict}}"
                 },
                 "operation": "Append",
                 "collection": "{{vars.item['@id']}}",
@@ -297,12 +300,13 @@
                 "for_each": {
                     "item": "{{vars.input.records}}",
                     "__bulk": true,
+                    "parallel": false,
                     "condition": "",
                     "batch_size": 100
                 },
                 "resource": {
-                    "exampleJinjaVars": "{{vars.value_null}}",
-                    "exampleOutputJSON": "{{vars.value_null}}",
+                    "exampleJinjaVars": "{{vars.value_empty_dict}}",
+                    "exampleOutputJSON": "{{vars.value_empty_dict}}",
                     "exampleOutputText": "{{vars.value_empty}}",
                     "exampleOutputTextHTML": "<p>{{vars.value_empty}}<\/p>",
                     "exampleOutputTextMarkdown": "{{vars.value_empty}}"

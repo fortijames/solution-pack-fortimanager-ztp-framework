@@ -1,0 +1,264 @@
+{
+    "@type": "Workflow",
+    "triggerLimit": null,
+    "name": "Configure Template Script",
+    "aliasName": null,
+    "tag": null,
+    "description": "Help user build a template using existing linked metadata sources.",
+    "isActive": true,
+    "debug": false,
+    "singleRecordExecution": false,
+    "remoteExecutableFlag": false,
+    "parameters": [],
+    "synchronous": false,
+    "collection": "\/api\/3\/workflow_collections\/f0b56dc0-6c1e-4f5b-9199-c807800f028a",
+    "versions": [],
+    "triggerStep": "\/api\/3\/workflow_steps\/ff11f41e-0ade-4fcf-ae9b-8bb09d3db3b7",
+    "steps": [
+        {
+            "@type": "WorkflowStep",
+            "name": "cancel or timeout",
+            "description": null,
+            "arguments": [],
+            "status": null,
+            "top": "120",
+            "left": "380",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "d93a2a3e-b928-4c10-a599-f74732ffe9da"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "create example_data",
+            "description": null,
+            "arguments": {
+                "example_data": "{%- set ret = {\"record\":{},\"data\":{}} -%}\n   \n{%- for j in vars.steps.find_metadata_sources|json_query('[].exampleJinjaVars.record') -%}\n{%- do ret.record.update(j) -%}\n{%- endfor -%}\n\n{%- for m in vars.steps.find_metadata_sources|json_query('[].exampleOutput') -%}\n{%- do ret.data.update(m) -%}\n{%- endfor -%}\n\n{{ret}}"
+            },
+            "status": null,
+            "top": "40",
+            "left": "820",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "ce84de14-1c40-4295-86eb-9ae769010445"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "find metadata sources",
+            "description": null,
+            "arguments": {
+                "query": {
+                    "sort": [],
+                    "limit": 30,
+                    "logic": "AND",
+                    "filters": [
+                        {
+                            "type": "primitive",
+                            "field": "ztpfTemplates.id.uuid",
+                            "value": "{{vars.input.records[0].id}}",
+                            "operator": "in",
+                            "_operator": "in"
+                        }
+                    ],
+                    "__selectFields": [
+                        "name",
+                        "type",
+                        "id",
+                        "exampleJinjaVars",
+                        "exampleOutput"
+                    ]
+                },
+                "module": "ztpf_metadata_sources?$limit=5000",
+                "checkboxFields": true,
+                "step_variables": []
+            },
+            "status": null,
+            "top": "40",
+            "left": "380",
+            "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928770",
+            "group": null,
+            "uuid": "0b808254-3ed5-42cb-a0de-4c8c1f266421"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "ok",
+            "description": null,
+            "arguments": [],
+            "status": null,
+            "top": "240",
+            "left": "380",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "618bcd4a-adaf-4544-b20b-c7ace3042a6e"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "prompt user",
+            "description": null,
+            "arguments": {
+                "type": "InputBased",
+                "input": {
+                    "schema": {
+                        "title": "Script for Metadta from Example Data",
+                        "description": "Copy\/Paste the following metadata example data into any Jinja Editor to build your script.\n\n```\n{{vars.example_data\n  |toJSON\n  |regex_replace(\"^\\\"\",\"\")\n  |regex_replace(\"\\\"$\",\"\")\n  |replace(\"\\\\\",\"\")\n}}\n```\n\nThen your Jinja Script can leverage the metadata above like in the below example:\n\n```\n{%- raw %}\nconfig\n  edit {{ data.datakey.config1 }}\n    set edit {{ data.datakey.config1.setting }}\n  next\nend\n{%- endraw %}\n```",
+                        "inputVariables": []
+                    }
+                },
+                "record": "",
+                "timeout": {
+                    "days": 0,
+                    "hours": 0,
+                    "minutes": 5,
+                    "step_iri": "\/api\/3\/workflow_steps\/d93a2a3e-b928-4c10-a599-f74732ffe9da"
+                },
+                "agent_id": null,
+                "resources": "ztpf_templates",
+                "is_approval": false,
+                "owner_detail": {
+                    "isAssigned": false,
+                    "emailRecipients": ""
+                },
+                "isRecordLinked": false,
+                "step_variables": [],
+                "response_mapping": {
+                    "options": [
+                        {
+                            "option": "Ok",
+                            "primary": true,
+                            "step_iri": "\/api\/3\/workflow_steps\/618bcd4a-adaf-4544-b20b-c7ace3042a6e"
+                        },
+                        {
+                            "option": "Cancel",
+                            "step_iri": "\/api\/3\/workflow_steps\/d93a2a3e-b928-4c10-a599-f74732ffe9da"
+                        }
+                    ],
+                    "duplicateOption": false,
+                    "customSuccessMessage": "Awaiting Playbook resumed successfully."
+                },
+                "email_notification": {
+                    "enabled": false,
+                    "smtpParameters": []
+                },
+                "customEmailExternal": false,
+                "inline_channel_list": [],
+                "external_channel_list": [],
+                "unauthenticated_input": false,
+                "external_email_subject": null,
+                "internal_email_subject": "A FortiSOAR playbook is requesting your input",
+                "custom_email_body_external": null,
+                "external_email_attachments": null
+            },
+            "status": null,
+            "top": "180",
+            "left": "820",
+            "stepType": "\/api\/3\/workflow_step_types\/fc04082a-d7dc-4299-96fb-6837b1baa0fe",
+            "group": null,
+            "uuid": "b127a619-ca29-4716-982b-91d44e67e7a1"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Start",
+            "description": null,
+            "arguments": {
+                "route": "b08795c0-c7b6-47b9-8458-abaffb8dd792",
+                "title": "Script Help",
+                "resources": [
+                    "ztpf_templates"
+                ],
+                "__triggerLimit": true,
+                "inputVariables": [],
+                "step_variables": {
+                    "input": {
+                        "params": [],
+                        "records": "{{vars.input.records}}"
+                    }
+                },
+                "triggerOnSource": true,
+                "displayConditions": {
+                    "ztpf_templates": {
+                        "sort": [],
+                        "limit": 30,
+                        "logic": "AND",
+                        "filters": []
+                    }
+                },
+                "executeButtonText": "Execute",
+                "noRecordExecution": false,
+                "showToasterMessage": {
+                    "visible": false,
+                    "messageVisible": true
+                },
+                "triggerOnReplicate": false,
+                "singleRecordExecution": true
+            },
+            "status": null,
+            "top": "40",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/f414d039-bb0d-4e59-9c39-a8f1e880b18a",
+            "group": null,
+            "uuid": "ff11f41e-0ade-4fcf-ae9b-8bb09d3db3b7"
+        }
+    ],
+    "routes": [
+        {
+            "@type": "WorkflowRoute",
+            "name": "find metadata sources -> example_data metadata",
+            "targetStep": "\/api\/3\/workflow_steps\/ce84de14-1c40-4295-86eb-9ae769010445",
+            "sourceStep": "\/api\/3\/workflow_steps\/0b808254-3ed5-42cb-a0de-4c8c1f266421",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "4e45561e-29eb-4a6b-ab93-06571f2f4e14"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "prompt user -> cancel or timeout",
+            "targetStep": "\/api\/3\/workflow_steps\/d93a2a3e-b928-4c10-a599-f74732ffe9da",
+            "sourceStep": "\/api\/3\/workflow_steps\/b127a619-ca29-4716-982b-91d44e67e7a1",
+            "label": "Cancel",
+            "isExecuted": false,
+            "group": null,
+            "uuid": "3980836d-866b-4170-a26b-cf9fe52d25eb"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "prompt user -> ok",
+            "targetStep": "\/api\/3\/workflow_steps\/618bcd4a-adaf-4544-b20b-c7ace3042a6e",
+            "sourceStep": "\/api\/3\/workflow_steps\/b127a619-ca29-4716-982b-91d44e67e7a1",
+            "label": "Ok",
+            "isExecuted": false,
+            "group": null,
+            "uuid": "12b85a9d-2566-441f-aee2-7e78eb7b9a49"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "setup vars -> prompt user",
+            "targetStep": "\/api\/3\/workflow_steps\/b127a619-ca29-4716-982b-91d44e67e7a1",
+            "sourceStep": "\/api\/3\/workflow_steps\/ce84de14-1c40-4295-86eb-9ae769010445",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "9e7d72e6-82ce-483d-8de2-c7049fe26c94"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Start -> fidn metadata sources",
+            "targetStep": "\/api\/3\/workflow_steps\/0b808254-3ed5-42cb-a0de-4c8c1f266421",
+            "sourceStep": "\/api\/3\/workflow_steps\/ff11f41e-0ade-4fcf-ae9b-8bb09d3db3b7",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "8dbbe50e-c30b-4c69-a98f-611f54d80615"
+        }
+    ],
+    "groups": [],
+    "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+    "playbookOrigin": "\/api\/3\/picklists\/b6d710a9-a8ec-41ec-8817-fe9fa062fcdd",
+    "isEditable": false,
+    "uuid": "513f3db1-41b1-47b6-ab7f-3045fad2d2e6",
+    "owners": [],
+    "isPrivate": false,
+    "deletedAt": null,
+    "recordTags": [
+        "ztpfTemplate"
+    ]
+}

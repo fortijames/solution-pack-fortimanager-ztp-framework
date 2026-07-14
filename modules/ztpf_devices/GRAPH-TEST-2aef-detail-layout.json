@@ -342,13 +342,6 @@
                                                                                         "actionTriggerName": "Create Run Group and Queue Steps",
                                                                                         "collectionName": "10 - SP - ZTPF - Buttons",
                                                                                         "icon": "icon icon-queue_rules"
-                                                                                    },
-                                                                                    {
-                                                                                        "name": "Add Steps to Device from Profile",
-                                                                                        "uuid": "8fb90083-a8b7-4e03-aa5b-87b87e1bee92",
-                                                                                        "actionTriggerName": "Add Steps from Profile",
-                                                                                        "collectionName": "10 - SP - ZTPF - Buttons",
-                                                                                        "icon": "fa fa-user-plus"
                                                                                     }
                                                                                 ]
                                                                             }
@@ -361,7 +354,7 @@
                                                                         {
                                                                             "type": "editableFormGroup",
                                                                             "config": {
-                                                                                "wid": "aa7ef8f8-7803-45da-ae4c-6e4c46837820",
+                                                                                "wid": "a11021e4-fffd-4f18-a8f0-11857c61ff6e",
                                                                                 "rows": [
                                                                                     {
                                                                                         "columns": [
@@ -369,12 +362,6 @@
                                                                                                 "fields": [
                                                                                                     {
                                                                                                         "name": "ztpfRunning",
-                                                                                                        "highlightMode": true,
-                                                                                                        "linky": true,
-                                                                                                        "readOnly": true
-                                                                                                    },
-                                                                                                    {
-                                                                                                        "name": "ztpfArtifacts",
                                                                                                         "highlightMode": true,
                                                                                                         "linky": true,
                                                                                                         "readOnly": true
@@ -401,6 +388,20 @@
                                                                 {
                                                                     "widgets": [
                                                                         {
+                                                                            "type": "ztpAutomationGraph-1.0.2",
+                                                                            "config": {
+                                                                                "wid": "8617657a-edf9-4eaa-a502-7b8b35ae5081",
+                                                                                "title": "ZTP Automation Step Graph",
+                                                                                "pollSeconds": 6,
+                                                                                "openInNewTab": true,
+                                                                                "orientation": "TB",
+                                                                                "graphHeight": 380,
+                                                                                "align": "center",
+                                                                                "blinkCurrent": true,
+                                                                                "nodeStyle": "card"
+                                                                            }
+                                                                        },
+                                                                        {
                                                                             "type": "sectionHeader",
                                                                             "config": {
                                                                                 "wid": "47a833c4-4a18-4da0-bfad-c17c3368747a",
@@ -416,7 +417,7 @@
                                                                         {
                                                                             "type": "relationship.subtab",
                                                                             "config": {
-                                                                                "wid": "4092055a-9da5-4d4e-8775-c3d31cebd014",
+                                                                                "wid": "47f81fe2-c279-4896-b253-188728292e46",
                                                                                 "excludes": [],
                                                                                 "selectionType": "include",
                                                                                 "actionButtons": [],
@@ -429,15 +430,7 @@
                                                                                         "columns": [
                                                                                             {
                                                                                                 "openTab": false,
-                                                                                                "name": "stepARGS"
-                                                                                            },
-                                                                                            {
-                                                                                                "openTab": false,
-                                                                                                "name": "jinjaVars"
-                                                                                            },
-                                                                                            {
-                                                                                                "openTab": false,
-                                                                                                "name": "script"
+                                                                                                "name": "outputMarkdown"
                                                                                             }
                                                                                         ],
                                                                                         "checkBox": true
@@ -489,78 +482,6 @@
                                                             "collapsible": false,
                                                             "collapsibleIndex": 0,
                                                             "_collapsed": false
-                                                        },
-                                                        {
-                                                            "columns": [
-                                                                {
-                                                                    "widgets": [
-                                                                        {
-                                                                            "type": "sectionHeader",
-                                                                            "config": {
-                                                                                "wid": "9a3fa2c7-625b-4365-9ec8-584a85610cb7",
-                                                                                "query": {
-                                                                                    "filters": [],
-                                                                                    "sort": [],
-                                                                                    "limit": 10
-                                                                                },
-                                                                                "editorType": "html",
-                                                                                "sectionText": "<p style=\"text-align: center;\"><span style=\"font-size: 14pt;\">Run Groups<\/span><\/p>"
-                                                                            }
-                                                                        },
-                                                                        {
-                                                                            "type": "relationship.subtab",
-                                                                            "config": {
-                                                                                "wid": "47f81fe2-c279-4896-b253-188728292e46",
-                                                                                "excludes": [],
-                                                                                "selectionType": "include",
-                                                                                "actionButtons": [],
-                                                                                "expandableCol": {
-                                                                                    "ztpfDeviceAutomtionSteps": {
-                                                                                        "columns": [],
-                                                                                        "checkBox": false
-                                                                                    }
-                                                                                },
-                                                                                "enableHorizontalScroll": [],
-                                                                                "includes": [
-                                                                                    "ztpfRunGroups"
-                                                                                ],
-                                                                                "queryFilters": {
-                                                                                    "ztpf_device_automation_steps": {
-                                                                                        "sort": [
-                                                                                            {
-                                                                                                "direction": "DESC",
-                                                                                                "field": "stepStopTimestamp",
-                                                                                                "sort": {
-                                                                                                    "direction": "DESC"
-                                                                                                }
-                                                                                            },
-                                                                                            {
-                                                                                                "direction": "ASC",
-                                                                                                "field": "stepNumber",
-                                                                                                "sort": {
-                                                                                                    "direction": "ASC"
-                                                                                                }
-                                                                                            }
-                                                                                        ],
-                                                                                        "limit": 30,
-                                                                                        "logic": "OR",
-                                                                                        "filters": [
-                                                                                            {
-                                                                                                "field": "stepDone",
-                                                                                                "operator": "neq",
-                                                                                                "_operator": "neq",
-                                                                                                "value": true,
-                                                                                                "type": "primitive"
-                                                                                            }
-                                                                                        ]
-                                                                                    }
-                                                                                }
-                                                                            }
-                                                                        }
-                                                                    ]
-                                                                }
-                                                            ],
-                                                            "wid": "bd1709f8-19a3-4504-a0ec-beed531e1336"
                                                         },
                                                         {
                                                             "columns": [
@@ -1017,11 +938,10 @@
     },
     "module": "ztpf_devices",
     "filters": [],
-    "isDefault": true,
+    "isDefault": false,
     "visible": true,
     "viewOptions": "detail",
-    "name": "Base Template",
+    "name": "GRAPH-TEST",
     "system": true,
-    "uuid": "modules-ztpf_devices-detail",
-    "newUuid": "092de4e4-ed79-4a32-9b08-1dd107e9f3a6"
+    "uuid": "151eaac0-2aef-4670-9066-1758a0392ab7"
 }

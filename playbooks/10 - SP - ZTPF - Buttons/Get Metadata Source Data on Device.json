@@ -21,7 +21,7 @@
             "description": null,
             "arguments": {
                 "resource": {
-                    "exampleOutput": "{{vars.steps.get_jinja_vars.output.data[vars.datakey]}}",
+                    "exampleOutput": "{\"{{vars.datakey}}\":{{vars.steps.get_jinja_vars.output.data[vars.datakey]}}}",
                     "exampleJinjaVars": "{ \"record\": {{vars.steps.get_jinja_vars.output.record}} }"
                 },
                 "operation": "Append",
@@ -46,11 +46,11 @@
             "description": null,
             "arguments": [],
             "status": null,
-            "top": "120",
+            "top": "140",
             "left": "-80",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
-            "group": "\/api\/3\/workflow_groups\/4c46b8fc-5442-46bd-80ae-51a1e17305b5",
-            "uuid": "dcd708a5-f3cd-4fd7-9e47-54437a2d5027"
+            "group": "\/api\/3\/workflow_groups\/895fcb41-60bd-45a0-91fb-4619ec33f108",
+            "uuid": "543864e1-35b1-449f-9dbd-4de9c3866c70"
         },
         {
             "@type": "WorkflowStep",
@@ -63,8 +63,8 @@
             "top": "140",
             "left": "260",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
-            "group": "\/api\/3\/workflow_groups\/4c46b8fc-5442-46bd-80ae-51a1e17305b5",
-            "uuid": "dd8e5a48-a539-4fb5-9785-14b956ae36c8"
+            "group": "\/api\/3\/workflow_groups\/895fcb41-60bd-45a0-91fb-4619ec33f108",
+            "uuid": "11ebd7cc-a273-444a-870b-ed058e3ada0b"
         },
         {
             "@type": "WorkflowStep",
@@ -79,20 +79,6 @@
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
             "uuid": "2311a5fa-81c7-4770-853f-f6724100b7e5"
-        },
-        {
-            "@type": "WorkflowStep",
-            "name": "device option selected",
-            "description": null,
-            "arguments": {
-                "device_option_selected": "{%- set m = vars.user_device_selection[0] -%}\n{%- set d = vars.user_device_selection[1] -%}\n\n{%- set ret = vars.manager_and_device_options.src \n        | json_query('[?_option_mgr==`{}`]'.format(m))\n        | json_query('[?_option_dev==`{}`]'.format(d))\n        | json_query('[]')\n-%}\n\n{{ret[0]}}"
-            },
-            "status": null,
-            "top": "340",
-            "left": "260",
-            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
-            "group": "\/api\/3\/workflow_groups\/4c46b8fc-5442-46bd-80ae-51a1e17305b5",
-            "uuid": "33dcf55e-4cf9-4d48-bad6-d01c647a26e7"
         },
         {
             "@type": "WorkflowStep",
@@ -119,8 +105,8 @@
             "top": "56",
             "left": "263",
             "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928770",
-            "group": "\/api\/3\/workflow_groups\/4c46b8fc-5442-46bd-80ae-51a1e17305b5",
-            "uuid": "8a380a42-2362-459d-a044-37f03c7f8874"
+            "group": "\/api\/3\/workflow_groups\/895fcb41-60bd-45a0-91fb-4619ec33f108",
+            "uuid": "f6421329-9d3d-48fb-8223-b356b647d96a"
         },
         {
             "@type": "WorkflowStep",
@@ -129,7 +115,7 @@
             "arguments": {
                 "arguments": {
                     "device_id": "{{vars.device_option_selected.id}}",
-                    "input_yaml": "",
+                    "input_yaml": "{{vars.input_yaml}}",
                     "metadata_source_ids": "{{vars.input.records[0].id}}"
                 },
                 "apply_async": false,
@@ -147,6 +133,21 @@
         },
         {
             "@type": "WorkflowStep",
+            "name": "options selected",
+            "description": null,
+            "arguments": {
+                "input_yaml": "{%- if vars.steps.pick_a_manager_and_device.input.populateInputParameters -%}\n{{vars.steps.pick_a_manager_and_device.input.inputParameters}}\n{%- endif -%}",
+                "device_option_selected": "{%- set m = vars.user_device_selection[0] -%}\n{%- set d = vars.user_device_selection[1] -%}\n\n{%- set ret = vars.manager_and_device_options.src \n        | json_query('[?_option_mgr==`{}`]'.format(m))\n        | json_query('[?_option_dev==`{}`]'.format(d))\n        | json_query('[]')\n-%}\n\n{{ret[0]}}"
+            },
+            "status": null,
+            "top": "340",
+            "left": "260",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": "\/api\/3\/workflow_groups\/895fcb41-60bd-45a0-91fb-4619ec33f108",
+            "uuid": "610a8a63-d297-4d71-b0f8-e73df2ecfb32"
+        },
+        {
+            "@type": "WorkflowStep",
             "name": "pick a manager and device",
             "description": null,
             "arguments": {
@@ -154,7 +155,7 @@
                 "input": {
                     "schema": {
                         "title": "Choose a Manager and a Device",
-                        "description": "Choose a Manager and then a Device from below:",
+                        "description": "1. Choose a Manager and then a Device from below.\n2. Optionally provide input parameters. ",
                         "inputVariables": [
                             {
                                 "name": "managerAndDevice",
@@ -167,7 +168,7 @@
                                 "dataType": "dynamicList",
                                 "formType": "dynamicList",
                                 "required": false,
-                                "_expanded": true,
+                                "_expanded": false,
                                 "mmdUpdate": true,
                                 "collection": false,
                                 "searchable": false,
@@ -181,6 +182,80 @@
                                 "jinjaExpressionView": true,
                                 "useRecordFieldDefault": false,
                                 "_addRequiredConditions": false
+                            },
+                            {
+                                "name": "populateInputParameters",
+                                "type": "boolean",
+                                "label": "Populate Input Parameters",
+                                "title": "Checkbox",
+                                "usable": true,
+                                "tooltip": "",
+                                "dataType": "checkbox",
+                                "formType": "checkbox",
+                                "required": false,
+                                "_expanded": true,
+                                "mmdUpdate": true,
+                                "collection": false,
+                                "searchable": true,
+                                "templateUrl": "app\/components\/form\/fields\/checkbox.html",
+                                "defaultValue": null,
+                                "_previousName": "populateParameters",
+                                "playbookField": true,
+                                "visibilityQuery": {
+                                    "sort": [],
+                                    "limit": 30,
+                                    "logic": "AND",
+                                    "filters": []
+                                },
+                                "lengthConstraint": false,
+                                "allowedEncryption": false,
+                                "allowedGridColumn": true,
+                                "requiredCondition": "notrequired",
+                                "jinjaExpressionView": true,
+                                "useRecordFieldDefault": false,
+                                "_addRequiredConditions": true,
+                                "_addVisibilityConditions": true
+                            },
+                            {
+                                "name": "inputParameters",
+                                "type": "string",
+                                "label": "Input Paramters",
+                                "title": "Text Area",
+                                "usable": false,
+                                "tooltip": "",
+                                "dataType": "text",
+                                "formType": "textarea",
+                                "required": false,
+                                "_expanded": true,
+                                "mmdUpdate": false,
+                                "collection": false,
+                                "searchable": false,
+                                "templateUrl": "app\/components\/form\/fields\/json.html",
+                                "_nameTouched": true,
+                                "defaultValue": "input:\n{%- for f in vars.input_params %}\n  {{f}}: \n{%- endfor %}",
+                                "_previousName": "inputParamters",
+                                "playbookField": true,
+                                "visibilityQuery": {
+                                    "sort": [],
+                                    "limit": 30,
+                                    "logic": "AND",
+                                    "filters": [
+                                        {
+                                            "type": "primitive",
+                                            "field": "populateInputParameters",
+                                            "value": true,
+                                            "operator": "eq",
+                                            "_operator": "eq"
+                                        }
+                                    ]
+                                },
+                                "lengthConstraint": false,
+                                "allowedGridColumn": false,
+                                "requiredCondition": "notrequired",
+                                "jinjaExpressionView": true,
+                                "useRecordFieldDefault": false,
+                                "_addRequiredConditions": false,
+                                "_addVisibilityConditions": true
                             }
                         ]
                     }
@@ -190,7 +265,7 @@
                     "days": 0,
                     "hours": 0,
                     "minutes": 1,
-                    "step_iri": "\/api\/3\/workflow_steps\/9ee0298d-3bab-415b-a0ad-ca5eb1438940"
+                    "step_iri": "\/api\/3\/workflow_steps\/680e02fc-6aa1-4f91-8805-59d1a9d64e8e"
                 },
                 "agent_id": null,
                 "resources": "ztpf_templates",
@@ -208,11 +283,11 @@
                         {
                             "option": "Ok",
                             "primary": true,
-                            "step_iri": "\/api\/3\/workflow_steps\/33dcf55e-4cf9-4d48-bad6-d01c647a26e7"
+                            "step_iri": "\/api\/3\/workflow_steps\/610a8a63-d297-4d71-b0f8-e73df2ecfb32"
                         },
                         {
                             "option": "Cancel",
-                            "step_iri": "\/api\/3\/workflow_steps\/dcd708a5-f3cd-4fd7-9e47-54437a2d5027"
+                            "step_iri": "\/api\/3\/workflow_steps\/543864e1-35b1-449f-9dbd-4de9c3866c70"
                         }
                     ],
                     "duplicateOption": false,
@@ -235,8 +310,8 @@
             "top": "240",
             "left": "260",
             "stepType": "\/api\/3\/workflow_step_types\/fc04082a-d7dc-4299-96fb-6837b1baa0fe",
-            "group": "\/api\/3\/workflow_groups\/4c46b8fc-5442-46bd-80ae-51a1e17305b5",
-            "uuid": "7a420d85-1145-40d5-af54-ffb70a7b3bad"
+            "group": "\/api\/3\/workflow_groups\/895fcb41-60bd-45a0-91fb-4619ec33f108",
+            "uuid": "93728a1c-4514-4a15-ae86-f8c2aa335d11"
         },
         {
             "@type": "WorkflowStep",
@@ -259,7 +334,7 @@
                 "input": {
                     "schema": {
                         "title": "Data Collected",
-                        "description": "<hr>\n\n**Use the Jinja Editor**\n\nYou can use the editor to play with this data using Jinja in real-time. \n\n - Open this record `Playbook Logs` and `Edit Playbook`\n - Click `Tools` and `Jinja Editor`, \n - Click `Load env JSON` \n - Add the below script and click `Render`:\n {%- raw %}}\n```\n{%- set mdata = vars.metadata_returned -%}\n{{mdata}}\n```\n{%- endraw %}\n\n<hr>\n\n**Metadata Results**\n\nAs an alternative way to play with this data copy\/paste the raw json below into any JSON or Jinja editor of your choice. \n```\n{{ vars.metadata_returned | tojson(indent=2) }}\n```",
+                        "description": "<hr>\n\n**Use the Jinja Editor**\n\nYou can use the editor to play with this data using Jinja in real-time. \n\n - Open this record `Playbook Logs` and `Edit Playbook`\n - Click `Tools` and `Jinja Editor`, \n - Click `Load env JSON` \n - Add the below script and click `Render`:\n {%- raw %}}\n```\n{%- set mdata = vars.metadata_returned -%}\n{{mdata}}\n```\n{%- endraw %}\n\n<hr>\n\n**Metadata Results**\n\nAs an alternative way to play with this data copy\/paste the raw json below into any JSON or Jinja editor of your choice. \n```\n{{ vars.metadata_returned | tojson(indent=2) }}\n```\n\n*This form will expire in 5 minutes.*",
                         "inputVariables": []
                     }
                 },
@@ -267,8 +342,8 @@
                 "timeout": {
                     "days": 0,
                     "hours": 0,
-                    "minutes": 3,
-                    "step_iri": "\/api\/3\/workflow_steps\/dcd708a5-f3cd-4fd7-9e47-54437a2d5027"
+                    "minutes": 5,
+                    "step_iri": "\/api\/3\/workflow_steps\/543864e1-35b1-449f-9dbd-4de9c3866c70"
                 },
                 "agent_id": null,
                 "resources": "ztpf_metadata_sources",
@@ -313,6 +388,20 @@
             "stepType": "\/api\/3\/workflow_step_types\/fc04082a-d7dc-4299-96fb-6837b1baa0fe",
             "group": null,
             "uuid": "eb62ada2-cf74-4b06-88a1-2a7f4e0d00d2"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "setup vars",
+            "description": null,
+            "arguments": {
+                "input_params": "{%- set ret = [] -%}\n{%- set in = vars.input.records[0].inputParameters -%}\n\n{%- if in not in [None,''] -%}\n  {%- for i in in.split(\"\\n\") -%}\n    {%- do ret.append(i) -%}\n  {%- endfor -%}\n{%- endif -%}\n\n{{ret|unique}}"
+            },
+            "status": null,
+            "top": "40",
+            "left": "320",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "c1daf64a-ab24-4e73-9147-c5c8e620c4ef"
         },
         {
             "@type": "WorkflowStep",
@@ -373,12 +462,12 @@
         {
             "@type": "WorkflowRoute",
             "name": "create device options -> pick a manager and device",
-            "targetStep": "\/api\/3\/workflow_steps\/7a420d85-1145-40d5-af54-ffb70a7b3bad",
-            "sourceStep": "\/api\/3\/workflow_steps\/dd8e5a48-a539-4fb5-9785-14b956ae36c8",
+            "targetStep": "\/api\/3\/workflow_steps\/93728a1c-4514-4a15-ae86-f8c2aa335d11",
+            "sourceStep": "\/api\/3\/workflow_steps\/11ebd7cc-a273-444a-870b-ed058e3ada0b",
             "label": null,
             "isExecuted": false,
             "group": null,
-            "uuid": "6ca25057-21a9-4ba2-9e86-d09c64a6bd88"
+            "uuid": "e2df27cf-e67f-4dc2-81c1-bc059dfeb254"
         },
         {
             "@type": "WorkflowRoute",
@@ -392,23 +481,13 @@
         },
         {
             "@type": "WorkflowRoute",
-            "name": "device option selected -> get jinja_vars",
-            "targetStep": "\/api\/3\/workflow_steps\/c478619b-4c6e-4607-9283-ccf1cde620c3",
-            "sourceStep": "\/api\/3\/workflow_steps\/33dcf55e-4cf9-4d48-bad6-d01c647a26e7",
-            "label": null,
-            "isExecuted": false,
-            "group": null,
-            "uuid": "0f573ad7-4b92-48a5-b80b-46d340f853ca"
-        },
-        {
-            "@type": "WorkflowRoute",
             "name": "find devices with manager -> create device options",
-            "targetStep": "\/api\/3\/workflow_steps\/dd8e5a48-a539-4fb5-9785-14b956ae36c8",
-            "sourceStep": "\/api\/3\/workflow_steps\/8a380a42-2362-459d-a044-37f03c7f8874",
+            "targetStep": "\/api\/3\/workflow_steps\/11ebd7cc-a273-444a-870b-ed058e3ada0b",
+            "sourceStep": "\/api\/3\/workflow_steps\/f6421329-9d3d-48fb-8223-b356b647d96a",
             "label": null,
             "isExecuted": false,
             "group": null,
-            "uuid": "920bc14d-8933-4c0a-81f2-b49d898aa5f9"
+            "uuid": "ddbd57be-d84d-447a-bba6-2cca21b8593c"
         },
         {
             "@type": "WorkflowRoute",
@@ -422,23 +501,33 @@
         },
         {
             "@type": "WorkflowRoute",
-            "name": "pick a manager and device -> cancel or timeout",
-            "targetStep": "\/api\/3\/workflow_steps\/dcd708a5-f3cd-4fd7-9e47-54437a2d5027",
-            "sourceStep": "\/api\/3\/workflow_steps\/7a420d85-1145-40d5-af54-ffb70a7b3bad",
+            "name": "options selected -> get jinja_vars",
+            "targetStep": "\/api\/3\/workflow_steps\/c478619b-4c6e-4607-9283-ccf1cde620c3",
+            "sourceStep": "\/api\/3\/workflow_steps\/610a8a63-d297-4d71-b0f8-e73df2ecfb32",
             "label": null,
             "isExecuted": false,
             "group": null,
-            "uuid": "7cf578d6-1155-4201-8466-a1fdbb37b31a"
+            "uuid": "c1b52f9b-825a-4e1d-b35b-7f9cac58daf8"
         },
         {
             "@type": "WorkflowRoute",
-            "name": "pick a manager and device -> device option selected",
-            "targetStep": "\/api\/3\/workflow_steps\/33dcf55e-4cf9-4d48-bad6-d01c647a26e7",
-            "sourceStep": "\/api\/3\/workflow_steps\/7a420d85-1145-40d5-af54-ffb70a7b3bad",
-            "label": null,
+            "name": "pick a manager and device -> cancel or timeout",
+            "targetStep": "\/api\/3\/workflow_steps\/543864e1-35b1-449f-9dbd-4de9c3866c70",
+            "sourceStep": "\/api\/3\/workflow_steps\/93728a1c-4514-4a15-ae86-f8c2aa335d11",
+            "label": "Cancel",
             "isExecuted": false,
             "group": null,
-            "uuid": "6885d8d8-3851-425a-b140-8b38855d2c21"
+            "uuid": "3b1efc57-2c41-4b98-94cf-6b2188cc6b30"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "pick a manager and device -> options selected",
+            "targetStep": "\/api\/3\/workflow_steps\/610a8a63-d297-4d71-b0f8-e73df2ecfb32",
+            "sourceStep": "\/api\/3\/workflow_steps\/93728a1c-4514-4a15-ae86-f8c2aa335d11",
+            "label": "Ok",
+            "isExecuted": false,
+            "group": null,
+            "uuid": "b05f8444-b368-432f-9a32-2ad44ecc6341"
         },
         {
             "@type": "WorkflowRoute",
@@ -453,12 +542,12 @@
         {
             "@type": "WorkflowRoute",
             "name": "return results -> cancel or timeout",
-            "targetStep": "\/api\/3\/workflow_steps\/dcd708a5-f3cd-4fd7-9e47-54437a2d5027",
+            "targetStep": "\/api\/3\/workflow_steps\/543864e1-35b1-449f-9dbd-4de9c3866c70",
             "sourceStep": "\/api\/3\/workflow_steps\/eb62ada2-cf74-4b06-88a1-2a7f4e0d00d2",
             "label": "",
             "isExecuted": false,
             "group": null,
-            "uuid": "a842ceae-396a-4b03-9876-67609a19910f"
+            "uuid": "39278676-45df-4568-822d-ee53aadd0b8d"
         },
         {
             "@type": "WorkflowRoute",
@@ -472,13 +561,23 @@
         },
         {
             "@type": "WorkflowRoute",
-            "name": "Start -> find devices with manager",
-            "targetStep": "\/api\/3\/workflow_steps\/8a380a42-2362-459d-a044-37f03c7f8874",
+            "name": "setup vars -> find devices with manager",
+            "targetStep": "\/api\/3\/workflow_steps\/f6421329-9d3d-48fb-8223-b356b647d96a",
+            "sourceStep": "\/api\/3\/workflow_steps\/c1daf64a-ab24-4e73-9147-c5c8e620c4ef",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "56f4239a-a105-4df2-ad66-3523bc502300"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Start -> setup vars",
+            "targetStep": "\/api\/3\/workflow_steps\/c1daf64a-ab24-4e73-9147-c5c8e620c4ef",
             "sourceStep": "\/api\/3\/workflow_steps\/8acf918a-cde1-4902-a312-8229621dccb8",
             "label": null,
             "isExecuted": false,
             "group": null,
-            "uuid": "ad7c89df-8e7c-408d-97fa-3081b2b1f00c"
+            "uuid": "d1ca41fd-f36b-46cd-80f2-6fc84f0989f6"
         }
     ],
     "groups": [
@@ -492,8 +591,8 @@
             "hideInLogs": false,
             "metadata": [],
             "reusable": false,
-            "top": "220",
-            "left": "100",
+            "top": "240",
+            "left": "80",
             "height": "139",
             "width": "498",
             "uuid": "edd92dfc-7906-423c-888e-0e3de00d0390",
@@ -513,7 +612,7 @@
             "left": "660",
             "height": "416",
             "width": "569",
-            "uuid": "4c46b8fc-5442-46bd-80ae-51a1e17305b5",
+            "uuid": "895fcb41-60bd-45a0-91fb-4619ec33f108",
             "recordTags": []
         }
     ],

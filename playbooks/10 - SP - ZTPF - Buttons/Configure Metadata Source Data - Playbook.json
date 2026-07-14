@@ -21,8 +21,8 @@
             "description": null,
             "arguments": [],
             "status": null,
-            "top": "220",
-            "left": "760",
+            "top": "680",
+            "left": "980",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
             "uuid": "eed98afd-0bd7-4b79-a0b1-11ad5ac3c851"
@@ -44,8 +44,8 @@
                 "workflowReference": "\/api\/3\/workflows\/43e4995d-a486-448a-84e9-460afdc46830"
             },
             "status": null,
-            "top": "300",
-            "left": "40",
+            "top": "720",
+            "left": "60",
             "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
             "group": null,
             "uuid": "f00f3dcc-93dd-4348-934f-715366f23176"
@@ -59,11 +59,26 @@
                 "playbook_args": "{{vars.record_data['args']}}"
             },
             "status": null,
-            "top": "100",
-            "left": "760",
+            "top": "460",
+            "left": "1340",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
             "uuid": "89d8dd59-6f1d-4dbb-965a-51fd9a4622f8"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "current_script_vars",
+            "description": null,
+            "arguments": {
+                "playbook_id": "{{vars.current_script['id']}}",
+                "playbook_args": "{{vars.current_script['args']}}"
+            },
+            "status": null,
+            "top": "260",
+            "left": "1140",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "2c8cdae5-adb8-4e65-a84a-175418b71648"
         },
         {
             "@type": "WorkflowStep",
@@ -74,8 +89,8 @@
                 "playbook_args": "{{vars.steps.Prompt_User.input.playbookArgs}}"
             },
             "status": null,
-            "top": "120",
-            "left": "40",
+            "top": "340",
+            "left": "60",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
             "uuid": "a11ac8a9-131c-4dc3-bd62-e3f8d55d2761"
@@ -88,11 +103,12 @@
                 "record_id": "{{vars.input.records[0].id}}",
                 "data_fields": "[\"id\",\"args\"]",
                 "record_data": "{{vars.input.records[0].data}}",
+                "current_script": "{{vars.input.records[0].script}}",
                 "record_datakey": "{{vars.input.records[0].datakey}}"
             },
             "status": null,
             "top": "40",
-            "left": "360",
+            "left": "340",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
             "uuid": "290f850d-643c-4676-ad38-dbdda4ecd7d0"
@@ -192,8 +208,8 @@
                 "external_email_attachments": null
             },
             "status": null,
-            "top": "160",
-            "left": "360",
+            "top": "440",
+            "left": "300",
             "stepType": "\/api\/3\/workflow_step_types\/fc04082a-d7dc-4299-96fb-6837b1baa0fe",
             "group": null,
             "uuid": "92aa823d-e6f4-44f8-8c8d-31d42ecad5f3"
@@ -207,11 +223,51 @@
                 "playbook_args": "''"
             },
             "status": null,
-            "top": "300",
-            "left": "360",
+            "top": "760",
+            "left": "460",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
             "uuid": "ef6e5e9f-0ebb-4123-b4b9-552fd5770417"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "script type",
+            "description": null,
+            "arguments": {
+                "conditions": [
+                    {
+                        "default": true,
+                        "step_iri": "\/api\/3\/workflow_steps\/2c8cdae5-adb8-4e65-a84a-175418b71648",
+                        "step_name": "current_script_vars"
+                    },
+                    {
+                        "step_iri": "\/api\/3\/workflow_steps\/9b93b01f-6ddf-49d1-a62e-8003eb487e87",
+                        "condition": "{{ vars.script_type|lower == \"yaml\" }}",
+                        "step_name": "yaml to json"
+                    }
+                ],
+                "step_variables": []
+            },
+            "status": null,
+            "top": "160",
+            "left": "980",
+            "stepType": "\/api\/3\/workflow_step_types\/12254cf5-5db7-4b1a-8cb1-3af081924b28",
+            "group": null,
+            "uuid": "474a10dc-0057-4f8d-8ebb-01c2d3c641b5"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "script_type",
+            "description": null,
+            "arguments": {
+                "script_type": "{%- set scr = vars.current_script -%}\n\n{%- if scr in [None,''] -%}\nempty\n{%- elif \"{\" in scr or \"[\" in scr -%}\njson\n{%- else -%}\nyaml\n{%- endif -%}"
+            },
+            "status": null,
+            "top": "40",
+            "left": "640",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "491d352c-d9eb-47e0-8ddb-70cf2891efe1"
         },
         {
             "@type": "WorkflowStep",
@@ -259,7 +315,7 @@
                     "messageVisible": true
                 },
                 "triggerOnReplicate": false,
-                "singleRecordExecution": false
+                "singleRecordExecution": true
             },
             "status": null,
             "top": "40",
@@ -267,6 +323,30 @@
             "stepType": "\/api\/3\/workflow_step_types\/f414d039-bb0d-4e59-9c39-a8f1e880b18a",
             "group": null,
             "uuid": "4677744a-2f38-4e4b-9ad8-fdf665911518"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "yaml to json",
+            "description": null,
+            "arguments": {
+                "arguments": {
+                    "yaml": "{{vars.current_script}}",
+                    "manual_test": ""
+                },
+                "apply_async": false,
+                "step_variables": {
+                    "current_script": "{{vars.steps.yaml_to_json.output}}"
+                },
+                "pass_parent_env": false,
+                "pass_input_record": false,
+                "workflowReference": "\/api\/3\/workflows\/e8a9ca65-8ba2-4da5-993a-e98d1e22283c"
+            },
+            "status": null,
+            "top": "260",
+            "left": "780",
+            "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
+            "group": null,
+            "uuid": "9b93b01f-6ddf-49d1-a62e-8003eb487e87"
         }
     ],
     "routes": [
@@ -292,13 +372,13 @@
         },
         {
             "@type": "WorkflowRoute",
-            "name": "initial vars -> user vars",
-            "targetStep": "\/api\/3\/workflow_steps\/89d8dd59-6f1d-4dbb-965a-51fd9a4622f8",
+            "name": "initial vars -> script_type",
+            "targetStep": "\/api\/3\/workflow_steps\/491d352c-d9eb-47e0-8ddb-70cf2891efe1",
             "sourceStep": "\/api\/3\/workflow_steps\/290f850d-643c-4676-ad38-dbdda4ecd7d0",
             "label": null,
             "isExecuted": false,
             "group": null,
-            "uuid": "8cad4de5-c384-4590-ab2b-1ed99795b88c"
+            "uuid": "0b3d95ab-5db7-4317-b58f-49e9adca32f4"
         },
         {
             "@type": "WorkflowRoute",
@@ -342,6 +422,26 @@
         },
         {
             "@type": "WorkflowRoute",
+            "name": "script type -> json script",
+            "targetStep": "\/api\/3\/workflow_steps\/2c8cdae5-adb8-4e65-a84a-175418b71648",
+            "sourceStep": "\/api\/3\/workflow_steps\/474a10dc-0057-4f8d-8ebb-01c2d3c641b5",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "3c0016a5-982f-433d-80eb-36f95a3594e5"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "script type -> yaml to json",
+            "targetStep": "\/api\/3\/workflow_steps\/9b93b01f-6ddf-49d1-a62e-8003eb487e87",
+            "sourceStep": "\/api\/3\/workflow_steps\/474a10dc-0057-4f8d-8ebb-01c2d3c641b5",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "e24b6d9d-aaa3-4378-9060-73e75f1b5dc8"
+        },
+        {
+            "@type": "WorkflowRoute",
             "name": "Start -> setup vars",
             "targetStep": "\/api\/3\/workflow_steps\/290f850d-643c-4676-ad38-dbdda4ecd7d0",
             "sourceStep": "\/api\/3\/workflow_steps\/4677744a-2f38-4e4b-9ad8-fdf665911518",
@@ -349,6 +449,16 @@
             "isExecuted": false,
             "group": null,
             "uuid": "d5ce6d31-58fa-4721-9bf4-a27ed0e15c73"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "yaml to json -> current_script_vars",
+            "targetStep": "\/api\/3\/workflow_steps\/2c8cdae5-adb8-4e65-a84a-175418b71648",
+            "sourceStep": "\/api\/3\/workflow_steps\/9b93b01f-6ddf-49d1-a62e-8003eb487e87",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "a84f3776-c978-440f-b7d5-65e3557e6237"
         }
     ],
     "groups": [],

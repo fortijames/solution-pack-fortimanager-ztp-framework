@@ -9,6 +9,54 @@
                     {
                         "widgets": [
                             {
+                                "type": "chart",
+                                "config": {
+                                    "wid": "c8cec408-2734-4d3f-a562-a4d5c37104ab",
+                                    "widgetAlwaysDisplay": true,
+                                    "showTabularData": false,
+                                    "query": {
+                                        "sort": [],
+                                        "limit": 2147483647,
+                                        "logic": "AND",
+                                        "filters": [],
+                                        "aggregates": [
+                                            {
+                                                "operator": "countdistinct",
+                                                "field": "*",
+                                                "alias": "total"
+                                            },
+                                            {
+                                                "operator": "groupby",
+                                                "alias": "recordTags",
+                                                "field": "recordTags.uuid"
+                                            }
+                                        ]
+                                    },
+                                    "mapping": {
+                                        "fieldName": "recordTags"
+                                    },
+                                    "assignedToSetting": "all",
+                                    "aggregate": true,
+                                    "viewType": "chart",
+                                    "title": "Tags",
+                                    "resource": "ztpf_automation_profiles",
+                                    "chart": "donut",
+                                    "showCount": true,
+                                    "widgetAlwaysExpanded": true
+                                }
+                            }
+                        ],
+                        "style": "col-lg-12"
+                    }
+                ],
+                "wid": "596649ab-ae56-49d1-9576-bbd935705d5e",
+                "_collapsed": false
+            },
+            {
+                "columns": [
+                    {
+                        "widgets": [
+                            {
                                 "type": "grid",
                                 "config": {
                                     "wid": "12f3c928-2e51-4f7c-acc9-0fbb420f3718",

@@ -12,8 +12,8 @@
     "peerReplicable": false,
     "defaultSort": [
         {
-            "direction": "ASC",
-            "field": "name"
+            "direction": "DESC",
+            "field": "modifyDate"
         }
     ],
     "uniqueConstraint": [],
@@ -666,15 +666,15 @@
         {
             "@type": "AttributeMetadata",
             "type": "string",
-            "name": "script",
+            "name": "configParameters",
             "length": null,
-            "formType": "textarea",
+            "formType": "text",
             "dataSource": null,
-            "searchable": true,
+            "searchable": false,
             "peerReplicable": true,
             "system": false,
             "encrypted": false,
-            "gridColumn": true,
+            "gridColumn": false,
             "collection": false,
             "inversedField": null,
             "ownsRelationship": false,
@@ -691,8 +691,8 @@
                 "buttonClass": "btn btn-default btn-sm"
             },
             "dataSourceFilters": null,
-            "defaultValue": "{{template}}",
-            "tooltip": "Script supporting Jinja used for the Action. Different action types have specific format expectations, such as YAML, which can be found in the documentation.",
+            "defaultValue": "",
+            "tooltip": "Action Config in the form of YAML that contains settings for step using this action that need to be filled out by the profile step and\/or device step.",
             "visibility": true,
             "htmlEscape": false,
             "orphanRemoval": null,
@@ -702,9 +702,9 @@
             "unique": false,
             "recommend": false,
             "skipSerialization": false,
-            "displayName": "{{ script }}",
+            "displayName": "{{ configParameters }}",
             "descriptions": {
-                "singular": "Script"
+                "singular": "Config Parameters"
             }
         },
         {
@@ -749,6 +749,50 @@
             "displayName": "{{ inputParameters }}",
             "descriptions": {
                 "singular": "Input Parameters"
+            }
+        },
+        {
+            "@type": "AttributeMetadata",
+            "type": "string",
+            "name": "script",
+            "length": null,
+            "formType": "textarea",
+            "dataSource": null,
+            "searchable": true,
+            "peerReplicable": true,
+            "system": false,
+            "encrypted": false,
+            "gridColumn": true,
+            "collection": false,
+            "inversedField": null,
+            "ownsRelationship": false,
+            "validation": {
+                "required": false,
+                "minlength": 0,
+                "maxlength": 10485761,
+                "_enableRange": false
+            },
+            "bulkAction": {
+                "allow": false,
+                "buttonText": "",
+                "buttonIcon": "",
+                "buttonClass": "btn btn-default btn-sm"
+            },
+            "dataSourceFilters": null,
+            "defaultValue": "{{template}}",
+            "tooltip": "Script supporting Jinja used for the Action. Different action types have specific format expectations, such as YAML, which can be found in the documentation.",
+            "visibility": true,
+            "htmlEscape": false,
+            "orphanRemoval": null,
+            "readable": true,
+            "writeable": true,
+            "identifier": null,
+            "unique": false,
+            "recommend": false,
+            "skipSerialization": false,
+            "displayName": "{{ script }}",
+            "descriptions": {
+                "singular": "Script"
             }
         },
         {
@@ -916,7 +960,7 @@
             "skipSerialization": false,
             "displayName": "{{ actionOutputType }}",
             "descriptions": {
-                "singular": "Action Output Type"
+                "singular": "Action Output Type DEPRECATED"
             }
         },
         {
@@ -937,7 +981,8 @@
             "validation": {
                 "required": false,
                 "minlength": 0,
-                "maxlength": 10485761
+                "maxlength": 10485761,
+                "_enableRange": false
             },
             "bulkAction": {
                 "allow": false,
@@ -959,7 +1004,7 @@
             "skipSerialization": false,
             "displayName": "{{ actionOutputTemplate }}",
             "descriptions": {
-                "singular": "Action Output Template"
+                "singular": "Action Output Template DEPRECATED"
             }
         },
         {
@@ -1042,6 +1087,138 @@
             "displayName": "{{ ztpfDeviceAutomationSteps }}",
             "descriptions": {
                 "singular": "Device Automation Steps"
+            }
+        },
+        {
+            "@type": "AttributeMetadata",
+            "type": "string",
+            "name": "outputTemplateMarkdown",
+            "length": null,
+            "formType": "textarea",
+            "dataSource": null,
+            "searchable": true,
+            "peerReplicable": true,
+            "system": false,
+            "encrypted": false,
+            "gridColumn": false,
+            "collection": false,
+            "inversedField": null,
+            "ownsRelationship": false,
+            "validation": {
+                "required": false,
+                "minlength": 0,
+                "maxlength": 10485761,
+                "_enableRange": false
+            },
+            "bulkAction": {
+                "allow": false,
+                "buttonText": "",
+                "buttonIcon": "",
+                "buttonClass": "btn btn-default btn-sm"
+            },
+            "dataSourceFilters": null,
+            "defaultValue": null,
+            "tooltip": "Jinja Template to produce output for the Output Markdown field.",
+            "visibility": true,
+            "htmlEscape": false,
+            "orphanRemoval": null,
+            "readable": true,
+            "writeable": true,
+            "identifier": null,
+            "unique": false,
+            "recommend": false,
+            "skipSerialization": false,
+            "displayName": "{{ outputTemplateMarkdown }}",
+            "descriptions": {
+                "singular": "Output Template Markdown"
+            }
+        },
+        {
+            "@type": "AttributeMetadata",
+            "type": "string",
+            "name": "outputTemplateHTML",
+            "length": null,
+            "formType": "textarea",
+            "dataSource": null,
+            "searchable": true,
+            "peerReplicable": true,
+            "system": false,
+            "encrypted": false,
+            "gridColumn": false,
+            "collection": false,
+            "inversedField": null,
+            "ownsRelationship": false,
+            "validation": {
+                "required": false,
+                "minlength": 0,
+                "maxlength": 10485761,
+                "_enableRange": false
+            },
+            "bulkAction": {
+                "allow": false,
+                "buttonText": "",
+                "buttonIcon": "",
+                "buttonClass": "btn btn-default btn-sm"
+            },
+            "dataSourceFilters": null,
+            "defaultValue": null,
+            "tooltip": "Jinja Template to produce output for the Output HTML field.",
+            "visibility": true,
+            "htmlEscape": false,
+            "orphanRemoval": null,
+            "readable": true,
+            "writeable": true,
+            "identifier": null,
+            "unique": false,
+            "recommend": false,
+            "skipSerialization": false,
+            "displayName": "{{ outputTemplateHTML }}",
+            "descriptions": {
+                "singular": "Output Template HTML"
+            }
+        },
+        {
+            "@type": "AttributeMetadata",
+            "type": "string",
+            "name": "outputTemplateJSON",
+            "length": null,
+            "formType": "textarea",
+            "dataSource": null,
+            "searchable": true,
+            "peerReplicable": true,
+            "system": false,
+            "encrypted": false,
+            "gridColumn": false,
+            "collection": false,
+            "inversedField": null,
+            "ownsRelationship": false,
+            "validation": {
+                "required": false,
+                "minlength": 0,
+                "maxlength": 10485761,
+                "_enableRange": false
+            },
+            "bulkAction": {
+                "allow": false,
+                "buttonText": "",
+                "buttonIcon": "",
+                "buttonClass": "btn btn-default btn-sm"
+            },
+            "dataSourceFilters": null,
+            "defaultValue": null,
+            "tooltip": "Jinja Template to produce output for the Output JSON field.",
+            "visibility": true,
+            "htmlEscape": false,
+            "orphanRemoval": null,
+            "readable": true,
+            "writeable": true,
+            "identifier": null,
+            "unique": false,
+            "recommend": false,
+            "skipSerialization": false,
+            "displayName": "{{ outputTemplateJSON }}",
+            "descriptions": {
+                "singular": "Output Template JSON"
             }
         }
     ],

@@ -1,10 +1,10 @@
 {
     "@type": "Workflow",
     "triggerLimit": null,
-    "name": "Add Action to Device",
+    "name": "Add Step from Action to Device",
     "aliasName": null,
     "tag": null,
-    "description": "Add an action record to a device that will be run when queued.",
+    "description": "Add an step action record to a device that will be run when queued.",
     "isActive": true,
     "debug": false,
     "singleRecordExecution": false,
@@ -24,7 +24,7 @@
             },
             "status": null,
             "top": "40",
-            "left": "640",
+            "left": "660",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
             "uuid": "b380c122-b512-41d0-a538-771cea51f960"
@@ -38,7 +38,7 @@
             },
             "status": null,
             "top": "240",
-            "left": "640",
+            "left": "660",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
             "uuid": "0010bcbc-974e-48de-8912-0d15ef1adbcf"
@@ -55,6 +55,7 @@
                     "condition": ""
                 },
                 "arguments": {
+                    "stepARGS": "",
                     "action_id": "{{vars.action_selected[0].id}}",
                     "device_id": "{{vars.item.id}}"
                 },
@@ -66,7 +67,7 @@
             },
             "status": null,
             "top": "340",
-            "left": "640",
+            "left": "660",
             "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
             "group": null,
             "uuid": "33df6fd8-96ec-4229-b846-93086cd6c796"
@@ -94,7 +95,7 @@
             },
             "status": null,
             "top": "40",
-            "left": "340",
+            "left": "360",
             "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928770",
             "group": null,
             "uuid": "30a87d7f-0efe-4d51-b4d1-c7983d372ae8"
@@ -185,7 +186,7 @@
             },
             "status": null,
             "top": "140",
-            "left": "640",
+            "left": "660",
             "stepType": "\/api\/3\/workflow_step_types\/fc04082a-d7dc-4299-96fb-6837b1baa0fe",
             "group": null,
             "uuid": "0d968f1d-71a1-4a03-85ef-1822d79c9b7a"
@@ -196,7 +197,7 @@
             "description": null,
             "arguments": {
                 "route": "df5dc929-4a6e-4db7-9809-e5a221abde1b",
-                "title": "Add Action",
+                "title": "Add Step from Action",
                 "resources": [
                     "ztpf_devices"
                 ],
@@ -215,13 +216,21 @@
                         "sort": [],
                         "limit": 30,
                         "logic": "AND",
-                        "filters": []
+                        "filters": [
+                            {
+                                "type": "primitive",
+                                "field": "ztpfRunning",
+                                "value": true,
+                                "operator": "neq",
+                                "_operator": "neq"
+                            }
+                        ]
                     }
                 },
                 "executeButtonText": "Execute",
                 "noRecordExecution": false,
                 "showToasterMessage": {
-                    "message": "Adding Step - Refresh the Step Grid",
+                    "message": "Adding Step",
                     "visible": true,
                     "messageVisible": true
                 },
@@ -242,7 +251,7 @@
             "arguments": [],
             "status": null,
             "top": "40",
-            "left": "960",
+            "left": "1060",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
             "uuid": "c5776d84-1ff9-41d2-ade6-c95695aab8cf"
