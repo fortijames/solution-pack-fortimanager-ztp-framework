@@ -1,0 +1,291 @@
+{
+    "@type": "Workflow",
+    "triggerLimit": null,
+    "name": "> manager admin status (Changed)",
+    "aliasName": null,
+    "tag": null,
+    "description": "On change of admin status perform steps on the record.",
+    "isActive": true,
+    "debug": false,
+    "singleRecordExecution": false,
+    "remoteExecutableFlag": false,
+    "parameters": [],
+    "synchronous": false,
+    "collection": "\/api\/3\/workflow_collections\/9cca11ea-b95a-4504-8385-ad42db358c36",
+    "versions": [],
+    "triggerStep": "\/api\/3\/workflow_steps\/d647d4e3-3729-4ab6-856b-1e385d404c17",
+    "steps": [
+        {
+            "@type": "WorkflowStep",
+            "name": "setup vars",
+            "description": null,
+            "arguments": {
+                "record_id": "{{vars.input.records[0].id}}",
+                "record_fqid": "{{vars.input.records[0]['@id']}}",
+                "admin_status": "{{vars.input.records[0].adminStatus.itemValue}}"
+            },
+            "status": null,
+            "top": "40",
+            "left": "660",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "9393d732-a26d-448b-afa8-c57f81284023"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Start",
+            "description": null,
+            "arguments": {
+                "resource": "ztpf_managers",
+                "resources": [
+                    "ztpf_managers"
+                ],
+                "__triggerLimit": true,
+                "step_variables": {
+                    "input": {
+                        "params": [],
+                        "records": [
+                            "{{vars.input.records[0]}}"
+                        ]
+                    }
+                },
+                "triggerOnSource": true,
+                "fieldbasedtrigger": {
+                    "sort": [],
+                    "limit": 30,
+                    "logic": "AND",
+                    "filters": [
+                        {
+                            "type": "object",
+                            "field": "adminStatus",
+                            "value": "",
+                            "_value": {
+                                "@id": "",
+                                "display": "",
+                                "itemValue": ""
+                            },
+                            "operator": "changed"
+                        }
+                    ]
+                },
+                "triggerOnReplicate": false
+            },
+            "status": null,
+            "top": "40",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/9300bf69-5063-486d-b3a6-47eb9da24872",
+            "group": null,
+            "uuid": "d647d4e3-3729-4ab6-856b-1e385d404c17"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "status",
+            "description": null,
+            "arguments": {
+                "conditions": [
+                    {
+                        "default": true,
+                        "step_iri": "\/api\/3\/workflow_steps\/87e0bfa3-4615-45a7-aaee-124022e3b4f4",
+                        "step_name": "unknown"
+                    },
+                    {
+                        "step_iri": "\/api\/3\/workflow_steps\/31108e00-a526-4352-a18f-b950e6657149",
+                        "condition": "{{ vars.admin_status == \"Disabled\" }}",
+                        "step_name": "status disabled"
+                    },
+                    {
+                        "step_iri": "\/api\/3\/workflow_steps\/ba068de9-6dc2-4621-8b67-2199201cba2c",
+                        "condition": "{{ vars.admin_status == \"Enabled\" }}",
+                        "step_name": "status enabled"
+                    }
+                ],
+                "step_variables": []
+            },
+            "status": null,
+            "top": "140",
+            "left": "660",
+            "stepType": "\/api\/3\/workflow_step_types\/12254cf5-5db7-4b1a-8cb1-3af081924b28",
+            "group": null,
+            "uuid": "ce76ef2e-137a-496f-b715-679c529d9565"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "status disabled",
+            "description": null,
+            "arguments": {
+                "status": "Disabled"
+            },
+            "status": null,
+            "top": "220",
+            "left": "1000",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "31108e00-a526-4352-a18f-b950e6657149"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "status enabled",
+            "description": null,
+            "arguments": {
+                "status": "Pending"
+            },
+            "status": null,
+            "top": "220",
+            "left": "320",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "ba068de9-6dc2-4621-8b67-2199201cba2c"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "synch manager info",
+            "description": null,
+            "arguments": {
+                "when": "{{vars.status == \"Pending\"}}",
+                "arguments": {
+                    "record_id": "{{vars.record_id}}"
+                },
+                "apply_async": false,
+                "step_variables": [],
+                "pass_parent_env": false,
+                "pass_input_record": false,
+                "workflowReference": "\/api\/3\/workflows\/d653b755-cf23-4935-93e4-474acc7534d8"
+            },
+            "status": null,
+            "top": "400",
+            "left": "660",
+            "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
+            "group": null,
+            "uuid": "eab19220-33b0-4a9d-af1a-4252c0dc615b"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "unknown",
+            "description": null,
+            "arguments": [],
+            "status": null,
+            "top": "80",
+            "left": "1000",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "87e0bfa3-4615-45a7-aaee-124022e3b4f4"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "update manager status",
+            "description": null,
+            "arguments": {
+                "resource": {
+                    "status": "{{\"ztpfStatus\" | picklist(vars.status, \"@id\")}}"
+                },
+                "operation": "Append",
+                "collection": "{{vars.record_fqid}}",
+                "__recommend": [],
+                "collectionType": "\/api\/3\/ztpf_managers",
+                "fieldOperation": {
+                    "recordTags": "Append"
+                },
+                "step_variables": []
+            },
+            "status": null,
+            "top": "300",
+            "left": "660",
+            "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928722",
+            "group": null,
+            "uuid": "a50d50bc-5fc5-470a-ac7f-cd67bdc37f0f"
+        }
+    ],
+    "routes": [
+        {
+            "@type": "WorkflowRoute",
+            "name": "setup vars -> status",
+            "targetStep": "\/api\/3\/workflow_steps\/ce76ef2e-137a-496f-b715-679c529d9565",
+            "sourceStep": "\/api\/3\/workflow_steps\/9393d732-a26d-448b-afa8-c57f81284023",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "581762b7-67eb-404f-8569-d36a58eb1fd2"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Start -> setup vars",
+            "targetStep": "\/api\/3\/workflow_steps\/9393d732-a26d-448b-afa8-c57f81284023",
+            "sourceStep": "\/api\/3\/workflow_steps\/d647d4e3-3729-4ab6-856b-1e385d404c17",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "9eb69119-445d-4acb-9f50-e881c4b91010"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "status disabled -> update manager status",
+            "targetStep": "\/api\/3\/workflow_steps\/a50d50bc-5fc5-470a-ac7f-cd67bdc37f0f",
+            "sourceStep": "\/api\/3\/workflow_steps\/31108e00-a526-4352-a18f-b950e6657149",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "bd001a03-9d9a-4977-990d-d2553b028830"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "status enabled -> update manager status",
+            "targetStep": "\/api\/3\/workflow_steps\/a50d50bc-5fc5-470a-ac7f-cd67bdc37f0f",
+            "sourceStep": "\/api\/3\/workflow_steps\/ba068de9-6dc2-4621-8b67-2199201cba2c",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "fd1e9d3c-aa6f-47ef-af4a-eb2d971640e4"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "status -> status disabled",
+            "targetStep": "\/api\/3\/workflow_steps\/31108e00-a526-4352-a18f-b950e6657149",
+            "sourceStep": "\/api\/3\/workflow_steps\/ce76ef2e-137a-496f-b715-679c529d9565",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "d4713663-b0c3-4701-be03-63c90498698e"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "status -> status enabled",
+            "targetStep": "\/api\/3\/workflow_steps\/ba068de9-6dc2-4621-8b67-2199201cba2c",
+            "sourceStep": "\/api\/3\/workflow_steps\/ce76ef2e-137a-496f-b715-679c529d9565",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "71fff841-8e01-40c3-973f-4bba0b0817b0"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "status -> unknown",
+            "targetStep": "\/api\/3\/workflow_steps\/87e0bfa3-4615-45a7-aaee-124022e3b4f4",
+            "sourceStep": "\/api\/3\/workflow_steps\/ce76ef2e-137a-496f-b715-679c529d9565",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "7c4a3ea8-2939-4729-b1b2-1dc2db155505"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "update manager status -> synch manager info",
+            "targetStep": "\/api\/3\/workflow_steps\/eab19220-33b0-4a9d-af1a-4252c0dc615b",
+            "sourceStep": "\/api\/3\/workflow_steps\/a50d50bc-5fc5-470a-ac7f-cd67bdc37f0f",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "ef949841-8b72-4490-98b7-f4b822d2c670"
+        }
+    ],
+    "groups": [],
+    "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+    "playbookOrigin": "\/api\/3\/picklists\/b6d710a9-a8ec-41ec-8817-fe9fa062fcdd",
+    "isEditable": false,
+    "uuid": "e853d695-c3d4-48e7-b74b-f1a495d89e54",
+    "owners": [],
+    "isPrivate": false,
+    "deletedAt": null,
+    "recordTags": [
+        "ztpfManager"
+    ]
+}

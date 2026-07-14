@@ -1,0 +1,276 @@
+{
+    "@type": "Workflow",
+    "triggerLimit": null,
+    "name": "> device step (Running) - FortiManager Remote CLI",
+    "aliasName": null,
+    "tag": null,
+    "description": "Step changed to running for given Action Category and Type.",
+    "isActive": true,
+    "debug": false,
+    "singleRecordExecution": false,
+    "remoteExecutableFlag": false,
+    "parameters": [],
+    "synchronous": false,
+    "collection": "\/api\/3\/workflow_collections\/9cca11ea-b95a-4504-8385-ad42db358c36",
+    "versions": [],
+    "triggerStep": "\/api\/3\/workflow_steps\/ef0e1f5d-179a-4fd3-9e89-05ec2faeffe4",
+    "steps": [
+        {
+            "@type": "WorkflowStep",
+            "name": "return",
+            "description": null,
+            "arguments": [],
+            "status": null,
+            "top": "140",
+            "left": "20",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": "\/api\/3\/workflow_groups\/4194fe26-a05c-4889-a378-8a82f572d0a7",
+            "uuid": "a02aa011-ac2f-4ef0-87de-b76c6080a780"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "run automation",
+            "description": "Steps to run automation start here and connect to the next step, the post_run.",
+            "arguments": {
+                "script_type": "{{vars.input.records[0].triggerKey.split(' ')[1:]|join(\" \")}}",
+                "device_step_id": "{{vars.input.records[0].id}}"
+            },
+            "status": null,
+            "top": "100",
+            "left": "1060",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": "\/api\/3\/workflow_groups\/4194fe26-a05c-4889-a378-8a82f572d0a7",
+            "uuid": "e399a4b7-0240-4186-8bc1-88cfd02a3f45"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "run device script",
+            "description": null,
+            "arguments": {
+                "arguments": {
+                    "script_type": "{{vars.script_type}}",
+                    "device_step_id": "{{vars.device_step_id}}"
+                },
+                "apply_async": false,
+                "step_variables": [],
+                "pass_parent_env": false,
+                "pass_input_record": false,
+                "workflowReference": "\/api\/3\/workflows\/9339cf20-07e5-419c-b995-68d4d897d525"
+            },
+            "status": null,
+            "top": "340",
+            "left": "720",
+            "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
+            "group": null,
+            "uuid": "0062f25f-9edc-4f71-8348-b511b86d126f"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Start",
+            "description": null,
+            "arguments": {
+                "resource": "ztpf_device_automation_steps",
+                "resources": [
+                    "ztpf_device_automation_steps"
+                ],
+                "__triggerLimit": true,
+                "step_variables": {
+                    "input": {
+                        "params": [],
+                        "records": [
+                            "{{vars.input.records[0]}}"
+                        ]
+                    }
+                },
+                "triggerOnSource": true,
+                "fieldbasedtrigger": {
+                    "sort": [],
+                    "limit": 30,
+                    "logic": "AND",
+                    "filters": [
+                        {
+                            "type": "object",
+                            "field": "status",
+                            "value": "",
+                            "_value": {
+                                "@id": "",
+                                "display": "",
+                                "itemValue": ""
+                            },
+                            "operator": "changed"
+                        },
+                        {
+                            "type": "object",
+                            "field": "status",
+                            "value": "\/api\/3\/picklists\/b2b405dc-97e6-40cd-98bb-9132e37d5b6d",
+                            "_value": {
+                                "@id": "\/api\/3\/picklists\/b2b405dc-97e6-40cd-98bb-9132e37d5b6d",
+                                "display": "Running",
+                                "itemValue": "Running"
+                            },
+                            "operator": "eq"
+                        },
+                        {
+                            "type": "primitive",
+                            "field": "triggerKey",
+                            "value": "FortiManager Remote CLI",
+                            "operator": "eq",
+                            "_operator": "eq"
+                        }
+                    ]
+                },
+                "triggerOnReplicate": false
+            },
+            "status": null,
+            "top": "46",
+            "left": "20",
+            "stepType": "\/api\/3\/workflow_step_types\/9300bf69-5063-486d-b3a6-47eb9da24872",
+            "group": "\/api\/3\/workflow_groups\/4194fe26-a05c-4889-a378-8a82f572d0a7",
+            "uuid": "ef0e1f5d-179a-4fd3-9e89-05ec2faeffe4"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "step post_run",
+            "description": null,
+            "arguments": {
+                "arguments": {
+                    "trigger_step_input_record": "{{vars.input.records[0]}}"
+                },
+                "apply_async": false,
+                "step_variables": [],
+                "pass_parent_env": false,
+                "pass_input_record": false,
+                "workflowReference": "\/api\/3\/workflows\/9e61ba1a-4371-4d35-825d-9cea8f79feff"
+            },
+            "status": null,
+            "top": "140",
+            "left": "320",
+            "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
+            "group": "\/api\/3\/workflow_groups\/4194fe26-a05c-4889-a378-8a82f572d0a7",
+            "uuid": "a60f64e9-1326-46da-b64e-4fc6030c1834"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "step trigger pre_run",
+            "description": null,
+            "arguments": {
+                "arguments": {
+                    "input_yaml": "{{vars.input.records[0].stepARGS}}",
+                    "refresh_step_script": "{{vars.input.records[0].script}}",
+                    "trigger_step_input_record": "{{vars.input.records[0]}}"
+                },
+                "apply_async": false,
+                "step_variables": [],
+                "pass_parent_env": false,
+                "pass_input_record": false,
+                "workflowReference": "\/api\/3\/workflows\/1c59904d-0333-48f4-a608-d73a85117e81"
+            },
+            "status": null,
+            "top": "46",
+            "left": "320",
+            "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
+            "group": "\/api\/3\/workflow_groups\/4194fe26-a05c-4889-a378-8a82f572d0a7",
+            "uuid": "bdaa7508-b00e-43cf-9d03-c6251d321b3a"
+        }
+    ],
+    "routes": [
+        {
+            "@type": "WorkflowRoute",
+            "name": "run automation -> run device script",
+            "targetStep": "\/api\/3\/workflow_steps\/0062f25f-9edc-4f71-8348-b511b86d126f",
+            "sourceStep": "\/api\/3\/workflow_steps\/e399a4b7-0240-4186-8bc1-88cfd02a3f45",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "0bf6f601-216c-45b4-82d4-1bbb9906f2f3"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "run device script -> step post_run",
+            "targetStep": "\/api\/3\/workflow_steps\/a60f64e9-1326-46da-b64e-4fc6030c1834",
+            "sourceStep": "\/api\/3\/workflow_steps\/0062f25f-9edc-4f71-8348-b511b86d126f",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "1ef18ef7-f691-43c7-bf0c-9f40209b5b7d"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Start -> step trigger pre_run",
+            "targetStep": "\/api\/3\/workflow_steps\/bdaa7508-b00e-43cf-9d03-c6251d321b3a",
+            "sourceStep": "\/api\/3\/workflow_steps\/ef0e1f5d-179a-4fd3-9e89-05ec2faeffe4",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "51bdc8da-82ea-46cf-a5bf-9c8a0d7f3a79"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "step post_run -> complete",
+            "targetStep": "\/api\/3\/workflow_steps\/a02aa011-ac2f-4ef0-87de-b76c6080a780",
+            "sourceStep": "\/api\/3\/workflow_steps\/a60f64e9-1326-46da-b64e-4fc6030c1834",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "fc610b60-b764-405f-981d-a1032ba23343"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "step trigger pre_run -> run automation",
+            "targetStep": "\/api\/3\/workflow_steps\/e399a4b7-0240-4186-8bc1-88cfd02a3f45",
+            "sourceStep": "\/api\/3\/workflow_steps\/bdaa7508-b00e-43cf-9d03-c6251d321b3a",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "151bf6b1-0f90-4f7d-b987-6f464c132bd2"
+        }
+    ],
+    "groups": [
+        {
+            "@type": "WorkflowGroup",
+            "name": "Details",
+            "description": "Step status changed to running and matching trigger key playbook. Starts with standard pre and post routines but each action is unique to the needs of this step.\n\nType: FortiManager DeviceDB\nDescription: Create, execute, delete, and get the logs of a device manager script via the FMG API.",
+            "type": "note",
+            "isCollapsed": false,
+            "hasTriggerStep": false,
+            "hideInLogs": false,
+            "metadata": [],
+            "reusable": false,
+            "top": "260",
+            "left": "20",
+            "height": "205",
+            "width": "496",
+            "uuid": "6cf5250a-3974-46d3-b87d-4d80e22ff48c",
+            "recordTags": []
+        },
+        {
+            "@type": "WorkflowGroup",
+            "name": "Step Trigger Start and Stop",
+            "description": "Block to start and stop steps that are triggered to running.",
+            "type": "block",
+            "isCollapsed": false,
+            "hasTriggerStep": false,
+            "hideInLogs": false,
+            "metadata": [],
+            "reusable": false,
+            "top": "20",
+            "left": "20",
+            "height": "232",
+            "width": "1360",
+            "uuid": "4194fe26-a05c-4889-a378-8a82f572d0a7",
+            "recordTags": []
+        }
+    ],
+    "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+    "playbookOrigin": "\/api\/3\/picklists\/b6d710a9-a8ec-41ec-8817-fe9fa062fcdd",
+    "isEditable": false,
+    "uuid": "065f534e-5ef0-4b32-9f08-5f587a172c73",
+    "owners": [],
+    "isPrivate": false,
+    "deletedAt": null,
+    "recordTags": [
+        "TODO",
+        "TriggerStep",
+        "ztpfDeviceAutomationStep"
+    ]
+}

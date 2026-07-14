@@ -1,0 +1,239 @@
+{
+    "@type": "Workflow",
+    "triggerLimit": null,
+    "name": "> device step (Running) - TEMPLATE to CLONE from",
+    "aliasName": null,
+    "tag": null,
+    "description": "Step changed to running for given Action Category and Type.",
+    "isActive": false,
+    "debug": false,
+    "singleRecordExecution": false,
+    "remoteExecutableFlag": false,
+    "parameters": [],
+    "synchronous": false,
+    "collection": "\/api\/3\/workflow_collections\/9cca11ea-b95a-4504-8385-ad42db358c36",
+    "versions": [],
+    "triggerStep": "\/api\/3\/workflow_steps\/64613bb7-a386-4b96-bde6-ca30b67aae6c",
+    "steps": [
+        {
+            "@type": "WorkflowStep",
+            "name": "return",
+            "description": null,
+            "arguments": [],
+            "status": null,
+            "top": "140",
+            "left": "20",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": "\/api\/3\/workflow_groups\/5271ae04-10bd-425e-91b4-2cecf37fcf07",
+            "uuid": "bde9478f-c97b-4047-9952-885581730e16"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "run automation",
+            "description": "Steps to run automation start here and connect to the next step, the post_run.",
+            "arguments": [],
+            "status": null,
+            "top": "100",
+            "left": "1060",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": "\/api\/3\/workflow_groups\/5271ae04-10bd-425e-91b4-2cecf37fcf07",
+            "uuid": "aad2ead2-891a-4433-b371-c289d48eb6ff"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Start",
+            "description": null,
+            "arguments": {
+                "resource": "ztpf_device_automation_steps",
+                "resources": [
+                    "ztpf_device_automation_steps"
+                ],
+                "__triggerLimit": true,
+                "step_variables": {
+                    "input": {
+                        "params": [],
+                        "records": [
+                            "{{vars.input.records[0]}}"
+                        ]
+                    }
+                },
+                "triggerOnSource": true,
+                "fieldbasedtrigger": {
+                    "sort": [],
+                    "limit": 30,
+                    "logic": "AND",
+                    "filters": [
+                        {
+                            "type": "object",
+                            "field": "queueStatus",
+                            "value": "",
+                            "_value": {
+                                "@id": "",
+                                "display": "",
+                                "itemValue": ""
+                            },
+                            "operator": "changed"
+                        },
+                        {
+                            "type": "object",
+                            "field": "queueStatus",
+                            "value": "\/api\/3\/picklists\/b2b405dc-97e6-40cd-98bb-9132e37d5b6d",
+                            "_value": {
+                                "@id": "\/api\/3\/picklists\/b2b405dc-97e6-40cd-98bb-9132e37d5b6d",
+                                "display": "Running",
+                                "itemValue": "Running"
+                            },
+                            "operator": "eq"
+                        },
+                        {
+                            "type": "primitive",
+                            "field": "triggerKey",
+                            "value": "[Action Category and Type]",
+                            "operator": "eq",
+                            "_operator": "eq"
+                        }
+                    ]
+                },
+                "triggerOnReplicate": false
+            },
+            "status": null,
+            "top": "46",
+            "left": "20",
+            "stepType": "\/api\/3\/workflow_step_types\/9300bf69-5063-486d-b3a6-47eb9da24872",
+            "group": "\/api\/3\/workflow_groups\/5271ae04-10bd-425e-91b4-2cecf37fcf07",
+            "uuid": "64613bb7-a386-4b96-bde6-ca30b67aae6c"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "step post_run",
+            "description": null,
+            "arguments": {
+                "arguments": {
+                    "trigger_step_input_record": "{{vars.input.records[0]}}"
+                },
+                "apply_async": false,
+                "step_variables": [],
+                "pass_parent_env": false,
+                "pass_input_record": false,
+                "workflowReference": "\/api\/3\/workflows\/9e61ba1a-4371-4d35-825d-9cea8f79feff"
+            },
+            "status": null,
+            "top": "140",
+            "left": "320",
+            "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
+            "group": "\/api\/3\/workflow_groups\/5271ae04-10bd-425e-91b4-2cecf37fcf07",
+            "uuid": "793f7b90-32e0-43d8-a500-24ba340150f8"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "step trigger pre_run",
+            "description": null,
+            "arguments": {
+                "arguments": {
+                    "trigger_step_input_records": "{{vars.input.records[0]}}"
+                },
+                "apply_async": false,
+                "step_variables": [],
+                "pass_parent_env": false,
+                "pass_input_record": false,
+                "workflowReference": "\/api\/3\/workflows\/1c59904d-0333-48f4-a608-d73a85117e81"
+            },
+            "status": null,
+            "top": "46",
+            "left": "320",
+            "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
+            "group": "\/api\/3\/workflow_groups\/5271ae04-10bd-425e-91b4-2cecf37fcf07",
+            "uuid": "e3aafcf2-5814-4dbc-baf8-70590da5bdf0"
+        }
+    ],
+    "routes": [
+        {
+            "@type": "WorkflowRoute",
+            "name": "running automation vars -> step post_run",
+            "targetStep": "\/api\/3\/workflow_steps\/793f7b90-32e0-43d8-a500-24ba340150f8",
+            "sourceStep": "\/api\/3\/workflow_steps\/aad2ead2-891a-4433-b371-c289d48eb6ff",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "46a19baa-0c22-452f-9f60-97c07a163807"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Start -> step trigger pre_run",
+            "targetStep": "\/api\/3\/workflow_steps\/e3aafcf2-5814-4dbc-baf8-70590da5bdf0",
+            "sourceStep": "\/api\/3\/workflow_steps\/64613bb7-a386-4b96-bde6-ca30b67aae6c",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "1bce7349-1ee2-44cd-a089-1ee2d6534c46"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "step post_run -> complete",
+            "targetStep": "\/api\/3\/workflow_steps\/bde9478f-c97b-4047-9952-885581730e16",
+            "sourceStep": "\/api\/3\/workflow_steps\/793f7b90-32e0-43d8-a500-24ba340150f8",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "ac0d618b-2bd8-4a60-ba5e-db437f7e65d7"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "step trigger pre_run -> run automation",
+            "targetStep": "\/api\/3\/workflow_steps\/aad2ead2-891a-4433-b371-c289d48eb6ff",
+            "sourceStep": "\/api\/3\/workflow_steps\/e3aafcf2-5814-4dbc-baf8-70590da5bdf0",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "707d516b-70ef-458f-9a52-917f57929d69"
+        }
+    ],
+    "groups": [
+        {
+            "@type": "WorkflowGroup",
+            "name": "Details",
+            "description": "Step status changed to running and matching trigger key playbook. Starts with standard pre and post routines but each action is unique to the needs of this step.\n\nType: [Action Category and Type]\nDescription: [What this action will do.]",
+            "type": "note",
+            "isCollapsed": false,
+            "hasTriggerStep": false,
+            "hideInLogs": false,
+            "metadata": [],
+            "reusable": false,
+            "top": "280",
+            "left": "20",
+            "height": "181",
+            "width": "498",
+            "uuid": "3a5a22c2-5653-4c91-8cdc-ce76299c3e12",
+            "recordTags": []
+        },
+        {
+            "@type": "WorkflowGroup",
+            "name": "Step Trigger Start and Stop",
+            "description": "Block to start and stop steps that are triggered to running.",
+            "type": "block",
+            "isCollapsed": false,
+            "hasTriggerStep": false,
+            "hideInLogs": false,
+            "metadata": [],
+            "reusable": false,
+            "top": "20",
+            "left": "20",
+            "height": "232",
+            "width": "1360",
+            "uuid": "5271ae04-10bd-425e-91b4-2cecf37fcf07",
+            "recordTags": []
+        }
+    ],
+    "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+    "playbookOrigin": "\/api\/3\/picklists\/b6d710a9-a8ec-41ec-8817-fe9fa062fcdd",
+    "isEditable": false,
+    "uuid": "8d0cbbf3-8263-4183-8617-9e455794e883",
+    "owners": [],
+    "isPrivate": false,
+    "deletedAt": null,
+    "recordTags": [
+        "TEMPLATE",
+        "TriggerStep",
+        "ztpfDeviceAutomationStep"
+    ]
+}
