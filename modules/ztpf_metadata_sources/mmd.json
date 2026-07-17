@@ -278,6 +278,50 @@
         {
             "@type": "AttributeMetadata",
             "type": "string",
+            "name": "inputParameters",
+            "length": null,
+            "formType": "textarea",
+            "dataSource": null,
+            "searchable": true,
+            "peerReplicable": true,
+            "system": false,
+            "encrypted": false,
+            "gridColumn": true,
+            "collection": false,
+            "inversedField": null,
+            "ownsRelationship": false,
+            "validation": {
+                "required": false,
+                "minlength": 0,
+                "maxlength": 10485761,
+                "_enableRange": false
+            },
+            "bulkAction": {
+                "allow": false,
+                "buttonText": "",
+                "buttonIcon": "",
+                "buttonClass": "btn btn-default btn-sm"
+            },
+            "dataSourceFilters": null,
+            "defaultValue": null,
+            "tooltip": "Input fields that can be used in jinja under input.<fieldname> in your jinja script if needed.",
+            "visibility": true,
+            "htmlEscape": false,
+            "orphanRemoval": null,
+            "readable": true,
+            "writeable": true,
+            "identifier": null,
+            "unique": false,
+            "recommend": false,
+            "skipSerialization": false,
+            "displayName": "{{ inputParameters }}",
+            "descriptions": {
+                "singular": "Input Parameters"
+            }
+        },
+        {
+            "@type": "AttributeMetadata",
+            "type": "string",
             "name": "script",
             "length": null,
             "formType": "textarea",
@@ -317,50 +361,6 @@
             "displayName": "{{ script }}",
             "descriptions": {
                 "singular": "Script"
-            }
-        },
-        {
-            "@type": "AttributeMetadata",
-            "type": "object",
-            "name": "data",
-            "length": null,
-            "formType": "object",
-            "dataSource": null,
-            "searchable": false,
-            "peerReplicable": true,
-            "system": false,
-            "encrypted": false,
-            "gridColumn": false,
-            "collection": false,
-            "inversedField": null,
-            "ownsRelationship": false,
-            "validation": {
-                "required": false,
-                "minlength": 0,
-                "maxlength": 10485761,
-                "_enableRange": false
-            },
-            "bulkAction": {
-                "allow": false,
-                "buttonText": "",
-                "buttonIcon": "",
-                "buttonClass": "btn btn-default btn-sm"
-            },
-            "dataSourceFilters": null,
-            "defaultValue": null,
-            "tooltip": "PENDING DELETE",
-            "visibility": true,
-            "htmlEscape": false,
-            "orphanRemoval": null,
-            "readable": true,
-            "writeable": true,
-            "identifier": null,
-            "unique": false,
-            "recommend": false,
-            "skipSerialization": false,
-            "displayName": "{{ data }}",
-            "descriptions": {
-                "singular": "Data DEPRECATED"
             }
         },
         {
@@ -525,12 +525,12 @@
         },
         {
             "@type": "AttributeMetadata",
-            "type": "string",
-            "name": "inputParameters",
+            "type": "object",
+            "name": "data",
             "length": null,
-            "formType": "textarea",
+            "formType": "object",
             "dataSource": null,
-            "searchable": true,
+            "searchable": false,
             "peerReplicable": true,
             "system": false,
             "encrypted": false,
@@ -552,7 +552,7 @@
             },
             "dataSourceFilters": null,
             "defaultValue": null,
-            "tooltip": "Input fields that can be used in jinja under input.<fieldname> in your jinja script if needed.",
+            "tooltip": "PENDING DELETE",
             "visibility": true,
             "htmlEscape": false,
             "orphanRemoval": null,
@@ -562,9 +562,9 @@
             "unique": false,
             "recommend": false,
             "skipSerialization": false,
-            "displayName": "{{ inputParameters }}",
+            "displayName": "{{ data }}",
             "descriptions": {
-                "singular": "Input Parameters"
+                "singular": "Data DEPRECATED"
             }
         }
     ],

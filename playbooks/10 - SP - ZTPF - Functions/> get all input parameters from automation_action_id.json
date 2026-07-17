@@ -1,0 +1,269 @@
+{
+    "@type": "Workflow",
+    "triggerLimit": null,
+    "name": "> get all input parameters from automation_action_id",
+    "aliasName": null,
+    "tag": null,
+    "description": "Search for all input parameters recursively and return a yaml configuration to populate required input.",
+    "isActive": true,
+    "debug": false,
+    "singleRecordExecution": false,
+    "remoteExecutableFlag": false,
+    "parameters": [
+        "automation_action_id"
+    ],
+    "synchronous": false,
+    "collection": "\/api\/3\/workflow_collections\/517fb52d-36f5-4bac-a344-7d4599d7dec6",
+    "versions": [],
+    "triggerStep": "\/api\/3\/workflow_steps\/bb8a673b-561e-40b3-9230-cb1a23c3280c",
+    "steps": [
+        {
+            "@type": "WorkflowStep",
+            "name": "create step args yaml",
+            "description": null,
+            "arguments": {
+                "arguments": {
+                    "step_args": "{{vars.merged_input_params}}"
+                },
+                "apply_async": false,
+                "step_variables": [],
+                "pass_parent_env": false,
+                "pass_input_record": false,
+                "workflowReference": "\/api\/3\/workflows\/4af18fe1-5248-4f94-a595-131de9c6a913"
+            },
+            "status": null,
+            "top": "220",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
+            "group": null,
+            "uuid": "17578d9d-40e0-45da-ba95-bab1ac0e933a"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "find metadata sources",
+            "description": null,
+            "arguments": {
+                "query": {
+                    "sort": [],
+                    "limit": 30,
+                    "logic": "AND",
+                    "filters": [
+                        {
+                            "type": "primitive",
+                            "field": "id",
+                            "value": "{{vars.steps.recursive_records.output.ztpfMetadataSource}}",
+                            "operator": "in",
+                            "_operator": "in"
+                        }
+                    ],
+                    "__selectFields": [
+                        "id",
+                        "inputParameters"
+                    ]
+                },
+                "module": "ztpf_metadata_sources?$limit=5000",
+                "checkboxFields": true,
+                "step_variables": []
+            },
+            "status": null,
+            "top": "100",
+            "left": "740",
+            "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928770",
+            "group": null,
+            "uuid": "a9ca7f1a-8f31-41c0-9cc5-fbcd4c230963"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "find templates",
+            "description": null,
+            "arguments": {
+                "query": {
+                    "sort": [],
+                    "limit": 30,
+                    "logic": "AND",
+                    "filters": [
+                        {
+                            "type": "primitive",
+                            "field": "id",
+                            "value": "{{vars.steps.recursive_records.output.ztpfTemplate}}",
+                            "operator": "in",
+                            "_operator": "in"
+                        }
+                    ]
+                },
+                "module": "ztpf_templates?$limit=5000",
+                "checkboxFields": true,
+                "step_variables": []
+            },
+            "status": null,
+            "top": "200",
+            "left": "740",
+            "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928770",
+            "group": null,
+            "uuid": "4236aa64-98e9-4d65-8088-02a14e504026"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "merged_input_params",
+            "description": null,
+            "arguments": {
+                "merged_input_params": "{%- set ds = [\n  vars.steps.find_metadata_sources,\n   vars.steps.find_templates\n] -%}\n{%- set inputs = [] -%}\n\n{%- for d in ds -%}\n{%- for i in d|json_query('[].inputParameters') -%}\n  {%- set i = i | replace('\\n',',') -%}\n  {%- for p in i.split(\",\") -%}\n    {%- do inputs.append(p) -%}\n  {%- endfor -%}\n{%- endfor -%}\n{%- endfor -%}\n\n{%- set ret = {\"input\":{}} -%}\n{%- for i in inputs|unique|sort -%}\n{%- do ret.input.update({i:\"\"}) -%}\n{%- endfor -%}\n\n{{ret}}"
+            },
+            "status": null,
+            "top": "280",
+            "left": "380",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "3ac10469-afd8-4b19-8b38-e2048c9c10a5"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "recursive records",
+            "description": null,
+            "arguments": {
+                "arguments": {
+                    "record_ids": "{{vars.input.params['automation_action_id']}}"
+                },
+                "apply_async": false,
+                "step_variables": [],
+                "pass_parent_env": false,
+                "pass_input_record": false,
+                "workflowReference": "\/api\/3\/workflows\/39ab6f6c-e76d-4702-828a-0d34b2817018"
+            },
+            "status": null,
+            "top": "40",
+            "left": "380",
+            "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
+            "group": null,
+            "uuid": "05e59971-4ffe-4438-9bf2-0e52865c00f0"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "return",
+            "description": null,
+            "arguments": {
+                "output": "{%- set ret = {\"yaml\":{},\"json\":{}} -%}\n\n{%- if vars.merged_input_params -%}\n  {%- do ret.update({\"json\":vars.merged_input_params}) -%}\n{%- endif -%}\n\n{%- if vars.steps.create_step_args_yaml -%}\n  {%- do ret.update({\"yaml\":vars.steps.create_step_args_yaml.output}) -%}\n{%- endif -%}\n\n{{ret}}",
+                "params": "{{vars.input.params}}",
+                "status": "{\"error\":false,\"msg\":\"ok\"}"
+            },
+            "status": null,
+            "top": "120",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "ec81dbf9-57d4-441b-bbe2-5a1674de5411"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Start",
+            "description": null,
+            "arguments": {
+                "__triggerLimit": true,
+                "step_variables": {
+                    "input": {
+                        "params": []
+                    }
+                },
+                "triggerOnSource": true,
+                "triggerOnReplicate": false
+            },
+            "status": null,
+            "top": "40",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/b348f017-9a94-471f-87f8-ce88b6a7ad62",
+            "group": null,
+            "uuid": "bb8a673b-561e-40b3-9230-cb1a23c3280c"
+        }
+    ],
+    "routes": [
+        {
+            "@type": "WorkflowRoute",
+            "name": "creeate step args yaml -> return",
+            "targetStep": "\/api\/3\/workflow_steps\/ec81dbf9-57d4-441b-bbe2-5a1674de5411",
+            "sourceStep": "\/api\/3\/workflow_steps\/17578d9d-40e0-45da-ba95-bab1ac0e933a",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "0706ca68-6e3a-4205-842a-549cad7b23cc"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "find metadata sources -> Copy of find metadata sources",
+            "targetStep": "\/api\/3\/workflow_steps\/4236aa64-98e9-4d65-8088-02a14e504026",
+            "sourceStep": "\/api\/3\/workflow_steps\/a9ca7f1a-8f31-41c0-9cc5-fbcd4c230963",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "056e503e-a910-4e09-a331-68b112bbff4f"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "find templates -> input_yaml_configs",
+            "targetStep": "\/api\/3\/workflow_steps\/3ac10469-afd8-4b19-8b38-e2048c9c10a5",
+            "sourceStep": "\/api\/3\/workflow_steps\/4236aa64-98e9-4d65-8088-02a14e504026",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "91313f6d-a00d-49da-8f72-1b6589b3cb7b"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "merged_input_params -> creeate step args yaml",
+            "targetStep": "\/api\/3\/workflow_steps\/17578d9d-40e0-45da-ba95-bab1ac0e933a",
+            "sourceStep": "\/api\/3\/workflow_steps\/3ac10469-afd8-4b19-8b38-e2048c9c10a5",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "bc33836f-0237-448d-9ade-cbfcb9a22df3"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "recursive records -> find metadata sources",
+            "targetStep": "\/api\/3\/workflow_steps\/a9ca7f1a-8f31-41c0-9cc5-fbcd4c230963",
+            "sourceStep": "\/api\/3\/workflow_steps\/05e59971-4ffe-4438-9bf2-0e52865c00f0",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "3b928154-818f-4798-9d86-fe6802f5e310"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Start -> recursive records",
+            "targetStep": "\/api\/3\/workflow_steps\/05e59971-4ffe-4438-9bf2-0e52865c00f0",
+            "sourceStep": "\/api\/3\/workflow_steps\/bb8a673b-561e-40b3-9230-cb1a23c3280c",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "ed03201a-0258-4033-8bb6-8021d63f51f3"
+        }
+    ],
+    "groups": [
+        {
+            "@type": "WorkflowGroup",
+            "name": "Details",
+            "description": "Recursively search template and metadata source records for input parameters to be used as stepARGS in YAML.",
+            "type": "note",
+            "isCollapsed": false,
+            "hasTriggerStep": false,
+            "hideInLogs": false,
+            "metadata": [],
+            "reusable": false,
+            "top": "120",
+            "left": "360",
+            "height": "130",
+            "width": "291",
+            "uuid": "92f42f1a-dcc1-4819-8b12-e0a91d3b5cb5",
+            "recordTags": []
+        }
+    ],
+    "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+    "playbookOrigin": "\/api\/3\/picklists\/b6d710a9-a8ec-41ec-8817-fe9fa062fcdd",
+    "isEditable": false,
+    "uuid": "56a53968-ce5c-445a-b3a7-de3ddcef5e61",
+    "owners": [],
+    "isPrivate": false,
+    "deletedAt": null,
+    "recordTags": [
+        "ztpfAutomationAction"
+    ]
+}

@@ -73,11 +73,35 @@
                 "step_variables": []
             },
             "status": null,
-            "top": "460",
+            "top": "380",
             "left": "700",
             "stepType": "\/api\/3\/workflow_step_types\/2597053c-e718-44b4-8394-4d40fe26d357",
             "group": null,
             "uuid": "043a65c4-cb43-4561-b9f7-d9d791655d5e"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "create stepARGS if needed",
+            "description": null,
+            "arguments": {
+                "when": "{{vars.step_args in [None,'']}}",
+                "arguments": {
+                    "automation_action_id": "{{vars.steps.find_action[0].id}}"
+                },
+                "apply_async": false,
+                "step_variables": {
+                    "step_args": "{{vars.steps.create_stepARGS_if_needed.output.yaml}}"
+                },
+                "pass_parent_env": false,
+                "pass_input_record": false,
+                "workflowReference": "\/api\/3\/workflows\/56a53968-ce5c-445a-b3a7-de3ddcef5e61"
+            },
+            "status": null,
+            "top": "300",
+            "left": "1000",
+            "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
+            "group": null,
+            "uuid": "80601f81-f95c-4b44-9810-19080765ee42"
         },
         {
             "@type": "WorkflowStep",
@@ -143,7 +167,7 @@
                 "step_variables": []
             },
             "status": null,
-            "top": "80",
+            "top": "60",
             "left": "700",
             "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928770",
             "group": null,
@@ -200,7 +224,7 @@
                 "step_variables": []
             },
             "status": null,
-            "top": "180",
+            "top": "140",
             "left": "700",
             "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928770",
             "group": null,
@@ -212,7 +236,7 @@
             "description": null,
             "arguments": [],
             "status": null,
-            "top": "420",
+            "top": "440",
             "left": "60",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
@@ -231,7 +255,7 @@
                 "trigger_key": "{{vars.steps.find_action[0].category.itemValue}} {{vars.steps.find_action[0].type.itemValue}}"
             },
             "status": null,
-            "top": "360",
+            "top": "220",
             "left": "700",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
@@ -282,6 +306,16 @@
         },
         {
             "@type": "WorkflowRoute",
+            "name": "create stepARGS if needed -> create device step",
+            "targetStep": "\/api\/3\/workflow_steps\/043a65c4-cb43-4561-b9f7-d9d791655d5e",
+            "sourceStep": "\/api\/3\/workflow_steps\/80601f81-f95c-4b44-9810-19080765ee42",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "165ff7d5-16b1-4731-8f99-07b04b4719d6"
+        },
+        {
+            "@type": "WorkflowRoute",
             "name": "find action -> find device",
             "targetStep": "\/api\/3\/workflow_steps\/b0949ada-58b9-455e-a56e-59f0cc235b43",
             "sourceStep": "\/api\/3\/workflow_steps\/293dfe38-0b28-43a7-a4e8-8444bd5b75a4",
@@ -312,13 +346,13 @@
         },
         {
             "@type": "WorkflowRoute",
-            "name": "setup vars -> create device step",
-            "targetStep": "\/api\/3\/workflow_steps\/043a65c4-cb43-4561-b9f7-d9d791655d5e",
+            "name": "setup vars -> create stepARGS if needed",
+            "targetStep": "\/api\/3\/workflow_steps\/80601f81-f95c-4b44-9810-19080765ee42",
             "sourceStep": "\/api\/3\/workflow_steps\/85363141-ce1d-4bff-af02-077dbfda97a3",
             "label": null,
             "isExecuted": false,
             "group": null,
-            "uuid": "f4eb6ad0-9689-4ba3-beee-7e9aa1c53cc2"
+            "uuid": "8a301528-73fa-4db8-bbbe-5dd8becd7056"
         },
         {
             "@type": "WorkflowRoute",
@@ -335,7 +369,7 @@
         {
             "@type": "WorkflowGroup",
             "name": "Details",
-            "description": "Input: \n - device_id, action_id\n - Step Name\n - stepARGS in the form of YAML.\n - jinja_vars in json.\n\nGet the last step number from the currently processing or added steps to the device and create the next step record in processing state.\n\nCreate the step under the status New and then set to Preparing to trigger step setup and validate inputs are ready.",
+            "description": "Input: \n - device_id, action_id\n - Step Name\n - stepARGS in the form of YAML.\n - jinja_vars in json.\n\nGet the last step number from the currently processing or added steps to the device and create the next step record in processing state.\n\nGet stepARGS from related records IF not provided from the input params. \n\nCreate the step under the status New and then set to Preparing to trigger step setup and validate inputs are ready.",
             "type": "note",
             "isCollapsed": false,
             "hasTriggerStep": false,
@@ -344,15 +378,15 @@
             "reusable": false,
             "top": "120",
             "left": "100",
-            "height": "272",
-            "width": "496",
+            "height": "298",
+            "width": "498",
             "uuid": "b9de9c01-64f4-44bb-9c32-13e9509e3f1d",
             "recordTags": []
         }
     ],
     "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
     "playbookOrigin": "\/api\/3\/picklists\/b6d710a9-a8ec-41ec-8817-fe9fa062fcdd",
-    "isEditable": false,
+    "isEditable": true,
     "uuid": "6839c219-b88a-413c-9cdd-e38b0b764163",
     "owners": [],
     "isPrivate": false,

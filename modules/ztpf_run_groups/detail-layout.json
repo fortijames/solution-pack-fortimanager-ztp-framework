@@ -250,6 +250,104 @@
                                                                             "visible": true
                                                                         },
                                                                         "icon": "fa fa-file-text-o",
+                                                                        "show": false,
+                                                                        "visible": true
+                                                                    },
+                                                                    {
+                                                                        "title": "Report Markdown",
+                                                                        "active": 0,
+                                                                        "widget": {
+                                                                            "type": "rows",
+                                                                            "config": {
+                                                                                "wid": "975ed676-e7b8-477d-a8f5-20c08dd4afce",
+                                                                                "rows": [
+                                                                                    {
+                                                                                        "columns": [
+                                                                                            {
+                                                                                                "widgets": [
+                                                                                                    {
+                                                                                                        "type": "sectionHeader",
+                                                                                                        "config": {
+                                                                                                            "wid": "cddcbc4e-5d0a-494e-a78c-e759fe07bb1d",
+                                                                                                            "query": {
+                                                                                                                "filters": [],
+                                                                                                                "sort": [],
+                                                                                                                "limit": 10
+                                                                                                            },
+                                                                                                            "editorType": "html",
+                                                                                                            "sectionText": ""
+                                                                                                        }
+                                                                                                    },
+                                                                                                    {
+                                                                                                        "type": "relationship.lineItem",
+                                                                                                        "config": {
+                                                                                                            "wid": "8b2478f5-31da-4053-863d-1ec15f5676c6",
+                                                                                                            "query": {
+                                                                                                                "sort": [
+                                                                                                                    {
+                                                                                                                        "direction": "DESC",
+                                                                                                                        "field": "stepStopTimestamp",
+                                                                                                                        "_fieldTitle": "Stop Timestamp",
+                                                                                                                        "_fieldName": "stepStopTimestamp"
+                                                                                                                    },
+                                                                                                                    {
+                                                                                                                        "direction": "ASC",
+                                                                                                                        "field": "stepNumber",
+                                                                                                                        "_fieldTitle": "Step Number",
+                                                                                                                        "_fieldName": "stepNumber"
+                                                                                                                    }
+                                                                                                                ],
+                                                                                                                "limit": 50,
+                                                                                                                "logic": "AND",
+                                                                                                                "filters": []
+                                                                                                            },
+                                                                                                            "mapping": {
+                                                                                                                "assignedToPerson": ""
+                                                                                                            },
+                                                                                                            "assignedToSetting": "all",
+                                                                                                            "columns": [
+                                                                                                                {
+                                                                                                                    "column_name": "ztpfDevices",
+                                                                                                                    "display_type": "block"
+                                                                                                                },
+                                                                                                                {
+                                                                                                                    "column_name": "name",
+                                                                                                                    "display_type": "block"
+                                                                                                                },
+                                                                                                                {
+                                                                                                                    "column_name": "stepNumber",
+                                                                                                                    "display_type": "block"
+                                                                                                                },
+                                                                                                                {
+                                                                                                                    "column_name": "ztpfAutomationActions",
+                                                                                                                    "display_type": "block"
+                                                                                                                },
+                                                                                                                {
+                                                                                                                    "column_name": "outputMarkdown",
+                                                                                                                    "display_type": "inline"
+                                                                                                                },
+                                                                                                                {
+                                                                                                                    "column_name": "stepTime",
+                                                                                                                    "display_type": "inline"
+                                                                                                                }
+                                                                                                            ],
+                                                                                                            "title": "Steps",
+                                                                                                            "module": "ztpf_device_automation_steps",
+                                                                                                            "fieldName": "ztpfDeviceAutomationSteps"
+                                                                                                        }
+                                                                                                    }
+                                                                                                ],
+                                                                                                "style": "col-lg-12"
+                                                                                            }
+                                                                                        ],
+                                                                                        "wid": "6b2a32fc-94f2-4de4-83a4-14a1da95a4f1",
+                                                                                        "_collapsed": false
+                                                                                    }
+                                                                                ]
+                                                                            },
+                                                                            "visible": true
+                                                                        },
+                                                                        "icon": "icon icon-generate-incident-summary-report",
                                                                         "show": true,
                                                                         "visible": true
                                                                     },
@@ -307,8 +405,8 @@
     "isDefault": true,
     "visible": true,
     "viewOptions": "detail",
-    "name": "Base Template",
-    "system": false,
+    "name": "Default Layout",
+    "system": true,
     "uuid": "modules-ztpf_run_groups-detail",
     "newUuid": "d44fbd48-4ea6-4a85-8f94-ee61f2328d01"
 }

@@ -36,6 +36,7 @@
                     "status": "\/api\/3\/picklists\/83db709f-e76b-4f0a-883b-e5c0dbb0f6da",
                     "__replace": "false",
                     "adminStatus": "\/api\/3\/picklists\/03d3043d-5010-47bd-9176-3389facfea6b",
+                    "ztpfRunning": "{{vars.unchecked}}",
                     "ztpfManagers": "{{vars.steps.find_manager[0]['@id']}}"
                 },
                 "_showJson": false,
@@ -159,6 +160,7 @@
             "description": null,
             "arguments": {
                 "record_id": "{{vars.steps.find_manager[0].id}}",
+                "unchecked": "false",
                 "api_fields": "[\"name\"]",
                 "api_filter": "{{vars.input.params['api_filter']}}",
                 "manager_fqid": "{{vars.steps.find_manager[0]['@id']}}",

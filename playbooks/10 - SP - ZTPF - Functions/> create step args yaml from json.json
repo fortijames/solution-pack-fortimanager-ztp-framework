@@ -22,7 +22,7 @@
             "name": "create step_args_yaml",
             "description": null,
             "arguments": {
-                "step_args_yaml": "{%- set args = vars.input.params['step_args'] -%}\n\n{%- macro render_section(name, data) -%}\n{%- set out = [] -%}\n{%- if data -%}\n{{ name }}:\n{%- for key, value in data.items() %}\n{%- if value in [None,''] -%}\n{%- set value = \"<INPUT NEEDED>\" -%}\n{%- endif -%}\n{%- do out.append(\"  \" + key + \": \" + value|string) -%}\n{%- endfor %}\n{{out|sort|join(\"\\n\")}}\n{%- endif -%}\n{%- endmacro -%}\n\n{{ render_section(\"input\", args.get(\"input\")) }}\n{{ render_section(\"config\", args.get(\"config\")) }}"
+                "step_args_yaml": "{%- set args = vars.input.params['step_args'] -%}\n\n{%- macro render_section(name, data) -%}\n  {%- set out = [] -%}\n  {%- if data -%}\n{{ name }}:\n  {%- for key, value in data.items() %}\n    {%- if value in [None,''] -%}\n      {%- set value = \"<INPUT NEEDED>\" -%}\n    {%- endif -%}\n      {%- do out.append(\"  \" + key + \": \" + value|string) -%}\n  {%- endfor %}\n{{out|sort|join(\"\\n\")}}\n  {%- endif -%}\n{%- endmacro -%}\n\n{%- if args -%}\n{{ render_section(\"input\", args.get(\"input\")) }}\n{{ render_section(\"config\", args.get(\"config\")) }}\n{%- endif -%}"
             },
             "status": null,
             "top": "140",
@@ -112,7 +112,7 @@
     ],
     "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
     "playbookOrigin": "\/api\/3\/picklists\/b6d710a9-a8ec-41ec-8817-fe9fa062fcdd",
-    "isEditable": false,
+    "isEditable": true,
     "uuid": "4af18fe1-5248-4f94-a595-131de9c6a913",
     "owners": [],
     "isPrivate": false,

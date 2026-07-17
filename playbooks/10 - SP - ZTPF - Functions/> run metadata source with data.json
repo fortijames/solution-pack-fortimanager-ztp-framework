@@ -25,12 +25,7 @@
             "name": "FortiManager API args",
             "description": null,
             "arguments": {
-                "api_url": "{{vars.steps.render_data_jinja.output.url}}",
-                "api_fields": "{{vars.steps.render_data_jinja.output.fields}}",
-                "api_filter": "{{vars.steps.render_data_jinja.output.filter}}",
                 "api_method": "{{vars.steps.render_data_jinja.output.method}}",
-                "api_loadsub": "{{vars.steps.render_data_jinja.output.loadsub}}",
-                "api_options": "{{vars.steps.render_data_jinja.output.options}}",
                 "connector_config": "{{vars.jinja_vars.record.manager.connector_config}}"
             },
             "status": null,
@@ -42,14 +37,40 @@
         },
         {
             "@type": "WorkflowStep",
+            "name": "FortiManager API method",
+            "description": null,
+            "arguments": {
+                "conditions": [
+                    {
+                        "step_iri": "\/api\/3\/workflow_steps\/55d1767d-70c2-46df-b636-c8f4ecad0ef0",
+                        "condition": "{{ \"proxy\" in vars.type|lower }}",
+                        "step_name": "proxy fmg payload"
+                    },
+                    {
+                        "default": true,
+                        "step_iri": "\/api\/3\/workflow_steps\/2613704e-dd1d-4844-b3fe-e74cb72215f7",
+                        "step_name": "get fmg table payload"
+                    }
+                ],
+                "step_variables": []
+            },
+            "status": null,
+            "top": "460",
+            "left": "1360",
+            "stepType": "\/api\/3\/workflow_step_types\/12254cf5-5db7-4b1a-8cb1-3af081924b28",
+            "group": null,
+            "uuid": "f5d5ffc0-cffb-49a5-90c5-48db720c1f0b"
+        },
+        {
+            "@type": "WorkflowStep",
             "name": "FortiManager API results",
             "description": null,
             "arguments": {
-                "playbook_status": "{%- set ret = {\"error\":false} -%}\n{%- if vars.steps.get_fmg_table.output.status != 0 -%}\n  {%- do ret.update({\n    \"error\":true,\n    \"msg\": vars.steps.get_fmg_table.output.get_response.status.message\n  }) -%}\n{%- endif -%}\n{{ret}}",
-                "metadata_results": "{{vars.steps.get_fmg_table.output['get_response']}}"
+                "playbook_status": "{%- set ret = {\n  \"error\":false,\n  \"msg\":\"FMG API looked to have completed ok\"} \n-%}\n\n{%- if \"proxy\" in vars.type|lower -%}\n  {%- if vars.fmg_api_results.output.data.status != 0 -%}\n    {%- do ret.update({\n      \"error\":true,\n      \"msg\": vars.fmg_api_results.output.data.message\n    }) -%}\n  {%- endif -%}\n{%- else -%}\n  {%- if vars.fmg_api_results.output.status != 0 -%}\n    {%- do ret.update({\n      \"error\":true,\n      \"msg\": vars.fmg_api_results.output.get_response.status.message\n    }) -%}\n  {%- endif -%}\n{%- endif -%}\n\n{{ret}}",
+                "metadata_results": "{%- set apir = vars.fmg_api_results -%}\n{%- set ret = {} -%}\n{%- if \"proxy\" in vars.type|lower -%}\n  {%- do  ret.update({\n    \"table\":apir.output.data.execute_response[0].response.results\n    })  -%}\n{%- else -%}\n  {%- do  ret.update({\n    \"table\":apir.output['get_response']\n    })  -%}\n{%- endif -%}\n{{ret.table}}"
             },
             "status": null,
-            "top": "580",
+            "top": "720",
             "left": "1020",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
@@ -69,17 +90,37 @@
                     "connector_config": "{{vars.connector_config}}"
                 },
                 "apply_async": false,
-                "step_variables": [],
+                "step_variables": {
+                    "fmg_api_results": "{{vars.steps.get_fmg_table}}"
+                },
                 "pass_parent_env": false,
                 "pass_input_record": false,
                 "workflowReference": "\/api\/3\/workflows\/d49ed3d7-7452-48c8-b316-4b6362dfe9d6"
             },
             "status": null,
-            "top": "500",
+            "top": "580",
             "left": "1020",
             "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
             "group": null,
             "uuid": "ed50f595-d0eb-41e7-8309-9a3fc0d36d77"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "get fmg table payload",
+            "description": null,
+            "arguments": {
+                "api_url": "{{vars.steps.render_data_jinja.output.url}}",
+                "api_fields": "{{vars.steps.render_data_jinja.output.fields}}",
+                "api_filter": "{{vars.steps.render_data_jinja.output.filter}}",
+                "api_loadsub": "{{vars.steps.render_data_jinja.output.loadsub}}",
+                "api_options": "{{vars.steps.render_data_jinja.output.options}}"
+            },
+            "status": null,
+            "top": "500",
+            "left": "1020",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "2613704e-dd1d-4844-b3fe-e74cb72215f7"
         },
         {
             "@type": "WorkflowStep",
@@ -114,7 +155,7 @@
                     {
                         "option": "FMG API",
                         "step_iri": "\/api\/3\/workflow_steps\/a9b09485-6198-470a-bda3-91810230fd76",
-                        "condition": "{{ vars.type == \"FortiManager API\" }}",
+                        "condition": "{{ \"FortiManager\" in vars.type and \"API\" in vars.type }}",
                         "step_name": "FortiManager API args"
                     }
                 ],
@@ -156,6 +197,50 @@
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
             "uuid": "d0cc7b3e-e733-4753-9774-57008e2839f5"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "proxy fmg api",
+            "description": null,
+            "arguments": {
+                "arguments": {
+                    "action": "{{vars.proxy_fmg_action}}",
+                    "target": "{{vars.proxy_fmg_target}}",
+                    "payload": "{{vars.proxy_fmg_payload}}",
+                    "resource": "{{vars.proxy_fmg_resource}}",
+                    "connector_config": "{{vars.connector_config}}"
+                },
+                "apply_async": false,
+                "step_variables": {
+                    "fmg_api_results": "{{vars.steps.proxy_fmg_api}}"
+                },
+                "pass_parent_env": false,
+                "pass_input_record": false,
+                "workflowReference": "\/api\/3\/workflows\/9ebd04bf-207c-4ea4-afa9-191fb6b75ad2"
+            },
+            "status": null,
+            "top": "620",
+            "left": "1680",
+            "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
+            "group": null,
+            "uuid": "159de120-cc0b-4c30-b99d-53a494016d49"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "proxy fmg payload",
+            "description": null,
+            "arguments": {
+                "proxy_fmg_action": "{{vars.steps.render_data_jinja.output.data.action}}",
+                "proxy_fmg_target": "{{vars.steps.render_data_jinja.output.data.target}}",
+                "proxy_fmg_payload": "{{vars.steps.render_data_jinja.output.data.payload}}",
+                "proxy_fmg_resource": "{{vars.steps.render_data_jinja.output.data.resource}}"
+            },
+            "status": null,
+            "top": "520",
+            "left": "1680",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "55d1767d-70c2-46df-b636-c8f4ecad0ef0"
         },
         {
             "@type": "WorkflowStep",
@@ -234,7 +319,7 @@
             },
             "status": null,
             "top": "40",
-            "left": "320",
+            "left": "380",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
             "uuid": "d71128de-5a20-4f72-969e-726003f2bae8"
@@ -281,8 +366,8 @@
             "description": null,
             "arguments": [],
             "status": null,
-            "top": "300",
-            "left": "1300",
+            "top": "280",
+            "left": "1340",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
             "uuid": "19e34974-b5b2-41d7-9d41-573269636d11"
@@ -303,13 +388,43 @@
     "routes": [
         {
             "@type": "WorkflowRoute",
-            "name": "FortiManager API -> get fmg table",
+            "name": "Copy of FortiManager API args -> get fmg table",
             "targetStep": "\/api\/3\/workflow_steps\/ed50f595-d0eb-41e7-8309-9a3fc0d36d77",
+            "sourceStep": "\/api\/3\/workflow_steps\/2613704e-dd1d-4844-b3fe-e74cb72215f7",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "fc91a0e8-047b-4157-afdc-0e6ffaab2d99"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "FortiManager API args -> FortiManager API method",
+            "targetStep": "\/api\/3\/workflow_steps\/f5d5ffc0-cffb-49a5-90c5-48db720c1f0b",
             "sourceStep": "\/api\/3\/workflow_steps\/a9b09485-6198-470a-bda3-91810230fd76",
             "label": null,
             "isExecuted": false,
             "group": null,
-            "uuid": "71a36727-fa6e-4bae-b13f-2ec027661d7e"
+            "uuid": "67f4aa8c-a28b-40d8-9049-ec062b29073f"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "FortiManager API method -> Copy of FortiManager API args",
+            "targetStep": "\/api\/3\/workflow_steps\/2613704e-dd1d-4844-b3fe-e74cb72215f7",
+            "sourceStep": "\/api\/3\/workflow_steps\/f5d5ffc0-cffb-49a5-90c5-48db720c1f0b",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "ad9ec41d-cf46-420b-b14a-38c2f5a2145c"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "FortiManager API method -> exec fmg payload",
+            "targetStep": "\/api\/3\/workflow_steps\/55d1767d-70c2-46df-b636-c8f4ecad0ef0",
+            "sourceStep": "\/api\/3\/workflow_steps\/f5d5ffc0-cffb-49a5-90c5-48db720c1f0b",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "aaa272de-e0d7-418f-a669-713d993986bd"
         },
         {
             "@type": "WorkflowRoute",
@@ -400,6 +515,26 @@
             "isExecuted": false,
             "group": null,
             "uuid": "354cbeff-a022-46e1-a870-e76555bed1d4"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "proxy fmg api -> FortiManager API results",
+            "targetStep": "\/api\/3\/workflow_steps\/9b10bf0b-f1b4-43f6-9b6c-5b72182e60b3",
+            "sourceStep": "\/api\/3\/workflow_steps\/159de120-cc0b-4c30-b99d-53a494016d49",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "6782033f-40c2-43e8-840a-3d98e531dece"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "proxy fmg payload -> proxy fmg api",
+            "targetStep": "\/api\/3\/workflow_steps\/159de120-cc0b-4c30-b99d-53a494016d49",
+            "sourceStep": "\/api\/3\/workflow_steps\/55d1767d-70c2-46df-b636-c8f4ecad0ef0",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "575e271a-bf2d-49a4-957c-e6de13e36d1a"
         },
         {
             "@type": "WorkflowRoute",

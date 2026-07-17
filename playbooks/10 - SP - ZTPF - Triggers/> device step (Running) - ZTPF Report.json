@@ -1,7 +1,7 @@
 {
     "@type": "Workflow",
     "triggerLimit": null,
-    "name": "> device step (Running) - FortiManager Remote CLI",
+    "name": "> device step (Running) - ZTPF Report",
     "aliasName": null,
     "tag": null,
     "description": "Step changed to running for given Action Category and Type.",
@@ -13,7 +13,7 @@
     "synchronous": false,
     "collection": "\/api\/3\/workflow_collections\/9cca11ea-b95a-4504-8385-ad42db358c36",
     "versions": [],
-    "triggerStep": "\/api\/3\/workflow_steps\/ef0e1f5d-179a-4fd3-9e89-05ec2faeffe4",
+    "triggerStep": "\/api\/3\/workflow_steps\/ebdff6d1-c100-47be-bfd0-6e00e0e177e3",
     "steps": [
         {
             "@type": "WorkflowStep",
@@ -24,45 +24,44 @@
             "top": "140",
             "left": "20",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
-            "group": "\/api\/3\/workflow_groups\/4194fe26-a05c-4889-a378-8a82f572d0a7",
-            "uuid": "a02aa011-ac2f-4ef0-87de-b76c6080a780"
+            "group": "\/api\/3\/workflow_groups\/4b390490-2035-4b2f-b3ef-8ebad30a7f7a",
+            "uuid": "8008b917-c93f-4ae4-ae1d-7d8e30497284"
         },
         {
             "@type": "WorkflowStep",
             "name": "run automation",
             "description": "Steps to run automation start here and connect to the next step, the post_run.",
             "arguments": {
-                "script_type": "{{vars.input.records[0].triggerKey.split(' ')[1:]|join(\" \")}}",
+                "script_type": "{{vars.input.records[0].triggerKey.split(' ')[1]}}",
                 "device_step_id": "{{vars.input.records[0].id}}"
             },
             "status": null,
             "top": "100",
             "left": "1060",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
-            "group": "\/api\/3\/workflow_groups\/4194fe26-a05c-4889-a378-8a82f572d0a7",
-            "uuid": "e399a4b7-0240-4186-8bc1-88cfd02a3f45"
+            "group": "\/api\/3\/workflow_groups\/4b390490-2035-4b2f-b3ef-8ebad30a7f7a",
+            "uuid": "4f3abe5a-11f7-4b4d-b98f-e20c9e8b803a"
         },
         {
             "@type": "WorkflowStep",
-            "name": "run device script",
+            "name": "run report",
             "description": null,
             "arguments": {
                 "arguments": {
-                    "script_type": "{{vars.script_type}}",
                     "device_step_id": "{{vars.device_step_id}}"
                 },
                 "apply_async": false,
                 "step_variables": [],
                 "pass_parent_env": false,
                 "pass_input_record": false,
-                "workflowReference": "\/api\/3\/workflows\/9339cf20-07e5-419c-b995-68d4d897d525"
+                "workflowReference": "\/api\/3\/workflows\/13c165ac-38fc-41c4-b20f-cb90394c3d71"
             },
             "status": null,
-            "top": "340",
-            "left": "720",
+            "top": "280",
+            "left": "700",
             "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
             "group": null,
-            "uuid": "0062f25f-9edc-4f71-8348-b511b86d126f"
+            "uuid": "0a653a51-a0cb-42cf-a3b3-8efc3186325d"
         },
         {
             "@type": "WorkflowStep",
@@ -113,7 +112,7 @@
                         {
                             "type": "primitive",
                             "field": "triggerKey",
-                            "value": "FortiManager Remote CLI",
+                            "value": "ZTPF Report",
                             "operator": "eq",
                             "_operator": "eq"
                         }
@@ -125,8 +124,8 @@
             "top": "46",
             "left": "20",
             "stepType": "\/api\/3\/workflow_step_types\/9300bf69-5063-486d-b3a6-47eb9da24872",
-            "group": "\/api\/3\/workflow_groups\/4194fe26-a05c-4889-a378-8a82f572d0a7",
-            "uuid": "ef0e1f5d-179a-4fd3-9e89-05ec2faeffe4"
+            "group": "\/api\/3\/workflow_groups\/4b390490-2035-4b2f-b3ef-8ebad30a7f7a",
+            "uuid": "ebdff6d1-c100-47be-bfd0-6e00e0e177e3"
         },
         {
             "@type": "WorkflowStep",
@@ -146,8 +145,8 @@
             "top": "140",
             "left": "320",
             "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
-            "group": "\/api\/3\/workflow_groups\/4194fe26-a05c-4889-a378-8a82f572d0a7",
-            "uuid": "a60f64e9-1326-46da-b64e-4fc6030c1834"
+            "group": "\/api\/3\/workflow_groups\/4b390490-2035-4b2f-b3ef-8ebad30a7f7a",
+            "uuid": "be7e9fa3-f4c2-4ed1-88ba-704f58cdc0a9"
         },
         {
             "@type": "WorkflowStep",
@@ -169,67 +168,67 @@
             "top": "46",
             "left": "320",
             "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
-            "group": "\/api\/3\/workflow_groups\/4194fe26-a05c-4889-a378-8a82f572d0a7",
-            "uuid": "bdaa7508-b00e-43cf-9d03-c6251d321b3a"
+            "group": "\/api\/3\/workflow_groups\/4b390490-2035-4b2f-b3ef-8ebad30a7f7a",
+            "uuid": "19d6c1b8-b630-46d6-8532-b3493dbfe508"
         }
     ],
     "routes": [
         {
             "@type": "WorkflowRoute",
-            "name": "run automation -> run device script",
-            "targetStep": "\/api\/3\/workflow_steps\/0062f25f-9edc-4f71-8348-b511b86d126f",
-            "sourceStep": "\/api\/3\/workflow_steps\/e399a4b7-0240-4186-8bc1-88cfd02a3f45",
+            "name": "run automation -> run report",
+            "targetStep": "\/api\/3\/workflow_steps\/0a653a51-a0cb-42cf-a3b3-8efc3186325d",
+            "sourceStep": "\/api\/3\/workflow_steps\/4f3abe5a-11f7-4b4d-b98f-e20c9e8b803a",
             "label": null,
             "isExecuted": false,
             "group": null,
-            "uuid": "0bf6f601-216c-45b4-82d4-1bbb9906f2f3"
+            "uuid": "be46cdb4-012e-4654-a6ef-e33e5ea902ec"
         },
         {
             "@type": "WorkflowRoute",
-            "name": "run device script -> step post_run",
-            "targetStep": "\/api\/3\/workflow_steps\/a60f64e9-1326-46da-b64e-4fc6030c1834",
-            "sourceStep": "\/api\/3\/workflow_steps\/0062f25f-9edc-4f71-8348-b511b86d126f",
+            "name": "run report -> step post_run",
+            "targetStep": "\/api\/3\/workflow_steps\/be7e9fa3-f4c2-4ed1-88ba-704f58cdc0a9",
+            "sourceStep": "\/api\/3\/workflow_steps\/0a653a51-a0cb-42cf-a3b3-8efc3186325d",
             "label": null,
             "isExecuted": false,
             "group": null,
-            "uuid": "1ef18ef7-f691-43c7-bf0c-9f40209b5b7d"
+            "uuid": "01b24a0e-e850-4661-9f9a-cf4532f3fe5b"
         },
         {
             "@type": "WorkflowRoute",
             "name": "Start -> step trigger pre_run",
-            "targetStep": "\/api\/3\/workflow_steps\/bdaa7508-b00e-43cf-9d03-c6251d321b3a",
-            "sourceStep": "\/api\/3\/workflow_steps\/ef0e1f5d-179a-4fd3-9e89-05ec2faeffe4",
+            "targetStep": "\/api\/3\/workflow_steps\/19d6c1b8-b630-46d6-8532-b3493dbfe508",
+            "sourceStep": "\/api\/3\/workflow_steps\/ebdff6d1-c100-47be-bfd0-6e00e0e177e3",
             "label": null,
             "isExecuted": false,
             "group": null,
-            "uuid": "51bdc8da-82ea-46cf-a5bf-9c8a0d7f3a79"
+            "uuid": "4c24e3cf-64f2-4f2c-9952-5c94d5e54695"
         },
         {
             "@type": "WorkflowRoute",
             "name": "step post_run -> complete",
-            "targetStep": "\/api\/3\/workflow_steps\/a02aa011-ac2f-4ef0-87de-b76c6080a780",
-            "sourceStep": "\/api\/3\/workflow_steps\/a60f64e9-1326-46da-b64e-4fc6030c1834",
+            "targetStep": "\/api\/3\/workflow_steps\/8008b917-c93f-4ae4-ae1d-7d8e30497284",
+            "sourceStep": "\/api\/3\/workflow_steps\/be7e9fa3-f4c2-4ed1-88ba-704f58cdc0a9",
             "label": null,
             "isExecuted": false,
             "group": null,
-            "uuid": "fc610b60-b764-405f-981d-a1032ba23343"
+            "uuid": "1bdcf703-dfbf-459a-a81c-9d674741bcdd"
         },
         {
             "@type": "WorkflowRoute",
             "name": "step trigger pre_run -> run automation",
-            "targetStep": "\/api\/3\/workflow_steps\/e399a4b7-0240-4186-8bc1-88cfd02a3f45",
-            "sourceStep": "\/api\/3\/workflow_steps\/bdaa7508-b00e-43cf-9d03-c6251d321b3a",
+            "targetStep": "\/api\/3\/workflow_steps\/4f3abe5a-11f7-4b4d-b98f-e20c9e8b803a",
+            "sourceStep": "\/api\/3\/workflow_steps\/19d6c1b8-b630-46d6-8532-b3493dbfe508",
             "label": null,
             "isExecuted": false,
             "group": null,
-            "uuid": "151bf6b1-0f90-4f7d-b987-6f464c132bd2"
+            "uuid": "4736efea-0a50-4a32-bdc7-976cbc1290e3"
         }
     ],
     "groups": [
         {
             "@type": "WorkflowGroup",
             "name": "Details",
-            "description": "Step status changed to running and matching trigger key playbook. Starts with standard pre and post routines but each action is unique to the needs of this step.\n\nType: FortiManager DeviceDB\nDescription: Create, execute, delete, and get the logs of a device manager script via the FMG API.",
+            "description": "Step status changed to running and matching trigger key playbook. Starts with standard pre and post routines but each action is unique to the needs of this step.\n\nType: ZTPF Report\nDescription: Run the Report",
             "type": "note",
             "isCollapsed": false,
             "hasTriggerStep": false,
@@ -240,7 +239,7 @@
             "left": "20",
             "height": "205",
             "width": "496",
-            "uuid": "6cf5250a-3974-46d3-b87d-4d80e22ff48c",
+            "uuid": "2694dcab-e1aa-46e3-9f49-194ce7e12e8f",
             "recordTags": []
         },
         {
@@ -257,14 +256,14 @@
             "left": "20",
             "height": "232",
             "width": "1360",
-            "uuid": "4194fe26-a05c-4889-a378-8a82f572d0a7",
+            "uuid": "4b390490-2035-4b2f-b3ef-8ebad30a7f7a",
             "recordTags": []
         }
     ],
     "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
     "playbookOrigin": "\/api\/3\/picklists\/b6d710a9-a8ec-41ec-8817-fe9fa062fcdd",
     "isEditable": true,
-    "uuid": "065f534e-5ef0-4b32-9f08-5f587a172c73",
+    "uuid": "30dc14b0-252d-4d53-ae9a-3e89c6d357a6",
     "owners": [],
     "isPrivate": false,
     "deletedAt": null,

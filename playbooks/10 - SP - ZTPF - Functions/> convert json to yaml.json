@@ -101,7 +101,7 @@
                     },
                     {
                         "step_iri": "\/api\/3\/workflow_steps\/3d1f617f-9a70-486f-bd24-ec4f879a6a32",
-                        "condition": "{{ vars.input.params['manual_test'] in [true,1,\"y\",\"yes\"] }}",
+                        "condition": "{{ vars.manual_test }}",
                         "step_name": "manual test"
                     }
                 ],
@@ -129,6 +129,20 @@
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
             "uuid": "772dd020-27b4-466f-a49d-2314b309fd87"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "setup vars",
+            "description": null,
+            "arguments": {
+                "manual_test": "{%- set inv = vars.input.params['manual_test'] -%}\n{%- if inv in [true,\"y\",\"yes\",1] -%}\ntrue\n{%- else -%}\nfalse\n{%- endif -%}"
+            },
+            "status": null,
+            "top": "80",
+            "left": "480",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "ffd15010-b6f7-44d1-8003-17c175bbdf93"
         },
         {
             "@type": "WorkflowStep",
@@ -207,13 +221,23 @@
         },
         {
             "@type": "WorkflowRoute",
-            "name": "Start -> yaml2json",
+            "name": "setup vars -> json2yaml",
             "targetStep": "\/api\/3\/workflow_steps\/7de05436-59d4-4f6f-9e36-6560d066bc04",
+            "sourceStep": "\/api\/3\/workflow_steps\/ffd15010-b6f7-44d1-8003-17c175bbdf93",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "0ced5cd3-5271-4d3b-b784-66ef1f8e9728"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Start -> setup vars",
+            "targetStep": "\/api\/3\/workflow_steps\/ffd15010-b6f7-44d1-8003-17c175bbdf93",
             "sourceStep": "\/api\/3\/workflow_steps\/e6fd51af-2d30-4fcd-8a2a-7f0f0fdf5f4b",
             "label": null,
             "isExecuted": false,
             "group": null,
-            "uuid": "91739f93-5267-4656-8148-6c6bf51a437f"
+            "uuid": "3e257886-97f8-4238-9d13-b114c5a4402b"
         }
     ],
     "groups": [
@@ -237,7 +261,7 @@
     ],
     "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
     "playbookOrigin": "\/api\/3\/picklists\/b6d710a9-a8ec-41ec-8817-fe9fa062fcdd",
-    "isEditable": false,
+    "isEditable": true,
     "uuid": "f55012fc-f837-4759-87a1-4bdcc486f87b",
     "owners": [],
     "isPrivate": false,

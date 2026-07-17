@@ -90,9 +90,9 @@
             "name": "rungroup status complete",
             "description": null,
             "arguments": {
-                "total_time": "{% macro human_time(total_seconds) -%}\n    {%- set total_seconds = total_seconds | int -%}\n    {%- set days = total_seconds \/\/ 86400 -%}\n    {%- set hours = (total_seconds % 86400) \/\/ 3600 -%}\n    {%- set minutes = (total_seconds % 3600) \/\/ 60 -%}\n    {%- set seconds = total_seconds % 60 -%}\n\n    {%- set out = [] -%}\n\n    {%- if days > 0 -%}\n        {%- set _ = out.append(days ~ \"d\") -%}\n    {%- endif -%}\n\n    {%- if hours > 0 -%}\n        {%- set _ = out.append(hours ~ \"h\") -%}\n    {%- endif -%}\n\n    {%- if minutes > 0 -%}\n        {%- set _ = out.append(minutes ~ \"m\") -%}\n    {%- endif -%}\n\n    {%- if total_seconds < 600 and seconds > 0 -%}\n        {%- set _ = out.append(seconds ~ \"s\") -%}\n    {%- endif -%}\n\n    {%- if out | length == 0 -%}\n        0s\n    {%- else -%}\n        {{ out | join(\" \") }}\n    {%- endif -%}\n{%- endmacro %}\n\n{%- set step_seconds_sum = vars.step_results.steps_stopped|json_query('[].stepTimeSeconds')|sum -%}\n\n{%- set total_seconds = step_seconds_sum -%}\n{{human_time(total_seconds )}}",
+                "total_time": "{% macro human_time(total_seconds) -%}\n    {%- set total_seconds = total_seconds | int -%}\n    {%- set days = total_seconds \/\/ 86400 -%}\n    {%- set hours = (total_seconds % 86400) \/\/ 3600 -%}\n    {%- set minutes = (total_seconds % 3600) \/\/ 60 -%}\n    {%- set seconds = total_seconds % 60 -%}\n\n    {%- set out = [] -%}\n\n    {%- if days > 0 -%}\n        {%- set _ = out.append(days ~ \"d\") -%}\n    {%- endif -%}\n\n    {%- if hours > 0 -%}\n        {%- set _ = out.append(hours ~ \"h\") -%}\n    {%- endif -%}\n\n    {%- if minutes > 0 -%}\n        {%- set _ = out.append(minutes ~ \"m\") -%}\n    {%- endif -%}\n\n    {%- if total_seconds < 600 and seconds > 0 -%}\n        {%- set _ = out.append(seconds ~ \"s\") -%}\n    {%- endif -%}\n\n    {%- if out | length == 0 -%}\n        0s\n    {%- else -%}\n        {{ out | join(\" \") }}\n    {%- endif -%}\n{%- endmacro %}\n\n{%- set start_min =  vars.step_results.steps_stopped\n                          |json_query('[].stepStartTimestamp')\n                          |min\n-%}\n{%- set stop_max =  vars.step_results.steps_stopped\n                          |json_query('[].stepStopTimestamp')\n                          |max\n-%}\n\n{%- set total_seconds = stop_max - start_min  -%}\n{{human_time(total_seconds )}}",
                 "rungroup_status": "Complete",
-                "total_time_seconds": "{{vars.step_results.steps_stopped|json_query('[].stepTimeSeconds')|sum}}",
+                "total_time_seconds": "{%- set start_min =  vars.step_results.steps_stopped\n                          |json_query('[].stepStartTimestamp')\n                          |min\n-%}\n{%- set stop_max =  vars.step_results.steps_stopped\n                          |json_query('[].stepStopTimestamp')\n                          |max\n-%}\n{%- set total_seconds = stop_max - start_min  -%}\n{{total_seconds}}",
                 "ztpfRunning_checkbox": "false"
             },
             "status": null,
@@ -424,7 +424,7 @@
     ],
     "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
     "playbookOrigin": "\/api\/3\/picklists\/b6d710a9-a8ec-41ec-8817-fe9fa062fcdd",
-    "isEditable": false,
+    "isEditable": true,
     "uuid": "4afe669a-08c8-45f6-94e3-82910e7a1d5a",
     "owners": [],
     "isPrivate": false,

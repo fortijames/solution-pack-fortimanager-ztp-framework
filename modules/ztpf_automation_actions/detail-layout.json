@@ -239,7 +239,7 @@
                                                                                                         "name": "inputParameters",
                                                                                                         "highlightMode": true,
                                                                                                         "linky": true,
-                                                                                                        "readOnly": false
+                                                                                                        "readOnly": true
                                                                                                     }
                                                                                                 ],
                                                                                                 "style": "col-lg-4"
@@ -281,6 +281,81 @@
                                                                         {
                                                                             "type": "sectionHeader",
                                                                             "config": {
+                                                                                "wid": "7cc32122-868a-4603-bf46-3f24c09ddce6",
+                                                                                "query": {
+                                                                                    "filters": [],
+                                                                                    "sort": [],
+                                                                                    "limit": 10
+                                                                                },
+                                                                                "editorType": "html",
+                                                                                "sectionText": "<p style=\"text-align: center;\"><span style=\"font-size: 14pt;\"><strong>Payload Settings<\/strong><\/span><\/p>\n<p style=\"text-align: center;\"><span style=\"font-size: 12pt;\">Create the script template to build the payload for running this action.&nbsp;<\/span><\/p>"
+                                                                            }
+                                                                        },
+                                                                        {
+                                                                            "type": "playbookButtons-1.1.1",
+                                                                            "config": {
+                                                                                "wid": "44d51d9d-7c53-4374-bd1f-053b73a78a88",
+                                                                                "widgetName": "Playbook Execution Wizard",
+                                                                                "selectedPlaybooksWithRecord": [
+                                                                                    {
+                                                                                        "name": "Configure Action Script Help",
+                                                                                        "uuid": "7dfafe5f-36c1-4d79-80d7-10ee82e068ff",
+                                                                                        "actionTriggerName": "Script Help",
+                                                                                        "collectionName": "10 - SP - ZTPF - Buttons",
+                                                                                        "icon": "icon icon-help"
+                                                                                    }
+                                                                                ]
+                                                                            }
+                                                                        },
+                                                                        {
+                                                                            "type": "editableFormGroup",
+                                                                            "config": {
+                                                                                "wid": "fb384b0a-317a-4200-9b3f-cb73df04be79",
+                                                                                "rows": [
+                                                                                    {
+                                                                                        "columns": [
+                                                                                            {
+                                                                                                "fields": [
+                                                                                                    {
+                                                                                                        "name": "inputParameters",
+                                                                                                        "highlightMode": true,
+                                                                                                        "linky": true,
+                                                                                                        "readOnly": false
+                                                                                                    },
+                                                                                                    {
+                                                                                                        "name": "ztpfTemplates",
+                                                                                                        "highlightMode": true,
+                                                                                                        "linky": true,
+                                                                                                        "readOnly": true
+                                                                                                    },
+                                                                                                    {
+                                                                                                        "name": "script",
+                                                                                                        "highlightMode": true,
+                                                                                                        "linky": true,
+                                                                                                        "readOnly": false
+                                                                                                    }
+                                                                                                ],
+                                                                                                "style": "col-lg-12"
+                                                                                            }
+                                                                                        ]
+                                                                                    }
+                                                                                ]
+                                                                            }
+                                                                        }
+                                                                    ],
+                                                                    "style": "col-lg-12"
+                                                                }
+                                                            ],
+                                                            "wid": "0af0c475-8927-4f41-b0ab-0cc9876f9935",
+                                                            "_collapsed": false
+                                                        },
+                                                        {
+                                                            "columns": [
+                                                                {
+                                                                    "widgets": [
+                                                                        {
+                                                                            "type": "sectionHeader",
+                                                                            "config": {
                                                                                 "wid": "3e7cfdbc-6e47-4a9c-a3f5-312d8ff205d9",
                                                                                 "query": {
                                                                                     "filters": [],
@@ -298,11 +373,33 @@
                                                                                 "excludes": [],
                                                                                 "selectionType": "include",
                                                                                 "actionButtons": [],
-                                                                                "expandableCol": [],
+                                                                                "expandableCol": {
+                                                                                    "ztpfMetadataSources": {
+                                                                                        "columns": [
+                                                                                            {
+                                                                                                "openTab": false,
+                                                                                                "name": "exampleJinjaVars"
+                                                                                            },
+                                                                                            {
+                                                                                                "openTab": false,
+                                                                                                "name": "exampleOutput"
+                                                                                            }
+                                                                                        ],
+                                                                                        "checkBox": true
+                                                                                    }
+                                                                                },
                                                                                 "enableHorizontalScroll": [],
                                                                                 "includes": [
                                                                                     "ztpfMetadataSources"
-                                                                                ]
+                                                                                ],
+                                                                                "queryFilters": {
+                                                                                    "ztpf_metadata_sources": {
+                                                                                        "sort": [],
+                                                                                        "limit": 30,
+                                                                                        "logic": "AND",
+                                                                                        "filters": []
+                                                                                    }
+                                                                                }
                                                                             }
                                                                         }
                                                                     ],
@@ -311,93 +408,13 @@
                                                             ],
                                                             "wid": "78b21e5e-a21b-407d-a391-53e4cf5de314",
                                                             "_collapsed": false
-                                                        },
-                                                        {
-                                                            "columns": [
-                                                                {
-                                                                    "widgets": [
-                                                                        {
-                                                                            "type": "sectionHeader",
-                                                                            "config": {
-                                                                                "wid": "7cc32122-868a-4603-bf46-3f24c09ddce6",
-                                                                                "query": {
-                                                                                    "filters": [],
-                                                                                    "sort": [],
-                                                                                    "limit": 10
-                                                                                },
-                                                                                "editorType": "html",
-                                                                                "sectionText": "<p style=\"text-align: center;\"><span style=\"font-size: 14pt;\"><strong>Payload Settings<\/strong><\/span><\/p>\n<p style=\"text-align: center;\"><span style=\"font-size: 12pt;\">Create the script template to build the payload for running this action.&nbsp;<\/span><\/p>"
-                                                                            }
-                                                                        },
-                                                                        {
-                                                                            "type": "editableFormGroup",
-                                                                            "config": {
-                                                                                "wid": "fb384b0a-317a-4200-9b3f-cb73df04be79",
-                                                                                "rows": [
-                                                                                    {
-                                                                                        "columns": [
-                                                                                            {
-                                                                                                "fields": [
-                                                                                                    {
-                                                                                                        "name": "inputParameters",
-                                                                                                        "highlightMode": true,
-                                                                                                        "linky": true,
-                                                                                                        "readOnly": true
-                                                                                                    }
-                                                                                                ],
-                                                                                                "style": "col-lg-6"
-                                                                                            },
-                                                                                            {
-                                                                                                "fields": [
-                                                                                                    {
-                                                                                                        "name": "ztpfTemplates",
-                                                                                                        "highlightMode": true,
-                                                                                                        "linky": true,
-                                                                                                        "readOnly": true
-                                                                                                    }
-                                                                                                ],
-                                                                                                "style": "col-lg-6"
-                                                                                            }
-                                                                                        ]
-                                                                                    }
-                                                                                ]
-                                                                            }
-                                                                        },
-                                                                        {
-                                                                            "type": "editableFormGroup",
-                                                                            "config": {
-                                                                                "wid": "7d176fda-669f-45f8-9f1a-9f5e292935f2",
-                                                                                "rows": [
-                                                                                    {
-                                                                                        "columns": [
-                                                                                            {
-                                                                                                "fields": [
-                                                                                                    {
-                                                                                                        "name": "script",
-                                                                                                        "highlightMode": true,
-                                                                                                        "linky": true,
-                                                                                                        "readOnly": false
-                                                                                                    }
-                                                                                                ]
-                                                                                            }
-                                                                                        ]
-                                                                                    }
-                                                                                ]
-                                                                            }
-                                                                        }
-                                                                    ],
-                                                                    "style": "col-lg-12"
-                                                                }
-                                                            ],
-                                                            "wid": "03debe1b-b06e-4e5e-a955-583fa3d3500b",
-                                                            "_collapsed": false
                                                         }
                                                     ]
                                                 },
                                                 "visible": true
                                             },
                                             "icon": "icon icon-settings",
-                                            "show": false,
+                                            "show": true,
                                             "visible": true
                                         },
                                         {
@@ -590,7 +607,7 @@
                                                 "visible": true
                                             },
                                             "icon": "icon icon-test-configuration",
-                                            "show": true,
+                                            "show": false,
                                             "visible": true
                                         },
                                         {
@@ -707,7 +724,7 @@
     "isDefault": true,
     "visible": true,
     "viewOptions": "detail",
-    "name": "Base Template",
+    "name": "Default Layout",
     "system": true,
     "uuid": "modules-ztpf_automation_actions-detail",
     "newUuid": "725f5f9f-9ebc-4fad-8fc5-5a87815b928b"

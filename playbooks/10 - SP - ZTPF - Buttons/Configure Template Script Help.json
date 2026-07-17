@@ -1,7 +1,7 @@
 {
     "@type": "Workflow",
     "triggerLimit": null,
-    "name": "Configure Template Script",
+    "name": "Configure Template Script Help",
     "aliasName": null,
     "tag": null,
     "description": "Help user build a template using existing linked metadata sources.",
@@ -21,8 +21,8 @@
             "description": null,
             "arguments": [],
             "status": null,
-            "top": "120",
-            "left": "380",
+            "top": "280",
+            "left": "680",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
             "uuid": "d93a2a3e-b928-4c10-a599-f74732ffe9da"
@@ -32,11 +32,11 @@
             "name": "create example_data",
             "description": null,
             "arguments": {
-                "example_data": "{%- set ret = {\"record\":{},\"data\":{}} -%}\n   \n{%- for j in vars.steps.find_metadata_sources|json_query('[].exampleJinjaVars.record') -%}\n{%- do ret.record.update(j) -%}\n{%- endfor -%}\n\n{%- for m in vars.steps.find_metadata_sources|json_query('[].exampleOutput') -%}\n{%- do ret.data.update(m) -%}\n{%- endfor -%}\n\n{{ret}}"
+                "example_data": "{%- set ret = {\"record\":{},\"data\":{}} -%}\n{%- if vars.input.records[0].exampleJinjaVars -%}\n  {%- do ret.update(vars.input.records[0].exampleJinjaVars) -%}\n{%- endif -%}\n   \n{%- for j in vars.steps.find_metadata_sources|json_query('[].exampleJinjaVars.record') -%}\n{%- do ret.record.update(j) -%}\n{%- endfor -%}\n\n{%- for m in vars.steps.find_metadata_sources|json_query('[].exampleOutput') -%}\n{%- do ret.data.update(m) -%}\n{%- endfor -%}\n\n{{ret}}"
             },
             "status": null,
-            "top": "40",
-            "left": "820",
+            "top": "100",
+            "left": "720",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
             "uuid": "ce84de14-1c40-4295-86eb-9ae769010445"
@@ -84,8 +84,8 @@
             "description": null,
             "arguments": [],
             "status": null,
-            "top": "240",
-            "left": "380",
+            "top": "280",
+            "left": "80",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
             "uuid": "618bcd4a-adaf-4544-b20b-c7ace3042a6e"
@@ -99,7 +99,7 @@
                 "input": {
                     "schema": {
                         "title": "Script for Metadta from Example Data",
-                        "description": "Copy\/Paste the following metadata example data into any Jinja Editor to build your script.\n\n```\n{{vars.example_data\n  |toJSON\n  |regex_replace(\"^\\\"\",\"\")\n  |regex_replace(\"\\\"$\",\"\")\n  |replace(\"\\\\\",\"\")\n}}\n```\n\nThen your Jinja Script can leverage the metadata above like in the below example:\n\n```\n{%- raw %}\nconfig\n  edit {{ data.datakey.config1 }}\n    set edit {{ data.datakey.config1.setting }}\n  next\nend\n{%- endraw %}\n```",
+                        "description": "The following data is from the example data in the linked metadata and can be copy\/pasted into any Jinja Editor to help build your script.\n\n```\n{{vars.example_data\n  |toJSON\n  |regex_replace(\"^\\\"\",\"\")\n  |regex_replace(\"\\\"$\",\"\")\n  |replace(\"\\\\\",\"\")\n}}\n```\n\nThen your Jinja Script can leverage the metadata above like in the below example:\n\n```\n{%- raw %}\nconfig\n  edit {{ data.datakey.config1 }}\n    set edit {{ data.datakey.config1.setting }}\n  next\nend\n{%- endraw %}\n```",
                         "inputVariables": []
                     }
                 },
@@ -148,8 +148,8 @@
                 "external_email_attachments": null
             },
             "status": null,
-            "top": "180",
-            "left": "820",
+            "top": "160",
+            "left": "380",
             "stepType": "\/api\/3\/workflow_step_types\/fc04082a-d7dc-4299-96fb-6837b1baa0fe",
             "group": null,
             "uuid": "b127a619-ca29-4716-982b-91d44e67e7a1"
@@ -253,7 +253,7 @@
     "groups": [],
     "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
     "playbookOrigin": "\/api\/3\/picklists\/b6d710a9-a8ec-41ec-8817-fe9fa062fcdd",
-    "isEditable": false,
+    "isEditable": true,
     "uuid": "513f3db1-41b1-47b6-ab7f-3045fad2d2e6",
     "owners": [],
     "isPrivate": false,

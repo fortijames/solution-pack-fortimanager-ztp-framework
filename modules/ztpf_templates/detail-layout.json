@@ -258,7 +258,75 @@
                                                                     "style": "col-lg-12"
                                                                 }
                                                             ],
-                                                            "wid": "baf8b4ea-aac9-411e-8e1f-6017c25a0473",
+                                                            "wid": "9fb4f49a-ac55-477c-ae11-c492f46ca460",
+                                                            "_collapsed": false
+                                                        },
+                                                        {
+                                                            "columns": [
+                                                                {
+                                                                    "widgets": [
+                                                                        {
+                                                                            "type": "sectionHeader",
+                                                                            "config": {
+                                                                                "wid": "72746b46-8fb6-4f8d-8737-94f1e832561d",
+                                                                                "query": {
+                                                                                    "filters": [],
+                                                                                    "sort": [],
+                                                                                    "limit": 10
+                                                                                },
+                                                                                "editorType": "html",
+                                                                                "sectionText": "<p style=\"text-align: center;\"><span style=\"font-size: 14pt;\"><strong>Linked Metadata Sources<\/strong><\/span><\/p>\n<p style=\"text-align: center;\">Link required metadata sources for the script template.<\/p>"
+                                                                            }
+                                                                        },
+                                                                        {
+                                                                            "type": "relationship.subtab",
+                                                                            "config": {
+                                                                                "wid": "5ef1c34e-5656-4c6d-b55d-e6af34982fb9",
+                                                                                "excludes": [],
+                                                                                "selectionType": "include",
+                                                                                "actionButtons": [],
+                                                                                "expandableCol": {
+                                                                                    "ztpfMetadataSources": {
+                                                                                        "columns": [
+                                                                                            {
+                                                                                                "openTab": false,
+                                                                                                "name": "exampleJinjaVars"
+                                                                                            },
+                                                                                            {
+                                                                                                "openTab": false,
+                                                                                                "name": "exampleOutput"
+                                                                                            }
+                                                                                        ],
+                                                                                        "checkBox": true
+                                                                                    }
+                                                                                },
+                                                                                "enableHorizontalScroll": [],
+                                                                                "includes": [
+                                                                                    "ztpfMetadataSources"
+                                                                                ],
+                                                                                "queryFilters": {
+                                                                                    "ztpf_metadata_sources": {
+                                                                                        "sort": [
+                                                                                            {
+                                                                                                "direction": "DESC",
+                                                                                                "field": "modifyDate",
+                                                                                                "sort": {
+                                                                                                    "direction": "DESC"
+                                                                                                }
+                                                                                            }
+                                                                                        ],
+                                                                                        "limit": 30,
+                                                                                        "logic": "AND",
+                                                                                        "filters": []
+                                                                                    }
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                    ],
+                                                                    "style": "col-lg-12"
+                                                                }
+                                                            ],
+                                                            "wid": "e0bec685-ab26-4484-a720-7f9147b13ab6",
                                                             "_collapsed": false
                                                         }
                                                     ]
@@ -573,94 +641,6 @@
                                             "visible": true
                                         },
                                         {
-                                            "title": "Linked Metadata Sources",
-                                            "active": 0,
-                                            "widget": {
-                                                "type": "rows",
-                                                "config": {
-                                                    "wid": "192c1226-7e2d-41ba-954e-b09ea684eab6",
-                                                    "rows": [
-                                                        {
-                                                            "columns": [
-                                                                {
-                                                                    "widgets": [
-                                                                        {
-                                                                            "type": "sectionHeader",
-                                                                            "config": {
-                                                                                "wid": "004226bc-ba7c-4465-b919-30a99ee40c27",
-                                                                                "query": {
-                                                                                    "filters": [],
-                                                                                    "sort": [],
-                                                                                    "limit": 10
-                                                                                },
-                                                                                "editorType": "html",
-                                                                                "sectionText": "<p style=\"text-align: center;\"><span style=\"font-size: 14pt;\"><strong>Linked Metadata Sources<\/strong><\/span><\/p>"
-                                                                            }
-                                                                        },
-                                                                        {
-                                                                            "type": "relationship.subtab",
-                                                                            "config": {
-                                                                                "wid": "255ff3f3-566d-43ad-8ab9-abbc80086dda",
-                                                                                "excludes": [],
-                                                                                "selectionType": "include",
-                                                                                "actionButtons": [],
-                                                                                "includes": [
-                                                                                    "ztpfMetadataSources"
-                                                                                ],
-                                                                                "expandableCol": {
-                                                                                    "ztpfMetadataSources": {
-                                                                                        "columns": [
-                                                                                            {
-                                                                                                "openTab": false,
-                                                                                                "name": "script"
-                                                                                            },
-                                                                                            {
-                                                                                                "openTab": false,
-                                                                                                "name": "exampleJinjaVars"
-                                                                                            },
-                                                                                            {
-                                                                                                "openTab": false,
-                                                                                                "name": "exampleOutput"
-                                                                                            }
-                                                                                        ],
-                                                                                        "checkBox": true
-                                                                                    }
-                                                                                },
-                                                                                "enableHorizontalScroll": [],
-                                                                                "queryFilters": {
-                                                                                    "ztpf_metadata_sources": {
-                                                                                        "sort": [
-                                                                                            {
-                                                                                                "direction": "DESC",
-                                                                                                "field": "modifyDate",
-                                                                                                "sort": {
-                                                                                                    "direction": "DESC"
-                                                                                                }
-                                                                                            }
-                                                                                        ],
-                                                                                        "limit": 30,
-                                                                                        "logic": "AND",
-                                                                                        "filters": []
-                                                                                    }
-                                                                                }
-                                                                            }
-                                                                        }
-                                                                    ],
-                                                                    "style": "col-lg-12"
-                                                                }
-                                                            ],
-                                                            "wid": "b8509a83-596d-471f-9732-3bf0f26331d7",
-                                                            "_collapsed": false
-                                                        }
-                                                    ]
-                                                },
-                                                "visible": true
-                                            },
-                                            "icon": "icon icon-code-snippet",
-                                            "show": false,
-                                            "visible": true
-                                        },
-                                        {
                                             "title": "Actions using this Template",
                                             "active": 0,
                                             "widget": {
@@ -757,7 +737,7 @@
     "isDefault": true,
     "visible": true,
     "viewOptions": "detail",
-    "name": "Base Template",
+    "name": "Default Layout",
     "system": true,
     "uuid": "modules-ztpf_templates-detail",
     "newUuid": "b3902708-7c2a-4d31-8017-3132f2a28424"

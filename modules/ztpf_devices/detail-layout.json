@@ -497,78 +497,6 @@
                                                                         {
                                                                             "type": "sectionHeader",
                                                                             "config": {
-                                                                                "wid": "9a3fa2c7-625b-4365-9ec8-584a85610cb7",
-                                                                                "query": {
-                                                                                    "filters": [],
-                                                                                    "sort": [],
-                                                                                    "limit": 10
-                                                                                },
-                                                                                "editorType": "html",
-                                                                                "sectionText": "<p style=\"text-align: center;\"><span style=\"font-size: 14pt;\">Run Groups<\/span><\/p>"
-                                                                            }
-                                                                        },
-                                                                        {
-                                                                            "type": "relationship.subtab",
-                                                                            "config": {
-                                                                                "wid": "47f81fe2-c279-4896-b253-188728292e46",
-                                                                                "excludes": [],
-                                                                                "selectionType": "include",
-                                                                                "actionButtons": [],
-                                                                                "expandableCol": {
-                                                                                    "ztpfDeviceAutomtionSteps": {
-                                                                                        "columns": [],
-                                                                                        "checkBox": false
-                                                                                    }
-                                                                                },
-                                                                                "enableHorizontalScroll": [],
-                                                                                "includes": [
-                                                                                    "ztpfRunGroups"
-                                                                                ],
-                                                                                "queryFilters": {
-                                                                                    "ztpf_device_automation_steps": {
-                                                                                        "sort": [
-                                                                                            {
-                                                                                                "direction": "DESC",
-                                                                                                "field": "stepStopTimestamp",
-                                                                                                "sort": {
-                                                                                                    "direction": "DESC"
-                                                                                                }
-                                                                                            },
-                                                                                            {
-                                                                                                "direction": "ASC",
-                                                                                                "field": "stepNumber",
-                                                                                                "sort": {
-                                                                                                    "direction": "ASC"
-                                                                                                }
-                                                                                            }
-                                                                                        ],
-                                                                                        "limit": 30,
-                                                                                        "logic": "OR",
-                                                                                        "filters": [
-                                                                                            {
-                                                                                                "field": "stepDone",
-                                                                                                "operator": "neq",
-                                                                                                "_operator": "neq",
-                                                                                                "value": true,
-                                                                                                "type": "primitive"
-                                                                                            }
-                                                                                        ]
-                                                                                    }
-                                                                                }
-                                                                            }
-                                                                        }
-                                                                    ]
-                                                                }
-                                                            ],
-                                                            "wid": "bd1709f8-19a3-4504-a0ec-beed531e1336"
-                                                        },
-                                                        {
-                                                            "columns": [
-                                                                {
-                                                                    "widgets": [
-                                                                        {
-                                                                            "type": "sectionHeader",
-                                                                            "config": {
                                                                                 "wid": "eb968254-8060-45ca-8fce-2a7e5ee5e000",
                                                                                 "query": {
                                                                                     "filters": [],
@@ -630,6 +558,80 @@
                                                                                                 "field": "stepDone",
                                                                                                 "operator": "eq",
                                                                                                 "_operator": "eq",
+                                                                                                "value": true,
+                                                                                                "type": "primitive"
+                                                                                            }
+                                                                                        ]
+                                                                                    }
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                    ],
+                                                                    "style": "col-lg-12"
+                                                                }
+                                                            ],
+                                                            "wid": "bd1709f8-19a3-4504-a0ec-beed531e1336",
+                                                            "_collapsed": false
+                                                        },
+                                                        {
+                                                            "columns": [
+                                                                {
+                                                                    "widgets": [
+                                                                        {
+                                                                            "type": "sectionHeader",
+                                                                            "config": {
+                                                                                "wid": "9a3fa2c7-625b-4365-9ec8-584a85610cb7",
+                                                                                "query": {
+                                                                                    "filters": [],
+                                                                                    "sort": [],
+                                                                                    "limit": 10
+                                                                                },
+                                                                                "editorType": "html",
+                                                                                "sectionText": "<p style=\"text-align: center;\"><span style=\"font-size: 14pt;\">Run Groups<\/span><\/p>"
+                                                                            }
+                                                                        },
+                                                                        {
+                                                                            "type": "relationship.subtab",
+                                                                            "config": {
+                                                                                "wid": "47f81fe2-c279-4896-b253-188728292e46",
+                                                                                "excludes": [],
+                                                                                "selectionType": "include",
+                                                                                "actionButtons": [],
+                                                                                "expandableCol": {
+                                                                                    "ztpfDeviceAutomtionSteps": {
+                                                                                        "columns": [],
+                                                                                        "checkBox": false
+                                                                                    }
+                                                                                },
+                                                                                "enableHorizontalScroll": [],
+                                                                                "includes": [
+                                                                                    "ztpfRunGroups"
+                                                                                ],
+                                                                                "queryFilters": {
+                                                                                    "ztpf_device_automation_steps": {
+                                                                                        "sort": [
+                                                                                            {
+                                                                                                "direction": "DESC",
+                                                                                                "field": "stepStopTimestamp",
+                                                                                                "sort": {
+                                                                                                    "direction": "DESC"
+                                                                                                }
+                                                                                            },
+                                                                                            {
+                                                                                                "direction": "ASC",
+                                                                                                "field": "stepNumber",
+                                                                                                "sort": {
+                                                                                                    "direction": "ASC"
+                                                                                                }
+                                                                                            }
+                                                                                        ],
+                                                                                        "limit": 30,
+                                                                                        "logic": "OR",
+                                                                                        "filters": [
+                                                                                            {
+                                                                                                "field": "stepDone",
+                                                                                                "operator": "neq",
+                                                                                                "_operator": "neq",
                                                                                                 "value": true,
                                                                                                 "type": "primitive"
                                                                                             }
@@ -1020,7 +1022,7 @@
     "isDefault": true,
     "visible": true,
     "viewOptions": "detail",
-    "name": "Base Template",
+    "name": "Default Layout",
     "system": true,
     "uuid": "modules-ztpf_devices-detail",
     "newUuid": "092de4e4-ed79-4a32-9b08-1dd107e9f3a6"
