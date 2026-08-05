@@ -273,7 +273,7 @@
             "arguments": {
                 "output": "{%- set script = '*No Action Payload for Step*' -%}\n{%- if 'output' in vars.steps.render_jinja -%}\n  {%- set script = vars.steps.render_jinja.output -%}\n{%- endif -%}\n\n{%- set ret = {\n  \"jinja_vars\": vars.jinja_vars,\n  \"script_rendered\": script\n    |regex_replace('^\"','')\n    |regex_replace('\"$','')\n} -%}\n{{ret}}",
                 "params": "{{vars.input.params}}",
-                "status": "{ \"error\": {{vars.steps.render_jinja.error}} }"
+                "status": "{%- set status = {\"error\":false,\"msg\":\"no errors seen\"} -%}\n{%- if vars.steps.render_jinja.error -%}\n  {%- do status.update({ \"error\":vars.steps.render_jinja.error,\"msg\":\"update from render_jija step.\" }) -%}\n{%- endif -%}\n{{status}}"
             },
             "status": null,
             "top": "120",

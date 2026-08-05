@@ -394,7 +394,15 @@
                                                                                 ],
                                                                                 "queryFilters": {
                                                                                     "ztpf_metadata_sources": {
-                                                                                        "sort": [],
+                                                                                        "sort": [
+                                                                                            {
+                                                                                                "direction": "DESC",
+                                                                                                "field": "modifyDate",
+                                                                                                "sort": {
+                                                                                                    "direction": "DESC"
+                                                                                                }
+                                                                                            }
+                                                                                        ],
                                                                                         "limit": 30,
                                                                                         "logic": "AND",
                                                                                         "filters": []
@@ -414,7 +422,7 @@
                                                 "visible": true
                                             },
                                             "icon": "icon icon-settings",
-                                            "show": true,
+                                            "show": false,
                                             "visible": true
                                         },
                                         {
@@ -671,8 +679,13 @@
                                                                                 "actionButtons": [],
                                                                                 "expandableCol": {
                                                                                     "ztpfDeviceAutomationSteps": {
-                                                                                        "columns": [],
-                                                                                        "checkBox": false
+                                                                                        "columns": [
+                                                                                            {
+                                                                                                "openTab": false,
+                                                                                                "name": "outputMarkdown"
+                                                                                            }
+                                                                                        ],
+                                                                                        "checkBox": true
                                                                                     }
                                                                                 },
                                                                                 "enableHorizontalScroll": [],
@@ -681,7 +694,22 @@
                                                                                 ],
                                                                                 "queryFilters": {
                                                                                     "ztpf_device_automation_steps": {
-                                                                                        "sort": [],
+                                                                                        "sort": [
+                                                                                            {
+                                                                                                "direction": "DESC",
+                                                                                                "field": "stepStopTimestamp",
+                                                                                                "sort": {
+                                                                                                    "direction": "DESC"
+                                                                                                }
+                                                                                            },
+                                                                                            {
+                                                                                                "direction": "ASC",
+                                                                                                "field": "stepNumber",
+                                                                                                "sort": {
+                                                                                                    "direction": "ASC"
+                                                                                                }
+                                                                                            }
+                                                                                        ],
                                                                                         "limit": 30,
                                                                                         "logic": "AND",
                                                                                         "filters": []
@@ -701,7 +729,7 @@
                                                 "visible": true
                                             },
                                             "icon": "fa fa-align-left",
-                                            "show": false,
+                                            "show": true,
                                             "visible": true
                                         }
                                     ]

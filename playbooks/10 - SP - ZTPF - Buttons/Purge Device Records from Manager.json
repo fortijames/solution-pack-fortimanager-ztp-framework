@@ -24,7 +24,7 @@
                 "input": {
                     "schema": {
                         "title": "Purge these records?",
-                        "description": "Are you sure you want to purge these devices from ZTPF? \n*Devices will not be deleted from the Manager itself*\n\n| Manager | Device | \n| ----------  | --------  |\n{% for d in vars.steps.find_devices -%}\n| {{d.ztpfManagers.name}} | {{d.name}} |\n{% endfor -%}",
+                        "description": "Are you sure you want to purge these devices from ZTPF? \n*Devices will not be deleted from the Manager itself*\n\n| Manager | Device | \n| ----------  | --------  |\n{% for d in vars.find_devices -%}\n| {{d.ztpfManagers.name}} | {{d.name}} |\n{% endfor -%}",
                         "inputVariables": []
                     }
                 },
@@ -47,11 +47,11 @@
                 "response_mapping": {
                     "options": [
                         {
-                            "option": "Yes",
+                            "option": "Yes Delete",
                             "step_iri": "\/api\/3\/workflow_steps\/82260bc4-6e1f-4bad-afb9-e9f133cfd69d"
                         },
                         {
-                            "option": "No",
+                            "option": "No Cancel",
                             "step_iri": "\/api\/3\/workflow_steps\/7f7656f0-cb03-4c95-985e-411156aaf250"
                         }
                     ],
@@ -72,8 +72,8 @@
                 "external_email_attachments": null
             },
             "status": null,
-            "top": "140",
-            "left": "520",
+            "top": "340",
+            "left": "380",
             "stepType": "\/api\/3\/workflow_step_types\/fc04082a-d7dc-4299-96fb-6837b1baa0fe",
             "group": null,
             "uuid": "62b34449-4aad-41b3-9880-b19c2ff2e280"
@@ -88,9 +88,9 @@
                     "body": "",
                     "method": "DELETE"
                 },
-                "version": "3.7.0",
+                "version": "3.7.2",
                 "for_each": {
-                    "item": "{{vars.steps.find_devices}}",
+                    "item": "{{vars.find_devices}}",
                     "__bulk": false,
                     "parallel": true,
                     "condition": ""
@@ -101,15 +101,46 @@
                 "step_variables": []
             },
             "status": null,
-            "top": "360",
-            "left": "180",
+            "top": "160",
+            "left": "40",
             "stepType": "\/api\/3\/workflow_step_types\/0109f35d-090b-4a2b-bd8a-94cbc3508562",
             "group": null,
             "uuid": "554b01ed-ac8b-4b82-988f-400422a3d510"
         },
         {
             "@type": "WorkflowStep",
-            "name": "find devices",
+            "name": "device type",
+            "description": null,
+            "arguments": {
+                "conditions": [
+                    {
+                        "default": true,
+                        "step_iri": "\/api\/3\/workflow_steps\/c73d60ac-fb03-42af-805b-991dc9788270",
+                        "step_name": "unknown"
+                    },
+                    {
+                        "step_iri": "\/api\/3\/workflow_steps\/f5ae9f71-dd56-4893-a5a0-908768d8872f",
+                        "condition": "{{ vars.device_type == \"ALL\" }}",
+                        "step_name": "find all devices"
+                    },
+                    {
+                        "step_iri": "\/api\/3\/workflow_steps\/98ac6849-bbaf-402b-89b8-0c4eb1157b45",
+                        "condition": "{{ vars.device_type == \"DELETED\" }}",
+                        "step_name": "find deleted devices"
+                    }
+                ],
+                "step_variables": []
+            },
+            "status": null,
+            "top": "120",
+            "left": "700",
+            "stepType": "\/api\/3\/workflow_step_types\/12254cf5-5db7-4b1a-8cb1-3af081924b28",
+            "group": null,
+            "uuid": "e6282c2f-6263-4058-9540-407ca012cd71"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "find all devices",
             "description": null,
             "arguments": {
                 "query": {
@@ -150,14 +181,81 @@
                 },
                 "module": "ztpf_devices?$limit=5000",
                 "checkboxFields": true,
-                "step_variables": []
+                "step_variables": {
+                    "find_devices": "{{vars.steps.find_all_devices}}"
+                }
             },
             "status": null,
-            "top": "40",
-            "left": "520",
+            "top": "180",
+            "left": "380",
             "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928770",
             "group": null,
             "uuid": "f5ae9f71-dd56-4893-a5a0-908768d8872f"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "find deleted devices",
+            "description": null,
+            "arguments": {
+                "query": {
+                    "sort": [
+                        {
+                            "field": "ztpfManagers.name",
+                            "direction": "ASC",
+                            "_fieldName": "ztpfManagers",
+                            "_fieldTitle": "Manager"
+                        },
+                        {
+                            "field": "name",
+                            "direction": "ASC",
+                            "_fieldName": "name",
+                            "_fieldTitle": "Name"
+                        }
+                    ],
+                    "limit": 30,
+                    "logic": "AND",
+                    "filters": [
+                        {
+                            "type": "object",
+                            "field": "ztpfManagers",
+                            "value": "{{vars.input.records|json_query('[][\"@id\"][]')}}",
+                            "_value": {
+                                "@id": "{{vars.input.records|json_query('[][\"@id\"][]')}}",
+                                "display": "",
+                                "itemValue": ""
+                            },
+                            "operator": "in"
+                        },
+                        {
+                            "type": "object",
+                            "field": "status",
+                            "value": "\/api\/3\/picklists\/fb778ac2-a7ab-4fff-ba44-fe95b22ddc62",
+                            "_value": {
+                                "@id": "\/api\/3\/picklists\/fb778ac2-a7ab-4fff-ba44-fe95b22ddc62",
+                                "display": "Deleted",
+                                "itemValue": "Deleted"
+                            },
+                            "operator": "eq"
+                        }
+                    ],
+                    "__selectFields": [
+                        "id",
+                        "name",
+                        "ztpfManagers"
+                    ]
+                },
+                "module": "ztpf_devices?$limit=5000",
+                "checkboxFields": true,
+                "step_variables": {
+                    "find_devices": "{{vars.steps.find_deleted_devices}}"
+                }
+            },
+            "status": null,
+            "top": "180",
+            "left": "1020",
+            "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928770",
+            "group": null,
+            "uuid": "98ac6849-bbaf-402b-89b8-0c4eb1157b45"
         },
         {
             "@type": "WorkflowStep",
@@ -165,11 +263,25 @@
             "description": null,
             "arguments": [],
             "status": null,
-            "top": "260",
-            "left": "860",
+            "top": "480",
+            "left": "380",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
             "uuid": "7f7656f0-cb03-4c95-985e-411156aaf250"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "setup vars",
+            "description": null,
+            "arguments": {
+                "device_type": "{{vars.input.params.purgeDeviceType}}"
+            },
+            "status": null,
+            "top": "60",
+            "left": "380",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "2e6dbbb2-3146-4fd1-8140-ddb204ed66e6"
         },
         {
             "@type": "WorkflowStep",
@@ -182,13 +294,46 @@
                     "ztpf_managers"
                 ],
                 "__triggerLimit": true,
-                "inputVariables": [],
+                "inputVariables": [
+                    {
+                        "name": "purgeDeviceType",
+                        "type": "array",
+                        "label": "Purge Device Type",
+                        "title": "Dynamic List",
+                        "usable": true,
+                        "options": [
+                            "ALL",
+                            "DELETED"
+                        ],
+                        "tooltip": "Purge ALL or DELETED device records? Does not delete devices from the Manager itself.",
+                        "dataType": "dynamicList",
+                        "formType": "dynamicList",
+                        "required": false,
+                        "_expanded": true,
+                        "mmdUpdate": true,
+                        "collection": false,
+                        "searchable": false,
+                        "templateUrl": "app\/components\/form\/fields\/dynamicList.html",
+                        "defaultValue": null,
+                        "_previousName": "purgeDevice",
+                        "playbookField": true,
+                        "lengthConstraint": true,
+                        "allowedGridColumn": false,
+                        "requiredCondition": "notrequired",
+                        "jinjaExpressionView": true,
+                        "useRecordFieldDefault": false,
+                        "_addRequiredConditions": false
+                    }
+                ],
                 "step_variables": {
                     "input": {
-                        "params": [],
+                        "params": {
+                            "purgeDeviceType": "{{vars.request.data[\"purgeDeviceType\"]}}"
+                        },
                         "records": "{{vars.input.records}}"
                     }
                 },
+                "_promptexpanded": true,
                 "triggerOnSource": true,
                 "displayConditions": {
                     "ztpf_managers": {
@@ -198,7 +343,7 @@
                         "filters": []
                     }
                 },
-                "executeButtonText": "Execute",
+                "executeButtonText": "Purge",
                 "noRecordExecution": false,
                 "showToasterMessage": {
                     "visible": false,
@@ -216,12 +361,24 @@
         },
         {
             "@type": "WorkflowStep",
+            "name": "unknown",
+            "description": null,
+            "arguments": [],
+            "status": null,
+            "top": "60",
+            "left": "1020",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "c73d60ac-fb03-42af-805b-991dc9788270"
+        },
+        {
+            "@type": "WorkflowStep",
             "name": "yes",
             "description": null,
             "arguments": [],
             "status": null,
-            "top": "260",
-            "left": "180",
+            "top": "380",
+            "left": "40",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
             "uuid": "82260bc4-6e1f-4bad-afb9-e9f133cfd69d"
@@ -233,7 +390,7 @@
             "name": "confirmation -> no",
             "targetStep": "\/api\/3\/workflow_steps\/7f7656f0-cb03-4c95-985e-411156aaf250",
             "sourceStep": "\/api\/3\/workflow_steps\/62b34449-4aad-41b3-9880-b19c2ff2e280",
-            "label": "No",
+            "label": "No Cancel",
             "isExecuted": false,
             "group": null,
             "uuid": "a8213af1-eaca-473a-b470-8c8275d65c81"
@@ -243,10 +400,50 @@
             "name": "confirmation -> yes",
             "targetStep": "\/api\/3\/workflow_steps\/82260bc4-6e1f-4bad-afb9-e9f133cfd69d",
             "sourceStep": "\/api\/3\/workflow_steps\/62b34449-4aad-41b3-9880-b19c2ff2e280",
-            "label": "Yes",
+            "label": "Yes Delete",
             "isExecuted": false,
             "group": null,
             "uuid": "0b1dff8a-f6d7-4ca4-aac7-14c3f0cc9026"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "device type -> find all devices",
+            "targetStep": "\/api\/3\/workflow_steps\/f5ae9f71-dd56-4893-a5a0-908768d8872f",
+            "sourceStep": "\/api\/3\/workflow_steps\/e6282c2f-6263-4058-9540-407ca012cd71",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "cae28730-8d63-4eb0-995d-4aa4da1880ad"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "device type -> find deleted devices",
+            "targetStep": "\/api\/3\/workflow_steps\/98ac6849-bbaf-402b-89b8-0c4eb1157b45",
+            "sourceStep": "\/api\/3\/workflow_steps\/e6282c2f-6263-4058-9540-407ca012cd71",
+            "label": "",
+            "isExecuted": false,
+            "group": null,
+            "uuid": "3d9afbff-22b6-4294-adc8-0b38f9a5c7ed"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "device type -> unknown",
+            "targetStep": "\/api\/3\/workflow_steps\/c73d60ac-fb03-42af-805b-991dc9788270",
+            "sourceStep": "\/api\/3\/workflow_steps\/e6282c2f-6263-4058-9540-407ca012cd71",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "10103f16-2e53-4ebe-aec0-389f06ea6f87"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "find deleted devices -> confirmation",
+            "targetStep": "\/api\/3\/workflow_steps\/62b34449-4aad-41b3-9880-b19c2ff2e280",
+            "sourceStep": "\/api\/3\/workflow_steps\/98ac6849-bbaf-402b-89b8-0c4eb1157b45",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "84db9db0-10e1-43e4-b944-8be9ae8b6a8a"
         },
         {
             "@type": "WorkflowRoute",
@@ -260,13 +457,23 @@
         },
         {
             "@type": "WorkflowRoute",
-            "name": "Start -> find devices",
-            "targetStep": "\/api\/3\/workflow_steps\/f5ae9f71-dd56-4893-a5a0-908768d8872f",
+            "name": "setup vars -> device type",
+            "targetStep": "\/api\/3\/workflow_steps\/e6282c2f-6263-4058-9540-407ca012cd71",
+            "sourceStep": "\/api\/3\/workflow_steps\/2e6dbbb2-3146-4fd1-8140-ddb204ed66e6",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "1ef32c3d-9553-419a-a164-45eb863aaaae"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Start -> setup vars",
+            "targetStep": "\/api\/3\/workflow_steps\/2e6dbbb2-3146-4fd1-8140-ddb204ed66e6",
             "sourceStep": "\/api\/3\/workflow_steps\/e075d624-b842-4482-bbd7-608ce351da17",
             "label": null,
             "isExecuted": false,
             "group": null,
-            "uuid": "cd7dbbde-95e8-4888-979b-78cda49f9b16"
+            "uuid": "828c04ad-6cc7-4f3a-a5cf-32cfe3648e5a"
         },
         {
             "@type": "WorkflowRoute",

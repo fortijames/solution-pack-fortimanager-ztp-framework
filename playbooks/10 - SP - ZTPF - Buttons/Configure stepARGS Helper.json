@@ -1,0 +1,267 @@
+{
+    "@type": "Workflow",
+    "triggerLimit": null,
+    "name": "Configure stepARGS Helper",
+    "aliasName": null,
+    "tag": null,
+    "description": "Help user with stepARGS for config option",
+    "isActive": true,
+    "debug": false,
+    "singleRecordExecution": false,
+    "remoteExecutableFlag": false,
+    "parameters": [],
+    "synchronous": false,
+    "collection": "\/api\/3\/workflow_collections\/f0b56dc0-6c1e-4f5b-9199-c807800f028a",
+    "versions": [],
+    "triggerStep": "\/api\/3\/workflow_steps\/8bda331b-237b-40f2-9af0-8c9a69e5dd36",
+    "steps": [
+        {
+            "@type": "WorkflowStep",
+            "name": "cancel or timeout",
+            "description": null,
+            "arguments": [],
+            "status": null,
+            "top": "280",
+            "left": "680",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "f3eb0ec0-eecf-4bcd-9fa4-5e14af63ec3d"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "config options",
+            "description": null,
+            "arguments": {
+                "type": "InputBased",
+                "input": {
+                    "schema": {
+                        "title": "Configuration Option",
+                        "description": "{%- set table = [] -%}\n{%- for c in vars.config_args -%}\n  {%- set row = [] -%}\n  {%- do row.append(\"`\" + c[\"name\"] + \":`\") -%}\n  {%- do row.append(c[\"opts\"]) -%}\n  {%- do row.append(c[\"default\"]) -%}\n  {%- do row.append(c[\"desc\"]) -%}\n  {%- do table.append(row) -%}\n{%- endfor -%}\n\nUse the configuration options below to customize how this step runs. \n\n| Configuration Option | Options | Default | Description |\n| -------------------------- | ---------- | --------- | --------------- |\n{%- for c in table %}\n| {{ c|join(\" | \") }} |\n{%- endfor -%}\n \nUpdate the `Step ARGS` field in the step to modify. \n```\ninput:\n  invar1: value1\n  invar2: value2\nconfig:\n{%- for c in vars.config_args %}\n  {{c.name}}: {{c.opts.replace('`','')}}\n{%- endfor %}\n```",
+                        "inputVariables": []
+                    }
+                },
+                "record": "",
+                "timeout": {
+                    "days": 0,
+                    "hours": 0,
+                    "minutes": 3,
+                    "step_iri": "\/api\/3\/workflow_steps\/f3eb0ec0-eecf-4bcd-9fa4-5e14af63ec3d"
+                },
+                "agent_id": null,
+                "resources": "ztpf_device_automation_steps",
+                "is_approval": false,
+                "owner_detail": {
+                    "isAssigned": false,
+                    "emailRecipients": ""
+                },
+                "isRecordLinked": false,
+                "step_variables": [],
+                "response_mapping": {
+                    "options": [
+                        {
+                            "option": "Ok",
+                            "primary": true,
+                            "step_iri": "\/api\/3\/workflow_steps\/ec8ca6cf-9e97-4364-9dd0-011b6c6ba027"
+                        },
+                        {
+                            "option": "Cancel",
+                            "step_iri": "\/api\/3\/workflow_steps\/f3eb0ec0-eecf-4bcd-9fa4-5e14af63ec3d"
+                        }
+                    ],
+                    "duplicateOption": false,
+                    "customSuccessMessage": "Awaiting Playbook resumed successfully."
+                },
+                "email_notification": {
+                    "enabled": false,
+                    "smtpParameters": []
+                },
+                "customEmailExternal": false,
+                "inline_channel_list": [],
+                "external_channel_list": [],
+                "unauthenticated_input": false,
+                "external_email_subject": null,
+                "internal_email_subject": "A FortiSOAR playbook is requesting your input",
+                "custom_email_body_external": null,
+                "external_email_attachments": null
+            },
+            "status": null,
+            "top": "200",
+            "left": "360",
+            "stepType": "\/api\/3\/workflow_step_types\/fc04082a-d7dc-4299-96fb-6837b1baa0fe",
+            "group": null,
+            "uuid": "7645add2-e3e9-444e-b48c-5bbf40e89ffd"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "continue",
+            "description": null,
+            "arguments": [],
+            "status": null,
+            "top": "120",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "ec8ca6cf-9e97-4364-9dd0-011b6c6ba027"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "current_args",
+            "description": null,
+            "arguments": {
+                "arguments": {
+                    "yaml": "{{vars.input.records[0].stepARGS}}",
+                    "manual_test": ""
+                },
+                "apply_async": false,
+                "step_variables": {
+                    "current_args": "{{vars.steps.current_args.output}}"
+                },
+                "pass_parent_env": false,
+                "pass_input_record": false,
+                "workflowReference": "\/api\/3\/workflows\/e8a9ca65-8ba2-4da5-993a-e98d1e22283c"
+            },
+            "status": null,
+            "top": "100",
+            "left": "680",
+            "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
+            "group": null,
+            "uuid": "7f5a923e-a9f4-4cbe-9b79-87bed8722e2d"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "setup vars",
+            "description": null,
+            "arguments": {
+                "config_args": "[  \n  {\n    \"name\": \"render_script_on_preparing\",\n    \"opts\": \"`true` or `false`\",\n    \"default\": \"`true`\",\n    \"desc\": \"Script payloads are rendered on creation and preparation of the steps by default. Set to `false` to have the script only rendered just before running. This can speed up step preparation but moves that delay to when the script is running.\"\n  },\n  {\n    \"name\": \"render_script_on_running\",\n    \"opts\": \"`true` or `false`\",\n    \"default\": \"`false`\",\n    \"desc\": \"Script payloads are rendered on creation of the steps by default. Set to `true` to have the script rendered, even a second time, just before running the action. Usually required if the metadata used for the script depends on a previous step to run to be updated.\"\n    }\n]"
+            },
+            "status": null,
+            "top": "40",
+            "left": "360",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "771e38e2-3abe-46d4-8c1f-cc34467d6dc1"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Start",
+            "description": null,
+            "arguments": {
+                "route": "252e30b2-03c4-4344-ae97-8ef4146eedbd",
+                "title": "Configure stepARGs Help",
+                "resources": [
+                    "ztpf_device_automation_steps",
+                    "ztpf_automation_profile_steps"
+                ],
+                "__triggerLimit": true,
+                "inputVariables": [],
+                "step_variables": {
+                    "input": {
+                        "params": [],
+                        "records": "{{vars.input.records}}"
+                    }
+                },
+                "triggerOnSource": true,
+                "displayConditions": {
+                    "ztpf_device_automation_steps": {
+                        "sort": [],
+                        "limit": 30,
+                        "logic": "AND",
+                        "filters": [
+                            {
+                                "type": "primitive",
+                                "field": "stepDone",
+                                "value": true,
+                                "operator": "neq",
+                                "_operator": "neq"
+                            }
+                        ]
+                    },
+                    "ztpf_automation_profile_steps": {
+                        "sort": [],
+                        "limit": 30,
+                        "logic": "AND",
+                        "filters": []
+                    }
+                },
+                "executeButtonText": "Execute",
+                "noRecordExecution": false,
+                "showToasterMessage": {
+                    "visible": false,
+                    "messageVisible": true
+                },
+                "triggerOnReplicate": false,
+                "singleRecordExecution": false
+            },
+            "status": null,
+            "top": "40",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/f414d039-bb0d-4e59-9c39-a8f1e880b18a",
+            "group": null,
+            "uuid": "8bda331b-237b-40f2-9af0-8c9a69e5dd36"
+        }
+    ],
+    "routes": [
+        {
+            "@type": "WorkflowRoute",
+            "name": "config options -> cancel or timeout",
+            "targetStep": "\/api\/3\/workflow_steps\/f3eb0ec0-eecf-4bcd-9fa4-5e14af63ec3d",
+            "sourceStep": "\/api\/3\/workflow_steps\/7645add2-e3e9-444e-b48c-5bbf40e89ffd",
+            "label": "Cancel",
+            "isExecuted": false,
+            "group": null,
+            "uuid": "a22e7032-58d7-444b-8fd3-9067347b9580"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "config options -> continue",
+            "targetStep": "\/api\/3\/workflow_steps\/ec8ca6cf-9e97-4364-9dd0-011b6c6ba027",
+            "sourceStep": "\/api\/3\/workflow_steps\/7645add2-e3e9-444e-b48c-5bbf40e89ffd",
+            "label": "Ok",
+            "isExecuted": false,
+            "group": null,
+            "uuid": "e8437793-0057-4c52-bf66-49aa2f3340da"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "current_args -> config options",
+            "targetStep": "\/api\/3\/workflow_steps\/7645add2-e3e9-444e-b48c-5bbf40e89ffd",
+            "sourceStep": "\/api\/3\/workflow_steps\/7f5a923e-a9f4-4cbe-9b79-87bed8722e2d",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "f93358b4-30fa-4b4f-85d3-149a5f354563"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "setup vars -> current_args",
+            "targetStep": "\/api\/3\/workflow_steps\/7f5a923e-a9f4-4cbe-9b79-87bed8722e2d",
+            "sourceStep": "\/api\/3\/workflow_steps\/771e38e2-3abe-46d4-8c1f-cc34467d6dc1",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "6b994774-0097-4e93-ae59-2f8845a7ca72"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Start -> setup vars",
+            "targetStep": "\/api\/3\/workflow_steps\/771e38e2-3abe-46d4-8c1f-cc34467d6dc1",
+            "sourceStep": "\/api\/3\/workflow_steps\/8bda331b-237b-40f2-9af0-8c9a69e5dd36",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "8eb51ba7-87e7-43ab-ac2f-c80d18cce626"
+        }
+    ],
+    "groups": [],
+    "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+    "playbookOrigin": "\/api\/3\/picklists\/b6d710a9-a8ec-41ec-8817-fe9fa062fcdd",
+    "isEditable": false,
+    "uuid": "9240ad5e-e906-47f3-ae01-5afcf67f7bd6",
+    "owners": [],
+    "isPrivate": false,
+    "deletedAt": null,
+    "recordTags": [
+        "ztpfAutomationProfileStep",
+        "ztpfDeviceAutomationStep"
+    ]
+}

@@ -1,0 +1,339 @@
+{
+    "@type": "Workflow",
+    "triggerLimit": null,
+    "name": "Delete Device from Manager",
+    "aliasName": null,
+    "tag": null,
+    "description": "Delete devices from FMG and re-synch the device record.",
+    "isActive": true,
+    "debug": false,
+    "singleRecordExecution": false,
+    "remoteExecutableFlag": false,
+    "parameters": [],
+    "synchronous": false,
+    "collection": "\/api\/3\/workflow_collections\/f0b56dc0-6c1e-4f5b-9199-c807800f028a",
+    "versions": [],
+    "triggerStep": "\/api\/3\/workflow_steps\/d0825cfc-2c87-4525-8501-1fc6845f9e87",
+    "steps": [
+        {
+            "@type": "WorkflowStep",
+            "name": "cancel or timeout",
+            "description": null,
+            "arguments": [],
+            "status": null,
+            "top": "120",
+            "left": "1100",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "789470a9-be94-4e02-a7e1-f01bc22fdf77"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "delete device",
+            "description": null,
+            "arguments": {
+                "for_each": {
+                    "item": "{{vars.devices}}",
+                    "parallel": false,
+                    "condition": ""
+                },
+                "arguments": {
+                    "adom": "{{vars.item['adom']}}",
+                    "device": "{{vars.item['device_name']}}",
+                    "connector_config": "{{vars.item['connector_config']}}"
+                },
+                "apply_async": false,
+                "step_variables": [],
+                "pass_parent_env": false,
+                "pass_input_record": false,
+                "workflowReference": "\/api\/3\/workflows\/b0d1851b-1674-468f-8f45-8eeaf1b7d31c"
+            },
+            "status": null,
+            "top": "280",
+            "left": "400",
+            "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
+            "group": null,
+            "uuid": "13c655c2-ed33-4703-8676-e53d7b62bd50"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "prompt user",
+            "description": null,
+            "arguments": {
+                "type": "InputBased",
+                "input": {
+                    "schema": {
+                        "title": "Confirm Delete Devices",
+                        "description": "Devices we will delete:\n*Devices will be deleted from the Manager itself*\n\n| Manager | ADOM | Device | \n| ----------- | -------- | --------- | \n{%- for d in vars.devices %}\n| {{d.manager_name}} | {{d.adom}} | {{d.device_name}} | \n{%- endfor %}",
+                        "inputVariables": []
+                    }
+                },
+                "record": "",
+                "timeout": {
+                    "days": 0,
+                    "hours": 0,
+                    "minutes": 3,
+                    "step_iri": "\/api\/3\/workflow_steps\/789470a9-be94-4e02-a7e1-f01bc22fdf77"
+                },
+                "agent_id": null,
+                "resources": "ztpf_devices",
+                "is_approval": false,
+                "owner_detail": {
+                    "isAssigned": false,
+                    "emailRecipients": ""
+                },
+                "isRecordLinked": false,
+                "step_variables": [],
+                "response_mapping": {
+                    "options": [
+                        {
+                            "option": "Ok to Delete",
+                            "step_iri": "\/api\/3\/workflow_steps\/10c4a58a-44e0-4bc3-9b2e-fe3f0effd756"
+                        },
+                        {
+                            "option": "Cancel",
+                            "step_iri": "\/api\/3\/workflow_steps\/789470a9-be94-4e02-a7e1-f01bc22fdf77"
+                        }
+                    ],
+                    "duplicateOption": false,
+                    "customSuccessMessage": "Awaiting Playbook resumed successfully."
+                },
+                "email_notification": {
+                    "enabled": false,
+                    "smtpParameters": []
+                },
+                "customEmailExternal": false,
+                "inline_channel_list": [],
+                "external_channel_list": [],
+                "unauthenticated_input": false,
+                "external_email_subject": null,
+                "internal_email_subject": "A FortiSOAR playbook is requesting your input",
+                "custom_email_body_external": null,
+                "external_email_attachments": null
+            },
+            "status": null,
+            "top": "120",
+            "left": "760",
+            "stepType": "\/api\/3\/workflow_step_types\/fc04082a-d7dc-4299-96fb-6837b1baa0fe",
+            "group": null,
+            "uuid": "428f7c2c-9949-43ac-ad35-881e227b6a26"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "set device updating",
+            "description": null,
+            "arguments": {
+                "for_each": {
+                    "item": "{{vars.devices}}",
+                    "__bulk": true,
+                    "parallel": false,
+                    "condition": "",
+                    "batch_size": 100
+                },
+                "resource": {
+                    "status": "\/api\/3\/picklists\/286ba1d0-2aa4-4919-a418-5363e59077dc"
+                },
+                "operation": "Append",
+                "collection": "{{vars.item['device_fqid']}}",
+                "__recommend": [],
+                "collectionType": "\/api\/3\/ztpf_devices",
+                "fieldOperation": {
+                    "recordTags": "Append"
+                },
+                "step_variables": []
+            },
+            "status": null,
+            "top": "200",
+            "left": "400",
+            "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928722",
+            "group": null,
+            "uuid": "10c4a58a-44e0-4bc3-9b2e-fe3f0effd756"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "setup vars",
+            "description": null,
+            "arguments": {
+                "devices": "{%- set ret = [] -%}\n{%- for d in vars.input.records -%}\n  {%- set rec = {} -%}\n  {%- do rec.update({\n    \"device_id\":d.id,\n    \"device_name\":d.name,\n    \"device_fqid\":d['@id'],\n    \"adom\":d.adom,\n    \"connector_config\":d.ztpfManagers.connectorConfig,\n    \"manager_name\":d.ztpfManagers.name\n  }) -%}\n  {%- do ret.append(rec) -%}\n{%- endfor -%}\n{{ret}}"
+            },
+            "status": null,
+            "top": "40",
+            "left": "400",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "c1fb5a05-5265-415b-8440-cf3ff83408bb"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Start",
+            "description": null,
+            "arguments": {
+                "route": "7da77bed-42b7-45c3-880b-bf93289b3f30",
+                "title": "Delete Device",
+                "resources": [
+                    "ztpf_devices"
+                ],
+                "__triggerLimit": true,
+                "inputVariables": [],
+                "step_variables": {
+                    "input": {
+                        "params": [],
+                        "records": "{{vars.input.records}}"
+                    }
+                },
+                "triggerOnSource": true,
+                "displayConditions": {
+                    "ztpf_devices": {
+                        "sort": [],
+                        "limit": 30,
+                        "logic": "AND",
+                        "filters": [
+                            {
+                                "type": "object",
+                                "field": "status",
+                                "value": [
+                                    "\/api\/3\/picklists\/a8dfb595-14cc-4f83-bafa-ce328bddb612",
+                                    "\/api\/3\/picklists\/fb778ac2-a7ab-4fff-ba44-fe95b22ddc62"
+                                ],
+                                "module": "status",
+                                "display": "",
+                                "operator": "nin",
+                                "template": "multiselectpicklist",
+                                "OPERATOR_KEY": "$",
+                                "displayTemplate": "",
+                                "previousOperator": "nin",
+                                "previousTemplate": "multiselectpicklist"
+                            }
+                        ]
+                    }
+                },
+                "executeButtonText": "Execute",
+                "noRecordExecution": false,
+                "showToasterMessage": {
+                    "visible": false,
+                    "messageVisible": true
+                },
+                "triggerOnReplicate": false,
+                "singleRecordExecution": false
+            },
+            "status": null,
+            "top": "40",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/f414d039-bb0d-4e59-9c39-a8f1e880b18a",
+            "group": null,
+            "uuid": "d0825cfc-2c87-4525-8501-1fc6845f9e87"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "synch devices",
+            "description": null,
+            "arguments": {
+                "arguments": {
+                    "record_ids": "{{vars.devices|json_query('[].device_id')}}"
+                },
+                "apply_async": false,
+                "step_variables": [],
+                "pass_parent_env": false,
+                "pass_input_record": false,
+                "workflowReference": "\/api\/3\/workflows\/379c3a43-af7e-4a27-bdbf-1207d2697378"
+            },
+            "status": null,
+            "top": "220",
+            "left": "20",
+            "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
+            "group": null,
+            "uuid": "ca1aca98-bf95-40f4-88f2-9902e11eec2d"
+        }
+    ],
+    "routes": [
+        {
+            "@type": "WorkflowRoute",
+            "name": "delete device -> synch devices",
+            "targetStep": "\/api\/3\/workflow_steps\/ca1aca98-bf95-40f4-88f2-9902e11eec2d",
+            "sourceStep": "\/api\/3\/workflow_steps\/13c655c2-ed33-4703-8676-e53d7b62bd50",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "f8c0a443-2cba-4a88-ba8b-4acaa65d955a"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "prompt user -> cancel or timeout",
+            "targetStep": "\/api\/3\/workflow_steps\/789470a9-be94-4e02-a7e1-f01bc22fdf77",
+            "sourceStep": "\/api\/3\/workflow_steps\/428f7c2c-9949-43ac-ad35-881e227b6a26",
+            "label": "Cancel",
+            "isExecuted": false,
+            "group": null,
+            "uuid": "5ab5d04f-ccce-490c-a412-94eb31ba0a4b"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "prompt user -> set device updating",
+            "targetStep": "\/api\/3\/workflow_steps\/10c4a58a-44e0-4bc3-9b2e-fe3f0effd756",
+            "sourceStep": "\/api\/3\/workflow_steps\/428f7c2c-9949-43ac-ad35-881e227b6a26",
+            "label": "Ok to Delete",
+            "isExecuted": false,
+            "group": null,
+            "uuid": "e3d78f15-b722-42c3-abeb-9abf6f86b89f"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "set device updating -> delete device",
+            "targetStep": "\/api\/3\/workflow_steps\/13c655c2-ed33-4703-8676-e53d7b62bd50",
+            "sourceStep": "\/api\/3\/workflow_steps\/10c4a58a-44e0-4bc3-9b2e-fe3f0effd756",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "9bff414d-cafa-4829-a480-7a006aef0975"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "setup vars -> prompt user",
+            "targetStep": "\/api\/3\/workflow_steps\/428f7c2c-9949-43ac-ad35-881e227b6a26",
+            "sourceStep": "\/api\/3\/workflow_steps\/c1fb5a05-5265-415b-8440-cf3ff83408bb",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "b0aec5be-836a-4eee-9c23-14d7f39f342f"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Start -> setup vars",
+            "targetStep": "\/api\/3\/workflow_steps\/c1fb5a05-5265-415b-8440-cf3ff83408bb",
+            "sourceStep": "\/api\/3\/workflow_steps\/d0825cfc-2c87-4525-8501-1fc6845f9e87",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "fdba4729-6c49-48c5-ac22-63b9fcbc9c62"
+        }
+    ],
+    "groups": [
+        {
+            "@type": "WorkflowGroup",
+            "name": "Details",
+            "description": "Delete devices and resynch the device record.",
+            "type": "note",
+            "isCollapsed": false,
+            "hasTriggerStep": false,
+            "hideInLogs": false,
+            "metadata": [],
+            "reusable": false,
+            "top": "120",
+            "left": "20",
+            "height": "87",
+            "width": "367",
+            "uuid": "984a4ac6-85be-4138-893d-4c93a5d77b9f",
+            "recordTags": []
+        }
+    ],
+    "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+    "playbookOrigin": "\/api\/3\/picklists\/b6d710a9-a8ec-41ec-8817-fe9fa062fcdd",
+    "isEditable": false,
+    "uuid": "9b6cff59-7e0e-4c24-94cb-4c3af7d164fc",
+    "owners": [],
+    "isPrivate": false,
+    "deletedAt": null,
+    "recordTags": [
+        "ztpfDevice"
+    ]
+}

@@ -1,7 +1,7 @@
 {
     "@type": "Workflow",
     "triggerLimit": null,
-    "name": "Update Step Input",
+    "name": "Configure stepARGS via YAML",
     "aliasName": null,
     "tag": null,
     "description": "Update Step Input on selected records.",
@@ -110,7 +110,7 @@
                 "external_email_attachments": null
             },
             "status": null,
-            "top": "100",
+            "top": "120",
             "left": "720",
             "stepType": "\/api\/3\/workflow_step_types\/fc04082a-d7dc-4299-96fb-6837b1baa0fe",
             "group": null,
@@ -138,7 +138,7 @@
                 "user_input_yaml": "{{vars.steps.get_input.input['step_input']}}"
             },
             "status": null,
-            "top": "180",
+            "top": "200",
             "left": "720",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
@@ -147,10 +147,10 @@
         {
             "@type": "WorkflowStep",
             "name": "Start",
-            "description": "Update all step input args in one page with YAML.",
+            "description": "Update selected args from a YAML input.",
             "arguments": {
                 "route": "5e30652f-36ed-4a44-bde8-40e8d997190a",
-                "title": "Update Step Input Args",
+                "title": "Configure stepARGs via YAML",
                 "resources": [
                     "ztpf_device_automation_steps"
                 ],
@@ -252,7 +252,7 @@
                 "workflowReference": "\/api\/3\/workflows\/e8a9ca65-8ba2-4da5-993a-e98d1e22283c"
             },
             "status": null,
-            "top": "260",
+            "top": "280",
             "left": "720",
             "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
             "group": null,

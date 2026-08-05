@@ -1,7 +1,7 @@
 {
     "@type": "Workflow",
     "triggerLimit": null,
-    "name": "Create Run Group and Queue Steps",
+    "name": "Create Run Group and Execute Steps",
     "aliasName": null,
     "tag": null,
     "description": "Queue Pending Action Steps on a Device",
@@ -42,7 +42,7 @@
             "description": null,
             "arguments": {
                 "route": "67b5b7d8-9795-497e-ad7d-4ded78cb8bca",
-                "title": "Create Run Group and Queue Steps",
+                "title": "Create Run Group and Execute Steps",
                 "resources": [
                     "ztpf_devices"
                 ],
@@ -104,7 +104,7 @@
         {
             "@type": "WorkflowGroup",
             "name": "Details",
-            "description": "Create run group for pending steps on selected devices.",
+            "description": "Create run group for pending steps on selected devices and put steps into the queue to be executed on the device.",
             "type": "note",
             "isCollapsed": false,
             "hasTriggerStep": false,
@@ -112,7 +112,7 @@
             "metadata": [],
             "reusable": false,
             "top": "120",
-            "left": "80",
+            "left": "40",
             "height": "132",
             "width": "281",
             "uuid": "31e13f1f-8b65-4264-913b-2ddebc36c871",
@@ -127,8 +127,8 @@
     "isPrivate": false,
     "deletedAt": null,
     "recordTags": [
-        "TODO",
         "ztpfDevice",
-        "ztpfDeviceAutomationStep"
+        "ztpfDeviceAutomationStep",
+        "ztpfRunGroup"
     ]
 }

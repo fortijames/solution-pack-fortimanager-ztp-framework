@@ -9,6 +9,35 @@
                     {
                         "widgets": [
                             {
+                                "type": "primaryDetail",
+                                "config": {
+                                    "wid": "e0d170e6-ba2f-46e0-ba35-400aa51fed3b",
+                                    "idField": "id",
+                                    "picklistFieldReadOnly": true,
+                                    "titleFieldReadOnly": true,
+                                    "featuredRelationship": {
+                                        "field": null,
+                                        "preText": "Under Investigation In",
+                                        "query": null,
+                                        "statusField": null,
+                                        "sort": []
+                                    },
+                                    "picklistField": "status",
+                                    "titleField": "name"
+                                }
+                            }
+                        ],
+                        "style": "col-lg-12"
+                    }
+                ],
+                "wid": "920a9474-28f4-4cc0-b438-ce041e705438",
+                "_collapsed": false
+            },
+            {
+                "columns": [
+                    {
+                        "widgets": [
+                            {
                                 "type": "tabs",
                                 "config": {
                                     "wid": "9f20019b-cb8a-4524-9d0a-a5dc99b279ca",
@@ -133,6 +162,36 @@
                                                                             }
                                                                         },
                                                                         {
+                                                                            "type": "playbookButtons-1.1.1",
+                                                                            "config": {
+                                                                                "wid": "fe9b5136-ee8c-46d2-a79c-c89c027d6150",
+                                                                                "widgetName": "Playbook Execution Wizard",
+                                                                                "selectedPlaybooksWithRecord": [
+                                                                                    {
+                                                                                        "name": "Configure stepARGS All via YAML",
+                                                                                        "uuid": "5f56422c-9f28-4b36-8823-69cad0847000",
+                                                                                        "actionTriggerName": "Configure stepARGs All via YAML",
+                                                                                        "collectionName": "10 - SP - ZTPF - Buttons",
+                                                                                        "icon": "icon icon-test-configuration"
+                                                                                    },
+                                                                                    {
+                                                                                        "name": "Configure stepARGS Helper",
+                                                                                        "uuid": "9240ad5e-e906-47f3-ae01-5afcf67f7bd6",
+                                                                                        "actionTriggerName": "Configure stepARGs Help",
+                                                                                        "collectionName": "10 - SP - ZTPF - Buttons",
+                                                                                        "icon": "icon icon-help"
+                                                                                    },
+                                                                                    {
+                                                                                        "name": "Move Device Step Number",
+                                                                                        "uuid": "8c995534-cad0-4cb2-860a-55ea2016cf10",
+                                                                                        "actionTriggerName": "Move Step Number",
+                                                                                        "collectionName": "10 - SP - ZTPF - Buttons",
+                                                                                        "icon": "icon icon-reorder-tabs"
+                                                                                    }
+                                                                                ]
+                                                                            }
+                                                                        },
+                                                                        {
                                                                             "type": "editableFormGroup",
                                                                             "config": {
                                                                                 "wid": "ebb1134f-1a5c-4941-8453-ec8cf8792347",
@@ -158,9 +217,26 @@
                                                                                                         "highlightMode": true,
                                                                                                         "linky": true,
                                                                                                         "readOnly": false
+                                                                                                    }
+                                                                                                ],
+                                                                                                "style": "col-lg-4"
+                                                                                            },
+                                                                                            {
+                                                                                                "fields": [
+                                                                                                    {
+                                                                                                        "name": "status",
+                                                                                                        "highlightMode": true,
+                                                                                                        "linky": true,
+                                                                                                        "readOnly": true
                                                                                                     },
                                                                                                     {
                                                                                                         "name": "ztpfAutomationActions",
+                                                                                                        "highlightMode": true,
+                                                                                                        "linky": true,
+                                                                                                        "readOnly": true
+                                                                                                    },
+                                                                                                    {
+                                                                                                        "name": "triggerKey",
                                                                                                         "highlightMode": true,
                                                                                                         "linky": true,
                                                                                                         "readOnly": true
@@ -177,28 +253,11 @@
                                                                                             {
                                                                                                 "fields": [
                                                                                                     {
-                                                                                                        "name": "status",
-                                                                                                        "highlightMode": true,
-                                                                                                        "linky": true,
-                                                                                                        "readOnly": true
-                                                                                                    },
-                                                                                                    {
                                                                                                         "name": "ztpfRunGroups",
                                                                                                         "highlightMode": true,
                                                                                                         "linky": true,
                                                                                                         "readOnly": true
                                                                                                     },
-                                                                                                    {
-                                                                                                        "name": "triggerKey",
-                                                                                                        "highlightMode": true,
-                                                                                                        "linky": true,
-                                                                                                        "readOnly": true
-                                                                                                    }
-                                                                                                ],
-                                                                                                "style": "col-lg-4"
-                                                                                            },
-                                                                                            {
-                                                                                                "fields": [
                                                                                                     {
                                                                                                         "name": "stepStartTimestamp",
                                                                                                         "highlightMode": true,
@@ -251,7 +310,7 @@
                                                 "visible": true
                                             },
                                             "icon": "fa fa-th-list",
-                                            "show": true,
+                                            "show": false,
                                             "visible": true
                                         },
                                         {
@@ -303,6 +362,29 @@
                                                                             }
                                                                         },
                                                                         {
+                                                                            "type": "playbookButtons-1.1.1",
+                                                                            "config": {
+                                                                                "wid": "b6cd79e8-ffb6-48fe-b3b4-6939a2ab92bc",
+                                                                                "widgetName": "Playbook Execution Wizard",
+                                                                                "selectedPlaybooksWithRecord": [
+                                                                                    {
+                                                                                        "name": "Prepare Payload on Step",
+                                                                                        "uuid": "2ac6283e-bfc7-433d-9f12-22eae015960a",
+                                                                                        "actionTriggerName": "Prepare Step Payload",
+                                                                                        "collectionName": "10 - SP - ZTPF - Buttons",
+                                                                                        "icon": "icon icon-post-create-trigger"
+                                                                                    },
+                                                                                    {
+                                                                                        "name": "Delete Payload from Step",
+                                                                                        "uuid": "c0c325ae-f0a7-4aad-acf2-79a4467eff6e",
+                                                                                        "actionTriggerName": "Delete Step Payload",
+                                                                                        "collectionName": "10 - SP - ZTPF - Buttons",
+                                                                                        "icon": "icon icon-post-delete-trigger"
+                                                                                    }
+                                                                                ]
+                                                                            }
+                                                                        },
+                                                                        {
                                                                             "type": "editableFormGroup",
                                                                             "config": {
                                                                                 "wid": "9a1338fe-d91b-4af1-af66-4ac58412e1e3",
@@ -349,7 +431,7 @@
                                                 "visible": true
                                             },
                                             "icon": "fa fa-upload",
-                                            "show": false,
+                                            "show": true,
                                             "visible": true
                                         },
                                         {
@@ -462,20 +544,6 @@
                                                 "visible": true
                                             },
                                             "icon": "fa fa-clipboard",
-                                            "show": false,
-                                            "visible": true
-                                        },
-                                        {
-                                            "title": "TEST",
-                                            "active": 0,
-                                            "widget": {
-                                                "type": "editableForm",
-                                                "config": {
-                                                    "wid": "8150d738-a8cf-414a-82ff-45b12600067a"
-                                                },
-                                                "visible": true
-                                            },
-                                            "icon": "fa fa-none",
                                             "show": false,
                                             "visible": true
                                         }

@@ -32,7 +32,7 @@
             "name": "example_index",
             "description": null,
             "arguments": {
-                "example_index": "{%- set devbase = \"\/pm\/config\/device\/{{record.device.name}}\" -%}\n{%- set ret = {} -%}\n{%- do ret.update({\n  \"monitor\/network\": {\n    \"monitor\/network\/arp\": {\n      \"data\": {\n        \"action\": \"get\",\n        \"resource\": \"\/api\/v2\/monitor\/router\/ipv4\",\n        \"target\": [\"device\/{{record.device.name}}\"],\n        \"payload\": {}\n      }\n    }\n  },\n  \"monitor\/router\": {\n    \"monitor\/router\/ipv4\" : {\n      \"data\": {\n        \"action\": \"get\",\n        \"resource\": \"\/api\/v2\/monitor\/router\/ipv4\",\n        \"target\": [\"device\/{{record.device.name}}\"],\n        \"payload\": {}\n      }\n    },\n    \"monitor\/router\/bgp\/neighbors\" : {\n      \"data\": {\n        \"action\": \"get\",\n        \"resource\": \"\/api\/v2\/monitor\/router\/bgp\/neighbors\",\n        \"target\": [\"device\/{{record.device.name}}\"],\n        \"payload\": {}\n      }\n    },\n    \"monitor\/router\/statistics\" : {\n      \"data\": {\n        \"action\": \"get\",\n        \"resource\": \"\/api\/v2\/monitor\/router\/statistics\",\n        \"target\": [\"device\/{{record.device.name}}\"],\n        \"payload\": {}\n      }\n    }\n  },\n  \"monitor\/system\": {\n    \"monitor\/system\/available-interfaces\": {\n      \"data\": {\n        \"action\": \"get\",\n        \"resource\": \"\/api\/v2\/monitor\/system\/available-interfaces\",\n        \"target\": [\"device\/{{record.device.name}}\"],\n        \"payload\": {}\n      }\n    }\n  }\n}) -%}\n\n{{ret}}"
+                "example_index": "{%- set devbase = \"\/pm\/config\/device\/{{record.device.name}}\" -%}\n{%- set ret = {} -%}\n{%- do ret.update({\n  \"monitor\/network\": {\n    \"monitor\/network\/arp\": {\n      \"data\": {\n        \"action\": \"get\",\n        \"resource\": \"\/api\/v2\/monitor\/router\/ipv4\",\n        \"target\": [\"device\/{{record.device.name}}\"],\n        \"payload\": {}\n      }\n    }\n  },\n  \"monitor\/router\": {\n    \"monitor\/router\/ipv4\" : {\n      \"data\": {\n        \"action\": \"get\",\n        \"resource\": \"\/api\/v2\/monitor\/router\/ipv4\",\n        \"target\": [\"device\/{{record.device.name}}\"],\n        \"payload\": {}\n      }\n    },\n    \"monitor\/router\/bgp\/neighbors\" : {\n      \"data\": {\n        \"action\": \"get\",\n        \"resource\": \"\/api\/v2\/monitor\/router\/bgp\/neighbors\",\n        \"target\": [\"device\/{{record.device.name}}\"],\n        \"payload\": {}\n      }\n    },\n    \"monitor\/router\/statistics\" : {\n      \"data\": {\n        \"action\": \"get\",\n        \"resource\": \"\/api\/v2\/monitor\/router\/statistics\",\n        \"target\": [\"device\/{{record.device.name}}\"],\n        \"payload\": {}\n      }\n    }\n  },\n  \"monitor\/system\": {\n    \"monitor\/system\/available-interfaces\": {\n      \"data\": {\n        \"action\": \"get\",\n        \"resource\": \"\/api\/v2\/monitor\/system\/available-interfaces\",\n        \"target\": [\"device\/{{record.device.name}}\"],\n        \"payload\": {}\n      }\n    },\n    \"monitor\/system\/interface\": {\n      \"data\": {\n        \"action\": \"get\",\n        \"resource\": \"\/api\/v2\/monitor\/system\/interface\",\n        \"target\": [\"device\/{{record.device.name}}\"],\n        \"payload\": {}\n      }\n    }\n  }\n}) -%}\n\n{{ret}}"
             },
             "status": null,
             "top": "40",
@@ -46,11 +46,12 @@
             "name": "example_selected",
             "description": null,
             "arguments": {
-                "example_selected": "{%- set cat = vars.config_example_selected[0] -%}\n{%- set exa = vars.config_example_selected[1] -%}\n{{vars.example_index[cat][exa]}}"
+                "example_selected": "{%- set cat = vars.config_example_selected[0] -%}\n{%- set exa = vars.config_example_selected[1] -%}\n{{vars.example_index[cat][exa]}}",
+                "config_example_selected_formated": "{%- set cat = vars.config_example_selected[0] -%}\n{%- set exa = vars.config_example_selected[1] -%}\n{{vars.example_index[cat][exa]|to_nice_json(indent=2)}}"
             },
             "status": null,
-            "top": "240",
-            "left": "660",
+            "top": "220",
+            "left": "700",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
             "uuid": "49c0c4f8-2418-4bce-8c73-cdf88a45701d"
@@ -73,86 +74,22 @@
         },
         {
             "@type": "WorkflowStep",
-            "name": "return",
-            "description": null,
-            "arguments": [],
-            "status": null,
-            "top": "480",
-            "left": "340",
-            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
-            "group": null,
-            "uuid": "189fb8b3-d5b9-4168-8586-9538d8462475"
-        },
-        {
-            "@type": "WorkflowStep",
-            "name": "save example JSON",
-            "description": null,
-            "arguments": [],
-            "status": null,
-            "top": "420",
-            "left": "1060",
-            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
-            "group": null,
-            "uuid": "7f09b1de-f3bc-493b-a276-141aff11c366"
-        },
-        {
-            "@type": "WorkflowStep",
-            "name": "save example YAML",
-            "description": null,
-            "arguments": [],
-            "status": null,
-            "top": "120",
-            "left": "340",
-            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
-            "group": null,
-            "uuid": "0c7e23bc-a45f-4155-925c-b39168e58907"
-        },
-        {
-            "@type": "WorkflowStep",
-            "name": "save script as json",
-            "description": null,
-            "arguments": {
-                "resource": {
-                    "script": "{{vars.example_selected|toJSON}}"
-                },
-                "operation": "Append",
-                "collection": "{{vars.input.records[0]['@id']}}",
-                "__recommend": [],
-                "collectionType": "\/api\/3\/ztpf_metadata_sources",
-                "fieldOperation": {
-                    "recordTags": "Append"
-                },
-                "step_variables": []
-            },
-            "status": null,
-            "top": "480",
-            "left": "660",
-            "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928722",
-            "group": null,
-            "uuid": "7b4b93ec-2bd4-4117-b9c1-d06c03044864"
-        },
-        {
-            "@type": "WorkflowStep",
             "name": "save script as yaml",
             "description": null,
             "arguments": {
                 "arguments": {
-                    "record_id": "{{vars.record_id}}",
-                    "api_fields": "{{vars.example_selected[\"fields\"]}}",
-                    "api_filter": "{{vars.example_selected[\"filter\"]}}",
-                    "api_loadsub": "{{vars.example_selected[\"loadsub\"]}}",
-                    "api_options": "{{vars.example_selected[\"options\"]}}",
-                    "api_resource": "{{vars.example_selected[\"url\"]}}"
+                    "json": "{{vars.config_example_selected_formated}}",
+                    "manual_test": ""
                 },
                 "apply_async": false,
                 "step_variables": [],
                 "pass_parent_env": false,
                 "pass_input_record": false,
-                "workflowReference": "\/api\/3\/workflows\/68acc0ea-5fda-4267-8305-ebab47c46161"
+                "workflowReference": "\/api\/3\/workflows\/f55012fc-f837-4759-87a1-4bdcc486f87b"
             },
             "status": null,
-            "top": "220",
-            "left": "340",
+            "top": "320",
+            "left": "700",
             "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
             "group": null,
             "uuid": "d07d1890-b96b-4e44-917b-39c9bfcd28a4"
@@ -244,8 +181,8 @@
                 "external_email_attachments": null
             },
             "status": null,
-            "top": "140",
-            "left": "660",
+            "top": "120",
+            "left": "700",
             "stepType": "\/api\/3\/workflow_step_types\/fc04082a-d7dc-4299-96fb-6837b1baa0fe",
             "group": null,
             "uuid": "3e4106f5-0af5-492e-b0e7-eadc82e03566"
@@ -259,11 +196,17 @@
                 "input": {
                     "schema": {
                         "title": "Example Selected",
-                        "description": "{%- set cat = vars.config_example_selected[0] -%}\n{%- set exa = vars.config_example_selected[1] -%}\n\nYou selected `{{cat}}` and `{{exa}}`:\n\n```\n{{vars.example_index[cat][exa]|to_nice_json(indent=2)}}\n```\n\n *Will Overwrite Current Script*",
+                        "description": "{%- set cat = vars.config_example_selected[0] -%}\n{%- set exa = vars.config_example_selected[1] -%}\n\nYou selected `{{cat}}` and `{{exa}}`. Choose a format that works best for your environment. The `JSON` format is more flexible but also more advanced to read. \n\n*Copy\/Paste the following into the script field for JSON*\n```\n{{vars.example_index[cat][exa]|to_nice_json(indent=2)}}\n```\n\n*Copy\/Paste the following into the script field for YAML*\n```\n{{vars.steps.save_script_as_yaml.output|replace('\\\\n','\\n')}}\n```\n\n",
                         "inputVariables": []
                     }
                 },
                 "record": "",
+                "timeout": {
+                    "days": 0,
+                    "hours": 0,
+                    "minutes": 3,
+                    "step_iri": "\/api\/3\/workflow_steps\/94d27e2b-7272-4b51-b965-90ec605d4243"
+                },
                 "agent_id": null,
                 "resources": "ztpf_metadata_sources",
                 "is_approval": false,
@@ -276,16 +219,8 @@
                 "response_mapping": {
                     "options": [
                         {
-                            "option": "Save as YAML",
+                            "option": "Ok",
                             "primary": true,
-                            "step_iri": "\/api\/3\/workflow_steps\/0c7e23bc-a45f-4155-925c-b39168e58907"
-                        },
-                        {
-                            "option": "Save as JSON",
-                            "step_iri": "\/api\/3\/workflow_steps\/7f09b1de-f3bc-493b-a276-141aff11c366"
-                        },
-                        {
-                            "option": "Cancel",
                             "step_iri": "\/api\/3\/workflow_steps\/94d27e2b-7272-4b51-b965-90ec605d4243"
                         }
                     ],
@@ -306,8 +241,8 @@
                 "external_email_attachments": null
             },
             "status": null,
-            "top": "340",
-            "left": "660",
+            "top": "420",
+            "left": "700",
             "stepType": "\/api\/3\/workflow_step_types\/fc04082a-d7dc-4299-96fb-6837b1baa0fe",
             "group": null,
             "uuid": "bb001121-316e-4e7b-ac6b-02f88a617456"
@@ -395,13 +330,13 @@
         },
         {
             "@type": "WorkflowRoute",
-            "name": "example_selected -> Show Example",
-            "targetStep": "\/api\/3\/workflow_steps\/bb001121-316e-4e7b-ac6b-02f88a617456",
+            "name": "example_selected -> save script as yaml",
+            "targetStep": "\/api\/3\/workflow_steps\/d07d1890-b96b-4e44-917b-39c9bfcd28a4",
             "sourceStep": "\/api\/3\/workflow_steps\/49c0c4f8-2418-4bce-8c73-cdf88a45701d",
             "label": null,
             "isExecuted": false,
             "group": null,
-            "uuid": "a5cff731-6994-4352-afa3-760d56faa573"
+            "uuid": "001b4916-b589-4d28-96c3-3e908f71b64d"
         },
         {
             "@type": "WorkflowRoute",
@@ -425,33 +360,13 @@
         },
         {
             "@type": "WorkflowRoute",
-            "name": "save example JSON -> update record json",
-            "targetStep": "\/api\/3\/workflow_steps\/7b4b93ec-2bd4-4117-b9c1-d06c03044864",
-            "sourceStep": "\/api\/3\/workflow_steps\/7f09b1de-f3bc-493b-a276-141aff11c366",
-            "label": null,
-            "isExecuted": false,
-            "group": null,
-            "uuid": "4836c82a-f659-4a8f-8caa-33403132bfb2"
-        },
-        {
-            "@type": "WorkflowRoute",
-            "name": "save example YAML -> configure script",
-            "targetStep": "\/api\/3\/workflow_steps\/d07d1890-b96b-4e44-917b-39c9bfcd28a4",
-            "sourceStep": "\/api\/3\/workflow_steps\/0c7e23bc-a45f-4155-925c-b39168e58907",
-            "label": null,
-            "isExecuted": false,
-            "group": null,
-            "uuid": "3d5a93ea-2be3-4b50-b933-a3c4774d0e0d"
-        },
-        {
-            "@type": "WorkflowRoute",
-            "name": "save script as yaml -> return",
-            "targetStep": "\/api\/3\/workflow_steps\/189fb8b3-d5b9-4168-8586-9538d8462475",
+            "name": "save script as yaml -> Show Example",
+            "targetStep": "\/api\/3\/workflow_steps\/bb001121-316e-4e7b-ac6b-02f88a617456",
             "sourceStep": "\/api\/3\/workflow_steps\/d07d1890-b96b-4e44-917b-39c9bfcd28a4",
             "label": null,
             "isExecuted": false,
             "group": null,
-            "uuid": "cbc2cbaa-9278-4a5a-ab5d-5718e7507706"
+            "uuid": "00e5e7fc-fddc-4fa7-9054-212b49874f05"
         },
         {
             "@type": "WorkflowRoute",
@@ -468,30 +383,10 @@
             "name": "Show Example -> cancel or timeout",
             "targetStep": "\/api\/3\/workflow_steps\/94d27e2b-7272-4b51-b965-90ec605d4243",
             "sourceStep": "\/api\/3\/workflow_steps\/bb001121-316e-4e7b-ac6b-02f88a617456",
-            "label": "Cancel",
+            "label": "Ok",
             "isExecuted": false,
             "group": null,
             "uuid": "e3926159-7ac0-47ad-a22f-4be902608202"
-        },
-        {
-            "@type": "WorkflowRoute",
-            "name": "Show Example -> ok",
-            "targetStep": "\/api\/3\/workflow_steps\/7f09b1de-f3bc-493b-a276-141aff11c366",
-            "sourceStep": "\/api\/3\/workflow_steps\/bb001121-316e-4e7b-ac6b-02f88a617456",
-            "label": "Save as JSON",
-            "isExecuted": false,
-            "group": null,
-            "uuid": "de82aa28-9837-4c25-9931-8e7232819c59"
-        },
-        {
-            "@type": "WorkflowRoute",
-            "name": "Show Example -> save example",
-            "targetStep": "\/api\/3\/workflow_steps\/0c7e23bc-a45f-4155-925c-b39168e58907",
-            "sourceStep": "\/api\/3\/workflow_steps\/bb001121-316e-4e7b-ac6b-02f88a617456",
-            "label": "Save as YAML",
-            "isExecuted": false,
-            "group": null,
-            "uuid": "29233e74-f086-4c75-8d25-ce5cbd664a60"
         },
         {
             "@type": "WorkflowRoute",
@@ -502,16 +397,6 @@
             "isExecuted": false,
             "group": null,
             "uuid": "1d28753b-48fd-46fe-806d-f8b11cb7e14e"
-        },
-        {
-            "@type": "WorkflowRoute",
-            "name": "update record json -> return",
-            "targetStep": "\/api\/3\/workflow_steps\/189fb8b3-d5b9-4168-8586-9538d8462475",
-            "sourceStep": "\/api\/3\/workflow_steps\/7b4b93ec-2bd4-4117-b9c1-d06c03044864",
-            "label": null,
-            "isExecuted": false,
-            "group": null,
-            "uuid": "30cd2220-b0a8-4e06-b141-f24a7b1c3ddd"
         },
         {
             "@type": "WorkflowRoute",
@@ -533,6 +418,7 @@
     "isPrivate": false,
     "deletedAt": null,
     "recordTags": [
+        "TODO",
         "ztpfMetadataSource"
     ]
 }

@@ -1,0 +1,180 @@
+{
+    "@type": "Workflow",
+    "triggerLimit": null,
+    "name": "Delete Payload from Step",
+    "aliasName": null,
+    "tag": null,
+    "description": "Delete payload from a step to force a re-rendering of the payload from the input args.",
+    "isActive": true,
+    "debug": false,
+    "singleRecordExecution": false,
+    "remoteExecutableFlag": false,
+    "parameters": [],
+    "synchronous": false,
+    "collection": "\/api\/3\/workflow_collections\/f0b56dc0-6c1e-4f5b-9199-c807800f028a",
+    "versions": [],
+    "triggerStep": "\/api\/3\/workflow_steps\/df021ecb-b6b2-4e4a-9b5a-9b102e6e982b",
+    "steps": [
+        {
+            "@type": "WorkflowStep",
+            "name": "setup vars",
+            "description": null,
+            "arguments": {
+                "empty_json": "{}",
+                "empty_string": "''"
+            },
+            "status": null,
+            "top": "40",
+            "left": "320",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "39200039-0828-47c0-926e-c9ed628ab532"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Start",
+            "description": null,
+            "arguments": {
+                "route": "28837e59-94d3-4c39-80b9-bd2c76709d90",
+                "title": "Delete Step Payload",
+                "resources": [
+                    "ztpf_device_automation_steps"
+                ],
+                "__triggerLimit": true,
+                "inputVariables": [],
+                "step_variables": {
+                    "input": {
+                        "params": [],
+                        "records": "{{vars.input.records}}"
+                    }
+                },
+                "triggerOnSource": true,
+                "displayConditions": {
+                    "ztpf_device_automation_steps": {
+                        "sort": [],
+                        "limit": 30,
+                        "logic": "OR",
+                        "filters": [
+                            {
+                                "type": "array",
+                                "field": "status",
+                                "value": [
+                                    "\/api\/3\/picklists\/757ec310-af08-4602-8205-1f789310cd13",
+                                    "\/api\/3\/picklists\/feea7c72-3743-49ad-baf8-46bf1f1fca0e",
+                                    "\/api\/3\/picklists\/5886b03a-c911-42b4-a065-d69fe3c6be88",
+                                    "\/api\/3\/picklists\/0102f438-8c8e-4a81-840d-a68a58e242d6"
+                                ],
+                                "module": "status",
+                                "display": "",
+                                "operator": "in",
+                                "template": "multiselectpicklist",
+                                "OPERATOR_KEY": "$",
+                                "useInOperator": true,
+                                "previousOperator": "in",
+                                "previousTemplate": "multiselectpicklist"
+                            }
+                        ]
+                    }
+                },
+                "executeButtonText": "Execute",
+                "noRecordExecution": false,
+                "showToasterMessage": {
+                    "visible": false,
+                    "messageVisible": true
+                },
+                "triggerOnReplicate": false,
+                "singleRecordExecution": false
+            },
+            "status": null,
+            "top": "40",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/f414d039-bb0d-4e59-9c39-a8f1e880b18a",
+            "group": null,
+            "uuid": "df021ecb-b6b2-4e4a-9b5a-9b102e6e982b"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "update step payload fields",
+            "description": null,
+            "arguments": {
+                "for_each": {
+                    "item": "{{vars.input.records}}",
+                    "__bulk": true,
+                    "parallel": false,
+                    "condition": "",
+                    "batch_size": 100
+                },
+                "resource": {
+                    "script": "{{vars.empty_string}}",
+                    "status": "\/api\/3\/picklists\/757ec310-af08-4602-8205-1f789310cd13",
+                    "jinjaVars": "{{vars.empty_json}}"
+                },
+                "operation": "Append",
+                "collection": "{{vars.item['@id']}}",
+                "__recommend": [],
+                "collectionType": "\/api\/3\/ztpf_device_automation_steps",
+                "fieldOperation": {
+                    "recordTags": "Append"
+                },
+                "step_variables": []
+            },
+            "status": null,
+            "top": "140",
+            "left": "520",
+            "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928722",
+            "group": null,
+            "uuid": "103597d7-4893-468e-b285-552e381dbdb8"
+        }
+    ],
+    "routes": [
+        {
+            "@type": "WorkflowRoute",
+            "name": "setup vars -> update step payload fields",
+            "targetStep": "\/api\/3\/workflow_steps\/103597d7-4893-468e-b285-552e381dbdb8",
+            "sourceStep": "\/api\/3\/workflow_steps\/39200039-0828-47c0-926e-c9ed628ab532",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "d4a16f12-bc69-4281-a5d9-6b9674cf3af2"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Start -> setup vars",
+            "targetStep": "\/api\/3\/workflow_steps\/39200039-0828-47c0-926e-c9ed628ab532",
+            "sourceStep": "\/api\/3\/workflow_steps\/df021ecb-b6b2-4e4a-9b5a-9b102e6e982b",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "a6f7611a-9507-4c5b-8594-1713aab7550b"
+        }
+    ],
+    "groups": [
+        {
+            "@type": "WorkflowGroup",
+            "name": "Details",
+            "description": "Clear both jinja_vars and the script for this step. The preparation or running state will re-populate these fields.\n\nSet the status of the step back to new.",
+            "type": "note",
+            "isCollapsed": false,
+            "hasTriggerStep": false,
+            "hideInLogs": false,
+            "metadata": [],
+            "reusable": false,
+            "top": "120",
+            "left": "40",
+            "height": "104",
+            "width": "458",
+            "uuid": "574cd8cc-68b7-401d-8861-53fb2ff94f11",
+            "recordTags": []
+        }
+    ],
+    "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+    "playbookOrigin": "\/api\/3\/picklists\/b6d710a9-a8ec-41ec-8817-fe9fa062fcdd",
+    "isEditable": false,
+    "uuid": "c0c325ae-f0a7-4aad-acf2-79a4467eff6e",
+    "owners": [],
+    "isPrivate": false,
+    "deletedAt": null,
+    "recordTags": [
+        "ztpfDeviceAutomationStep"
+    ]
+}

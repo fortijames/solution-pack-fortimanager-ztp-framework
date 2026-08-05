@@ -20,21 +20,44 @@
             "name": "create input data",
             "description": null,
             "arguments": {
-                "input_data": "{%- set ina = {} -%}\n{%- set invalid = [None,\"null\",''] -%}\n{%- set stepin = vars.steps.render_jinja_input.output.input -%}\n{%- set ret = {\"input_args\":ina,\"input_valid\":true} -%}\n\n{%- for k in stepin -%}\n  {%- set v = stepin[k] -%}\n  {%- if v == None -%}\n    {%- set v = \"<INPUT NEEDED>\" -%}\n  {%- endif -%}\n  {%- do ina.update({k:v}) -%}\n{%- endfor -%}\n\n{%- for i in ina -%}\n{%- set v = ina[i]|string|trim -%}\n  {% if v in invalid -%}\n    {%- do ret.update({\"input_valid\":false}) -%}\n  {%- elif v.startswith(\"<\") or v.endswith(\">\") -%}\n    {%- do ret.update({\"input_valid\":false}) -%}\n  {%- elif v.startswith(\"[\") or v.endswith(\"]\") -%}\n    {%- do ret.update({\"input_valid\":false}) -%}\n  {%-endif -%}\n{% endfor %}\n\n{{ret}}"
+                "input_data": "{%- set ina = {} -%}\n{%- set invalid = [None,\"null\",''] -%}\n{%- set stepin = vars.steps.render_jinja_input.output.input -%}\n{%- set ret = {\"input_args\":ina,\"input_valid\":true} -%}\n\n{%- if stepin  -%}\n  {%- for k in stepin -%}\n    {%- set v = stepin[k] -%}\n    {%- if v == None -%}\n      {%- set v = \"<INPUT NEEDED>\" -%}\n    {%- endif -%}\n    {%- do ina.update({k:v}) -%}\n  {%- endfor -%}\n{%- endif -%}\n\n{%- for i in ina -%}\n{%- set v = ina[i]|string|trim -%}\n  {% if v in invalid -%}\n    {%- do ret.update({\"input_valid\":false}) -%}\n  {%- elif v.startswith(\"<\") or v.endswith(\">\") -%}\n    {%- do ret.update({\"input_valid\":false}) -%}\n  {%- elif v.startswith(\"[\") or v.endswith(\"]\") -%}\n    {%- do ret.update({\"input_valid\":false}) -%}\n  {%-endif -%}\n{% endfor %}\n\n{{ret}}",
+                "config_data": "{%- set config_input = {} -%}\n{%- if vars.steps.render_jinja_input.output.config -%}\n  {%- set config_input = vars.steps.render_jinja_input.output.config -%}\n{%- endif -%}\n\n{%- set config = vars.config_default | combine (config_input ) -%}\n\n{{config}}"
             },
             "status": null,
-            "top": "80",
-            "left": "940",
+            "top": "220",
+            "left": "580",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
             "uuid": "ddb92561-7409-4228-92ea-1fd684a3c462"
         },
         {
             "@type": "WorkflowStep",
+            "name": "get device jinja_vars",
+            "description": null,
+            "arguments": {
+                "when": "{{'{{' in vars.input.records[0].stepARGS}}",
+                "arguments": {
+                    "device_id": "{{vars.input.records[0].ztpfDevices.id}}"
+                },
+                "apply_async": false,
+                "step_variables": [],
+                "pass_parent_env": false,
+                "pass_input_record": false,
+                "workflowReference": "\/api\/3\/workflows\/7b1c12a7-a422-45f4-87e4-96f01a4c03f2"
+            },
+            "status": null,
+            "top": "40",
+            "left": "300",
+            "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
+            "group": null,
+            "uuid": "14e2bf2c-76bc-4e2e-9f78-1cd9d1978565"
+        },
+        {
+            "@type": "WorkflowStep",
             "name": "get jinja_vars and script",
             "description": null,
             "arguments": {
-                "when": "{{vars.step_status == \"Ready\"}}",
+                "when": "{{vars.step_status == \"Ready\" and vars.config_data.render_script_on_preparing}}",
                 "arguments": {
                     "action_id": "{{vars.input.records[0].ztpfAutomationActions.id}}",
                     "device_id": "{{vars.input.records[0].ztpfDevices.id}}",
@@ -47,8 +70,8 @@
                 "workflowReference": "\/api\/3\/workflows\/6ed8988b-5216-4fb3-94e5-0be09ec2ac0a"
             },
             "status": null,
-            "top": "420",
-            "left": "940",
+            "top": "600",
+            "left": "580",
             "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
             "group": null,
             "uuid": "10156cc7-5d39-4cf5-bd0f-e892561d94ee"
@@ -73,8 +96,8 @@
                 "step_variables": []
             },
             "status": null,
-            "top": "160",
-            "left": "940",
+            "top": "340",
+            "left": "580",
             "stepType": "\/api\/3\/workflow_step_types\/12254cf5-5db7-4b1a-8cb1-3af081924b28",
             "group": null,
             "uuid": "b0d34030-d3e3-42a3-99ce-c5982147f75f"
@@ -87,8 +110,8 @@
                 "step_status": "Input Needed"
             },
             "status": null,
-            "top": "240",
-            "left": "600",
+            "top": "420",
+            "left": "240",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
             "uuid": "61656a85-91d4-4381-8463-694c512f7e13"
@@ -102,8 +125,8 @@
                 "step_status": "Ready"
             },
             "status": null,
-            "top": "200",
-            "left": "1260",
+            "top": "380",
+            "left": "900",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
             "uuid": "c881779a-ee63-4b42-a05c-e6c3dbdf9c7a"
@@ -113,6 +136,7 @@
             "name": "refactor_step_arg",
             "description": null,
             "arguments": {
+                "when": "{{vars.steps.render_jinja_input.output}}",
                 "arguments": {
                     "step_args": "{{vars.steps.render_jinja_input.output}}"
                 },
@@ -123,8 +147,8 @@
                 "workflowReference": "\/api\/3\/workflows\/4af18fe1-5248-4f94-a595-131de9c6a913"
             },
             "status": null,
-            "top": "320",
-            "left": "940",
+            "top": "500",
+            "left": "580",
             "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
             "group": null,
             "uuid": "041fe7be-edbe-4319-ab45-12e5657c5c52"
@@ -134,6 +158,7 @@
             "name": "render jinja input",
             "description": null,
             "arguments": {
+                "when": "{{vars.step_args}}",
                 "arguments": {
                     "script_vars": "{{vars.jinja_vars}}",
                     "yaml2json_flag": "true",
@@ -146,8 +171,8 @@
                 "workflowReference": "\/api\/3\/workflows\/b9e9fe1a-4964-4631-ba81-97987676884d"
             },
             "status": null,
-            "top": "40",
-            "left": "600",
+            "top": "140",
+            "left": "900",
             "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
             "group": null,
             "uuid": "659f259b-9b51-43d6-b0c9-3d3549453ab0"
@@ -172,8 +197,8 @@
                 "workflowReference": "\/api\/3\/workflows\/b9e9fe1a-4964-4631-ba81-97987676884d"
             },
             "status": null,
-            "top": "280",
-            "left": "1260",
+            "top": "460",
+            "left": "900",
             "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
             "group": null,
             "uuid": "904f368b-65c1-440b-9adf-eb586bf42377"
@@ -185,11 +210,12 @@
             "arguments": {
                 "step_args": "{{vars.input.records[0].stepARGS}}",
                 "step_name": "{{vars.input.records[0].name}}",
-                "jinja_vars": "{{vars.input.records[0].jinjaVars}}"
+                "jinja_vars": "{%- set ret = vars.input.records[0].jinjaVars -%}\n{%- if vars.steps.get_device_jinja_vars.output -%}\n  {%- set ret = ret | combine(vars.steps.get_device_jinja_vars.output) -%}\n{%- endif -%}\n{{ret}}",
+                "config_default": "{\"render_script_on_preparing\": true }"
             },
             "status": null,
             "top": "40",
-            "left": "300",
+            "left": "580",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
             "uuid": "267f5de7-bfdc-4543-9d0a-83d176ecb46b"
@@ -260,8 +286,8 @@
                     "name": "{{vars.step_name}}",
                     "script": "{{vars.steps.get_jinja_vars_and_script.output['script_rendered']}}",
                     "status": "{{\"ztpfDeviceStepStatus\" | picklist(vars.step_status, \"@id\")}}",
-                    "stepARGS": "{{vars.steps.refactor_step_arg.output}}",
-                    "jinjaVars": "{{vars.jinja_vars}}",
+                    "stepARGS": "{{vars.steps.refactor_step_arg.output|default('')}}",
+                    "jinjaVars": "{{vars.steps.get_jinja_vars_and_script.output['jinja_vars']}}",
                     "queueStatus": "{{\"ztpfDeviceStepStatus\" | picklist(vars.step_status, \"@id\")}}"
                 },
                 "operation": "Append",
@@ -274,8 +300,8 @@
                 "step_variables": []
             },
             "status": null,
-            "top": "520",
-            "left": "940",
+            "top": "700",
+            "left": "580",
             "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928722",
             "group": null,
             "uuid": "a5f64fa9-d613-4a61-9615-2be672c0394c"
@@ -291,6 +317,16 @@
             "isExecuted": false,
             "group": null,
             "uuid": "2a427863-615d-442e-aea7-61d585cbcdf4"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "get device jinja_vars -> setup vars",
+            "targetStep": "\/api\/3\/workflow_steps\/267f5de7-bfdc-4543-9d0a-83d176ecb46b",
+            "sourceStep": "\/api\/3\/workflow_steps\/14e2bf2c-76bc-4e2e-9f78-1cd9d1978565",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "b08bc4c8-8499-4471-a935-5b001e6facc7"
         },
         {
             "@type": "WorkflowRoute",
@@ -380,24 +416,24 @@
             "label": null,
             "isExecuted": false,
             "group": null,
-            "uuid": "e30826bf-2956-4e83-acde-455af39e3dab"
+            "uuid": "ca4dffdd-6f5b-4005-aa98-5a3fb8728602"
         },
         {
             "@type": "WorkflowRoute",
-            "name": "Start -> setup vars",
-            "targetStep": "\/api\/3\/workflow_steps\/267f5de7-bfdc-4543-9d0a-83d176ecb46b",
+            "name": "Start -> get device jinja_vars",
+            "targetStep": "\/api\/3\/workflow_steps\/14e2bf2c-76bc-4e2e-9f78-1cd9d1978565",
             "sourceStep": "\/api\/3\/workflow_steps\/d83ff81b-7319-4ca3-8470-59621178280b",
             "label": null,
             "isExecuted": false,
             "group": null,
-            "uuid": "95e6e651-dcf8-4517-8934-bb91d8758b2d"
+            "uuid": "1a79837e-ccbd-407b-b91b-f486ed015d38"
         }
     ],
     "groups": [
         {
             "@type": "WorkflowGroup",
             "name": "Details",
-            "description": "Step status changed to pre-run. Review input args and handle updating the step where needed. If our inputs are valid then populate the action payload script in the step and mark the record ready.",
+            "description": "Step status changed to pre-run. Review input args and handle updating the step where needed. If our inputs are valid then populate the action payload script in the step and mark the record ready.\n\nLook for render_script_on_preparing and if false skip render script.",
             "type": "note",
             "isCollapsed": false,
             "hasTriggerStep": false,

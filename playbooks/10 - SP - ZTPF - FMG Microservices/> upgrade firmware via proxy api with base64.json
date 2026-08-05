@@ -1,0 +1,177 @@
+{
+    "@type": "Workflow",
+    "triggerLimit": null,
+    "name": "> upgrade firmware via proxy api with base64",
+    "aliasName": null,
+    "tag": null,
+    "description": "Ue a base64 firmware image to upload to the FG using the proxy API.",
+    "isActive": true,
+    "debug": false,
+    "singleRecordExecution": false,
+    "remoteExecutableFlag": false,
+    "parameters": [
+        "firmware_base64",
+        "connector_config",
+        "devices"
+    ],
+    "synchronous": false,
+    "collection": "\/api\/3\/workflow_collections\/c15a8515-33ae-46d2-9166-fa6fa47ac762",
+    "versions": [],
+    "triggerStep": "\/api\/3\/workflow_steps\/cdf71189-820f-474e-a618-09618243a651",
+    "steps": [
+        {
+            "@type": "WorkflowStep",
+            "name": "create payload",
+            "description": null,
+            "arguments": {
+                "fmg_payload": "{\"file\":''}",
+                "fos_resource": "\/api\/v2\/blahblah\/firmware"
+            },
+            "status": null,
+            "top": "140",
+            "left": "740",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "0c8e5e73-73d9-485e-85fb-7ce3c5e44e00"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "fmg_proxy_api",
+            "description": null,
+            "arguments": {
+                "arguments": {
+                    "action": "",
+                    "target": "",
+                    "payload": "",
+                    "resource": "",
+                    "connector_config": ""
+                },
+                "apply_async": false,
+                "step_variables": [],
+                "pass_parent_env": false,
+                "pass_input_record": false,
+                "workflowReference": "\/api\/3\/workflows\/9ebd04bf-207c-4ea4-afa9-191fb6b75ad2"
+            },
+            "status": null,
+            "top": "260",
+            "left": "740",
+            "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
+            "group": null,
+            "uuid": "db101c92-146d-4e8c-8b26-89ac27470fad"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "return",
+            "description": null,
+            "arguments": {
+                "output": "{{vars.steps.fmg_proxy_api.output}}",
+                "params": "{{vars.input.params}}",
+                "status": "{\"error\":false,\"msg\":\"ok\"}"
+            },
+            "status": null,
+            "top": "300",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "dca25e94-20fa-46ef-8a38-72cb77305eeb"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "setup vars",
+            "description": null,
+            "arguments": {
+                "devices": "{{vars.input.params.devices}}",
+                "firmware_base64": "{{vars.input.params['firmware_base64']}}",
+                "connector_config": "{{vars.input.params.devices}}"
+            },
+            "status": null,
+            "top": "40",
+            "left": "380",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "c469e3ed-cfb7-460d-a6b7-a6388960b240"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Start",
+            "description": null,
+            "arguments": {
+                "__triggerLimit": true,
+                "step_variables": {
+                    "input": {
+                        "params": []
+                    }
+                },
+                "triggerOnSource": true,
+                "triggerOnReplicate": false
+            },
+            "status": null,
+            "top": "40",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/b348f017-9a94-471f-87f8-ce88b6a7ad62",
+            "group": null,
+            "uuid": "cdf71189-820f-474e-a618-09618243a651"
+        }
+    ],
+    "routes": [
+        {
+            "@type": "WorkflowRoute",
+            "name": "fmg_proxy_api -> return",
+            "targetStep": "\/api\/3\/workflow_steps\/dca25e94-20fa-46ef-8a38-72cb77305eeb",
+            "sourceStep": "\/api\/3\/workflow_steps\/db101c92-146d-4e8c-8b26-89ac27470fad",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "7301bf31-d021-40cf-84c2-5747ca4d7561"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "setup vars -> create payload",
+            "targetStep": "\/api\/3\/workflow_steps\/0c8e5e73-73d9-485e-85fb-7ce3c5e44e00",
+            "sourceStep": "\/api\/3\/workflow_steps\/c469e3ed-cfb7-460d-a6b7-a6388960b240",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "0bf38349-5010-4412-a53f-975197f7aad6"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Start -> setup vars",
+            "targetStep": "\/api\/3\/workflow_steps\/c469e3ed-cfb7-460d-a6b7-a6388960b240",
+            "sourceStep": "\/api\/3\/workflow_steps\/cdf71189-820f-474e-a618-09618243a651",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "40636c5a-fae2-4aaa-8c53-32338dc69006"
+        }
+    ],
+    "groups": [
+        {
+            "@type": "WorkflowGroup",
+            "name": "Details",
+            "description": "Create the payload for upoading a firmware via base64 to a FG via FMG Proxy API.",
+            "type": "note",
+            "isCollapsed": false,
+            "hasTriggerStep": false,
+            "hideInLogs": false,
+            "metadata": [],
+            "reusable": false,
+            "top": "140",
+            "left": "40",
+            "height": "128",
+            "width": "370",
+            "uuid": "d73f0c3b-48a7-4ed1-be38-318735368112",
+            "recordTags": []
+        }
+    ],
+    "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+    "playbookOrigin": "\/api\/3\/picklists\/b6d710a9-a8ec-41ec-8817-fe9fa062fcdd",
+    "isEditable": false,
+    "uuid": "318db8a4-58e5-41ae-a553-08d7288a5f0a",
+    "owners": [],
+    "isPrivate": false,
+    "deletedAt": null,
+    "recordTags": [
+        "fmg_api"
+    ]
+}
