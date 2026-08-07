@@ -17,32 +17,6 @@
     "steps": [
         {
             "@type": "WorkflowStep",
-            "name": "all steps done",
-            "description": null,
-            "arguments": {
-                "conditions": [
-                    {
-                        "default": true,
-                        "step_iri": "\/api\/3\/workflow_steps\/3dc2817d-0260-46b3-828e-ba13a3476644",
-                        "step_name": "rungroup status running"
-                    },
-                    {
-                        "step_iri": "\/api\/3\/workflow_steps\/ca114fe7-64bd-425d-900f-2d529b6930a3",
-                        "condition": "{{ vars.step_results['steps_pending']|length == 0 }}",
-                        "step_name": "rungroup status complete"
-                    }
-                ],
-                "step_variables": []
-            },
-            "status": null,
-            "top": "220",
-            "left": "620",
-            "stepType": "\/api\/3\/workflow_step_types\/12254cf5-5db7-4b1a-8cb1-3af081924b28",
-            "group": null,
-            "uuid": "83d60920-95bd-4431-8e17-d4cc8ec71a59"
-        },
-        {
-            "@type": "WorkflowStep",
             "name": "find steps",
             "description": null,
             "arguments": {
@@ -209,6 +183,34 @@
         },
         {
             "@type": "WorkflowStep",
+            "name": "steps done or running",
+            "description": null,
+            "arguments": {
+                "conditions": [
+                    {
+                        "option": "running",
+                        "default": true,
+                        "step_iri": "\/api\/3\/workflow_steps\/3dc2817d-0260-46b3-828e-ba13a3476644",
+                        "step_name": "rungroup status running"
+                    },
+                    {
+                        "option": "done",
+                        "step_iri": "\/api\/3\/workflow_steps\/ca114fe7-64bd-425d-900f-2d529b6930a3",
+                        "condition": "{{ vars.step_results['steps_pending']|length == 0 }}",
+                        "step_name": "rungroup status complete"
+                    }
+                ],
+                "step_variables": []
+            },
+            "status": null,
+            "top": "220",
+            "left": "620",
+            "stepType": "\/api\/3\/workflow_step_types\/12254cf5-5db7-4b1a-8cb1-3af081924b28",
+            "group": null,
+            "uuid": "83d60920-95bd-4431-8e17-d4cc8ec71a59"
+        },
+        {
+            "@type": "WorkflowStep",
             "name": "update devices",
             "description": null,
             "arguments": {
@@ -307,7 +309,7 @@
             "name": "all steps done -> rungroup status complete",
             "targetStep": "\/api\/3\/workflow_steps\/ca114fe7-64bd-425d-900f-2d529b6930a3",
             "sourceStep": "\/api\/3\/workflow_steps\/83d60920-95bd-4431-8e17-d4cc8ec71a59",
-            "label": "",
+            "label": "done",
             "isExecuted": false,
             "group": null,
             "uuid": "16b3de14-86e1-49b9-9600-220e25a2d798"
@@ -317,7 +319,7 @@
             "name": "all steps done -> rungroup status running",
             "targetStep": "\/api\/3\/workflow_steps\/3dc2817d-0260-46b3-828e-ba13a3476644",
             "sourceStep": "\/api\/3\/workflow_steps\/83d60920-95bd-4431-8e17-d4cc8ec71a59",
-            "label": null,
+            "label": "running",
             "isExecuted": false,
             "group": null,
             "uuid": "a150c81e-306b-415c-996b-edab69c7e3f5"

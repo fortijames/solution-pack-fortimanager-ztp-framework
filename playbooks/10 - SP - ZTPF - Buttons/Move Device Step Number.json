@@ -105,11 +105,15 @@
                         "logic": "AND",
                         "filters": [
                             {
-                                "type": "primitive",
-                                "field": "stepDone",
-                                "value": true,
-                                "operator": "neq",
-                                "_operator": "neq"
+                                "type": "object",
+                                "field": "ztpfRunGroups",
+                                "value": "true",
+                                "_value": {
+                                    "@id": "true",
+                                    "display": true,
+                                    "itemValue": ""
+                                },
+                                "operator": "isnull"
                             }
                         ]
                     }

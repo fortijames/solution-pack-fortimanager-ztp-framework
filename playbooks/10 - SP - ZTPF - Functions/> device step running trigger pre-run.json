@@ -150,7 +150,7 @@
                 "device_id": "{{vars.input.params['trigger_step_input_record']['ztpfDevices'].id}}",
                 "step_fqid": "{{vars.input.params['trigger_step_input_record']['@id']}}",
                 "automation_id": "{{vars.input.params['trigger_step_input_record']['ztpfAutomationActions'].id}}",
-                "refresh_step_script": "{%- set ret = false -%}\n{%- if vars.step_args_json.config.render_script_on_running -%}\n{%- set ret = true -%}\n{%- endif -%}\n{{ret}}"
+                "refresh_step_script": "{%- set ret = false -%}\n{%- if vars.input.params['trigger_step_input_record'].script in ['',None] -%}\n  {%- set ret = true -%}\n{%- elif vars.step_args_json.config.render_script_on_running == true -%}\n  {%- set ret = true -%}\n{%- endif -%}\n{{ret}}"
             },
             "status": null,
             "top": "40",

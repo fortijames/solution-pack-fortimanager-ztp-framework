@@ -167,11 +167,11 @@
                                                                 "query": {
                                                                     "sort": [
                                                                         {
-                                                                            "field": "adminStatus.orderIndex",
+                                                                            "field": "ztpfManagers.name",
                                                                             "direction": "ASC"
                                                                         },
                                                                         {
-                                                                            "field": "ztpfManagers.name",
+                                                                            "field": "adom",
                                                                             "direction": "ASC"
                                                                         }
                                                                     ],
@@ -185,16 +185,6 @@
                                                                             "alias": "total"
                                                                         },
                                                                         {
-                                                                            "operator": "groupby",
-                                                                            "alias": "adminStatus",
-                                                                            "field": "adminStatus.itemValue"
-                                                                        },
-                                                                        {
-                                                                            "operator": "groupby",
-                                                                            "alias": "firstOrderIndex",
-                                                                            "field": "adminStatus.orderIndex"
-                                                                        },
-                                                                        {
                                                                             "operator": "select",
                                                                             "alias": "ztpfManagers__name",
                                                                             "field": "ztpfManagers.name"
@@ -203,17 +193,22 @@
                                                                             "operator": "groupby",
                                                                             "alias": "ztpfManagers__uuid",
                                                                             "field": "ztpfManagers.uuid"
+                                                                        },
+                                                                        {
+                                                                            "operator": "groupby",
+                                                                            "alias": "adom",
+                                                                            "field": "adom"
                                                                         }
                                                                     ]
                                                                 },
                                                                 "mapping": {
-                                                                    "firstGrouping": "adminStatus",
-                                                                    "secondGrouping": "ztpfManagers"
+                                                                    "firstGrouping": "ztpfManagers",
+                                                                    "secondGrouping": "adom"
                                                                 },
-                                                                "assignedToSetting": "onlyMe",
+                                                                "assignedToSetting": "all",
                                                                 "aggregate": true,
                                                                 "viewType": "chart",
-                                                                "title": "Devices",
+                                                                "title": "ADOMs and Devices",
                                                                 "widgetAlwaysExpanded": true,
                                                                 "resource": "ztpf_devices",
                                                                 "chart": "bar",

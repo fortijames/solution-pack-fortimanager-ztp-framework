@@ -9,6 +9,119 @@
                     {
                         "widgets": [
                             {
+                                "type": "chart",
+                                "config": {
+                                    "wid": "d294060e-a77b-4656-9a82-84bc838c3df7",
+                                    "widgetAlwaysDisplay": true,
+                                    "showTabularData": false,
+                                    "query": {
+                                        "sort": [
+                                            {
+                                                "field": "status.orderIndex",
+                                                "direction": "ASC"
+                                            }
+                                        ],
+                                        "limit": 2147483647,
+                                        "logic": "AND",
+                                        "filters": [],
+                                        "aggregates": [
+                                            {
+                                                "operator": "countdistinct",
+                                                "field": "*",
+                                                "alias": "total"
+                                            },
+                                            {
+                                                "operator": "groupby",
+                                                "alias": "status",
+                                                "field": "status.itemValue"
+                                            },
+                                            {
+                                                "operator": "groupby",
+                                                "alias": "color",
+                                                "field": "status.color"
+                                            },
+                                            {
+                                                "operator": "groupby",
+                                                "alias": "orderIndex",
+                                                "field": "status.orderIndex"
+                                            }
+                                        ]
+                                    },
+                                    "mapping": {
+                                        "fieldName": "status"
+                                    },
+                                    "assignedToSetting": "all",
+                                    "aggregate": true,
+                                    "viewType": "chart",
+                                    "title": "Status",
+                                    "resource": "ztpf_run_groups",
+                                    "chart": "pie",
+                                    "widgetAlwaysExpanded": true
+                                }
+                            }
+                        ],
+                        "style": "col-lg-6"
+                    },
+                    {
+                        "widgets": [
+                            {
+                                "type": "relationshipCount",
+                                "config": {
+                                    "wid": "fe70a28f-80d7-4236-afea-0e279999cab1",
+                                    "widgetAlwaysDisplay": true,
+                                    "showTabularData": false,
+                                    "query": {
+                                        "sort": [
+                                            {
+                                                "field": "name",
+                                                "direction": "ASC"
+                                            }
+                                        ],
+                                        "limit": 2147483647,
+                                        "logic": "AND",
+                                        "filters": [],
+                                        "aggregates": [
+                                            {
+                                                "operator": "count",
+                                                "alias": "total",
+                                                "field": "ztpfDevices.uuid"
+                                            },
+                                            {
+                                                "operator": "groupby",
+                                                "alias": "name",
+                                                "field": "name"
+                                            }
+                                        ]
+                                    },
+                                    "mapping": {
+                                        "firstGrouping": "name"
+                                    },
+                                    "assignedToSetting": "all",
+                                    "aggregate": true,
+                                    "viewType": "chart",
+                                    "title": "Device Count of Last 20 Run Groups",
+                                    "chart": "relationshipBar",
+                                    "resource": "ztpf_run_groups",
+                                    "resourceRelationship": "ztpfDevices",
+                                    "relatedDataSourceLabel": "Devices",
+                                    "sortStyle": "DESC",
+                                    "limit": 20
+                                }
+                            }
+                        ],
+                        "style": "col-lg-6"
+                    }
+                ],
+                "wid": "cdba5b0a-ae66-4b33-82d8-0d4cabfeb11e",
+                "collapsible": false,
+                "collapsibleIndex": 0,
+                "_collapsed": false
+            },
+            {
+                "columns": [
+                    {
+                        "widgets": [
+                            {
                                 "type": "grid",
                                 "config": {
                                     "wid": "891c904a-9fdb-4a0f-88ec-4b81d4ed419f",
@@ -17,7 +130,6 @@
                                         "id",
                                         "name",
                                         "status",
-                                        "ztpfRunning",
                                         "totalDevices",
                                         "totalSteps",
                                         "totalStepsComplete",

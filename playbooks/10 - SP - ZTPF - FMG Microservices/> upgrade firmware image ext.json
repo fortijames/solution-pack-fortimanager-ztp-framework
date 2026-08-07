@@ -1,0 +1,190 @@
+{
+    "@type": "Workflow",
+    "triggerLimit": null,
+    "name": "> upgrade firmware image ext",
+    "aliasName": null,
+    "tag": null,
+    "description": "Using the \/um\/image\/upgrade\/ext to upgrade on a device list in the form of fg1,fg2,fg3",
+    "isActive": true,
+    "debug": false,
+    "singleRecordExecution": false,
+    "remoteExecutableFlag": false,
+    "parameters": [
+        "connector_config",
+        "firmware",
+        "devices"
+    ],
+    "synchronous": false,
+    "collection": "\/api\/3\/workflow_collections\/c15a8515-33ae-46d2-9166-fa6fa47ac762",
+    "versions": [],
+    "triggerStep": "\/api\/3\/workflow_steps\/b52fd747-e52d-4d42-9129-a81d907668d2",
+    "steps": [
+        {
+            "@type": "WorkflowStep",
+            "name": "fmg_api",
+            "description": null,
+            "arguments": {
+                "arguments": {
+                    "exec_url": "{{vars.api_url}}",
+                    "exec_payload": "{{vars.api_payload}}",
+                    "task_timeout": "",
+                    "connector_config": "{{vars.connector_config}}",
+                    "task_stale_timeout": "{{vars.task_stale_timeout}}",
+                    "zero_percent_timeout": ""
+                },
+                "apply_async": false,
+                "step_variables": [],
+                "pass_parent_env": false,
+                "pass_input_record": false,
+                "workflowReference": "\/api\/3\/workflows\/ec1c9a17-98b1-40c3-bda5-7e3a9b315e70"
+            },
+            "status": null,
+            "top": "240",
+            "left": "520",
+            "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
+            "group": null,
+            "uuid": "4e780eff-91c8-42b2-9d31-a1cbf5ee145d"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "return",
+            "description": null,
+            "arguments": {
+                "output": "{{vars.steps.fmg_api.output}}",
+                "params": "{{vars.input.params}}",
+                "status": "{%- set a = vars.steps.fmg_api -%}\n{%- set ret = {\"error\":false,\"msg\":\"Upgrade completed without error.\"} -%}\n{%- if a.status.error -%}\n  {%- do ret.update({\n      \"error\":true,\n      \"msg\":a.status.message\n    }\n  ) -%}\n{%- endif -%}\n{{ret}}"
+            },
+            "status": null,
+            "top": "280",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "a21e3fb8-b48b-4c1c-bbdc-ad5927848b31"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "setup payload",
+            "description": null,
+            "arguments": {
+                "api_payload": "{%- set ret = \n    {\n      \"data\": {\n        \"adom\": \"demo\",\n        \"create_task\": \"enable\",\n        \"devices\": [],\n        \"flags\": 900\n      }\n    } \n-%}\n\n{%- for d in vars.devices -%}\n  {%- set d = {\"image\":vars.firmware,\"name\":d} -%}\n  {%- do ret.data.devices.append(d) -%}\n{%- endfor -%}\n\n{{ret}}"
+            },
+            "status": null,
+            "top": "140",
+            "left": "520",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "014b34fe-f9f3-4f69-9da7-83e318ff2079"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "setup vars",
+            "description": null,
+            "arguments": {
+                "api_url": "\/um\/image\/upgrade\/ext",
+                "devices": "{{vars.input.params.devices.split(\",\")}}",
+                "firmware": "{{vars.input.params.firmware}}",
+                "connector_config": "{{vars.input.params['connector_config']}}",
+                "task_stale_timeout": "900"
+            },
+            "status": null,
+            "top": "40",
+            "left": "340",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "be6b8026-2ad7-4b14-a46f-830c97bd7a6b"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Start",
+            "description": null,
+            "arguments": {
+                "__triggerLimit": true,
+                "step_variables": {
+                    "input": {
+                        "params": []
+                    }
+                },
+                "triggerOnSource": true,
+                "triggerOnReplicate": false
+            },
+            "status": null,
+            "top": "40",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/b348f017-9a94-471f-87f8-ce88b6a7ad62",
+            "group": null,
+            "uuid": "b52fd747-e52d-4d42-9129-a81d907668d2"
+        }
+    ],
+    "routes": [
+        {
+            "@type": "WorkflowRoute",
+            "name": "fmg_api -> return",
+            "targetStep": "\/api\/3\/workflow_steps\/a21e3fb8-b48b-4c1c-bbdc-ad5927848b31",
+            "sourceStep": "\/api\/3\/workflow_steps\/4e780eff-91c8-42b2-9d31-a1cbf5ee145d",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "4c139b76-5367-49fd-add4-1fb1e4459567"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "setup payload -> fmg_api",
+            "targetStep": "\/api\/3\/workflow_steps\/4e780eff-91c8-42b2-9d31-a1cbf5ee145d",
+            "sourceStep": "\/api\/3\/workflow_steps\/014b34fe-f9f3-4f69-9da7-83e318ff2079",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "45c66433-7dab-4afa-aac4-a2b20be43ef8"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "setup vars -> setup payload",
+            "targetStep": "\/api\/3\/workflow_steps\/014b34fe-f9f3-4f69-9da7-83e318ff2079",
+            "sourceStep": "\/api\/3\/workflow_steps\/be6b8026-2ad7-4b14-a46f-830c97bd7a6b",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "38d3f342-693a-4185-aec4-fbdb90431060"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Start -> setup vars",
+            "targetStep": "\/api\/3\/workflow_steps\/be6b8026-2ad7-4b14-a46f-830c97bd7a6b",
+            "sourceStep": "\/api\/3\/workflow_steps\/b52fd747-e52d-4d42-9129-a81d907668d2",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "4aa9df5f-d954-4b90-871f-2ac98e60f2aa"
+        }
+    ],
+    "groups": [
+        {
+            "@type": "WorkflowGroup",
+            "name": "Details",
+            "description": "Run firmware upgrade via exec task. Monitor the task and if the task is not progressing for 900 seconds fail and delete the task.",
+            "type": "note",
+            "isCollapsed": false,
+            "hasTriggerStep": false,
+            "hideInLogs": false,
+            "metadata": [],
+            "reusable": false,
+            "top": "120",
+            "left": "160",
+            "height": "123",
+            "width": "279",
+            "uuid": "35d7de61-4a37-4cc5-9c1e-bcc790aa116d",
+            "recordTags": []
+        }
+    ],
+    "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+    "playbookOrigin": "\/api\/3\/picklists\/b6d710a9-a8ec-41ec-8817-fe9fa062fcdd",
+    "isEditable": false,
+    "uuid": "3bb5ce5e-29a2-4185-8110-b1e818a66f3d",
+    "owners": [],
+    "isPrivate": false,
+    "deletedAt": null,
+    "recordTags": [
+        "fmg_api",
+        "TODO"
+    ]
+}

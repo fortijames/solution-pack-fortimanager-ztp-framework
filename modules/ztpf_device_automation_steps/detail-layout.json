@@ -187,6 +187,13 @@
                                                                                         "actionTriggerName": "Move Step Number",
                                                                                         "collectionName": "10 - SP - ZTPF - Buttons",
                                                                                         "icon": "icon icon-reorder-tabs"
+                                                                                    },
+                                                                                    {
+                                                                                        "name": "Rerun Running Step",
+                                                                                        "uuid": "d170d499-86ab-4186-b29d-0a7ed8d4af4c",
+                                                                                        "actionTriggerName": "ReRun Running Step",
+                                                                                        "collectionName": "10 - SP - ZTPF - Buttons",
+                                                                                        "icon": "fa fa-reply-all"
                                                                                     }
                                                                                 ]
                                                                             }
@@ -431,7 +438,7 @@
                                                 "visible": true
                                             },
                                             "icon": "fa fa-upload",
-                                            "show": true,
+                                            "show": false,
                                             "visible": true
                                         },
                                         {
@@ -446,6 +453,22 @@
                                                             "columns": [
                                                                 {
                                                                     "widgets": [
+                                                                        {
+                                                                            "type": "playbookButtons-1.1.1",
+                                                                            "config": {
+                                                                                "wid": "0bcec053-2ce6-43a3-8573-1b48e3b928fd",
+                                                                                "widgetName": "Playbook Execution Wizard",
+                                                                                "selectedPlaybooksWithRecord": [
+                                                                                    {
+                                                                                        "name": "Re-Render Output on Completed Step",
+                                                                                        "uuid": "09cb92a7-0762-4a0b-8eb5-8d46705bb701",
+                                                                                        "actionTriggerName": "Re-Render Output on Completed Step",
+                                                                                        "collectionName": "10 - SP - ZTPF - Buttons",
+                                                                                        "icon": "icon icon-queue-management"
+                                                                                    }
+                                                                                ]
+                                                                            }
+                                                                        },
                                                                         {
                                                                             "type": "sectionHeader",
                                                                             "config": {
@@ -544,7 +567,7 @@
                                                 "visible": true
                                             },
                                             "icon": "fa fa-clipboard",
-                                            "show": false,
+                                            "show": true,
                                             "visible": true
                                         }
                                     ]

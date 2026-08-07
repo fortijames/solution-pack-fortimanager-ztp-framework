@@ -21,11 +21,57 @@
             "description": null,
             "arguments": [],
             "status": null,
-            "top": "40",
-            "left": "1140",
+            "top": "160",
+            "left": "1620",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
             "uuid": "b51c4913-5754-4482-b939-7119afa3054b"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "find steps on devices",
+            "description": null,
+            "arguments": {
+                "when": "{{vars.record_type == \"ZtpfDevice\"}}",
+                "query": {
+                    "sort": [],
+                    "limit": 30,
+                    "logic": "AND",
+                    "filters": [
+                        {
+                            "type": "object",
+                            "field": "ztpfDevices",
+                            "value": "{{vars.input.records|json_query('[].\"@id\"')}}",
+                            "_value": {
+                                "@id": "{{vars.input.records|json_query('[].\"@id\"')}}",
+                                "display": "",
+                                "itemValue": ""
+                            },
+                            "operator": "in"
+                        },
+                        {
+                            "type": "object",
+                            "field": "ztpfRunGroups",
+                            "value": "true",
+                            "_value": {
+                                "@id": "true",
+                                "display": "",
+                                "itemValue": ""
+                            },
+                            "operator": "isnull"
+                        }
+                    ]
+                },
+                "module": "ztpf_device_automation_steps?$limit=5000",
+                "checkboxFields": false,
+                "step_variables": []
+            },
+            "status": null,
+            "top": "40",
+            "left": "600",
+            "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928770",
+            "group": null,
+            "uuid": "bc1911ad-e8d4-4676-911f-31e9c84b52c8"
         },
         {
             "@type": "WorkflowStep",
@@ -110,8 +156,8 @@
                 "external_email_attachments": null
             },
             "status": null,
-            "top": "120",
-            "left": "720",
+            "top": "240",
+            "left": "1200",
             "stepType": "\/api\/3\/workflow_step_types\/fc04082a-d7dc-4299-96fb-6837b1baa0fe",
             "group": null,
             "uuid": "d4430512-bd23-4bd1-9612-d9b562789004"
@@ -121,11 +167,11 @@
             "name": "missing_step_input",
             "description": null,
             "arguments": {
-                "step_input_yaml": "{%- set ret = {\n  \"yaml_form\":[],\n  \"devsteps\":{}\n} \n-%}\n\n{%- set steps = {} -%}\n{%- set step_recs = vars.input.records -%}\n{%- for r in step_recs| sort(attribute='ztpfDevices.name,stepNumber') -%}\n  {%- set d = r.ztpfDevices.name -%}\n  {%- if d not in steps -%}\n    {%- do steps.update({ d:{} }) -%}\n  {%- endif -%}\n  {%- do steps[d].update({\n          r.stepNumber:{\n            \"args\":r.stepARGS,\n            \"fqid\":r['@id'],\n            \"id\":r['id']\n          }\n        }) \n  -%}\n{%- endfor -%}\n\n{%- for d in steps -%}\n  {%- do ret.yaml_form.append(d + \":\") -%}\n  {%- for s in steps[d] %}  \n    {%- set st = \"  step\" + s|string %}\n    {%- do ret.yaml_form.append(st + \":\") -%}\n    {%- if d not in ret['devsteps'] -%}\n      {%- do ret['devsteps'].update({d:{}}) -%}\n    {%- endif -%}\n    {%- do ret['devsteps'][d].update({\n           st|trim:{ \n                \"fqid\":steps[d][s][\"fqid\"],\n                \"id\":steps[d][s][\"id\"] \n               }\n           }) \n    -%}\n   {%- set in = steps[d][s][\"args\"].split(\"\\n\") %}\n   {%- for i in in %}\n     {%- if i|trim != \"\" %}\n       {%- set i = \"    \" + i %}\n       {%- do ret.yaml_form.append(i) -%}\n      {%- endif %}\n    {%- endfor %}\n  {%- endfor %}\n{% endfor %}\n\n{{ret}}"
+                "step_input_yaml": "{%- set ret = {\n  \"yaml_form\":[],\n  \"devsteps\":{}\n} \n-%}\n\n{%- set steps = {} -%}\n{%- set step_recs = vars.step_records -%}\n{%- for r in step_recs| sort(attribute='ztpfDevices.name,stepNumber') -%}\n  {%- set d = r.ztpfDevices.name -%}\n  {%- if d not in steps -%}\n    {%- do steps.update({ d:{} }) -%}\n  {%- endif -%}\n  {%- do steps[d].update({\n          r.stepNumber:{\n            \"args\":r.stepARGS,\n            \"fqid\":r['@id'],\n            \"id\":r['id']\n          }\n        }) \n  -%}\n{%- endfor -%}\n\n{%- for d in steps -%}\n  {%- do ret.yaml_form.append(d + \":\") -%}\n  {%- for s in steps[d] %}  \n    {%- set st = \"  step\" + s|string %}\n    {%- do ret.yaml_form.append(st + \":\") -%}\n    {%- if d not in ret['devsteps'] -%}\n      {%- do ret['devsteps'].update({d:{}}) -%}\n    {%- endif -%}\n    {%- do ret['devsteps'][d].update({\n           st|trim:{ \n                \"fqid\":steps[d][s][\"fqid\"],\n                \"id\":steps[d][s][\"id\"] \n               }\n           }) \n    -%}\n   {%- set in = steps[d][s][\"args\"].split(\"\\n\") %}\n   {%- for i in in %}\n     {%- if i|trim != \"\" %}\n       {%- set i = \"    \" + i %}\n       {%- do ret.yaml_form.append(i) -%}\n      {%- endif %}\n    {%- endfor %}\n  {%- endfor %}\n{% endfor %}\n\n{{ret}}"
             },
             "status": null,
-            "top": "40",
-            "left": "340",
+            "top": "160",
+            "left": "880",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
             "uuid": "3a4c38dd-7980-4d6d-853e-4992bcfc8bbd"
@@ -138,11 +184,25 @@
                 "user_input_yaml": "{{vars.steps.get_input.input['step_input']}}"
             },
             "status": null,
-            "top": "200",
-            "left": "720",
+            "top": "320",
+            "left": "1200",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
             "uuid": "b907bf48-23cf-4e9d-aad0-7001b139cdd3"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "record_input",
+            "description": null,
+            "arguments": {
+                "record_type": "{{vars.input.records[0]['@type']}}"
+            },
+            "status": null,
+            "top": "40",
+            "left": "320",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "fb64e3fd-2765-4456-aa4f-cad71d433d3e"
         },
         {
             "@type": "WorkflowStep",
@@ -152,7 +212,8 @@
                 "route": "5e30652f-36ed-4a44-bde8-40e8d997190a",
                 "title": "Configure stepARGs via YAML",
                 "resources": [
-                    "ztpf_device_automation_steps"
+                    "ztpf_device_automation_steps",
+                    "ztpf_devices"
                 ],
                 "__triggerLimit": true,
                 "inputVariables": [],
@@ -164,17 +225,27 @@
                 },
                 "triggerOnSource": true,
                 "displayConditions": {
+                    "ztpf_devices": {
+                        "sort": [],
+                        "limit": 30,
+                        "logic": "AND",
+                        "filters": []
+                    },
                     "ztpf_device_automation_steps": {
                         "sort": [],
                         "limit": 30,
                         "logic": "AND",
                         "filters": [
                             {
-                                "type": "primitive",
-                                "field": "stepDone",
-                                "value": true,
-                                "operator": "neq",
-                                "_operator": "neq"
+                                "type": "object",
+                                "field": "ztpfRunGroups",
+                                "value": "true",
+                                "_value": {
+                                    "@id": "true",
+                                    "display": true,
+                                    "itemValue": ""
+                                },
+                                "operator": "isnull"
                             }
                         ]
                     }
@@ -194,6 +265,20 @@
             "stepType": "\/api\/3\/workflow_step_types\/f414d039-bb0d-4e59-9c39-a8f1e880b18a",
             "group": null,
             "uuid": "33e19f1b-bded-4b7c-ae99-c7bbee9b4be2"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "step_records",
+            "description": null,
+            "arguments": {
+                "step_records": "{{vars.steps.find_steps_on_devices \n  or vars.input.records}}"
+            },
+            "status": null,
+            "top": "160",
+            "left": "560",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "25f9fedd-3df2-4620-9ea3-6bae4f9130f0"
         },
         {
             "@type": "WorkflowStep",
@@ -231,8 +316,8 @@
                 "update_steps": "{%- set table = [] -%}\n{%- for d in vars.steps.yaml2json.output -%}\n  {%- for s in vars.steps.yaml2json.output[d] -%}\n    {%- set rec = { } -%}\n    {%- do rec.update({\n         \"id\":vars.step_input_yaml.devsteps[d][s].id\n    }) -%}\n    {%- do rec.update({\"args\":vars.steps.yaml2json.output[d][s]}) -%}\n    {%- do table.append(rec) -%}\n  {%- endfor -%}\n{%- endfor -%}\n{{table}}"
             },
             "status": null,
-            "top": "320",
-            "left": "400",
+            "top": "440",
+            "left": "880",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
             "uuid": "12443fcc-8022-4e02-8126-662a6a2fa369"
@@ -252,14 +337,24 @@
                 "workflowReference": "\/api\/3\/workflows\/e8a9ca65-8ba2-4da5-993a-e98d1e22283c"
             },
             "status": null,
-            "top": "280",
-            "left": "720",
+            "top": "400",
+            "left": "1200",
             "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
             "group": null,
             "uuid": "4b1506c1-94ef-4f26-821f-46900d0c0b9c"
         }
     ],
     "routes": [
+        {
+            "@type": "WorkflowRoute",
+            "name": "find steps on devices -> step_records",
+            "targetStep": "\/api\/3\/workflow_steps\/25f9fedd-3df2-4620-9ea3-6bae4f9130f0",
+            "sourceStep": "\/api\/3\/workflow_steps\/bc1911ad-e8d4-4676-911f-31e9c84b52c8",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "2eecf610-0057-473c-91d5-c021f9705c65"
+        },
         {
             "@type": "WorkflowRoute",
             "name": "get input -> cancel or timeout",
@@ -292,13 +387,23 @@
         },
         {
             "@type": "WorkflowRoute",
-            "name": "Start -> step index",
-            "targetStep": "\/api\/3\/workflow_steps\/3a4c38dd-7980-4d6d-853e-4992bcfc8bbd",
+            "name": "record_input -> find steps on devices",
+            "targetStep": "\/api\/3\/workflow_steps\/bc1911ad-e8d4-4676-911f-31e9c84b52c8",
+            "sourceStep": "\/api\/3\/workflow_steps\/fb64e3fd-2765-4456-aa4f-cad71d433d3e",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "1b9cd885-f1c8-42f0-9e27-1f5a396196e5"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Start -> record_input",
+            "targetStep": "\/api\/3\/workflow_steps\/fb64e3fd-2765-4456-aa4f-cad71d433d3e",
             "sourceStep": "\/api\/3\/workflow_steps\/33e19f1b-bded-4b7c-ae99-c7bbee9b4be2",
             "label": null,
             "isExecuted": false,
             "group": null,
-            "uuid": "482e776e-0393-4aa1-a255-1fcf9744b0af"
+            "uuid": "99c607b0-5a22-414f-8f21-baf1110e04d3"
         },
         {
             "@type": "WorkflowRoute",
@@ -309,6 +414,16 @@
             "isExecuted": false,
             "group": null,
             "uuid": "ca3a534c-5f10-4e27-8b6e-453964280c62"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "step_records -> missing_step_input",
+            "targetStep": "\/api\/3\/workflow_steps\/3a4c38dd-7980-4d6d-853e-4992bcfc8bbd",
+            "sourceStep": "\/api\/3\/workflow_steps\/25f9fedd-3df2-4620-9ea3-6bae4f9130f0",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "86e8c547-2558-4a22-8003-221ac4afa025"
         },
         {
             "@type": "WorkflowRoute",
@@ -335,7 +450,7 @@
         {
             "@type": "WorkflowGroup",
             "name": "DEVNOTES",
-            "description": "Prepare a single yaml form for all selected steps to prompt the user to input all steps in batch. Convert from yaml to json and send results to the function to update each step with the updated data from the user.",
+            "description": "Prepare a single yaml form for all selected steps or Pending steps of devices to prompt the user to input all steps in batch. Convert from yaml to json and send results to the function to update each step with the updated data from the user.",
             "type": "note",
             "isCollapsed": false,
             "hasTriggerStep": false,

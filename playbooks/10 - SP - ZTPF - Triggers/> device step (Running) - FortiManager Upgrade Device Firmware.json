@@ -1,11 +1,11 @@
 {
     "@type": "Workflow",
     "triggerLimit": null,
-    "name": "> device step (Running) - TEMPLATE to CLONE from",
+    "name": "> device step (Running) - FortiManager Upgrade Device Firmware",
     "aliasName": null,
     "tag": null,
     "description": "Step changed to running for given Action Category and Type.",
-    "isActive": false,
+    "isActive": true,
     "debug": false,
     "singleRecordExecution": false,
     "remoteExecutableFlag": false,
@@ -13,7 +13,7 @@
     "synchronous": false,
     "collection": "\/api\/3\/workflow_collections\/9cca11ea-b95a-4504-8385-ad42db358c36",
     "versions": [],
-    "triggerStep": "\/api\/3\/workflow_steps\/64613bb7-a386-4b96-bde6-ca30b67aae6c",
+    "triggerStep": "\/api\/3\/workflow_steps\/374316aa-1c3c-4343-adfd-1f048cdd72bb",
     "steps": [
         {
             "@type": "WorkflowStep",
@@ -24,20 +24,29 @@
             "top": "140",
             "left": "20",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
-            "group": "\/api\/3\/workflow_groups\/5271ae04-10bd-425e-91b4-2cecf37fcf07",
-            "uuid": "bde9478f-c97b-4047-9952-885581730e16"
+            "group": "\/api\/3\/workflow_groups\/03c7ffac-623c-402f-a6c8-b5fe85f2a69e",
+            "uuid": "72d4568c-3e55-4eb1-8641-654a812f2d3a"
         },
         {
             "@type": "WorkflowStep",
-            "name": "run action placeholder",
-            "description": "Add referenced playbook here.",
-            "arguments": [],
+            "name": "run action",
+            "description": null,
+            "arguments": {
+                "arguments": {
+                    "device_step_id": "{{vars.device_step_id}}"
+                },
+                "apply_async": false,
+                "step_variables": [],
+                "pass_parent_env": false,
+                "pass_input_record": false,
+                "workflowReference": "\/api\/3\/workflows\/c6005971-b284-4b3e-8e47-006f14942899"
+            },
             "status": null,
             "top": "340",
             "left": "720",
-            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
             "group": null,
-            "uuid": "48a7b168-9d02-42ce-95d5-e001c31eabdf"
+            "uuid": "37f1c533-369d-4935-b43a-6f6559482bc7"
         },
         {
             "@type": "WorkflowStep",
@@ -50,8 +59,8 @@
             "top": "100",
             "left": "1060",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
-            "group": "\/api\/3\/workflow_groups\/5271ae04-10bd-425e-91b4-2cecf37fcf07",
-            "uuid": "aad2ead2-891a-4433-b371-c289d48eb6ff"
+            "group": "\/api\/3\/workflow_groups\/03c7ffac-623c-402f-a6c8-b5fe85f2a69e",
+            "uuid": "c5dfbc68-78d2-4e77-b961-adf3a3d636bd"
         },
         {
             "@type": "WorkflowStep",
@@ -102,7 +111,7 @@
                         {
                             "type": "primitive",
                             "field": "triggerKey",
-                            "value": "[Action Category and Type]",
+                            "value": "FortiManager Upgrade Device Firmware",
                             "operator": "eq",
                             "_operator": "eq"
                         }
@@ -114,8 +123,8 @@
             "top": "46",
             "left": "20",
             "stepType": "\/api\/3\/workflow_step_types\/9300bf69-5063-486d-b3a6-47eb9da24872",
-            "group": "\/api\/3\/workflow_groups\/5271ae04-10bd-425e-91b4-2cecf37fcf07",
-            "uuid": "64613bb7-a386-4b96-bde6-ca30b67aae6c"
+            "group": "\/api\/3\/workflow_groups\/03c7ffac-623c-402f-a6c8-b5fe85f2a69e",
+            "uuid": "374316aa-1c3c-4343-adfd-1f048cdd72bb"
         },
         {
             "@type": "WorkflowStep",
@@ -135,8 +144,8 @@
             "top": "140",
             "left": "320",
             "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
-            "group": "\/api\/3\/workflow_groups\/5271ae04-10bd-425e-91b4-2cecf37fcf07",
-            "uuid": "793f7b90-32e0-43d8-a500-24ba340150f8"
+            "group": "\/api\/3\/workflow_groups\/03c7ffac-623c-402f-a6c8-b5fe85f2a69e",
+            "uuid": "26bfdc8a-3df1-4712-84db-5616ff68e067"
         },
         {
             "@type": "WorkflowStep",
@@ -157,67 +166,67 @@
             "top": "46",
             "left": "320",
             "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
-            "group": "\/api\/3\/workflow_groups\/5271ae04-10bd-425e-91b4-2cecf37fcf07",
-            "uuid": "e3aafcf2-5814-4dbc-baf8-70590da5bdf0"
+            "group": "\/api\/3\/workflow_groups\/03c7ffac-623c-402f-a6c8-b5fe85f2a69e",
+            "uuid": "e3a9d731-d0f0-4b46-a729-f4118b0f5024"
         }
     ],
     "routes": [
         {
             "@type": "WorkflowRoute",
             "name": "run action -> step post_run",
-            "targetStep": "\/api\/3\/workflow_steps\/793f7b90-32e0-43d8-a500-24ba340150f8",
-            "sourceStep": "\/api\/3\/workflow_steps\/48a7b168-9d02-42ce-95d5-e001c31eabdf",
+            "targetStep": "\/api\/3\/workflow_steps\/26bfdc8a-3df1-4712-84db-5616ff68e067",
+            "sourceStep": "\/api\/3\/workflow_steps\/37f1c533-369d-4935-b43a-6f6559482bc7",
             "label": null,
             "isExecuted": false,
             "group": null,
-            "uuid": "c595562c-db1b-4fa2-a109-1855cc0fe2a0"
+            "uuid": "56a93bb1-b2db-4eb3-aaef-a9b0a0ca52a1"
         },
         {
             "@type": "WorkflowRoute",
-            "name": "run automation -> run action",
-            "targetStep": "\/api\/3\/workflow_steps\/48a7b168-9d02-42ce-95d5-e001c31eabdf",
-            "sourceStep": "\/api\/3\/workflow_steps\/aad2ead2-891a-4433-b371-c289d48eb6ff",
+            "name": "run automation -> run action step",
+            "targetStep": "\/api\/3\/workflow_steps\/37f1c533-369d-4935-b43a-6f6559482bc7",
+            "sourceStep": "\/api\/3\/workflow_steps\/c5dfbc68-78d2-4e77-b961-adf3a3d636bd",
             "label": null,
             "isExecuted": false,
             "group": null,
-            "uuid": "16f51cdf-252c-4297-b3e6-d84b93f6a7a8"
+            "uuid": "42585114-f147-409f-ab7a-e4a94faf5e11"
         },
         {
             "@type": "WorkflowRoute",
             "name": "Start -> step trigger pre_run",
-            "targetStep": "\/api\/3\/workflow_steps\/e3aafcf2-5814-4dbc-baf8-70590da5bdf0",
-            "sourceStep": "\/api\/3\/workflow_steps\/64613bb7-a386-4b96-bde6-ca30b67aae6c",
+            "targetStep": "\/api\/3\/workflow_steps\/e3a9d731-d0f0-4b46-a729-f4118b0f5024",
+            "sourceStep": "\/api\/3\/workflow_steps\/374316aa-1c3c-4343-adfd-1f048cdd72bb",
             "label": null,
             "isExecuted": false,
             "group": null,
-            "uuid": "1bce7349-1ee2-44cd-a089-1ee2d6534c46"
+            "uuid": "7fcf402d-a7ac-48d4-befc-21671e4894ee"
         },
         {
             "@type": "WorkflowRoute",
             "name": "step post_run -> complete",
-            "targetStep": "\/api\/3\/workflow_steps\/bde9478f-c97b-4047-9952-885581730e16",
-            "sourceStep": "\/api\/3\/workflow_steps\/793f7b90-32e0-43d8-a500-24ba340150f8",
+            "targetStep": "\/api\/3\/workflow_steps\/72d4568c-3e55-4eb1-8641-654a812f2d3a",
+            "sourceStep": "\/api\/3\/workflow_steps\/26bfdc8a-3df1-4712-84db-5616ff68e067",
             "label": null,
             "isExecuted": false,
             "group": null,
-            "uuid": "ac0d618b-2bd8-4a60-ba5e-db437f7e65d7"
+            "uuid": "25470cc5-cd63-47e8-9c15-a6bc36d378db"
         },
         {
             "@type": "WorkflowRoute",
             "name": "step trigger pre_run -> run automation",
-            "targetStep": "\/api\/3\/workflow_steps\/aad2ead2-891a-4433-b371-c289d48eb6ff",
-            "sourceStep": "\/api\/3\/workflow_steps\/e3aafcf2-5814-4dbc-baf8-70590da5bdf0",
+            "targetStep": "\/api\/3\/workflow_steps\/c5dfbc68-78d2-4e77-b961-adf3a3d636bd",
+            "sourceStep": "\/api\/3\/workflow_steps\/e3a9d731-d0f0-4b46-a729-f4118b0f5024",
             "label": null,
             "isExecuted": false,
             "group": null,
-            "uuid": "707d516b-70ef-458f-9a52-917f57929d69"
+            "uuid": "7b73ef11-9846-4b99-b52b-d1cb337e045e"
         }
     ],
     "groups": [
         {
             "@type": "WorkflowGroup",
             "name": "Details",
-            "description": "Step status changed to running and matching trigger key playbook. Starts with standard pre and post routines but each action is unique to the needs of this step.\n\nType: [Action Category and Type]\nDescription: [What this action will do.]",
+            "description": "Step status changed to running and matching trigger key playbook. Starts with standard pre and post routines but each action is unique to the needs of this step.\n\nType: FortiManager Upgrade Device Firmware\nDescription: Upgrade device firmware from FMG.",
             "type": "note",
             "isCollapsed": false,
             "hasTriggerStep": false,
@@ -228,7 +237,7 @@
             "left": "20",
             "height": "181",
             "width": "498",
-            "uuid": "3a5a22c2-5653-4c91-8cdc-ce76299c3e12",
+            "uuid": "77a664b6-e7c3-4b64-ac58-09cbdfe4d0ef",
             "recordTags": []
         },
         {
@@ -245,14 +254,14 @@
             "left": "20",
             "height": "232",
             "width": "1360",
-            "uuid": "5271ae04-10bd-425e-91b4-2cecf37fcf07",
+            "uuid": "03c7ffac-623c-402f-a6c8-b5fe85f2a69e",
             "recordTags": []
         }
     ],
     "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
     "playbookOrigin": "\/api\/3\/picklists\/b6d710a9-a8ec-41ec-8817-fe9fa062fcdd",
     "isEditable": true,
-    "uuid": "8d0cbbf3-8263-4183-8617-9e455794e883",
+    "uuid": "d223d29d-46f5-4f8b-8cba-dae5d07785fa",
     "owners": [],
     "isPrivate": false,
     "deletedAt": null,

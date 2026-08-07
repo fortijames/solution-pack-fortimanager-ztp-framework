@@ -284,7 +284,7 @@
             "arguments": {
                 "resource": {
                     "name": "{{vars.step_name}}",
-                    "script": "{{vars.steps.get_jinja_vars_and_script.output['script_rendered']}}",
+                    "script": "{%- set script = vars.steps.get_jinja_vars_and_script.output['script_rendered'] -%}\n{%- if script not in ['',None] -%}\n{{script}}\n{%- else -%}\n# no action payload\n{%- endif -%}",
                     "status": "{{\"ztpfDeviceStepStatus\" | picklist(vars.step_status, \"@id\")}}",
                     "stepARGS": "{{vars.steps.refactor_step_arg.output|default('')}}",
                     "jinjaVars": "{{vars.steps.get_jinja_vars_and_script.output['jinja_vars']}}",

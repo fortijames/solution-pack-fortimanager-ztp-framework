@@ -1,0 +1,173 @@
+{
+    "@type": "Workflow",
+    "triggerLimit": null,
+    "name": "Rerun Running Step",
+    "aliasName": null,
+    "tag": null,
+    "description": "Toggle status from running to queue to running to re-start the",
+    "isActive": true,
+    "debug": false,
+    "singleRecordExecution": false,
+    "remoteExecutableFlag": false,
+    "parameters": [],
+    "synchronous": false,
+    "collection": "\/api\/3\/workflow_collections\/f0b56dc0-6c1e-4f5b-9199-c807800f028a",
+    "versions": [],
+    "triggerStep": "\/api\/3\/workflow_steps\/ad99a411-eb55-4a29-8bde-2f75cf0c4f4f",
+    "steps": [
+        {
+            "@type": "WorkflowStep",
+            "name": "requeue step",
+            "description": null,
+            "arguments": {
+                "resource": {
+                    "status": "\/api\/3\/picklists\/91ff63f2-78cd-4bb5-92e3-36c99ec4d2c1"
+                },
+                "operation": "Append",
+                "collection": "{{vars.input.records[0]['@id']}}",
+                "__recommend": [],
+                "collectionType": "\/api\/3\/ztpf_device_automation_steps",
+                "fieldOperation": {
+                    "recordTags": "Append"
+                },
+                "step_variables": []
+            },
+            "status": null,
+            "top": "40",
+            "left": "340",
+            "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928722",
+            "group": null,
+            "uuid": "8781a27d-ac7b-414f-a271-22904a44728d"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "rerun step",
+            "description": null,
+            "arguments": {
+                "resource": {
+                    "status": "\/api\/3\/picklists\/b2b405dc-97e6-40cd-98bb-9132e37d5b6d"
+                },
+                "operation": "Append",
+                "collection": "{{vars.input.records[0]['@id']}}",
+                "__recommend": [],
+                "collectionType": "\/api\/3\/ztpf_device_automation_steps",
+                "fieldOperation": {
+                    "recordTags": "Append"
+                },
+                "step_variables": []
+            },
+            "status": null,
+            "top": "140",
+            "left": "400",
+            "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928722",
+            "group": null,
+            "uuid": "5beda375-2098-41f4-9f27-02bd056814d8"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Start",
+            "description": "If a step is stuck in running and needs to be re-started we want to toggle the status.",
+            "arguments": {
+                "route": "15fde130-a950-4f4c-8322-cbb030dcf62e",
+                "title": "ReRun Running Step",
+                "resources": [
+                    "ztpf_device_automation_steps"
+                ],
+                "__triggerLimit": true,
+                "inputVariables": [],
+                "step_variables": {
+                    "input": {
+                        "params": [],
+                        "records": "{{vars.input.records}}"
+                    }
+                },
+                "triggerOnSource": true,
+                "displayConditions": {
+                    "ztpf_device_automation_steps": {
+                        "sort": [],
+                        "limit": 30,
+                        "logic": "AND",
+                        "filters": [
+                            {
+                                "type": "object",
+                                "field": "status",
+                                "value": "\/api\/3\/picklists\/b2b405dc-97e6-40cd-98bb-9132e37d5b6d",
+                                "_value": {
+                                    "@id": "\/api\/3\/picklists\/b2b405dc-97e6-40cd-98bb-9132e37d5b6d",
+                                    "display": "Running",
+                                    "itemValue": "Running"
+                                },
+                                "operator": "eq"
+                            }
+                        ]
+                    }
+                },
+                "executeButtonText": "Execute",
+                "noRecordExecution": false,
+                "showToasterMessage": {
+                    "visible": false,
+                    "messageVisible": true
+                },
+                "triggerOnReplicate": false,
+                "singleRecordExecution": true
+            },
+            "status": null,
+            "top": "40",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/f414d039-bb0d-4e59-9c39-a8f1e880b18a",
+            "group": null,
+            "uuid": "ad99a411-eb55-4a29-8bde-2f75cf0c4f4f"
+        }
+    ],
+    "routes": [
+        {
+            "@type": "WorkflowRoute",
+            "name": "requeue step -> rerun step",
+            "targetStep": "\/api\/3\/workflow_steps\/5beda375-2098-41f4-9f27-02bd056814d8",
+            "sourceStep": "\/api\/3\/workflow_steps\/8781a27d-ac7b-414f-a271-22904a44728d",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "4fe3e8fb-c134-45a0-ae63-193c155dcbba"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Start -> requeue step",
+            "targetStep": "\/api\/3\/workflow_steps\/8781a27d-ac7b-414f-a271-22904a44728d",
+            "sourceStep": "\/api\/3\/workflow_steps\/ad99a411-eb55-4a29-8bde-2f75cf0c4f4f",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "81b1655c-cc79-4412-a917-567682d01880"
+        }
+    ],
+    "groups": [
+        {
+            "@type": "WorkflowGroup",
+            "name": "Details",
+            "description": "Simply toggle a running status to re-trigger the running playbook for this step.",
+            "type": "note",
+            "isCollapsed": false,
+            "hasTriggerStep": false,
+            "hideInLogs": false,
+            "metadata": [],
+            "reusable": false,
+            "top": "120",
+            "left": "40",
+            "height": "94",
+            "width": "318",
+            "uuid": "ced9f4db-f795-49e0-a212-dcdd87eb6bc8",
+            "recordTags": []
+        }
+    ],
+    "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+    "playbookOrigin": "\/api\/3\/picklists\/b6d710a9-a8ec-41ec-8817-fe9fa062fcdd",
+    "isEditable": false,
+    "uuid": "d170d499-86ab-4186-b29d-0a7ed8d4af4c",
+    "owners": [],
+    "isPrivate": false,
+    "deletedAt": null,
+    "recordTags": [
+        "ztpfDeviceAutomationStep"
+    ]
+}

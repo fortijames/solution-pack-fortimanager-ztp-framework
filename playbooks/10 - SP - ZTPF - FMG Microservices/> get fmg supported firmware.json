@@ -1,0 +1,234 @@
+{
+    "@type": "Workflow",
+    "triggerLimit": null,
+    "name": "> get fmg supported firmware",
+    "aliasName": null,
+    "tag": null,
+    "description": "Get supported FMG Versions and platforms per versions.",
+    "isActive": true,
+    "debug": false,
+    "singleRecordExecution": false,
+    "remoteExecutableFlag": false,
+    "parameters": [
+        "connector_config"
+    ],
+    "synchronous": false,
+    "collection": "\/api\/3\/workflow_collections\/c15a8515-33ae-46d2-9166-fa6fa47ac762",
+    "versions": [],
+    "triggerStep": "\/api\/3\/workflow_steps\/32e7f00e-5fd4-46b8-aaaf-5123995e1578",
+    "steps": [
+        {
+            "@type": "WorkflowStep",
+            "name": "api variables",
+            "description": null,
+            "arguments": {
+                "api_url": "\/pm\/config\/adom\/{{vars.adom}}\/_data\/dvm\/device\/model",
+                "api_data": "[\n    {\n      \"data\": {\n        \"flags\": 1,\n        \"product\": \"FGT\"\n      },\n      \"url\": \"\/um\/image\/version\/list\"\n    }\n]"
+            },
+            "status": null,
+            "top": "160",
+            "left": "740",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "e4c13ff8-9d45-427a-8c2e-dc6d266096c6"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "create firmware base index",
+            "description": null,
+            "arguments": {
+                "config": "74c7e349-a99d-44ac-a576-8c1b158fc364",
+                "params": {
+                    "python_function": "import json\r\n\r\n\r\ndef parse_version(version_string):\r\n    # Extract major.minor from version string (e.g., \"6.0.4-b0231\" -> \"6.0\")\r\n    parts = version_string.split('.')\r\n    return f\"{parts[0]}.{parts[1]}\"\r\n\r\n\r\ndef create_platform_index(data):\r\n    # Initialize version mapping\r\n    version_platforms = {}\r\n\r\n    # Process each platform and its versions\r\n    for platform_data in data:\r\n        platform_name = platform_data['platform']\r\n        # Process each version for this platform\r\n        for version_info in platform_data['versions']:\r\n            base_version = parse_version(version_info['version'])\r\n            # Initialize the version entry if it doesn't exist\r\n            if base_version not in version_platforms:\r\n                version_platforms[base_version] = {\r\n                    \"platforms\": []\r\n                }\r\n            # Add the platform if it's not already in the list\r\n            if platform_name not in version_platforms[base_version][\"platforms\"]:\r\n                version_platforms[base_version][\"platforms\"].append(platform_name)\r\n\r\n    # Sort platform lists\r\n    for version in version_platforms:\r\n        version_platforms[version][\"platforms\"].sort()\r\n\r\n    # Sort by version number\r\n    return dict(sorted(version_platforms.items()))\r\n\r\n\r\n# Generate the index\r\nresult = create_platform_index({{vars.firmware_data}})\r\nprint(json.dumps(result, indent=2))"
+                },
+                "version": "2.1.4",
+                "connector": "code-snippet",
+                "operation": "python_inline_code_editor",
+                "operationTitle": "Execute Python Code",
+                "step_variables": []
+            },
+            "status": null,
+            "top": "460",
+            "left": "380",
+            "stepType": "\/api\/3\/workflow_step_types\/1fdd14cc-d6b4-4335-a3af-ab49c8ed2fd8",
+            "group": null,
+            "uuid": "4826af0b-7bdf-4c67-98cf-7a354bb89384"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "create firmware data",
+            "description": null,
+            "arguments": {
+                "firmware_data": "{{vars.steps.get_firmware.data['free_form_response'][0].data['version_list']}}"
+            },
+            "status": null,
+            "top": "360",
+            "left": "380",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "eb754c26-1e56-4adf-9785-fbbeb010e750"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "get firmware",
+            "description": null,
+            "arguments": {
+                "name": "Fortinet FortiManager JSON-RPC",
+                "config": "{{vars.input.params['connector_config']}}",
+                "params": {
+                    "data": "{{vars.api_data}}",
+                    "method": "exec"
+                },
+                "version": "1.0.6",
+                "connector": "fortinet-fortimanager-json-rpc",
+                "operation": "json_rpc_freeform",
+                "operationTitle": "JSON RPC Freeform",
+                "pickFromTenant": false,
+                "step_variables": []
+            },
+            "status": null,
+            "top": "260",
+            "left": "380",
+            "stepType": "\/api\/3\/workflow_step_types\/0bfed618-0316-11e7-93ae-92361f002671",
+            "group": null,
+            "uuid": "07eb0ab7-d603-4875-a204-6940931d8e5e"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "return",
+            "description": null,
+            "arguments": {
+                "output": "{%- set ret = {} -%}\n{%- do ret.update({\n  \"base\":vars.steps.create_firmware_base_index.data['code_output']\n}) -%}\n{{ret}}",
+                "params": "{{vars.input.params}}"
+            },
+            "status": null,
+            "top": "120",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "de7187fb-c914-4414-ae82-0c098366257f"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "setup env",
+            "description": null,
+            "arguments": [],
+            "status": null,
+            "top": "60",
+            "left": "380",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "c235c63d-34a2-49fb-b49e-39dbbae7b5fc"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Start",
+            "description": null,
+            "arguments": {
+                "__triggerLimit": true,
+                "step_variables": {
+                    "input": {
+                        "params": []
+                    }
+                },
+                "triggerOnSource": true,
+                "triggerOnReplicate": false
+            },
+            "status": null,
+            "top": "40",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/b348f017-9a94-471f-87f8-ce88b6a7ad62",
+            "group": null,
+            "uuid": "32e7f00e-5fd4-46b8-aaaf-5123995e1578"
+        }
+    ],
+    "routes": [
+        {
+            "@type": "WorkflowRoute",
+            "name": "api variables -> get firmware",
+            "targetStep": "\/api\/3\/workflow_steps\/07eb0ab7-d603-4875-a204-6940931d8e5e",
+            "sourceStep": "\/api\/3\/workflow_steps\/e4c13ff8-9d45-427a-8c2e-dc6d266096c6",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "58f4989d-3ad0-4d70-aa0b-09865e8b7bf8"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "create firmware base index -> return",
+            "targetStep": "\/api\/3\/workflow_steps\/de7187fb-c914-4414-ae82-0c098366257f",
+            "sourceStep": "\/api\/3\/workflow_steps\/4826af0b-7bdf-4c67-98cf-7a354bb89384",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "d0c57877-bdcf-4af3-a27e-6f669b7f0594"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "create firmware data -> create firmware base index",
+            "targetStep": "\/api\/3\/workflow_steps\/4826af0b-7bdf-4c67-98cf-7a354bb89384",
+            "sourceStep": "\/api\/3\/workflow_steps\/eb754c26-1e56-4adf-9785-fbbeb010e750",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "51af6be2-0e33-4905-9291-df8a05c5d90a"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "get firmware -> create firmware data",
+            "targetStep": "\/api\/3\/workflow_steps\/eb754c26-1e56-4adf-9785-fbbeb010e750",
+            "sourceStep": "\/api\/3\/workflow_steps\/07eb0ab7-d603-4875-a204-6940931d8e5e",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "4d5e3774-60b3-4927-b718-acce145a055a"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "setup env -> api variables",
+            "targetStep": "\/api\/3\/workflow_steps\/e4c13ff8-9d45-427a-8c2e-dc6d266096c6",
+            "sourceStep": "\/api\/3\/workflow_steps\/c235c63d-34a2-49fb-b49e-39dbbae7b5fc",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "7fb53d01-b53b-44f6-96f8-0e3631a6f05a"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Start -> setup env",
+            "targetStep": "\/api\/3\/workflow_steps\/c235c63d-34a2-49fb-b49e-39dbbae7b5fc",
+            "sourceStep": "\/api\/3\/workflow_steps\/32e7f00e-5fd4-46b8-aaaf-5123995e1578",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "3d966762-f82b-4211-beca-87cb3a0532b5"
+        }
+    ],
+    "groups": [
+        {
+            "@type": "WorkflowGroup",
+            "name": "Firmware Data",
+            "description": "Get FortiGate Firmware and return as base image and platforms.",
+            "type": "note",
+            "isCollapsed": false,
+            "hasTriggerStep": false,
+            "hideInLogs": false,
+            "metadata": [],
+            "reusable": false,
+            "top": "140",
+            "left": "360",
+            "height": "93",
+            "width": "297",
+            "uuid": "d65d9439-a343-483e-9a96-c1f00058889d",
+            "recordTags": []
+        }
+    ],
+    "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+    "playbookOrigin": "\/api\/3\/picklists\/b6d710a9-a8ec-41ec-8817-fe9fa062fcdd",
+    "isEditable": false,
+    "uuid": "da759cd7-dadc-46e3-96e7-1822e3fc0fbd",
+    "owners": [],
+    "isPrivate": false,
+    "deletedAt": null,
+    "recordTags": []
+}

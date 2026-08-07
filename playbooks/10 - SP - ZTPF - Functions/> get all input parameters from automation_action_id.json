@@ -40,6 +40,36 @@
         },
         {
             "@type": "WorkflowStep",
+            "name": "find actions",
+            "description": null,
+            "arguments": {
+                "query": {
+                    "sort": [],
+                    "limit": 30,
+                    "logic": "AND",
+                    "filters": [
+                        {
+                            "type": "primitive",
+                            "field": "id",
+                            "value": "{{vars.steps.recursive_records.output.ztpfAutomationAction}}",
+                            "operator": "in",
+                            "_operator": "in"
+                        }
+                    ]
+                },
+                "module": "ztpf_automation_actions?$limit=5000",
+                "checkboxFields": true,
+                "step_variables": []
+            },
+            "status": null,
+            "top": "60",
+            "left": "740",
+            "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928770",
+            "group": null,
+            "uuid": "a214b3ac-16b6-444a-9854-d3e7b81723a1"
+        },
+        {
+            "@type": "WorkflowStep",
             "name": "find metadata sources",
             "description": null,
             "arguments": {
@@ -66,7 +96,7 @@
                 "step_variables": []
             },
             "status": null,
-            "top": "100",
+            "top": "160",
             "left": "740",
             "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928770",
             "group": null,
@@ -96,7 +126,7 @@
                 "step_variables": []
             },
             "status": null,
-            "top": "200",
+            "top": "260",
             "left": "740",
             "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928770",
             "group": null,
@@ -107,7 +137,7 @@
             "name": "merged_input_params",
             "description": null,
             "arguments": {
-                "merged_input_params": "{%- set ds = [\n  vars.steps.find_metadata_sources,\n   vars.steps.find_templates\n] -%}\n{%- set inputs = [] -%}\n\n{%- for d in ds -%}\n{%- for i in d|json_query('[].inputParameters') -%}\n  {%- set i = i | replace('\\n',',') -%}\n  {%- for p in i.split(\",\") -%}\n    {%- do inputs.append(p) -%}\n  {%- endfor -%}\n{%- endfor -%}\n{%- endfor -%}\n\n{%- set ret = {\"input\":{}} -%}\n{%- for i in inputs|unique|sort -%}\n{%- do ret.input.update({i:\"\"}) -%}\n{%- endfor -%}\n\n{{ret}}"
+                "merged_input_params": "{%- set ds = [\n  vars.steps.find_actions,\n  vars.steps.find_metadata_sources,\n  vars.steps.find_templates\n] -%}\n{%- set inputs = [] -%}\n\n{%- for d in ds -%}\n{%- for i in d|json_query('[].inputParameters') -%}\n  {%- set i = i | replace('\\n',',') -%}\n  {%- for p in i.split(\",\") -%}\n    {%- do inputs.append(p) -%}\n  {%- endfor -%}\n{%- endfor -%}\n{%- endfor -%}\n\n{%- set ret = {\"input\":{}} -%}\n{%- for i in inputs|unique|sort -%}\n  {%- if i not in ['',none] -%}\n    {%- do ret.input.update({i:\"\"}) -%}\n  {%- endif -%}\n{%- endfor -%}\n\n{{ret}}"
             },
             "status": null,
             "top": "280",
@@ -188,6 +218,16 @@
         },
         {
             "@type": "WorkflowRoute",
+            "name": "find actions -> find metadata sources",
+            "targetStep": "\/api\/3\/workflow_steps\/a9ca7f1a-8f31-41c0-9cc5-fbcd4c230963",
+            "sourceStep": "\/api\/3\/workflow_steps\/a214b3ac-16b6-444a-9854-d3e7b81723a1",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "20630ef0-efd7-4984-b37e-ee03ca2f778a"
+        },
+        {
+            "@type": "WorkflowRoute",
             "name": "find metadata sources -> Copy of find metadata sources",
             "targetStep": "\/api\/3\/workflow_steps\/4236aa64-98e9-4d65-8088-02a14e504026",
             "sourceStep": "\/api\/3\/workflow_steps\/a9ca7f1a-8f31-41c0-9cc5-fbcd4c230963",
@@ -218,13 +258,13 @@
         },
         {
             "@type": "WorkflowRoute",
-            "name": "recursive records -> find metadata sources",
-            "targetStep": "\/api\/3\/workflow_steps\/a9ca7f1a-8f31-41c0-9cc5-fbcd4c230963",
+            "name": "recursive records -> find actions",
+            "targetStep": "\/api\/3\/workflow_steps\/a214b3ac-16b6-444a-9854-d3e7b81723a1",
             "sourceStep": "\/api\/3\/workflow_steps\/05e59971-4ffe-4438-9bf2-0e52865c00f0",
             "label": null,
             "isExecuted": false,
             "group": null,
-            "uuid": "3b928154-818f-4798-9d86-fe6802f5e310"
+            "uuid": "193f999f-3523-4c39-abd6-83841fbe04af"
         },
         {
             "@type": "WorkflowRoute",
