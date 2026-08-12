@@ -1,0 +1,157 @@
+{
+    "@type": "Workflow",
+    "triggerLimit": null,
+    "name": "> diff text return json",
+    "aliasName": null,
+    "tag": null,
+    "description": "Simply diff two text blocks and return the results in json.",
+    "isActive": true,
+    "debug": false,
+    "singleRecordExecution": false,
+    "remoteExecutableFlag": false,
+    "parameters": [
+        "text1",
+        "text2"
+    ],
+    "synchronous": false,
+    "collection": "\/api\/3\/workflow_collections\/517fb52d-36f5-4bac-a344-7d4599d7dec6",
+    "versions": [],
+    "triggerStep": "\/api\/3\/workflow_steps\/73276ed4-76f3-43ec-997a-1a55383716b4",
+    "steps": [
+        {
+            "@type": "WorkflowStep",
+            "name": "diff2json",
+            "description": null,
+            "arguments": {
+                "config": "74c7e349-a99d-44ac-a576-8c1b158fc364",
+                "params": {
+                    "python_function": "import difflib\r\nimport json\r\n\r\n\r\ndef sdiff_json(text1, text2):\r\n    \"\"\"\r\n    Compares two text sections and returns a structured JSON with diff lines and summary statistics.\r\n    Uses `|` for modified lines, `<` for removed, and `>` for added.\r\n    Returns a dict with 'lines' containing the diff and 'summary' containing statistics.\r\n    \"\"\"\r\n\r\n    # Split text into lines\r\n    lines1 = text1.splitlines()\r\n    lines2 = text2.splitlines()\r\n\r\n    # Initialize counters for summary\r\n    total_changes = 0\r\n    lines_added = 0\r\n    lines_removed = 0\r\n    lines_changed = 0\r\n\r\n    # Compute the difference\r\n    diff = list(difflib.ndiff(lines1, lines2))\r\n\r\n    # Prepare JSON structure\r\n    result = []\r\n    left_buffer = None  # Store removed lines to detect modifications\r\n\r\n    for line in diff:\r\n        tag = line[0]  # First character indicates the type of change\r\n        content = line[2:]  # Actual content\r\n\r\n        if tag == ' ':  # Unchanged line\r\n            if left_buffer:  # Flush removed lines if no addition followed\r\n                for l in left_buffer:\r\n                    result.append({\r\n                        \"original\": l,\r\n                        \"symbol\": \"<\",\r\n                        \"modified\": \"\"\r\n                    })\r\n                    lines_removed += 1\r\n                    total_changes += 1\r\n                left_buffer = None  # Reset buffer\r\n\r\n            result.append({\r\n                \"original\": content,\r\n                \"symbol\": \" \",\r\n                \"modified\": content\r\n            })\r\n\r\n        elif tag == '-':  # Removed line (store it for potential modification)\r\n            left_buffer = [content]\r\n\r\n        elif tag == '+':  # Added line\r\n            if left_buffer:  # If a removed line exists, it's a modification\r\n                result.append({\r\n                    \"original\": left_buffer.pop(0),\r\n                    \"symbol\": \"|\",\r\n                    \"modified\": content\r\n                })\r\n                lines_changed += 1\r\n                total_changes += 1\r\n                left_buffer = None  # Reset buffer\r\n            else:  # Pure addition\r\n                result.append({\r\n                    \"original\": \"\",\r\n                    \"symbol\": \">\",\r\n                    \"modified\": content\r\n                })\r\n                lines_added += 1\r\n                total_changes += 1\r\n\r\n    # If any remaining removed lines exist, add them\r\n    if left_buffer:\r\n        for l in left_buffer:\r\n            result.append({\r\n                \"original\": l,\r\n                \"symbol\": \"<\",\r\n                \"modified\": \"\"\r\n            })\r\n            lines_removed += 1\r\n            total_changes += 1\r\n\r\n    # Create the final output structure\r\n    output = {\r\n        \"lines\": result,\r\n        \"summary\": {\r\n            \"total_lines\": len(result),\r\n            \"total_changes\": total_changes,\r\n            \"lines_added\": lines_added,\r\n            \"lines_removed\": lines_removed,\r\n            \"lines_changed\": lines_changed\r\n        }\r\n    }\r\n\r\n    return json.dumps(output, indent=4)\r\n\r\n\r\n#\r\n##Main\r\n#\r\ntext1 = \"\"\"{{vars.output1_data}}\"\"\"\r\ntext2 = \"\"\"{{vars.output2_data}}\"\"\"\r\n\r\n# Generate JSON diff output\r\njson_output = sdiff_json(text1, text2)\r\nprint(json_output)\r\n"
+                },
+                "version": "2.2.1",
+                "connector": "code-snippet",
+                "operation": "python_inline_code_editor",
+                "operationTitle": "Execute Python Code",
+                "step_variables": []
+            },
+            "status": null,
+            "top": "220",
+            "left": "460",
+            "stepType": "\/api\/3\/workflow_step_types\/1fdd14cc-d6b4-4335-a3af-ab49c8ed2fd8",
+            "group": null,
+            "uuid": "0647132a-c42b-4eff-a264-1e5438c07249"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "return",
+            "description": null,
+            "arguments": {
+                "output": "{{vars.steps.diff2json.data['code_output']}}",
+                "status": "{%- set ret = {\"error\":false,\"msg\":\"ok\"} -%}\n{%- if vars.steps.diff2json.status != \"Success\" -%}\n{%- set ret = {\"error\":true,\"msg\":\"Code Not Successful: \" + vars.steps.diff2json.status} -%}\n{%- endif -%}\n{{ret}}"
+            },
+            "status": null,
+            "top": "260",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "b9707f42-d2ae-4e55-aca1-9b3776e5de48"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "setup vars",
+            "description": null,
+            "arguments": {
+                "output1_data": "{{vars.input.params.text1}}",
+                "output2_data": "{{vars.input.params.text2}}"
+            },
+            "status": null,
+            "top": "40",
+            "left": "460",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "610f1dce-8adc-48b5-b47d-8998c5bda52e"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Start",
+            "description": null,
+            "arguments": {
+                "__triggerLimit": true,
+                "step_variables": {
+                    "input": {
+                        "params": []
+                    }
+                },
+                "triggerOnSource": true,
+                "triggerOnReplicate": false
+            },
+            "status": null,
+            "top": "40",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/b348f017-9a94-471f-87f8-ce88b6a7ad62",
+            "group": null,
+            "uuid": "73276ed4-76f3-43ec-997a-1a55383716b4"
+        }
+    ],
+    "routes": [
+        {
+            "@type": "WorkflowRoute",
+            "name": "diff2json -> return",
+            "targetStep": "\/api\/3\/workflow_steps\/b9707f42-d2ae-4e55-aca1-9b3776e5de48",
+            "sourceStep": "\/api\/3\/workflow_steps\/0647132a-c42b-4eff-a264-1e5438c07249",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "541464a4-4215-43aa-b552-ba3436f4012a"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "setup vars -> diff2json",
+            "targetStep": "\/api\/3\/workflow_steps\/0647132a-c42b-4eff-a264-1e5438c07249",
+            "sourceStep": "\/api\/3\/workflow_steps\/610f1dce-8adc-48b5-b47d-8998c5bda52e",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "dba07050-5327-48f5-a2db-141120b41435"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Start -> setup vars",
+            "targetStep": "\/api\/3\/workflow_steps\/610f1dce-8adc-48b5-b47d-8998c5bda52e",
+            "sourceStep": "\/api\/3\/workflow_steps\/73276ed4-76f3-43ec-997a-1a55383716b4",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "167112be-8649-458b-9d64-211a5882f244"
+        }
+    ],
+    "groups": [
+        {
+            "@type": "WorkflowGroup",
+            "name": "Details",
+            "description": "Input two chunks of text and output a json with a summary of a diff and the actual diff with symbols for changed, added, and removed.",
+            "type": "note",
+            "isCollapsed": false,
+            "hasTriggerStep": false,
+            "hideInLogs": false,
+            "metadata": [],
+            "reusable": false,
+            "top": "120",
+            "left": "40",
+            "height": "115",
+            "width": "368",
+            "uuid": "4d503785-2690-46ac-ba5e-255c26d0f95f",
+            "recordTags": []
+        }
+    ],
+    "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+    "playbookOrigin": "\/api\/3\/picklists\/b6d710a9-a8ec-41ec-8817-fe9fa062fcdd",
+    "isEditable": false,
+    "uuid": "ba73dd4a-eec7-4c94-be0c-b1db9401d078",
+    "owners": [],
+    "isPrivate": false,
+    "deletedAt": null,
+    "recordTags": [
+        "code-snippet",
+        "function"
+    ]
+}

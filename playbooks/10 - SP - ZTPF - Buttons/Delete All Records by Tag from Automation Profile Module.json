@@ -1,0 +1,648 @@
+{
+    "@type": "Workflow",
+    "triggerLimit": null,
+    "name": "Delete All Records by Tag from Automation Profile Module",
+    "aliasName": null,
+    "tag": null,
+    "description": "Delete Profile, steps, and and actions, templates, and metadata sources by selected tag.",
+    "isActive": true,
+    "debug": false,
+    "singleRecordExecution": false,
+    "remoteExecutableFlag": false,
+    "parameters": [],
+    "synchronous": false,
+    "collection": "\/api\/3\/workflow_collections\/f0b56dc0-6c1e-4f5b-9199-c807800f028a",
+    "versions": [],
+    "triggerStep": "\/api\/3\/workflow_steps\/de6113f3-7a85-4ebe-bb2b-9bb6dc6638bc",
+    "steps": [
+        {
+            "@type": "WorkflowStep",
+            "name": "all tags",
+            "description": null,
+            "arguments": {
+                "tags": "{{vars.steps.find_tags|json_query('[].recordTags[]')|unique|sort}}"
+            },
+            "status": null,
+            "top": "40",
+            "left": "680",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "42af0450-76f8-45ed-bf35-47fadde81ec9"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "cancel or timeout",
+            "description": null,
+            "arguments": [],
+            "status": null,
+            "top": "300",
+            "left": "1080",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "8a6548a7-bcba-459e-97ba-deb1e395ed36"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "confirm delete",
+            "description": null,
+            "arguments": {
+                "type": "InputBased",
+                "input": {
+                    "schema": {
+                        "title": "Confirm Delete",
+                        "description": "# Delete the Following:\n\n{%- if vars.steps.find_profiles %}\n### Profiles:\n| ID | Name | Tags | \n| --- | ------- | ------ |\n{%- for r in vars.steps.find_profiles %}\n| {{r.id}} | {{r.name}} | {{r.recordTags | join(\",\")}} |\n{%- endfor %}\n{%- endif %}\n\n{% if vars.steps.find_profiles_steps %}\n### Profile Steps:\n| Profile ID | ID | Name | Tags | \n| ------------ | --- | ------- | ------ | \n{%- for r in vars.steps.find_profiles_steps %}\n| {{r.ztpfAutomationProfiles.id}} | {{r.id}} | {{r.name}} | {{r.recordTags | join(\",\")}} |\n{%- endfor %}\n{%- endif %}\n\n{% if vars.steps.find_actions %}\n### Actions:\n| ID | Name | Tags | \n| --- | ------- | ------ |\n{%- for r in vars.steps.find_actions %}\n| {{r.id}} | {{r.name}} | {{r.recordTags | join(\",\")}} |\n{%- endfor %}\n{%- endif %}\n\n{% if vars.steps.find_templates %}\n### Templates:\n| ID | Name | Tags | \n| --- | ------- | ------ |\n{%- for r in vars.steps.find_templates %}\n| {{r.id}} | {{r.name}} | {{r.recordTags | join(\",\")}} |\n{%- endfor %}\n{%- endif %}\n\n{% if vars.steps.find_metadata_sources %}\n### Metadata Sources:\n| ID | Name | Tags | \n| --- | ------- | ------ |\n{%- for r in vars.steps.find_metadata_sources %}\n| {{r.id}} | {{r.name}} | {{r.recordTags | join(\",\")}} |\n{%- endfor %}\n{%- endif %}",
+                        "inputVariables": []
+                    }
+                },
+                "record": "",
+                "timeout": {
+                    "days": 0,
+                    "hours": 0,
+                    "minutes": 1,
+                    "step_iri": "\/api\/3\/workflow_steps\/8a6548a7-bcba-459e-97ba-deb1e395ed36"
+                },
+                "agent_id": null,
+                "resources": "ztpf_automation_profiles",
+                "is_approval": false,
+                "owner_detail": {
+                    "isAssigned": false,
+                    "emailRecipients": ""
+                },
+                "isRecordLinked": false,
+                "step_variables": [],
+                "response_mapping": {
+                    "options": [
+                        {
+                            "option": "Ok",
+                            "step_iri": "\/api\/3\/workflow_steps\/b850c6e7-75e5-44a7-a40a-1ba2fbfe0a44"
+                        },
+                        {
+                            "option": "Cancel",
+                            "step_iri": "\/api\/3\/workflow_steps\/8a6548a7-bcba-459e-97ba-deb1e395ed36"
+                        }
+                    ],
+                    "duplicateOption": false,
+                    "customSuccessMessage": "Awaiting Playbook resumed successfully."
+                },
+                "email_notification": {
+                    "enabled": false,
+                    "smtpParameters": []
+                },
+                "customEmailExternal": false,
+                "inline_channel_list": [],
+                "external_channel_list": [],
+                "unauthenticated_input": false,
+                "external_email_subject": null,
+                "internal_email_subject": "A FortiSOAR playbook is requesting your input",
+                "custom_email_body_external": null,
+                "external_email_attachments": null
+            },
+            "status": null,
+            "top": "540",
+            "left": "680",
+            "stepType": "\/api\/3\/workflow_step_types\/fc04082a-d7dc-4299-96fb-6837b1baa0fe",
+            "group": null,
+            "uuid": "f7c2e491-2328-4d4b-aa74-5148b6a2f4e6"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "delete records list",
+            "description": null,
+            "arguments": {
+                "delete_records": "{%- set ret = [] -%}\n{%- set ret = ret \n+ vars.steps.find_profiles|json_query('[].\"@id\"')\n+ vars.steps.find_profiles_steps|json_query('[].\"@id\"')\n+ vars.steps.find_actions|json_query('[].\"@id\"')\n+ vars.steps.find_templates|json_query('[].\"@id\"')\n+ vars.steps.find_metadata_sources|json_query('[].\"@id\"')\n-%}\n{{ret}}"
+            },
+            "status": null,
+            "top": "540",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "b850c6e7-75e5-44a7-a40a-1ba2fbfe0a44"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "delete tagged records",
+            "description": null,
+            "arguments": {
+                "params": {
+                    "iri": "{{vars.item}}",
+                    "body": "",
+                    "method": "DELETE"
+                },
+                "version": "3.7.2",
+                "for_each": {
+                    "item": "{{vars.delete_records}}",
+                    "__bulk": false,
+                    "parallel": true,
+                    "condition": ""
+                },
+                "connector": "cyops_utilities",
+                "operation": "make_cyops_request",
+                "operationTitle": "FSR: Make FortiSOAR API Call",
+                "step_variables": []
+            },
+            "status": null,
+            "top": "120",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/0109f35d-090b-4a2b-bd8a-94cbc3508562",
+            "group": null,
+            "uuid": "a6516815-dbf1-475e-9886-9936095165c8"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "find actions",
+            "description": null,
+            "arguments": {
+                "query": {
+                    "sort": [],
+                    "limit": 30,
+                    "logic": "AND",
+                    "filters": [
+                        {
+                            "type": "array",
+                            "field": "recordTags",
+                            "value": "{{vars.steps.pick_tag.input.tagSelected}}",
+                            "_value": "{{vars.steps.pick_tag.input.tagSelected}}",
+                            "operator": "in"
+                        }
+                    ],
+                    "__selectFields": [
+                        "name",
+                        "id",
+                        "recordTags"
+                    ]
+                },
+                "module": "ztpf_automation_actions?$limit=5000",
+                "checkboxFields": true,
+                "step_variables": []
+            },
+            "status": null,
+            "top": "340",
+            "left": "680",
+            "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928770",
+            "group": null,
+            "uuid": "27076e5c-7530-4b7b-ba3a-0fb33aae2183"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "find metadata sources",
+            "description": null,
+            "arguments": {
+                "query": {
+                    "sort": [],
+                    "limit": 30,
+                    "logic": "AND",
+                    "filters": [
+                        {
+                            "type": "array",
+                            "field": "recordTags",
+                            "value": "{{vars.steps.pick_tag.input.tagSelected}}",
+                            "_value": "{{vars.steps.pick_tag.input.tagSelected}}",
+                            "operator": "in"
+                        }
+                    ],
+                    "__selectFields": [
+                        "name",
+                        "id",
+                        "recordTags"
+                    ]
+                },
+                "module": "ztpf_templates?$limit=5000",
+                "checkboxFields": true,
+                "step_variables": []
+            },
+            "status": null,
+            "top": "420",
+            "left": "680",
+            "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928770",
+            "group": null,
+            "uuid": "3c028370-2afe-4305-88f9-6f7127d8d479"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "find profiles",
+            "description": null,
+            "arguments": {
+                "query": {
+                    "sort": [],
+                    "limit": 30,
+                    "logic": "AND",
+                    "filters": [
+                        {
+                            "type": "array",
+                            "field": "recordTags",
+                            "value": "{{vars.steps.pick_tag.input.tagSelected}}",
+                            "_value": "{{vars.steps.pick_tag.input.tagSelected}}",
+                            "operator": "in"
+                        }
+                    ],
+                    "__selectFields": [
+                        "name",
+                        "id",
+                        "recordTags"
+                    ]
+                },
+                "module": "ztpf_automation_profiles?$limit=5000",
+                "checkboxFields": true,
+                "step_variables": []
+            },
+            "status": null,
+            "top": "260",
+            "left": "680",
+            "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928770",
+            "group": null,
+            "uuid": "94f4df12-cec9-4b06-85b8-12b5ad089b54"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "find profiles steps",
+            "description": null,
+            "arguments": {
+                "query": {
+                    "sort": [],
+                    "limit": 30,
+                    "logic": "AND",
+                    "filters": [
+                        {
+                            "type": "array",
+                            "field": "recordTags",
+                            "value": "{{vars.steps.pick_tag.input.tagSelected}}",
+                            "_value": "{{vars.steps.pick_tag.input.tagSelected}}",
+                            "operator": "in"
+                        }
+                    ],
+                    "__selectFields": [
+                        "name",
+                        "id",
+                        "recordTags",
+                        "ztpfAutomationProfiles"
+                    ]
+                },
+                "module": "ztpf_automation_profile_steps?$limit=5000",
+                "checkboxFields": true,
+                "step_variables": []
+            },
+            "status": null,
+            "top": "300",
+            "left": "340",
+            "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928770",
+            "group": null,
+            "uuid": "8e704497-aac5-4394-b7d2-c2b608732cea"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "find tags",
+            "description": null,
+            "arguments": {
+                "query": {
+                    "sort": [
+                        {
+                            "field": "modifyDate",
+                            "direction": "DESC",
+                            "_fieldName": "modifyDate",
+                            "_fieldTitle": "Modified On"
+                        }
+                    ],
+                    "limit": 30,
+                    "logic": "AND",
+                    "filters": [],
+                    "__selectFields": [
+                        "recordTags"
+                    ]
+                },
+                "module": "ztpf_automation_profiles?$limit=5000",
+                "checkboxFields": true,
+                "step_variables": []
+            },
+            "status": null,
+            "top": "40",
+            "left": "340",
+            "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928770",
+            "group": null,
+            "uuid": "8a97985f-1803-4926-9739-e1ecb96aa352"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "find templates",
+            "description": null,
+            "arguments": {
+                "query": {
+                    "sort": [],
+                    "limit": 30,
+                    "logic": "AND",
+                    "filters": [
+                        {
+                            "type": "array",
+                            "field": "recordTags",
+                            "value": "{{vars.steps.pick_tag.input.tagSelected}}",
+                            "_value": "{{vars.steps.pick_tag.input.tagSelected}}",
+                            "operator": "in"
+                        }
+                    ],
+                    "__selectFields": [
+                        "id",
+                        "name",
+                        "recordTags"
+                    ]
+                },
+                "module": "ztpf_templates?$limit=5000",
+                "checkboxFields": true,
+                "step_variables": []
+            },
+            "status": null,
+            "top": "380",
+            "left": "340",
+            "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928770",
+            "group": null,
+            "uuid": "fb76c704-9599-4b58-b973-85d7fae8a952"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "pick tag",
+            "description": null,
+            "arguments": {
+                "type": "InputBased",
+                "input": {
+                    "schema": {
+                        "title": "Select Tag",
+                        "description": "Use the selected tag to find records to delete. ",
+                        "inputVariables": [
+                            {
+                                "name": "tagSelected",
+                                "type": "array",
+                                "label": "Tag Selected",
+                                "title": "Dynamic List",
+                                "usable": true,
+                                "options": "{{vars.tags}}",
+                                "tooltip": "Select a tag to use to find records to delete.",
+                                "dataType": "dynamicList",
+                                "formType": "dynamicList",
+                                "required": false,
+                                "_expanded": true,
+                                "mmdUpdate": true,
+                                "collection": false,
+                                "searchable": false,
+                                "templateUrl": "app\/components\/form\/fields\/dynamicList.html",
+                                "defaultValue": null,
+                                "_previousName": "tag",
+                                "playbookField": true,
+                                "lengthConstraint": true,
+                                "allowedGridColumn": false,
+                                "requiredCondition": "notrequired",
+                                "jinjaExpressionView": true,
+                                "useRecordFieldDefault": false,
+                                "_addRequiredConditions": false
+                            }
+                        ]
+                    }
+                },
+                "record": "",
+                "agent_id": null,
+                "resources": "ztpf_automation_profiles",
+                "is_approval": false,
+                "owner_detail": {
+                    "isAssigned": false,
+                    "emailRecipients": ""
+                },
+                "isRecordLinked": false,
+                "step_variables": [],
+                "response_mapping": {
+                    "options": [
+                        {
+                            "option": "Ok",
+                            "step_iri": "\/api\/3\/workflow_steps\/94f4df12-cec9-4b06-85b8-12b5ad089b54"
+                        },
+                        {
+                            "option": "Cancel",
+                            "step_iri": "\/api\/3\/workflow_steps\/8a6548a7-bcba-459e-97ba-deb1e395ed36"
+                        }
+                    ],
+                    "duplicateOption": false,
+                    "customSuccessMessage": "Awaiting Playbook resumed successfully."
+                },
+                "email_notification": {
+                    "enabled": false,
+                    "smtpParameters": []
+                },
+                "customEmailExternal": false,
+                "inline_channel_list": [],
+                "external_channel_list": [],
+                "unauthenticated_input": false,
+                "external_email_subject": null,
+                "internal_email_subject": "A FortiSOAR playbook is requesting your input",
+                "custom_email_body_external": null,
+                "external_email_attachments": null
+            },
+            "status": null,
+            "top": "120",
+            "left": "680",
+            "stepType": "\/api\/3\/workflow_step_types\/fc04082a-d7dc-4299-96fb-6837b1baa0fe",
+            "group": null,
+            "uuid": "0ea7ce85-2f07-4f12-8a3b-dc22b81f47b7"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Start",
+            "description": "Delete ALL records that match a tag",
+            "arguments": {
+                "route": "c3bf74a9-ebb5-4216-8f5f-b04c23d4d028",
+                "title": "Delete by Tag",
+                "resources": [
+                    "ztpf_automation_profiles"
+                ],
+                "__triggerLimit": true,
+                "inputVariables": [],
+                "step_variables": {
+                    "input": {
+                        "params": [],
+                        "records": "{{vars.input.records}}"
+                    }
+                },
+                "_promptexpanded": true,
+                "triggerOnSource": true,
+                "displayConditions": {
+                    "ztpf_automation_profiles": {
+                        "sort": [],
+                        "limit": 30,
+                        "logic": "AND",
+                        "filters": []
+                    }
+                },
+                "executeButtonText": "Execute",
+                "noRecordExecution": true,
+                "showToasterMessage": {
+                    "visible": false,
+                    "messageVisible": true
+                },
+                "triggerOnReplicate": false,
+                "singleRecordExecution": false
+            },
+            "status": null,
+            "top": "40",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/f414d039-bb0d-4e59-9c39-a8f1e880b18a",
+            "group": null,
+            "uuid": "de6113f3-7a85-4ebe-bb2b-9bb6dc6638bc"
+        }
+    ],
+    "routes": [
+        {
+            "@type": "WorkflowRoute",
+            "name": "all tags -> pick tag",
+            "targetStep": "\/api\/3\/workflow_steps\/0ea7ce85-2f07-4f12-8a3b-dc22b81f47b7",
+            "sourceStep": "\/api\/3\/workflow_steps\/42af0450-76f8-45ed-bf35-47fadde81ec9",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "9c37a75b-f2d4-4714-a3f3-c389eaca31ee"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "confirm delete -> cancel or timeout",
+            "targetStep": "\/api\/3\/workflow_steps\/8a6548a7-bcba-459e-97ba-deb1e395ed36",
+            "sourceStep": "\/api\/3\/workflow_steps\/f7c2e491-2328-4d4b-aa74-5148b6a2f4e6",
+            "label": "Cancel",
+            "isExecuted": false,
+            "group": null,
+            "uuid": "25d70f46-268d-4277-ac37-e6bff21950b3"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "confirm delete -> delete records",
+            "targetStep": "\/api\/3\/workflow_steps\/b850c6e7-75e5-44a7-a40a-1ba2fbfe0a44",
+            "sourceStep": "\/api\/3\/workflow_steps\/f7c2e491-2328-4d4b-aa74-5148b6a2f4e6",
+            "label": "Ok",
+            "isExecuted": false,
+            "group": null,
+            "uuid": "32f35dd4-1c62-4194-8f22-19583e4db9b2"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "delete records -> delete steps",
+            "targetStep": "\/api\/3\/workflow_steps\/a6516815-dbf1-475e-9886-9936095165c8",
+            "sourceStep": "\/api\/3\/workflow_steps\/b850c6e7-75e5-44a7-a40a-1ba2fbfe0a44",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "794ae933-5914-41b3-bbf7-4cbc276cbad2"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "find actions -> Copy of find actions",
+            "targetStep": "\/api\/3\/workflow_steps\/fb76c704-9599-4b58-b973-85d7fae8a952",
+            "sourceStep": "\/api\/3\/workflow_steps\/27076e5c-7530-4b7b-ba3a-0fb33aae2183",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "ba43b16d-ae4d-404e-8d45-fca2afef6369"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "find metadata sources -> confirm delete",
+            "targetStep": "\/api\/3\/workflow_steps\/f7c2e491-2328-4d4b-aa74-5148b6a2f4e6",
+            "sourceStep": "\/api\/3\/workflow_steps\/3c028370-2afe-4305-88f9-6f7127d8d479",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "e9620aeb-e36f-48c9-8c3f-35530af75976"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "find profiles -> Copy of find profiles",
+            "targetStep": "\/api\/3\/workflow_steps\/8e704497-aac5-4394-b7d2-c2b608732cea",
+            "sourceStep": "\/api\/3\/workflow_steps\/94f4df12-cec9-4b06-85b8-12b5ad089b54",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "fd2760d7-03af-416c-9380-649aff401dad"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "find profiles steps -> Copy of find profiles steps",
+            "targetStep": "\/api\/3\/workflow_steps\/27076e5c-7530-4b7b-ba3a-0fb33aae2183",
+            "sourceStep": "\/api\/3\/workflow_steps\/8e704497-aac5-4394-b7d2-c2b608732cea",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "667f00b7-a4bc-4fba-afbc-c9d075d58a64"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "find tags -> all tags",
+            "targetStep": "\/api\/3\/workflow_steps\/42af0450-76f8-45ed-bf35-47fadde81ec9",
+            "sourceStep": "\/api\/3\/workflow_steps\/8a97985f-1803-4926-9739-e1ecb96aa352",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "7032884d-790a-4510-94db-758c7616b237"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "find templates -> Copy of find templates",
+            "targetStep": "\/api\/3\/workflow_steps\/3c028370-2afe-4305-88f9-6f7127d8d479",
+            "sourceStep": "\/api\/3\/workflow_steps\/fb76c704-9599-4b58-b973-85d7fae8a952",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "6c4b7a28-7696-49a1-816f-3141971cade9"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "pick tag -> cancel or timeout",
+            "targetStep": "\/api\/3\/workflow_steps\/8a6548a7-bcba-459e-97ba-deb1e395ed36",
+            "sourceStep": "\/api\/3\/workflow_steps\/0ea7ce85-2f07-4f12-8a3b-dc22b81f47b7",
+            "label": "Cancel",
+            "isExecuted": false,
+            "group": null,
+            "uuid": "908b452b-a84b-4f6c-bc4d-1a7b163e5d3f"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "pick tag -> find profiles",
+            "targetStep": "\/api\/3\/workflow_steps\/94f4df12-cec9-4b06-85b8-12b5ad089b54",
+            "sourceStep": "\/api\/3\/workflow_steps\/0ea7ce85-2f07-4f12-8a3b-dc22b81f47b7",
+            "label": "Ok",
+            "isExecuted": false,
+            "group": null,
+            "uuid": "89e3948d-465a-4963-867e-bcb82582c4ab"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Start -> find tags",
+            "targetStep": "\/api\/3\/workflow_steps\/8a97985f-1803-4926-9739-e1ecb96aa352",
+            "sourceStep": "\/api\/3\/workflow_steps\/de6113f3-7a85-4ebe-bb2b-9bb6dc6638bc",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "50b393ca-5e58-4513-ac68-d9e1e74ebde0"
+        }
+    ],
+    "groups": [
+        {
+            "@type": "WorkflowGroup",
+            "name": "Details",
+            "description": "find all template records in ZTP matching a selected tag and delete those records.",
+            "type": "note",
+            "isCollapsed": false,
+            "hasTriggerStep": false,
+            "hideInLogs": false,
+            "metadata": [],
+            "reusable": false,
+            "top": "120",
+            "left": "320",
+            "height": "102",
+            "width": "324",
+            "uuid": "386910d2-1d0f-4d45-969c-de50f0ed5ade",
+            "recordTags": []
+        }
+    ],
+    "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+    "playbookOrigin": "\/api\/3\/picklists\/b6d710a9-a8ec-41ec-8817-fe9fa062fcdd",
+    "isEditable": false,
+    "uuid": "9ba1d465-7855-48c9-a8d7-923032288a23",
+    "owners": [],
+    "isPrivate": false,
+    "deletedAt": null,
+    "recordTags": [
+        "ztpfAutomationProfile"
+    ]
+}

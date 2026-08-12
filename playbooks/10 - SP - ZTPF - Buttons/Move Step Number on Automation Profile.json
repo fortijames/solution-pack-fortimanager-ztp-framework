@@ -1,0 +1,246 @@
+{
+    "@type": "Workflow",
+    "triggerLimit": null,
+    "name": "Move Step Number on Automation Profile",
+    "aliasName": null,
+    "tag": null,
+    "description": "Moving a step number requires touching all step numbers.",
+    "isActive": true,
+    "debug": false,
+    "singleRecordExecution": false,
+    "remoteExecutableFlag": false,
+    "parameters": [],
+    "synchronous": false,
+    "collection": "\/api\/3\/workflow_collections\/f0b56dc0-6c1e-4f5b-9199-c807800f028a",
+    "versions": [],
+    "triggerStep": "\/api\/3\/workflow_steps\/4e0d0f5b-c8f4-4617-8bd0-921b38808969",
+    "steps": [
+        {
+            "@type": "WorkflowStep",
+            "name": "done",
+            "description": null,
+            "arguments": [],
+            "status": null,
+            "top": "120",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "2b3ffd5f-6e1b-4f49-ac7b-b7d35e9ba240"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "move step number",
+            "description": null,
+            "arguments": {
+                "arguments": {
+                    "new_step_number": "{{vars.input.params.newStepNumber}}",
+                    "profile_step_id": "{{vars.input.records[0].id}}"
+                },
+                "apply_async": false,
+                "step_variables": [],
+                "pass_parent_env": false,
+                "pass_input_record": false,
+                "workflowReference": "\/api\/3\/workflows\/c0a01e5e-a212-422f-9425-3df1b01dfd51"
+            },
+            "status": null,
+            "top": "40",
+            "left": "380",
+            "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
+            "group": null,
+            "uuid": "70916238-1549-4cc7-9c39-f152b697bf17"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Start",
+            "description": "Move this step number which will re-number all steps as required. If multiple steps are selected we simply move the first step in the list.",
+            "arguments": {
+                "route": "a1338332-f9fc-4ca6-9fa8-4d25c0d746da",
+                "title": "Move Step Number",
+                "resources": [
+                    "ztpf_automation_profile_steps"
+                ],
+                "__triggerLimit": true,
+                "inputVariables": [
+                    {
+                        "name": "newStepNumber",
+                        "type": "integer",
+                        "label": "New Step Number",
+                        "title": "Integer Field",
+                        "usable": true,
+                        "tooltip": "Move this step to this new step number.",
+                        "dataType": "integer",
+                        "formType": "integer",
+                        "required": false,
+                        "_expanded": true,
+                        "mmdUpdate": true,
+                        "collection": false,
+                        "searchable": true,
+                        "templateUrl": "app\/components\/form\/fields\/integer.html",
+                        "defaultValue": null,
+                        "_previousName": "step",
+                        "playbookField": true,
+                        "lengthConstraint": true,
+                        "allowedEncryption": false,
+                        "allowedGridColumn": true,
+                        "requiredCondition": "notrequired",
+                        "jinjaExpressionView": true,
+                        "useRecordFieldDefault": false,
+                        "_addRequiredConditions": false
+                    }
+                ],
+                "step_variables": {
+                    "input": {
+                        "params": {
+                            "newStepNumber": "{{vars.request.data[\"newStepNumber\"]}}"
+                        },
+                        "records": "{{vars.input.records}}"
+                    }
+                },
+                "_promptexpanded": true,
+                "triggerOnSource": true,
+                "displayConditions": {
+                    "ztpf_device_automation_steps": {
+                        "sort": [],
+                        "limit": 30,
+                        "logic": "AND",
+                        "filters": [
+                            {
+                                "type": "object",
+                                "field": "ztpfRunGroups",
+                                "value": "true",
+                                "_value": {
+                                    "@id": "true",
+                                    "display": true,
+                                    "itemValue": ""
+                                },
+                                "operator": "isnull"
+                            }
+                        ]
+                    },
+                    "ztpf_automation_profile_steps": {
+                        "sort": [],
+                        "limit": 30,
+                        "logic": "AND",
+                        "filters": []
+                    }
+                },
+                "executeButtonText": "Move",
+                "noRecordExecution": false,
+                "showToasterMessage": {
+                    "visible": false,
+                    "messageVisible": true
+                },
+                "triggerOnReplicate": false,
+                "singleRecordExecution": false
+            },
+            "status": null,
+            "top": "40",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/f414d039-bb0d-4e59-9c39-a8f1e880b18a",
+            "group": null,
+            "uuid": "4e0d0f5b-c8f4-4617-8bd0-921b38808969"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Steps Updated",
+            "description": null,
+            "arguments": {
+                "type": "InputBased",
+                "input": {
+                    "schema": {
+                        "title": "Steps Updated",
+                        "description": "The following Steps were Updated:\n\n| Step Number | Name |\n| ----------------- | ------- | \n{%- for s in vars.steps.move_step_number.output %}\n| {{s.stepSequence|string}} | {{s.name}}( {{s.id|string}} ) |\n{%- endfor %}\n",
+                        "inputVariables": []
+                    }
+                },
+                "record": "",
+                "timeout": {
+                    "days": 0,
+                    "hours": 0,
+                    "minutes": 1,
+                    "step_iri": "\/api\/3\/workflow_steps\/2b3ffd5f-6e1b-4f49-ac7b-b7d35e9ba240"
+                },
+                "agent_id": null,
+                "resources": "ztpf_device_automation_steps",
+                "is_approval": false,
+                "owner_detail": {
+                    "isAssigned": false,
+                    "emailRecipients": ""
+                },
+                "isRecordLinked": false,
+                "step_variables": [],
+                "response_mapping": {
+                    "options": [
+                        {
+                            "option": "Ok",
+                            "step_iri": "\/api\/3\/workflow_steps\/2b3ffd5f-6e1b-4f49-ac7b-b7d35e9ba240"
+                        }
+                    ],
+                    "duplicateOption": false,
+                    "customSuccessMessage": "Awaiting Playbook resumed successfully."
+                },
+                "email_notification": {
+                    "enabled": false,
+                    "smtpParameters": []
+                },
+                "customEmailExternal": false,
+                "inline_channel_list": [],
+                "external_channel_list": [],
+                "unauthenticated_input": false,
+                "external_email_subject": null,
+                "internal_email_subject": "A FortiSOAR playbook is requesting your input",
+                "custom_email_body_external": null,
+                "external_email_attachments": null
+            },
+            "status": null,
+            "top": "180",
+            "left": "380",
+            "stepType": "\/api\/3\/workflow_step_types\/fc04082a-d7dc-4299-96fb-6837b1baa0fe",
+            "group": null,
+            "uuid": "3ee6b0c5-d1a6-4f7f-ab42-e99a343c7874"
+        }
+    ],
+    "routes": [
+        {
+            "@type": "WorkflowRoute",
+            "name": "move step number -> Steps Updated",
+            "targetStep": "\/api\/3\/workflow_steps\/3ee6b0c5-d1a6-4f7f-ab42-e99a343c7874",
+            "sourceStep": "\/api\/3\/workflow_steps\/70916238-1549-4cc7-9c39-f152b697bf17",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "2060a790-48e5-4d1d-92b0-bb7dc17b7bbc"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Start -> move step number",
+            "targetStep": "\/api\/3\/workflow_steps\/70916238-1549-4cc7-9c39-f152b697bf17",
+            "sourceStep": "\/api\/3\/workflow_steps\/4e0d0f5b-c8f4-4617-8bd0-921b38808969",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "c3d78644-aa3a-4d26-b599-cfcf9a454bef"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Steps Updated -> done",
+            "targetStep": "\/api\/3\/workflow_steps\/2b3ffd5f-6e1b-4f49-ac7b-b7d35e9ba240",
+            "sourceStep": "\/api\/3\/workflow_steps\/3ee6b0c5-d1a6-4f7f-ab42-e99a343c7874",
+            "label": "Ok",
+            "isExecuted": false,
+            "group": null,
+            "uuid": "67a41e04-4326-4861-aa26-2928a6c94fe4"
+        }
+    ],
+    "groups": [],
+    "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+    "playbookOrigin": "\/api\/3\/picklists\/b6d710a9-a8ec-41ec-8817-fe9fa062fcdd",
+    "isEditable": false,
+    "uuid": "c412e06b-db00-4e4f-ba25-77033094283e",
+    "owners": [],
+    "isPrivate": false,
+    "deletedAt": null,
+    "recordTags": [
+        "ztpfDeviceAutomationStep"
+    ]
+}

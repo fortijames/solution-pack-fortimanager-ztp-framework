@@ -62,10 +62,12 @@
             "arguments": {
                 "output_html": "{%- set rout = vars.steps.render_jinja_HTML -%}\n\n{%- if rout -%}\n{{rout.output| regex_replace('^\"|\"$', '')}}\n{%- endif -%}",
                 "output_json": "{%- set rout = vars.steps.render_jinja_JSON -%}\n\n{%- if rout -%}\n{{rout.output}}\n{%- endif -%}",
+                "output_text": "{%- set rout = vars.steps.render_jinja_TEXT \n-%}\n\n{%- if rout -%}\n{{rout.output| regex_replace('^\"|\"$', '')}}\n{%- endif -%}",
+                "output_status": "{%- set ret = {\n  \"status\": \"OK\",\n  \"message\": \"No Output Status Template\"\n} -%}\n{%- set status = vars.steps.status_yaml2json.output -%}\n{%- if status -%}\n  {%- do ret.update({\"message\":status.message}) -%}\n  {%- if status.exception -%}\n    {%- do ret.update({\"status\":\"Exceptions Found\"}) -%}    \n  {%- endif -%}\n{%- endif -%}\n{{ret}}",
                 "output_markdown": "{%- set rout = vars.steps.render_jinja_MARKDOWN -%}\n\n{%- if rout -%}\n{{rout.output| regex_replace('^\"|\"$', '')}}\n{%- endif -%}"
             },
             "status": null,
-            "top": "240",
+            "top": "440",
             "left": "340",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
@@ -89,7 +91,7 @@
                 "workflowReference": "\/api\/3\/workflows\/b9e9fe1a-4964-4631-ba81-97987676884d"
             },
             "status": null,
-            "top": "240",
+            "top": "320",
             "left": "640",
             "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
             "group": null,
@@ -113,7 +115,7 @@
                 "workflowReference": "\/api\/3\/workflows\/b9e9fe1a-4964-4631-ba81-97987676884d"
             },
             "status": null,
-            "top": "320",
+            "top": "400",
             "left": "640",
             "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
             "group": null,
@@ -142,6 +144,54 @@
             "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
             "group": null,
             "uuid": "d1dfc551-1b67-4793-8cc1-301b4329b816"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "render jinja STATUS",
+            "description": null,
+            "arguments": {
+                "when": "{{vars.steps.find_step[0].ztpfAutomationActions.outputStatusTemplate}}",
+                "arguments": {
+                    "script_vars": "{{vars.jinja_vars}}",
+                    "yaml2json_flag": "",
+                    "script_template": "{{vars.steps.find_step[0].ztpfAutomationActions.outputStatusTemplate}}"
+                },
+                "apply_async": false,
+                "step_variables": [],
+                "pass_parent_env": false,
+                "pass_input_record": false,
+                "workflowReference": "\/api\/3\/workflows\/b9e9fe1a-4964-4631-ba81-97987676884d"
+            },
+            "status": null,
+            "top": "480",
+            "left": "640",
+            "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
+            "group": null,
+            "uuid": "79aac4c5-936b-4bb9-8b96-45339df411b5"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "render jinja TEXT",
+            "description": null,
+            "arguments": {
+                "when": "{{vars.steps.find_step[0].ztpfAutomationActions.outputTemplateText}}",
+                "arguments": {
+                    "script_vars": "{{vars.jinja_vars}}",
+                    "yaml2json_flag": "",
+                    "script_template": "{{vars.steps.find_step[0].ztpfAutomationActions.outputTemplateText}}"
+                },
+                "apply_async": false,
+                "step_variables": [],
+                "pass_parent_env": false,
+                "pass_input_record": false,
+                "workflowReference": "\/api\/3\/workflows\/b9e9fe1a-4964-4631-ba81-97987676884d"
+            },
+            "status": null,
+            "top": "240",
+            "left": "640",
+            "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
+            "group": null,
+            "uuid": "6b1c3a9f-5fbd-4165-af03-34bda51ffda6"
         },
         {
             "@type": "WorkflowStep",
@@ -181,13 +231,39 @@
         },
         {
             "@type": "WorkflowStep",
+            "name": "status yaml2json",
+            "description": null,
+            "arguments": {
+                "when": "{{vars.steps.render_jinja_STATUS}}",
+                "arguments": {
+                    "yaml": "{{vars.steps.render_jinja_STATUS.output}}",
+                    "manual_test": ""
+                },
+                "apply_async": false,
+                "step_variables": [],
+                "pass_parent_env": false,
+                "pass_input_record": false,
+                "workflowReference": "\/api\/3\/workflows\/e8a9ca65-8ba2-4da5-993a-e98d1e22283c"
+            },
+            "status": null,
+            "top": "560",
+            "left": "640",
+            "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
+            "group": null,
+            "uuid": "095e64ff-0fbe-4896-8364-dc5d491b25ff"
+        },
+        {
+            "@type": "WorkflowStep",
             "name": "update step",
             "description": null,
             "arguments": {
                 "resource": {
                     "outputHTML": "<p>{{vars.output_html}}<\/p>",
                     "outputJSON": "{{vars.output_json}}",
-                    "outputMarkdown": "{{vars.output_markdown}}"
+                    "outputText": "{{vars.output_text}}",
+                    "outputStatus": "{{\"ztpfDeviceStepOutputStatus\" | picklist(vars.output_status.status, \"@id\")}}",
+                    "outputMarkdown": "{{vars.output_markdown}}",
+                    "outputStatusMessage": "{{vars.output_status.message}}"
                 },
                 "operation": "Append",
                 "collection": "{{vars.step_fqid}}",
@@ -219,6 +295,16 @@
         },
         {
             "@type": "WorkflowRoute",
+            "name": "Copy of render jinja MARKDOWN -> render jinja HTML",
+            "targetStep": "\/api\/3\/workflow_steps\/665f594e-58b9-4186-8628-f3740497159e",
+            "sourceStep": "\/api\/3\/workflow_steps\/6b1c3a9f-5fbd-4165-af03-34bda51ffda6",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "08be9df7-255c-4e82-9bc8-da8ee317cb18"
+        },
+        {
+            "@type": "WorkflowRoute",
             "name": "find step -> update jinja_vars",
             "targetStep": "\/api\/3\/workflow_steps\/85d3a526-d57e-4c51-bd8a-22e4df19613d",
             "sourceStep": "\/api\/3\/workflow_steps\/80ea339e-cc09-4c50-9729-3de7a8a9dbfc",
@@ -239,23 +325,33 @@
         },
         {
             "@type": "WorkflowRoute",
-            "name": "render jinja JSON -> output vars",
-            "targetStep": "\/api\/3\/workflow_steps\/7bb60fd8-fc32-4881-b845-3a6c63ff366a",
+            "name": "render jinja JSON -> Copy of render jinja JSON",
+            "targetStep": "\/api\/3\/workflow_steps\/79aac4c5-936b-4bb9-8b96-45339df411b5",
             "sourceStep": "\/api\/3\/workflow_steps\/864b10f0-f8c5-4869-bc33-2bc3ec330957",
             "label": null,
             "isExecuted": false,
             "group": null,
-            "uuid": "7a20df01-0403-4e63-a1d0-ce9ea0a36ab8"
+            "uuid": "067c83a6-3a50-4bc9-a1fb-99223b1ed6f9"
         },
         {
             "@type": "WorkflowRoute",
             "name": "render jinja MARKDOWN -> Copy of render jinja MARKDOWN",
-            "targetStep": "\/api\/3\/workflow_steps\/665f594e-58b9-4186-8628-f3740497159e",
+            "targetStep": "\/api\/3\/workflow_steps\/6b1c3a9f-5fbd-4165-af03-34bda51ffda6",
             "sourceStep": "\/api\/3\/workflow_steps\/d1dfc551-1b67-4793-8cc1-301b4329b816",
             "label": null,
             "isExecuted": false,
             "group": null,
-            "uuid": "0a3c80e9-0c41-41a9-875f-59bbc7083d79"
+            "uuid": "91958afb-8b6a-4e4d-9b3b-8919fce38896"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "render jinja STATUS -> status yaml2json",
+            "targetStep": "\/api\/3\/workflow_steps\/095e64ff-0fbe-4896-8364-dc5d491b25ff",
+            "sourceStep": "\/api\/3\/workflow_steps\/79aac4c5-936b-4bb9-8b96-45339df411b5",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "b2da317d-7fe8-4af2-817a-682be6e79a77"
         },
         {
             "@type": "WorkflowRoute",
@@ -266,6 +362,16 @@
             "isExecuted": false,
             "group": null,
             "uuid": "58222f66-2a88-4981-8594-5605184e2870"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "status yaml2json -> output vars",
+            "targetStep": "\/api\/3\/workflow_steps\/7bb60fd8-fc32-4881-b845-3a6c63ff366a",
+            "sourceStep": "\/api\/3\/workflow_steps\/095e64ff-0fbe-4896-8364-dc5d491b25ff",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "cffa96f0-91ff-4c19-a3cf-7a92542ca3d0"
         },
         {
             "@type": "WorkflowRoute",

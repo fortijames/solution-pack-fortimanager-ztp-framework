@@ -1,35 +1,35 @@
 {
     "@type": "Workflow",
     "triggerLimit": null,
-    "name": "> move step number on a device",
+    "name": "> move step number on an automation profile",
     "aliasName": null,
     "tag": null,
-    "description": "Use the device_step_id to find the device and all pending steps to then re-order the list as needed.",
+    "description": "Use the profile_step_id to find the profile and all steps to then re-order the list as needed.",
     "isActive": true,
     "debug": false,
     "singleRecordExecution": false,
     "remoteExecutableFlag": false,
     "parameters": [
-        "device_step_id",
+        "profile_step_id",
         "new_step_number"
     ],
     "synchronous": false,
     "collection": "\/api\/3\/workflow_collections\/517fb52d-36f5-4bac-a344-7d4599d7dec6",
     "versions": [],
-    "triggerStep": "\/api\/3\/workflow_steps\/9a83c706-5dcd-47b5-98be-7673be6557ee",
+    "triggerStep": "\/api\/3\/workflow_steps\/f87597af-bcf7-427c-9d12-f2c7e012ed2e",
     "steps": [
         {
             "@type": "WorkflowStep",
-            "name": "find pending steps",
+            "name": "find steps",
             "description": null,
             "arguments": {
-                "when": "{{vars.steps.find_step_to_move[0].ztpfDevices}}",
+                "when": "{{vars.steps.find_step_to_move[0].ztpfAutomationProfiles}}",
                 "query": {
                     "sort": [
                         {
-                            "field": "stepNumber",
+                            "field": "stepSequence",
                             "direction": "ASC",
-                            "_fieldName": "stepNumber",
+                            "_fieldName": "stepSequence",
                             "_fieldTitle": "Step Number"
                         }
                     ],
@@ -37,42 +37,20 @@
                     "logic": "AND",
                     "filters": [
                         {
-                            "type": "object",
-                            "field": "ztpfDevices",
-                            "value": "{{vars.steps.find_step_to_move[0].ztpfDevices['@id']}}",
-                            "_value": {
-                                "@id": "{{vars.steps.find_step_to_move[0].ztpfDevices['@id']}}",
-                                "display": "",
-                                "itemValue": ""
-                            },
-                            "operator": "eq"
-                        },
-                        {
-                            "type": "object",
-                            "field": "ztpfRunGroups",
-                            "value": "true",
-                            "_value": {
-                                "@id": "true",
-                                "display": "",
-                                "itemValue": ""
-                            },
-                            "operator": "isnull"
-                        },
-                        {
                             "type": "primitive",
-                            "field": "stepDone",
-                            "value": true,
-                            "operator": "neq",
-                            "_operator": "neq"
+                            "field": "ztpfAutomationProfiles",
+                            "value": "{{vars.steps.find_step_to_move[0].ztpfAutomationProfiles['@id']}}",
+                            "operator": "eq",
+                            "_operator": "eq"
                         }
                     ],
                     "__selectFields": [
+                        "stepSequence",
                         "id",
-                        "stepNumber",
                         "name"
                     ]
                 },
-                "module": "ztpf_device_automation_steps?$limit=5000",
+                "module": "ztpf_automation_profile_steps?$limit=5000",
                 "checkboxFields": true,
                 "step_variables": []
             },
@@ -81,7 +59,7 @@
             "left": "640",
             "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928770",
             "group": null,
-            "uuid": "cf23fedf-02e8-4811-968e-5925e5ce291a"
+            "uuid": "8ee0bf1b-ff5a-420c-9dbd-38b342cedc33"
         },
         {
             "@type": "WorkflowStep",
@@ -96,17 +74,13 @@
                         {
                             "type": "primitive",
                             "field": "id",
-                            "value": "{{vars.input.params['device_step_id']}}",
+                            "value": "{{vars.input.params['profile_step_id']}}",
                             "operator": "eq",
                             "_operator": "eq"
                         }
-                    ],
-                    "__selectFields": [
-                        "id",
-                        "ztpfDevices"
                     ]
                 },
-                "module": "ztpf_device_automation_steps?$limit=1",
+                "module": "ztpf_automation_profile_steps?$limit=1",
                 "checkboxFields": true,
                 "step_variables": []
             },
@@ -115,28 +89,28 @@
             "left": "340",
             "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928770",
             "group": null,
-            "uuid": "1e852d1d-baf0-45ed-9bec-ea60b4873954"
+            "uuid": "2b073cfe-ed18-48ea-bf8e-7aa5f9c39853"
         },
         {
             "@type": "WorkflowStep",
             "name": "invert step numbers",
             "description": "Invert step numbers to prevent unique constraints on the module.",
             "arguments": {
-                "when": "{{vars.steps.find_pending_steps}}",
+                "when": "{{vars.steps.find_steps}}",
                 "for_each": {
-                    "item": "{{vars.steps.find_pending_steps}}",
+                    "item": "{{vars.steps.find_steps}}",
                     "__bulk": true,
                     "parallel": false,
                     "condition": "",
                     "batch_size": 100
                 },
                 "resource": {
-                    "stepNumber": "-{{vars.item.stepNumber}}"
+                    "stepSequence": "-{{vars.item.stepSequence}}"
                 },
                 "operation": "Append",
                 "collection": "{{vars.item['@id']}}",
                 "__recommend": [],
-                "collectionType": "\/api\/3\/ztpf_device_automation_steps",
+                "collectionType": "\/api\/3\/ztpf_automation_profile_steps",
                 "fieldOperation": {
                     "recordTags": "Append"
                 },
@@ -147,21 +121,21 @@
             "left": "640",
             "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928722",
             "group": null,
-            "uuid": "2ba94945-b72d-46d0-a984-d27658560f83"
+            "uuid": "a4fde72e-80a2-47db-97be-0e9fb07ba403"
         },
         {
             "@type": "WorkflowStep",
             "name": "reordered_steps",
             "description": null,
             "arguments": {
-                "reordered_steps": "{%- macro reorder_steps(steps, move_id, new_step) -%}\n  {%- set ordered = steps | sort(attribute='stepNumber') | list -%}\n  {%- set ns = namespace(item=None) -%}\n  {%- for s in ordered -%}\n      {%- if s.id == move_id -%}\n          {%- set ns.item = s -%}\n          {%- do ordered.remove(s) -%}\n          {%- break -%}\n      {%- endif -%}\n  {%- endfor -%}\n  {%- if ns.item -%}\n      {%- if new_step < 1 -%}\n          {%- set new_step = 1 -%}\n      {%- elif new_step > ordered | length + 1 -%}\n          {%- set new_step = ordered | length + 1 -%}\n      {%- endif -%}\n      {%- do ordered.insert(new_step - 1, ns.item) %}\n      {%- for s in ordered -%}\n          {%- do s.update({'stepNumber': loop.index}) -%}\n      {%- endfor -%}\n  {%- endif -%}\n  {{ ordered }}\n{%- endmacro -%}\n\n{%- set stepid = vars.steps.find_step_to_move[0].id -%}\n{%- set newstep = vars.input.params['new_step_number'] -%}\n{{ reorder_steps(vars.steps.find_pending_steps, stepid, newstep) }}"
+                "reordered_steps": "{%- macro reorder_steps(steps, move_id, new_step) -%}\n  {%- set ordered = steps | sort(attribute='stepSequence') | list -%}\n  {%- set ns = namespace(item=None) -%}\n  {%- for s in ordered -%}\n      {%- if s.id == move_id -%}\n          {%- set ns.item = s -%}\n          {%- do ordered.remove(s) -%}\n          {%- break -%}\n      {%- endif -%}\n  {%- endfor -%}\n  {%- if ns.item -%}\n      {%- if new_step < 1 -%}\n          {%- set new_step = 1 -%}\n      {%- elif new_step > ordered | length + 1 -%}\n          {%- set new_step = ordered | length + 1 -%}\n      {%- endif -%}\n      {%- do ordered.insert(new_step - 1, ns.item) %}\n      {%- for s in ordered -%}\n          {%- do s.update({'stepSequence': loop.index}) -%}\n      {%- endfor -%}\n  {%- endif -%}\n  {{ ordered }}\n{%- endmacro -%}\n\n{%- set stepid = vars.steps.find_step_to_move[0].id -%}\n{%- set newstep = vars.input.params['new_step_number'] -%}\n{{ reorder_steps(vars.steps.find_steps, stepid, newstep) }}"
             },
             "status": null,
             "top": "200",
             "left": "640",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
-            "uuid": "66455646-ff8d-40df-a5ae-db267fcd0e46"
+            "uuid": "e2c1be11-60db-4ff6-939d-86d4eb5a3b10"
         },
         {
             "@type": "WorkflowStep",
@@ -177,7 +151,7 @@
             "left": "40",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
-            "uuid": "0ad866aa-4edc-49a4-96e3-91f2805cc465"
+            "uuid": "511c1c13-bf02-4f68-a9f9-5e407221e4fa"
         },
         {
             "@type": "WorkflowStep",
@@ -198,13 +172,14 @@
             "left": "40",
             "stepType": "\/api\/3\/workflow_step_types\/b348f017-9a94-471f-87f8-ce88b6a7ad62",
             "group": null,
-            "uuid": "9a83c706-5dcd-47b5-98be-7673be6557ee"
+            "uuid": "f87597af-bcf7-427c-9d12-f2c7e012ed2e"
         },
         {
             "@type": "WorkflowStep",
             "name": "update step numbers",
             "description": null,
             "arguments": {
+                "when": "{{vars.reordered_steps}}",
                 "for_each": {
                     "item": "{{vars.reordered_steps}}",
                     "__bulk": true,
@@ -213,12 +188,12 @@
                     "batch_size": 100
                 },
                 "resource": {
-                    "stepNumber": "{{vars.item[\"stepNumber\"]}}"
+                    "stepSequence": "{{vars.item[\"stepSequence\"]}}"
                 },
                 "operation": "Append",
                 "collection": "{{vars.item['@id']}}",
                 "__recommend": [],
-                "collectionType": "\/api\/3\/ztpf_device_automation_steps",
+                "collectionType": "\/api\/3\/ztpf_automation_profile_steps",
                 "fieldOperation": {
                     "recordTags": "Append"
                 },
@@ -229,76 +204,76 @@
             "left": "640",
             "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928722",
             "group": null,
-            "uuid": "c262b43c-6216-465b-b8fd-19017735887b"
+            "uuid": "e8a46adb-1ab8-471c-972f-10b9e195e069"
         }
     ],
     "routes": [
         {
             "@type": "WorkflowRoute",
             "name": "find pending steps -> invert step numbers",
-            "targetStep": "\/api\/3\/workflow_steps\/2ba94945-b72d-46d0-a984-d27658560f83",
-            "sourceStep": "\/api\/3\/workflow_steps\/cf23fedf-02e8-4811-968e-5925e5ce291a",
+            "targetStep": "\/api\/3\/workflow_steps\/a4fde72e-80a2-47db-97be-0e9fb07ba403",
+            "sourceStep": "\/api\/3\/workflow_steps\/8ee0bf1b-ff5a-420c-9dbd-38b342cedc33",
             "label": null,
             "isExecuted": false,
             "group": null,
-            "uuid": "19459c0e-909f-4626-8d9f-619ca294a32d"
+            "uuid": "d45eb3cd-ee85-4352-87a3-a1ef35a525a5"
         },
         {
             "@type": "WorkflowRoute",
             "name": "find step to move -> find pending steps",
-            "targetStep": "\/api\/3\/workflow_steps\/cf23fedf-02e8-4811-968e-5925e5ce291a",
-            "sourceStep": "\/api\/3\/workflow_steps\/1e852d1d-baf0-45ed-9bec-ea60b4873954",
+            "targetStep": "\/api\/3\/workflow_steps\/8ee0bf1b-ff5a-420c-9dbd-38b342cedc33",
+            "sourceStep": "\/api\/3\/workflow_steps\/2b073cfe-ed18-48ea-bf8e-7aa5f9c39853",
             "label": null,
             "isExecuted": false,
             "group": null,
-            "uuid": "626d4a8d-98d3-4acf-8189-1ff17b914c6c"
+            "uuid": "7b0f56f7-22c9-41e5-86cc-e4af0a64bab3"
         },
         {
             "@type": "WorkflowRoute",
             "name": "invert step numbers -> reordered_steps",
-            "targetStep": "\/api\/3\/workflow_steps\/66455646-ff8d-40df-a5ae-db267fcd0e46",
-            "sourceStep": "\/api\/3\/workflow_steps\/2ba94945-b72d-46d0-a984-d27658560f83",
+            "targetStep": "\/api\/3\/workflow_steps\/e2c1be11-60db-4ff6-939d-86d4eb5a3b10",
+            "sourceStep": "\/api\/3\/workflow_steps\/a4fde72e-80a2-47db-97be-0e9fb07ba403",
             "label": null,
             "isExecuted": false,
             "group": null,
-            "uuid": "f7fd5c9a-ed4c-47a9-81de-bf247f363e14"
+            "uuid": "8756df57-6f6e-49af-97ff-e2f22261920b"
         },
         {
             "@type": "WorkflowRoute",
             "name": "reordered_steps -> update step numbers",
-            "targetStep": "\/api\/3\/workflow_steps\/c262b43c-6216-465b-b8fd-19017735887b",
-            "sourceStep": "\/api\/3\/workflow_steps\/66455646-ff8d-40df-a5ae-db267fcd0e46",
+            "targetStep": "\/api\/3\/workflow_steps\/e8a46adb-1ab8-471c-972f-10b9e195e069",
+            "sourceStep": "\/api\/3\/workflow_steps\/e2c1be11-60db-4ff6-939d-86d4eb5a3b10",
             "label": null,
             "isExecuted": false,
             "group": null,
-            "uuid": "42173553-8f93-4db9-9251-99c65b986d54"
+            "uuid": "e92f6181-5f9e-41e8-8e84-36a3b03c82c7"
         },
         {
             "@type": "WorkflowRoute",
             "name": "Start -> find step",
-            "targetStep": "\/api\/3\/workflow_steps\/1e852d1d-baf0-45ed-9bec-ea60b4873954",
-            "sourceStep": "\/api\/3\/workflow_steps\/9a83c706-5dcd-47b5-98be-7673be6557ee",
+            "targetStep": "\/api\/3\/workflow_steps\/2b073cfe-ed18-48ea-bf8e-7aa5f9c39853",
+            "sourceStep": "\/api\/3\/workflow_steps\/f87597af-bcf7-427c-9d12-f2c7e012ed2e",
             "label": null,
             "isExecuted": false,
             "group": null,
-            "uuid": "6570470e-2c35-4b9b-9fcb-399b8847a264"
+            "uuid": "d62f414e-f19d-43ed-a0da-9588dbf30991"
         },
         {
             "@type": "WorkflowRoute",
             "name": "update step numbers -> return",
-            "targetStep": "\/api\/3\/workflow_steps\/0ad866aa-4edc-49a4-96e3-91f2805cc465",
-            "sourceStep": "\/api\/3\/workflow_steps\/c262b43c-6216-465b-b8fd-19017735887b",
+            "targetStep": "\/api\/3\/workflow_steps\/511c1c13-bf02-4f68-a9f9-5e407221e4fa",
+            "sourceStep": "\/api\/3\/workflow_steps\/e8a46adb-1ab8-471c-972f-10b9e195e069",
             "label": null,
             "isExecuted": false,
             "group": null,
-            "uuid": "e94a00c4-6860-4f60-bf9e-01e743552c83"
+            "uuid": "bffa39f9-9825-4473-9f48-c619680f1575"
         }
     ],
     "groups": [
         {
             "@type": "WorkflowGroup",
             "name": "Details",
-            "description": "Find all pending steps on a device. Update all steps on the device to invert their steps to ensure no unique constraints will occur.  \n\nReorder the steps that were found. Update the steps with the new step number.",
+            "description": "Find all pending steps on a profile. Update all steps on the profile to invert their steps to ensure no unique constraints will occur.  \n\nReorder the steps that were found. Update the steps with the new step number.",
             "type": "note",
             "isCollapsed": false,
             "hasTriggerStep": false,
@@ -309,14 +284,14 @@
             "left": "60",
             "height": "146",
             "width": "493",
-            "uuid": "8ebac787-7071-44be-a617-18fc70850ef6",
+            "uuid": "6d8babd5-bfce-43bb-8d69-c12bffbe1e8f",
             "recordTags": []
         }
     ],
     "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
     "playbookOrigin": "\/api\/3\/picklists\/b6d710a9-a8ec-41ec-8817-fe9fa062fcdd",
     "isEditable": false,
-    "uuid": "5d68c5d6-adb5-4add-90c5-ca3f94dde0de",
+    "uuid": "c0a01e5e-a212-422f-9425-3df1b01dfd51",
     "owners": [],
     "isPrivate": false,
     "deletedAt": null,

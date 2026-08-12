@@ -1,0 +1,273 @@
+{
+    "@type": "Workflow",
+    "triggerLimit": null,
+    "name": "> device step (Running) - ZTPF Diff Step Output",
+    "aliasName": null,
+    "tag": null,
+    "description": "Step changed to running for given Action Category and Type.",
+    "isActive": true,
+    "debug": false,
+    "singleRecordExecution": false,
+    "remoteExecutableFlag": false,
+    "parameters": [],
+    "synchronous": false,
+    "collection": "\/api\/3\/workflow_collections\/9cca11ea-b95a-4504-8385-ad42db358c36",
+    "versions": [],
+    "triggerStep": "\/api\/3\/workflow_steps\/7a3e65e8-c3d9-4c6b-95c2-304eed1aaa81",
+    "steps": [
+        {
+            "@type": "WorkflowStep",
+            "name": "return",
+            "description": null,
+            "arguments": [],
+            "status": null,
+            "top": "140",
+            "left": "20",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": "\/api\/3\/workflow_groups\/44ad1c73-18ed-44ab-9779-e9deb0eef666",
+            "uuid": "f4db85cb-a7a7-4b8e-bac2-fac9b4a8a869"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "run action",
+            "description": null,
+            "arguments": {
+                "arguments": {
+                    "device_step_id": "{{vars.input.records[0].id}}"
+                },
+                "apply_async": false,
+                "step_variables": [],
+                "pass_parent_env": false,
+                "pass_input_record": false,
+                "workflowReference": "\/api\/3\/workflows\/f23963fd-d890-44a1-8f93-d966d669e769"
+            },
+            "status": null,
+            "top": "340",
+            "left": "720",
+            "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
+            "group": null,
+            "uuid": "9dfff049-b3e3-4b75-ae37-427b974e3f2f"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "run automation",
+            "description": "Steps to run automation start here and connect to the next step, the post_run.",
+            "arguments": {
+                "device_step_id": "{{vars.input.records[0].id}}"
+            },
+            "status": null,
+            "top": "100",
+            "left": "1060",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": "\/api\/3\/workflow_groups\/44ad1c73-18ed-44ab-9779-e9deb0eef666",
+            "uuid": "69145c36-66ca-4301-94fc-0c9971f00235"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Start",
+            "description": null,
+            "arguments": {
+                "resource": "ztpf_device_automation_steps",
+                "resources": [
+                    "ztpf_device_automation_steps"
+                ],
+                "__triggerLimit": true,
+                "step_variables": {
+                    "input": {
+                        "params": [],
+                        "records": [
+                            "{{vars.input.records[0]}}"
+                        ]
+                    }
+                },
+                "triggerOnSource": true,
+                "fieldbasedtrigger": {
+                    "sort": [],
+                    "limit": 30,
+                    "logic": "AND",
+                    "filters": [
+                        {
+                            "type": "object",
+                            "field": "status",
+                            "value": "",
+                            "_value": {
+                                "@id": "",
+                                "display": "",
+                                "itemValue": ""
+                            },
+                            "operator": "changed"
+                        },
+                        {
+                            "type": "object",
+                            "field": "status",
+                            "value": "\/api\/3\/picklists\/b2b405dc-97e6-40cd-98bb-9132e37d5b6d",
+                            "_value": {
+                                "@id": "\/api\/3\/picklists\/b2b405dc-97e6-40cd-98bb-9132e37d5b6d",
+                                "display": "Running",
+                                "itemValue": "Running"
+                            },
+                            "operator": "eq"
+                        },
+                        {
+                            "type": "primitive",
+                            "field": "triggerKey",
+                            "value": "ZTPF Diff Step Output",
+                            "operator": "eq",
+                            "_operator": "eq"
+                        }
+                    ]
+                },
+                "triggerOnReplicate": false
+            },
+            "status": null,
+            "top": "46",
+            "left": "20",
+            "stepType": "\/api\/3\/workflow_step_types\/9300bf69-5063-486d-b3a6-47eb9da24872",
+            "group": "\/api\/3\/workflow_groups\/44ad1c73-18ed-44ab-9779-e9deb0eef666",
+            "uuid": "7a3e65e8-c3d9-4c6b-95c2-304eed1aaa81"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "step post_run",
+            "description": null,
+            "arguments": {
+                "arguments": {
+                    "trigger_step_input_record": "{{vars.input.records[0]}}"
+                },
+                "apply_async": false,
+                "step_variables": [],
+                "pass_parent_env": false,
+                "pass_input_record": false,
+                "workflowReference": "\/api\/3\/workflows\/9e61ba1a-4371-4d35-825d-9cea8f79feff"
+            },
+            "status": null,
+            "top": "140",
+            "left": "320",
+            "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
+            "group": "\/api\/3\/workflow_groups\/44ad1c73-18ed-44ab-9779-e9deb0eef666",
+            "uuid": "ba55710b-41f3-4dfe-91db-9f0dd4e70872"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "step trigger pre_run",
+            "description": null,
+            "arguments": {
+                "arguments": {
+                    "stepargs_yaml": "{{vars.input.records[0].stepARGS}}",
+                    "trigger_step_input_record": "{{vars.input.records[0]}}"
+                },
+                "apply_async": false,
+                "step_variables": [],
+                "pass_parent_env": false,
+                "pass_input_record": false,
+                "workflowReference": "\/api\/3\/workflows\/1c59904d-0333-48f4-a608-d73a85117e81"
+            },
+            "status": null,
+            "top": "46",
+            "left": "320",
+            "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
+            "group": "\/api\/3\/workflow_groups\/44ad1c73-18ed-44ab-9779-e9deb0eef666",
+            "uuid": "96cfa3ff-0683-45aa-894b-7071fffa4845"
+        }
+    ],
+    "routes": [
+        {
+            "@type": "WorkflowRoute",
+            "name": "run action -> step post_run",
+            "targetStep": "\/api\/3\/workflow_steps\/ba55710b-41f3-4dfe-91db-9f0dd4e70872",
+            "sourceStep": "\/api\/3\/workflow_steps\/9dfff049-b3e3-4b75-ae37-427b974e3f2f",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "19766ce6-17b4-4535-a244-9e5aac8365dd"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "run automation -> run action",
+            "targetStep": "\/api\/3\/workflow_steps\/9dfff049-b3e3-4b75-ae37-427b974e3f2f",
+            "sourceStep": "\/api\/3\/workflow_steps\/69145c36-66ca-4301-94fc-0c9971f00235",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "823ae21a-e972-462a-9095-91cc26722750"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Start -> step trigger pre_run",
+            "targetStep": "\/api\/3\/workflow_steps\/96cfa3ff-0683-45aa-894b-7071fffa4845",
+            "sourceStep": "\/api\/3\/workflow_steps\/7a3e65e8-c3d9-4c6b-95c2-304eed1aaa81",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "86f3d992-229a-4977-8d84-2c3062b5c1c6"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "step post_run -> complete",
+            "targetStep": "\/api\/3\/workflow_steps\/f4db85cb-a7a7-4b8e-bac2-fac9b4a8a869",
+            "sourceStep": "\/api\/3\/workflow_steps\/ba55710b-41f3-4dfe-91db-9f0dd4e70872",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "e03410ad-bb9d-4858-ba4e-457c0669d943"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "step trigger pre_run -> run automation",
+            "targetStep": "\/api\/3\/workflow_steps\/69145c36-66ca-4301-94fc-0c9971f00235",
+            "sourceStep": "\/api\/3\/workflow_steps\/96cfa3ff-0683-45aa-894b-7071fffa4845",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "91680907-4755-473e-905a-766ecfe09569"
+        }
+    ],
+    "groups": [
+        {
+            "@type": "WorkflowGroup",
+            "name": "Details",
+            "description": "Step status changed to running and matching trigger key playbook. Starts with standard pre and post routines but each action is unique to the needs of this step.\n\nType: ZTPF Diff Step Output\nDescription: Diff the output of two steps.",
+            "type": "note",
+            "isCollapsed": false,
+            "hasTriggerStep": false,
+            "hideInLogs": false,
+            "metadata": [],
+            "reusable": false,
+            "top": "280",
+            "left": "20",
+            "height": "181",
+            "width": "498",
+            "uuid": "80cc6461-c406-4eae-89f7-468a07fb8c41",
+            "recordTags": []
+        },
+        {
+            "@type": "WorkflowGroup",
+            "name": "Step Trigger Start and Stop",
+            "description": "Block to start and stop steps that are triggered to running.",
+            "type": "block",
+            "isCollapsed": false,
+            "hasTriggerStep": false,
+            "hideInLogs": false,
+            "metadata": [],
+            "reusable": false,
+            "top": "20",
+            "left": "20",
+            "height": "232",
+            "width": "1360",
+            "uuid": "44ad1c73-18ed-44ab-9779-e9deb0eef666",
+            "recordTags": []
+        }
+    ],
+    "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+    "playbookOrigin": "\/api\/3\/picklists\/b6d710a9-a8ec-41ec-8817-fe9fa062fcdd",
+    "isEditable": true,
+    "uuid": "84f66ae9-a77e-41fe-a27d-cad528b6c39a",
+    "owners": [],
+    "isPrivate": false,
+    "deletedAt": null,
+    "recordTags": [
+        "TEMPLATE",
+        "TriggerStep",
+        "ztpfDeviceAutomationStep"
+    ]
+}

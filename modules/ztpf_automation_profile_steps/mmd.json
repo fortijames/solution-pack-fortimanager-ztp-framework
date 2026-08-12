@@ -16,16 +16,7 @@
             "field": "stepSequence"
         }
     ],
-    "uniqueConstraint": [
-        {
-            "ztpf_automation_profile_steps_unique": {
-                "columns": [
-                    "ztpfAutomationProfiles",
-                    "stepSequence"
-                ]
-            }
-        }
-    ],
+    "uniqueConstraint": [],
     "indexable": true,
     "writable": true,
     "attributes": [
@@ -134,13 +125,13 @@
             "inversedField": null,
             "ownsRelationship": false,
             "validation": {
-                "required": true,
+                "required": false,
                 "minlength": 0,
                 "maxlength": 10485761,
                 "_enableRange": false
             },
             "bulkAction": {
-                "allow": true,
+                "allow": false,
                 "buttonText": "",
                 "buttonIcon": "",
                 "buttonClass": "btn btn-default btn-sm"
@@ -180,7 +171,7 @@
             "inversedField": null,
             "ownsRelationship": false,
             "validation": {
-                "required": true,
+                "required": false,
                 "minlength": 0,
                 "maxlength": 10485761,
                 "_enableRange": false

@@ -801,7 +801,7 @@
             },
             "dataSourceFilters": null,
             "defaultValue": "{{template}}",
-            "tooltip": "Script supporting Jinja used for the Action. Different action types have specific format expectations, such as YAML, which can be found in the documentation.",
+            "tooltip": "Script supporting Jinja used for the Action Payload. Different action types have specific format expectations, such as YAML, which can be found in the documentation.",
             "visibility": true,
             "htmlEscape": false,
             "orphanRemoval": null,
@@ -1157,6 +1157,50 @@
         {
             "@type": "AttributeMetadata",
             "type": "string",
+            "name": "outputTemplateText",
+            "length": null,
+            "formType": "textarea",
+            "dataSource": null,
+            "searchable": true,
+            "peerReplicable": true,
+            "system": false,
+            "encrypted": false,
+            "gridColumn": false,
+            "collection": false,
+            "inversedField": null,
+            "ownsRelationship": false,
+            "validation": {
+                "required": false,
+                "minlength": 0,
+                "maxlength": 10485761,
+                "_enableRange": false
+            },
+            "bulkAction": {
+                "allow": false,
+                "buttonText": "",
+                "buttonIcon": "",
+                "buttonClass": "btn btn-default btn-sm"
+            },
+            "dataSourceFilters": null,
+            "defaultValue": null,
+            "tooltip": "Jinja Template to produce output for the Output Text field.",
+            "visibility": true,
+            "htmlEscape": false,
+            "orphanRemoval": null,
+            "readable": true,
+            "writeable": true,
+            "identifier": null,
+            "unique": false,
+            "recommend": false,
+            "skipSerialization": false,
+            "displayName": "{{ outputTemplateText }}",
+            "descriptions": {
+                "singular": "Output Template Text"
+            }
+        },
+        {
+            "@type": "AttributeMetadata",
+            "type": "string",
             "name": "outputTemplateHTML",
             "length": null,
             "formType": "textarea",
@@ -1240,6 +1284,50 @@
             "displayName": "{{ outputTemplateJSON }}",
             "descriptions": {
                 "singular": "Output Template JSON"
+            }
+        },
+        {
+            "@type": "AttributeMetadata",
+            "type": "string",
+            "name": "outputStatusTemplate",
+            "length": null,
+            "formType": "textarea",
+            "dataSource": null,
+            "searchable": true,
+            "peerReplicable": true,
+            "system": false,
+            "encrypted": false,
+            "gridColumn": false,
+            "collection": false,
+            "inversedField": null,
+            "ownsRelationship": false,
+            "validation": {
+                "required": false,
+                "minlength": 0,
+                "maxlength": 10485761,
+                "_enableRange": false
+            },
+            "bulkAction": {
+                "allow": false,
+                "buttonText": "",
+                "buttonIcon": "",
+                "buttonClass": "btn btn-default btn-sm"
+            },
+            "dataSourceFilters": null,
+            "defaultValue": "exception: false\nmessage: No exceptions found.",
+            "tooltip": "Template supporting Jinja to render YAML for exception status from the step output.",
+            "visibility": true,
+            "htmlEscape": false,
+            "orphanRemoval": null,
+            "readable": true,
+            "writeable": true,
+            "identifier": null,
+            "unique": false,
+            "recommend": false,
+            "skipSerialization": false,
+            "displayName": "{{ outputStatusTemplate }}",
+            "descriptions": {
+                "singular": "Output Status Template"
             }
         }
     ],

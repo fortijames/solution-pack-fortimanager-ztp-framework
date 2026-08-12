@@ -449,11 +449,22 @@
                                                                                 "editorType": "html",
                                                                                 "sectionText": "<p style=\"text-align: center;\"><span style=\"font-size: 14pt;\"><strong>Output Settings<\/strong><\/span><\/p>\n<p style=\"text-align: center;\"><span style=\"font-size: 12pt;\">Fields that have content will be rendered with Jinja on the step output after the action is complete.<\/span><\/p>"
                                                                             }
-                                                                        },
+                                                                        }
+                                                                    ],
+                                                                    "style": "col-lg-12"
+                                                                }
+                                                            ],
+                                                            "wid": "5dcc4a10-ff7a-4740-8f7e-a37de42e62bf",
+                                                            "_collapsed": false
+                                                        },
+                                                        {
+                                                            "columns": [
+                                                                {
+                                                                    "widgets": [
                                                                         {
                                                                             "type": "editableFormGroup",
                                                                             "config": {
-                                                                                "wid": "3eda83d8-583c-4588-af88-a48f818a20be",
+                                                                                "wid": "e2db8f80-38e4-460f-b915-cf810a136754",
                                                                                 "rows": [
                                                                                     {
                                                                                         "columns": [
@@ -471,7 +482,7 @@
                                                                                             {
                                                                                                 "fields": [
                                                                                                     {
-                                                                                                        "name": "outputTemplateHTML",
+                                                                                                        "name": "outputTemplateText",
                                                                                                         "highlightMode": true,
                                                                                                         "linky": true,
                                                                                                         "readOnly": false
@@ -482,7 +493,7 @@
                                                                                             {
                                                                                                 "fields": [
                                                                                                     {
-                                                                                                        "name": "outputTemplateJSON",
+                                                                                                        "name": "outputStatusTemplate",
                                                                                                         "highlightMode": true,
                                                                                                         "linky": true,
                                                                                                         "readOnly": false
@@ -494,12 +505,48 @@
                                                                                     }
                                                                                 ]
                                                                             }
+                                                                        },
+                                                                        {
+                                                                            "type": "editableFormGroup",
+                                                                            "config": {
+                                                                                "wid": "3eda83d8-583c-4588-af88-a48f818a20be",
+                                                                                "rows": [
+                                                                                    {
+                                                                                        "columns": [
+                                                                                            {
+                                                                                                "fields": [
+                                                                                                    {
+                                                                                                        "name": "outputTemplateHTML",
+                                                                                                        "highlightMode": true,
+                                                                                                        "linky": true,
+                                                                                                        "readOnly": false
+                                                                                                    }
+                                                                                                ],
+                                                                                                "style": "col-lg-6"
+                                                                                            },
+                                                                                            {
+                                                                                                "fields": [
+                                                                                                    {
+                                                                                                        "name": "outputTemplateJSON",
+                                                                                                        "highlightMode": true,
+                                                                                                        "linky": true,
+                                                                                                        "readOnly": false
+                                                                                                    }
+                                                                                                ],
+                                                                                                "style": "col-lg-6"
+                                                                                            }
+                                                                                        ]
+                                                                                    }
+                                                                                ]
+                                                                            }
                                                                         }
                                                                     ],
                                                                     "style": "col-lg-12"
                                                                 }
                                                             ],
-                                                            "wid": "5dcc4a10-ff7a-4740-8f7e-a37de42e62bf",
+                                                            "wid": "23f271da-a148-4644-878e-f55c162be307",
+                                                            "collapsible": false,
+                                                            "collapsibleIndex": 0,
                                                             "_collapsed": false
                                                         }
                                                     ]
@@ -507,7 +554,7 @@
                                                 "visible": true
                                             },
                                             "icon": "fa fa-camera-retro",
-                                            "show": false,
+                                            "show": true,
                                             "visible": true
                                         },
                                         {
@@ -729,7 +776,7 @@
                                                 "visible": true
                                             },
                                             "icon": "fa fa-align-left",
-                                            "show": true,
+                                            "show": false,
                                             "visible": true
                                         }
                                     ]

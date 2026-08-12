@@ -1,10 +1,10 @@
 {
     "@type": "Workflow",
     "triggerLimit": null,
-    "name": "Add Step from Action to Device",
+    "name": "Add Step from Action to Device or Automation Profile",
     "aliasName": null,
     "tag": null,
-    "description": "Add an step action record to a device that will be run when queued.",
+    "description": "Add a step action record to the device or profile.",
     "isActive": true,
     "debug": false,
     "singleRecordExecution": false,
@@ -45,9 +45,10 @@
         },
         {
             "@type": "WorkflowStep",
-            "name": "create step",
+            "name": "create step on device",
             "description": null,
             "arguments": {
+                "when": "{{vars.input.records[0]['@type'] == \"ZtpfDevice\"}}",
                 "for_each": {
                     "item": "{{vars.input.records}}",
                     "__bulk": false,
@@ -57,7 +58,9 @@
                 "arguments": {
                     "stepARGS": "",
                     "action_id": "{{vars.action_selected[0].id}}",
-                    "device_id": "{{vars.item.id}}"
+                    "device_id": "{{vars.item.id}}",
+                    "step_name": "",
+                    "jinja_vars": ""
                 },
                 "apply_async": false,
                 "step_variables": [],
@@ -66,11 +69,43 @@
                 "workflowReference": "\/api\/3\/workflows\/6839c219-b88a-413c-9cdd-e38b0b764163"
             },
             "status": null,
-            "top": "340",
-            "left": "660",
+            "top": "380",
+            "left": "460",
             "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
             "group": null,
             "uuid": "33df6fd8-96ec-4229-b846-93086cd6c796"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "create step on profile",
+            "description": null,
+            "arguments": {
+                "when": "{{vars.input.records[0]['@type'] == \"ZtpfAutomationProfile\"}}",
+                "for_each": {
+                    "item": "{{vars.input.records}}",
+                    "__bulk": false,
+                    "parallel": true,
+                    "condition": ""
+                },
+                "arguments": {
+                    "stepARGS": "",
+                    "action_id": "{{vars.action_selected[0].id}}",
+                    "step_name": "",
+                    "jinja_vars": "",
+                    "automation_profile_id": "{{vars.item.id}}"
+                },
+                "apply_async": false,
+                "step_variables": [],
+                "pass_parent_env": false,
+                "pass_input_record": false,
+                "workflowReference": "\/api\/3\/workflows\/fa99da71-7bdb-4bdc-af23-7d632921b8c2"
+            },
+            "status": null,
+            "top": "380",
+            "left": "840",
+            "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
+            "group": null,
+            "uuid": "feb88d9e-09d9-4031-84d3-871541ca495a"
         },
         {
             "@type": "WorkflowStep",
@@ -109,7 +144,7 @@
                 "input": {
                     "schema": {
                         "title": "Select Action",
-                        "description": "Select an action to run. ",
+                        "description": "Select action to add as step.",
                         "inputVariables": [
                             {
                                 "name": "action",
@@ -199,7 +234,8 @@
                 "route": "df5dc929-4a6e-4db7-9809-e5a221abde1b",
                 "title": "Add Step from Action",
                 "resources": [
-                    "ztpf_devices"
+                    "ztpf_devices",
+                    "ztpf_automation_profiles"
                 ],
                 "__triggerLimit": true,
                 "inputVariables": [],
@@ -225,6 +261,12 @@
                                 "_operator": "neq"
                             }
                         ]
+                    },
+                    "ztpf_automation_profiles": {
+                        "sort": [],
+                        "limit": 30,
+                        "logic": "AND",
+                        "filters": []
                     }
                 },
                 "executeButtonText": "Execute",
@@ -270,13 +312,23 @@
         },
         {
             "@type": "WorkflowRoute",
-            "name": "action selected -> create step",
+            "name": "action selected -> create step on device",
             "targetStep": "\/api\/3\/workflow_steps\/33df6fd8-96ec-4229-b846-93086cd6c796",
             "sourceStep": "\/api\/3\/workflow_steps\/0010bcbc-974e-48de-8912-0d15ef1adbcf",
             "label": null,
             "isExecuted": false,
             "group": null,
-            "uuid": "e658400d-812d-4eae-8191-1a10e5e856a1"
+            "uuid": "750570f3-cb63-4a44-a593-180acf756ac0"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "action selected -> create step on profile",
+            "targetStep": "\/api\/3\/workflow_steps\/feb88d9e-09d9-4031-84d3-871541ca495a",
+            "sourceStep": "\/api\/3\/workflow_steps\/0010bcbc-974e-48de-8912-0d15ef1adbcf",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "1d53ec68-ed6b-488c-8a81-9f30ce193e8f"
         },
         {
             "@type": "WorkflowRoute",
@@ -348,6 +400,7 @@
     "recordTags": [
         "TODO",
         "ztpfAutomationAction",
+        "ztpfAutomationProfile",
         "ztpfDevice"
     ]
 }
