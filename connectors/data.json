@@ -8,9 +8,30 @@
         "description": "Execute code snippets as part of your Playbooks.",
         "publisher": "Fortinet",
         "operation_roles": [],
-        "configurations": [],
+        "configurations": [
+            {
+                "id": 5,
+                "config_id": "97418e57-1556-40e2-aae4-3840f2cecf52",
+                "status": 1,
+                "name": "ztpf",
+                "default": false,
+                "config": {
+                    "allow_imports": false,
+                    "restrict_imports": "json, re, yaml, operator, packaging, difflib"
+                },
+                "remote_status": [],
+                "health_status": [],
+                "connector": 19,
+                "agent": "bf5846fac09ee231a90bb9674e60c4f5",
+                "teams": []
+            }
+        ],
         "dataImports": [],
-        "install_mode": "rpm"
+        "install_mode": "rpm",
+        "ingestionPlaybooks": {
+            "collections": [],
+            "exported_tags": []
+        }
     },
     {
         "name": "fortinet-fortimanager-json-rpc",

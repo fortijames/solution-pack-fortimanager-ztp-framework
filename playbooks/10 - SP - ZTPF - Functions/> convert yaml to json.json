@@ -158,11 +158,11 @@
             "name": "yaml2json",
             "description": null,
             "arguments": {
-                "config": "74c7e349-a99d-44ac-a576-8c1b158fc364",
+                "config": "97418e57-1556-40e2-aae4-3840f2cecf52",
                 "params": {
                     "python_function": "#!\/usr\/bin\/env python3\r\n\r\nimport json\r\nimport yaml\r\nimport re\r\n\r\n\r\ndef yaml_string_to_json(yaml_string):\r\n    data = yaml.safe_load(yaml_string)\r\n    return json.dumps(data, indent=2)\r\n\r\n# Example usage\r\nyaml_input = \"\"\"\r\n{{vars.input.params.yaml}}\r\n\"\"\"\r\n\r\nyaml_string = re.sub(\r\n    r'^([ \\t-]*[^:#\\n]+?):([^\\s])',\r\n    r'\\1: \\2',\r\n    yaml_input,\r\n    flags=re.MULTILINE\r\n)\r\n\r\nprint(yaml_string_to_json(yaml_string))"
                 },
-                "version": "2.1.5",
+                "version": "2.2.1",
                 "connector": "code-snippet",
                 "operation": "python_inline_code_editor",
                 "operationTitle": "Execute Python Code",
