@@ -23,11 +23,11 @@
             "name": "compare versions",
             "description": null,
             "arguments": {
-                "config": "74c7e349-a99d-44ac-a576-8c1b158fc364",
+                "config": "97418e57-1556-40e2-aae4-3840f2cecf52",
                 "params": {
                     "python_function": "# Install the packaging library if you don't have it:\r\n# pip install packaging\r\n\r\nimport operator\r\nimport json\r\nfrom packaging.version import parse\r\n\r\ndef compare_versions(version1, version_check):\r\n    oper, version2 = version_check.split(\" \")\r\n    v1 = parse(version1)\r\n    v2 = parse(version2)\r\n\r\n    ops = {\r\n        \"<=\": operator.le,\r\n        \"<\": operator.lt,\r\n        \">=\": operator.ge,\r\n        \">\": operator.gt,\r\n        \"==\": operator.eq,\r\n        \"!=\": operator.ne\r\n    }\r\n\r\n    if ops[oper](v1, v2):\r\n        return True\r\n    else:\r\n        return False\r\n\r\n#\r\n# Script to Compare\r\n#\r\n\r\n\r\nVERSION = \"{{vars.version_parsed}}\"\r\n#VERSION = \"v7.6.6-build3654 260127 (GA.M)\"\r\n#VERSION = \"7.6.6-build3654 260127 (GA.M)\"\r\n#VERSION = \"v7.6.6-build3654\"\r\n#VERSION = \"7.6.6-build3654\"\r\n#VERSION = \"v7.6.6\"\r\n#VERSION = \"7.6.6\"\r\n\r\nFIND_VERSIONS = {{vars.find_version_list}}\r\nresults = {}\r\n\r\nfor v in FIND_VERSIONS:\r\n    results[v] = compare_versions(VERSION, v)\r\n\r\nprint(json.dumps(results, indent=2))\r\n"
                 },
-                "version": "2.1.5",
+                "version": "2.2.1",
                 "connector": "code-snippet",
                 "operation": "python_inline_code_editor",
                 "operationTitle": "Execute Python Code",

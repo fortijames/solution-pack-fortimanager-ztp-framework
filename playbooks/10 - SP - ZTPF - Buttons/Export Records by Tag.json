@@ -1,0 +1,832 @@
+{
+    "@type": "Workflow",
+    "triggerLimit": null,
+    "name": "Export Records by Tag",
+    "aliasName": null,
+    "tag": "",
+    "description": "Export ZTPF template records by a tag to then import into another FortiSOAR running this Solution Pack.",
+    "isActive": true,
+    "debug": false,
+    "singleRecordExecution": false,
+    "remoteExecutableFlag": false,
+    "parameters": [],
+    "synchronous": false,
+    "collection": "\/api\/3\/workflow_collections\/f0b56dc0-6c1e-4f5b-9199-c807800f028a",
+    "versions": [],
+    "triggerStep": "\/api\/3\/workflow_steps\/bc8e668a-1a06-4303-81e6-801e8a19052a",
+    "steps": [
+        {
+            "@type": "WorkflowStep",
+            "name": "build_export",
+            "description": null,
+            "arguments": {
+                "module_list": "{{ [\"ztpf_automation_actions\",\"ztpf_automation_profiles\",\"ztpf_automation_profile_steps\",\"ztpf_metadata_sources\",\"ztpf_templates\"] }}",
+                "metadata_json": "{{ {\"autoSelectDeps\": {}, \"autoSelectPicklists\": false} | tojson }}",
+                "swapped_options_json": "{%- set mods = [\"ztpf_automation_actions\",\"ztpf_automation_profiles\",\"ztpf_automation_profile_steps\",\"ztpf_metadata_sources\",\"ztpf_templates\"] -%} {%- set rs = [] -%} {%- for m in mods -%}\n  {%- do rs.append({\n    \"type\": m, \"label\": m,\n    \"query\": {\"sort\": [], \"limit\": 5000, \"logic\": \"AND\",\n      \"filters\": [{\"type\": \"array\", \"field\": \"recordTags\", \"module\": \"recordTags\",\n                   \"display\": \"\", \"operator\": \"in\", \"value\": [vars.new_tag_iri],\n                   \"template\": \"tags\", \"OPERATOR_KEY\": \"$\", \"useInOperator\": true,\n                   \"previousOperator\": \"in\", \"previousTemplate\": \"tags\"}],\n      \"__selectFields\": [\"uuid\"]},\n    \"include\": true, \"includeCorrelations\": true}) -%}\n{%- endfor -%} {{ {\"roles\": [], \"rules\": [], \"teams\": [], \"views\": [], \"actors\": [], \"modules\": [],\n    \"reports\": [], \"widgets\": [], \"connectors\": [], \"dashboards\": [], \"recordSets\": rs} | tojson }}"
+            },
+            "status": null,
+            "top": "580",
+            "left": "340",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "ff388d67-23f6-4091-9adc-fbadb69cb030"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "build_preview",
+            "description": null,
+            "arguments": {
+                "preview": "{%- set ns = namespace(total=0) -%} {%- set lines = [] -%} {%- for i in range(vars.module_list | length) -%}\n  {%- set mod = vars.module_list[i] -%}\n  {%- set res = vars.steps.count_records[i] | default({}, true) -%}\n  {%- set cnt = (res.data['hydra:totalItems'] if res.data is defined else res['hydra:totalItems']) | default(0, true) -%}\n  {%- set ns.total = ns.total + (cnt | int) -%}\n  {%- do lines.append('- ' ~ mod ~ ': ' ~ cnt) -%}\n{%- endfor -%} Records tagged '{{vars.tag}}' that would be exported ({{ns.total}} total):{{ '\\n' }}{{ lines | join('\\n') }}",
+                "total_count": "{%- set ns = namespace(total=0) -%} {%- for i in range(vars.module_list | length) -%}\n  {%- set res = vars.steps.count_records[i] | default({}, true) -%}\n  {%- set cnt = (res.data['hydra:totalItems'] if res.data is defined else res['hydra:totalItems']) | default(0, true) -%}\n  {%- set ns.total = ns.total + (cnt | int) -%}\n{%- endfor -%} {{ ns.total }}"
+            },
+            "status": null,
+            "top": "740",
+            "left": "340",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "b9b1b275-c1ec-4f9d-8b0f-6a89160f63cb"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "build_tag_options",
+            "description": null,
+            "arguments": {
+                "tag_options": "{%- set tags = [] -%} {%- for p in vars.profiles -%}\n  {%- for t in (p.recordTags | default([], true)) -%}\n    {%- set nm = (t | string) | replace('\/api\/3\/tags\/', '') -%}\n    {%- if nm and nm not in tags -%}{%- do tags.append(nm) -%}{%- endif -%}\n  {%- endfor -%}\n{%- endfor -%} {{ (tags | sort) | tojson }}"
+            },
+            "status": null,
+            "top": "240",
+            "left": "540",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "26ede703-2c47-46b1-88b6-f44206e765f9"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "cancel or timeout",
+            "description": null,
+            "arguments": [],
+            "status": null,
+            "top": "820",
+            "left": "1260",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "e818c779-9066-4076-9740-f18fed1d81d3"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "confirm",
+            "description": "{{ vars.preview }}",
+            "arguments": {
+                "type": "InputBased",
+                "input": {
+                    "schema": {
+                        "title": "Confirm export",
+                        "description": "{{ vars.preview }}",
+                        "inputVariables": []
+                    }
+                },
+                "record": "",
+                "timeout": {
+                    "days": 0,
+                    "hours": 0,
+                    "minutes": 5,
+                    "step_iri": "\/api\/3\/workflow_steps\/e818c779-9066-4076-9740-f18fed1d81d3"
+                },
+                "is_approval": false,
+                "owner_detail": {
+                    "isAssigned": false
+                },
+                "isRecordLinked": false,
+                "step_variables": [],
+                "response_mapping": {
+                    "options": [
+                        {
+                            "option": "Export",
+                            "primary": true,
+                            "step_iri": "\/api\/3\/workflow_steps\/52eb5e20-a240-4b52-bdf4-30e8c44eff06"
+                        },
+                        {
+                            "option": "Cancel",
+                            "step_iri": "\/api\/3\/workflow_steps\/e818c779-9066-4076-9740-f18fed1d81d3"
+                        }
+                    ],
+                    "duplicateOption": false,
+                    "customSuccessMessage": "Awaiting Playbook resumed successfully."
+                },
+                "email_notification": {
+                    "enabled": false,
+                    "smtpParameters": []
+                },
+                "inline_channel_list": [],
+                "external_channel_list": [],
+                "unauthenticated_input": false
+            },
+            "status": null,
+            "top": "820",
+            "left": "340",
+            "stepType": "\/api\/3\/workflow_step_types\/fc04082a-d7dc-4299-96fb-6837b1baa0fe",
+            "group": null,
+            "uuid": "fe573f6a-0ff7-4001-bb11-c8954570720a"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "count_records",
+            "description": null,
+            "arguments": {
+                "name": "Utilities",
+                "config": "",
+                "params": {
+                    "iri": "\/api\/query\/{{vars.item}}",
+                    "body": "{\"logic\":\"AND\",\"filters\":[{\"type\":\"array\",\"field\":\"recordTags\",\"operator\":\"in\",\"value\":[\"{{vars.new_tag_iri}}\"]}],\"limit\":1}",
+                    "method": "POST"
+                },
+                "version": "3.7.2",
+                "for_each": {
+                    "item": "{{vars.module_list}}",
+                    "parallel": false,
+                    "condition": ""
+                },
+                "connector": "cyops_utilities",
+                "operation": "make_cyops_request",
+                "operationTitle": "FSR: Make FortiSOAR API Call",
+                "pickFromTenant": false,
+                "step_variables": []
+            },
+            "status": null,
+            "top": "660",
+            "left": "340",
+            "stepType": "\/api\/3\/workflow_step_types\/0bfed618-0316-11e7-93ae-92361f002671",
+            "group": null,
+            "uuid": "e7c3d0f3-2c84-430d-81ad-450e98cd932b"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "create_template",
+            "description": null,
+            "arguments": {
+                "name": "Utilities",
+                "config": "",
+                "params": {
+                    "iri": "\/api\/3\/export_templates",
+                    "body": "{\"name\": {{vars.new_name | tojson}}, \"type\": \"Export Wizard\", \"options\": {{vars.swapped_options_json}}, \"metadata\": {{vars.metadata_json}}}",
+                    "method": "POST"
+                },
+                "version": "3.7.2",
+                "connector": "cyops_utilities",
+                "operation": "make_cyops_request",
+                "operationTitle": "FSR: Make FortiSOAR API Call",
+                "pickFromTenant": false,
+                "step_variables": {
+                    "template_uuid": "{{vars.result.data.uuid}}"
+                }
+            },
+            "status": null,
+            "top": "1100",
+            "left": "20",
+            "stepType": "\/api\/3\/workflow_step_types\/0bfed618-0316-11e7-93ae-92361f002671",
+            "group": null,
+            "uuid": "d2e5a29e-922c-4a9e-b39e-de4bc4c057fa"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "done",
+            "description": "Exported **{{ vars.total_count }}** record(s) tagged `{{ vars.tag }}` to template **{{ vars.new_name }}**.\n\n**[Download ztpf-{{ vars.tag }}-export.zip]({{ vars.file_iri }})**",
+            "arguments": {
+                "type": "InputBased",
+                "input": {
+                    "schema": {
+                        "title": "Export ready",
+                        "description": "Exported **{{ vars.total_count }}** record(s) tagged `{{ vars.tag }}` to template `{{vars.steps.wait_export.data.fileName}}`.\n\nNavigate to: [System Settings > Export History](\/editor\/import-export\/exporter\/history) -> and download the file.",
+                        "inputVariables": []
+                    }
+                },
+                "record": "",
+                "timeout": {
+                    "days": 0,
+                    "hours": 0,
+                    "minutes": 5,
+                    "step_iri": "\/api\/3\/workflow_steps\/e818c779-9066-4076-9740-f18fed1d81d3"
+                },
+                "is_approval": false,
+                "owner_detail": {
+                    "isAssigned": false
+                },
+                "isRecordLinked": false,
+                "step_variables": [],
+                "response_mapping": {
+                    "options": [
+                        {
+                            "option": "Close",
+                            "primary": true,
+                            "step_iri": "\/api\/3\/workflow_steps\/e818c779-9066-4076-9740-f18fed1d81d3"
+                        }
+                    ],
+                    "duplicateOption": false,
+                    "customSuccessMessage": "Awaiting Playbook resumed successfully."
+                },
+                "email_notification": {
+                    "enabled": false,
+                    "smtpParameters": []
+                },
+                "inline_channel_list": [],
+                "external_channel_list": [],
+                "unauthenticated_input": false
+            },
+            "status": null,
+            "top": "1240",
+            "left": "660",
+            "stepType": "\/api\/3\/workflow_step_types\/fc04082a-d7dc-4299-96fb-6837b1baa0fe",
+            "group": null,
+            "uuid": "95c51e4c-9d21-4ee2-9ec1-4a63bf713551"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "exists_gate",
+            "description": null,
+            "arguments": {
+                "conditions": [
+                    {
+                        "option": "update",
+                        "step_iri": "\/api\/3\/workflow_steps\/42692436-902b-418d-86df-28b46e4e2fee",
+                        "condition": "{{ vars.existing_uuid not in ['', None] }}",
+                        "step_name": "update_template"
+                    },
+                    {
+                        "option": "create",
+                        "default": true,
+                        "step_iri": "\/api\/3\/workflow_steps\/d2e5a29e-922c-4a9e-b39e-de4bc4c057fa",
+                        "step_name": "create_template"
+                    }
+                ]
+            },
+            "status": null,
+            "top": "1020",
+            "left": "340",
+            "stepType": "\/api\/3\/workflow_step_types\/12254cf5-5db7-4b1a-8cb1-3af081924b28",
+            "group": null,
+            "uuid": "e03b59da-f16b-40ab-8927-4de2aad21d3c"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "find_existing",
+            "description": null,
+            "arguments": {
+                "name": "Utilities",
+                "config": "",
+                "params": {
+                    "query": "{\"logic\":\"AND\",\"filters\":[{\"field\":\"name\",\"operator\":\"eq\",\"value\":\"{{vars.new_name}}\"}]}",
+                    "resource": "export_templates"
+                },
+                "version": "3.7.2",
+                "connector": "cyops_utilities",
+                "operation": "query_cyops_resource",
+                "operationTitle": "FSR: Find Record",
+                "pickFromTenant": false,
+                "step_variables": {
+                    "existing_uuid": "{{ vars.result.data[0].uuid if vars.result.data else '' }}"
+                }
+            },
+            "status": null,
+            "top": "920",
+            "left": "340",
+            "stepType": "\/api\/3\/workflow_step_types\/0bfed618-0316-11e7-93ae-92361f002671",
+            "group": null,
+            "uuid": "52eb5e20-a240-4b52-bdf4-30e8c44eff06"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "get_profile_tags",
+            "description": null,
+            "arguments": {
+                "name": "Utilities",
+                "config": "",
+                "params": {
+                    "iri": "\/api\/3\/ztpf_automation_profiles?$limit=1000",
+                    "body": "",
+                    "method": "GET"
+                },
+                "version": "3.7.2",
+                "connector": "cyops_utilities",
+                "operation": "make_cyops_request",
+                "operationTitle": "FSR: Make FortiSOAR API Call",
+                "pickFromTenant": false,
+                "step_variables": {
+                    "profiles": "{{ vars.result.data[\"hydra:member\"] }}"
+                }
+            },
+            "status": null,
+            "top": "160",
+            "left": "540",
+            "stepType": "\/api\/3\/workflow_step_types\/0bfed618-0316-11e7-93ae-92361f002671",
+            "group": null,
+            "uuid": "c7122eff-1f66-4393-867e-e5063d93e761"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "pick_tag",
+            "description": "Pick a tag used on a ZTPF automation profile. Every record carrying that tag will be exported.",
+            "arguments": {
+                "type": "InputBased",
+                "input": {
+                    "schema": {
+                        "title": "Export records by profile tag",
+                        "description": "Pick a tag used on a ZTPF automation profile. Every record carrying that tag will be exported.",
+                        "inputVariables": [
+                            {
+                                "name": "tag",
+                                "type": "array",
+                                "label": "Tag",
+                                "title": "Dynamic List",
+                                "usable": true,
+                                "options": "{{ vars.tag_options }}",
+                                "tooltip": "",
+                                "dataType": "dynamicList",
+                                "formType": "dynamicList",
+                                "required": true,
+                                "_expanded": true,
+                                "mmdUpdate": true,
+                                "collection": false,
+                                "searchable": false,
+                                "templateUrl": "app\/components\/form\/fields\/dynamicList.html",
+                                "defaultValue": null,
+                                "_previousName": "",
+                                "playbookField": true,
+                                "lengthConstraint": true,
+                                "allowedGridColumn": false,
+                                "requiredCondition": "required",
+                                "jinjaExpressionView": true,
+                                "useRecordFieldDefault": false,
+                                "_addRequiredConditions": true
+                            }
+                        ]
+                    }
+                },
+                "record": "",
+                "timeout": {
+                    "days": 0,
+                    "hours": 0,
+                    "minutes": 5,
+                    "step_iri": "\/api\/3\/workflow_steps\/e818c779-9066-4076-9740-f18fed1d81d3"
+                },
+                "is_approval": false,
+                "owner_detail": {
+                    "isAssigned": false
+                },
+                "isRecordLinked": false,
+                "step_variables": [],
+                "response_mapping": {
+                    "options": [
+                        {
+                            "option": "Next",
+                            "primary": true,
+                            "step_iri": "\/api\/3\/workflow_steps\/aa61a1e7-db5e-425a-ba4b-1f1cb3f3479f"
+                        },
+                        {
+                            "option": "Cancel",
+                            "step_iri": "\/api\/3\/workflow_steps\/e818c779-9066-4076-9740-f18fed1d81d3"
+                        }
+                    ],
+                    "duplicateOption": false,
+                    "customSuccessMessage": "Awaiting Playbook resumed successfully."
+                },
+                "email_notification": {
+                    "enabled": false,
+                    "smtpParameters": []
+                },
+                "inline_channel_list": [],
+                "external_channel_list": [],
+                "unauthenticated_input": false
+            },
+            "status": null,
+            "top": "320",
+            "left": "540",
+            "stepType": "\/api\/3\/workflow_step_types\/fc04082a-d7dc-4299-96fb-6837b1baa0fe",
+            "group": null,
+            "uuid": "d85fb780-6074-407e-8f51-8507da0ad5ba"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "rejected",
+            "description": null,
+            "arguments": {
+                "error": true,
+                "message_var": "Rejected: tag must be 1-64 chars of [A-Za-z0-9_.:-]. Got '{{vars.tag}}'."
+            },
+            "status": null,
+            "top": "580",
+            "left": "720",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "2c292f4c-9d7b-49fc-ad57-3d144669bb67"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "run_export",
+            "description": null,
+            "arguments": {
+                "name": "Utilities",
+                "config": "",
+                "params": {
+                    "iri": "\/api\/export?fileName={{vars.file_name_enc}}&template={{vars.template_uuid}}",
+                    "body": "",
+                    "method": "PUT"
+                },
+                "version": "3.7.2",
+                "connector": "cyops_utilities",
+                "operation": "make_cyops_request",
+                "operationTitle": "FSR: Make FortiSOAR API Call",
+                "pickFromTenant": false,
+                "step_variables": {
+                    "jobUuid": "{{vars.result.data.jobUuid}}"
+                }
+            },
+            "status": null,
+            "top": "1160",
+            "left": "340",
+            "stepType": "\/api\/3\/workflow_step_types\/0bfed618-0316-11e7-93ae-92361f002671",
+            "group": null,
+            "uuid": "1161bb0c-9a9d-4509-bbab-f570cd947236"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "setup",
+            "description": null,
+            "arguments": {
+                "tag": "{{ (vars.steps.pick_tag.input.tag if vars.steps.pick_tag.input.tag is string else (vars.steps.pick_tag.input.tag | last)) | string | replace('\/api\/3\/tags\/', '') }}",
+                "new_name": "ZTPF-TagExport--{{ (vars.steps.pick_tag.input.tag if vars.steps.pick_tag.input.tag is string else (vars.steps.pick_tag.input.tag | last)) | string | replace('\/api\/3\/tags\/', '') }}",
+                "tag_clean": "{{ (vars.steps.pick_tag.input.tag if vars.steps.pick_tag.input.tag is string else (vars.steps.pick_tag.input.tag | last)) | string | replace('\/api\/3\/tags\/', '') | regex_replace('[^A-Za-z0-9_.:-]', '') }}",
+                "new_tag_iri": "\/api\/3\/tags\/{{ (vars.steps.pick_tag.input.tag if vars.steps.pick_tag.input.tag is string else (vars.steps.pick_tag.input.tag | last)) | string | replace('\/api\/3\/tags\/', '') }}",
+                "file_name_enc": "{{ ('ztpf-TemplateRecordExport--' \n    ~ (\n        (vars.steps.pick_tag.input.tag if vars.steps.pick_tag.input.tag is string else (vars.steps.pick_tag.input.tag | last)) | string | replace('\/api\/3\/tags\/', ''))\n        ~ '-'\n        ~ arrow.utcnow().format(\"YYYYMMDD-HHmm\")\n      ) \n  | urlencode }}"
+            },
+            "status": null,
+            "top": "400",
+            "left": "540",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "aa61a1e7-db5e-425a-ba4b-1f1cb3f3479f"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Start",
+            "description": null,
+            "arguments": {
+                "route": "b9a530ed-9291-4886-aba4-75ef3504cb9f",
+                "title": "Export Records by Tag",
+                "resources": [
+                    "ztpf_automation_profiles"
+                ],
+                "inputVariables": [],
+                "step_variables": {
+                    "input": {
+                        "params": [],
+                        "records": "{{vars.input.records}}"
+                    }
+                },
+                "_promptexpanded": true,
+                "executeButtonText": "Export",
+                "noRecordExecution": true,
+                "showToasterMessage": {
+                    "visible": true,
+                    "messageVisible": true
+                },
+                "triggerOnReplicate": false,
+                "singleRecordExecution": false
+            },
+            "status": null,
+            "top": "40",
+            "left": "80",
+            "stepType": "\/api\/3\/workflow_step_types\/f414d039-bb0d-4e59-9c39-a8f1e880b18a",
+            "group": null,
+            "uuid": "bc8e668a-1a06-4303-81e6-801e8a19052a"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "update_template",
+            "description": null,
+            "arguments": {
+                "name": "Utilities",
+                "config": "",
+                "params": {
+                    "iri": "\/api\/3\/export_templates\/{{vars.existing_uuid}}",
+                    "body": "{\"options\": {{vars.swapped_options_json}}}",
+                    "method": "PUT"
+                },
+                "version": "3.7.2",
+                "connector": "cyops_utilities",
+                "operation": "make_cyops_request",
+                "operationTitle": "FSR: Make FortiSOAR API Call",
+                "pickFromTenant": false,
+                "step_variables": {
+                    "template_uuid": "{{vars.existing_uuid}}"
+                }
+            },
+            "status": null,
+            "top": "1080",
+            "left": "660",
+            "stepType": "\/api\/3\/workflow_step_types\/0bfed618-0316-11e7-93ae-92361f002671",
+            "group": null,
+            "uuid": "42692436-902b-418d-86df-28b46e4e2fee"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "validate",
+            "description": null,
+            "arguments": {
+                "conditions": [
+                    {
+                        "option": "valid",
+                        "step_iri": "\/api\/3\/workflow_steps\/ff388d67-23f6-4091-9adc-fbadb69cb030",
+                        "condition": "{{ vars.tag == vars.tag_clean and (vars.tag | length) > 0 and (vars.tag | length) <= 64 }}",
+                        "step_name": "build_export"
+                    },
+                    {
+                        "option": "rejected",
+                        "default": true,
+                        "step_iri": "\/api\/3\/workflow_steps\/2c292f4c-9d7b-49fc-ad57-3d144669bb67",
+                        "step_name": "rejected"
+                    }
+                ]
+            },
+            "status": null,
+            "top": "480",
+            "left": "540",
+            "stepType": "\/api\/3\/workflow_step_types\/12254cf5-5db7-4b1a-8cb1-3af081924b28",
+            "group": null,
+            "uuid": "f1b7eb17-ccce-4e81-8d62-7c71ee8c024d"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "wait_export",
+            "description": null,
+            "arguments": {
+                "name": "Utilities",
+                "config": "",
+                "params": {
+                    "iri": "\/api\/3\/export_jobs\/{{vars.jobUuid}}",
+                    "body": "",
+                    "method": "GET"
+                },
+                "version": "3.7.2",
+                "do_until": {
+                    "delay": "10",
+                    "retries": "18",
+                    "condition": "{{ vars.result.data['status'] == 'Export Complete' }}"
+                },
+                "connector": "cyops_utilities",
+                "operation": "make_cyops_request",
+                "operationTitle": "FSR: Make FortiSOAR API Call",
+                "pickFromTenant": false,
+                "step_variables": {
+                    "file_iri": "{{ vars.result.data['file']['@id'] }}"
+                }
+            },
+            "status": null,
+            "top": "1240",
+            "left": "340",
+            "stepType": "\/api\/3\/workflow_step_types\/0bfed618-0316-11e7-93ae-92361f002671",
+            "group": null,
+            "uuid": "ae72b842-b6fb-407b-88f4-3ff3848228c6"
+        }
+    ],
+    "routes": [
+        {
+            "@type": "WorkflowRoute",
+            "name": "build_export -> count_records",
+            "targetStep": "\/api\/3\/workflow_steps\/e7c3d0f3-2c84-430d-81ad-450e98cd932b",
+            "sourceStep": "\/api\/3\/workflow_steps\/ff388d67-23f6-4091-9adc-fbadb69cb030",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "e2311007-4dd0-4e0c-87be-8cf65b05e1c3"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "build_preview -> confirm",
+            "targetStep": "\/api\/3\/workflow_steps\/fe573f6a-0ff7-4001-bb11-c8954570720a",
+            "sourceStep": "\/api\/3\/workflow_steps\/b9b1b275-c1ec-4f9d-8b0f-6a89160f63cb",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "91227031-83a9-4e9f-ad13-2b37c4883a5b"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "build_tag_options -> pick_tag",
+            "targetStep": "\/api\/3\/workflow_steps\/d85fb780-6074-407e-8f51-8507da0ad5ba",
+            "sourceStep": "\/api\/3\/workflow_steps\/26ede703-2c47-46b1-88b6-f44206e765f9",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "4477835c-f2f2-4566-9849-572cec6cdb3d"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "confirm -> cancel or timeout",
+            "targetStep": "\/api\/3\/workflow_steps\/e818c779-9066-4076-9740-f18fed1d81d3",
+            "sourceStep": "\/api\/3\/workflow_steps\/fe573f6a-0ff7-4001-bb11-c8954570720a",
+            "label": "Cancel",
+            "isExecuted": false,
+            "group": null,
+            "uuid": "75901c2e-d999-457f-9656-301c59f8d58a"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "confirm -> find_existing",
+            "targetStep": "\/api\/3\/workflow_steps\/52eb5e20-a240-4b52-bdf4-30e8c44eff06",
+            "sourceStep": "\/api\/3\/workflow_steps\/fe573f6a-0ff7-4001-bb11-c8954570720a",
+            "label": "Export",
+            "isExecuted": false,
+            "group": null,
+            "uuid": "ab4f93db-2e55-4a21-997f-989ee503f922"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "count_records -> build_preview",
+            "targetStep": "\/api\/3\/workflow_steps\/b9b1b275-c1ec-4f9d-8b0f-6a89160f63cb",
+            "sourceStep": "\/api\/3\/workflow_steps\/e7c3d0f3-2c84-430d-81ad-450e98cd932b",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "965b96cd-052d-4199-bfe6-7e087eed4eeb"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "create_template -> run_export",
+            "targetStep": "\/api\/3\/workflow_steps\/1161bb0c-9a9d-4509-bbab-f570cd947236",
+            "sourceStep": "\/api\/3\/workflow_steps\/d2e5a29e-922c-4a9e-b39e-de4bc4c057fa",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "f9409f02-8329-4f58-9d2c-d2ebde1b5c55"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "done -> cancel or timeout",
+            "targetStep": "\/api\/3\/workflow_steps\/e818c779-9066-4076-9740-f18fed1d81d3",
+            "sourceStep": "\/api\/3\/workflow_steps\/95c51e4c-9d21-4ee2-9ec1-4a63bf713551",
+            "label": "Close",
+            "isExecuted": false,
+            "group": null,
+            "uuid": "c83aeba9-5b92-4131-818e-97e5bff08d84"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "exists_gate -> create_template",
+            "targetStep": "\/api\/3\/workflow_steps\/d2e5a29e-922c-4a9e-b39e-de4bc4c057fa",
+            "sourceStep": "\/api\/3\/workflow_steps\/e03b59da-f16b-40ab-8927-4de2aad21d3c",
+            "label": "create",
+            "isExecuted": false,
+            "group": null,
+            "uuid": "c02ea4d4-d9b0-4db1-89ec-bf3993432d18"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "exists_gate -> update_template",
+            "targetStep": "\/api\/3\/workflow_steps\/42692436-902b-418d-86df-28b46e4e2fee",
+            "sourceStep": "\/api\/3\/workflow_steps\/e03b59da-f16b-40ab-8927-4de2aad21d3c",
+            "label": "update",
+            "isExecuted": false,
+            "group": null,
+            "uuid": "f701e726-1cee-41d1-8b3f-26a52b569de2"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "find_existing -> exists_gate",
+            "targetStep": "\/api\/3\/workflow_steps\/e03b59da-f16b-40ab-8927-4de2aad21d3c",
+            "sourceStep": "\/api\/3\/workflow_steps\/52eb5e20-a240-4b52-bdf4-30e8c44eff06",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "0ea779f4-a95a-4719-8e8e-25ad2135b6e8"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "get_profile_tags -> build_tag_options",
+            "targetStep": "\/api\/3\/workflow_steps\/26ede703-2c47-46b1-88b6-f44206e765f9",
+            "sourceStep": "\/api\/3\/workflow_steps\/c7122eff-1f66-4393-867e-e5063d93e761",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "47f66324-2f0f-4fad-a0b8-d96b71783516"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "pick_tag -> cancel or timeout",
+            "targetStep": "\/api\/3\/workflow_steps\/e818c779-9066-4076-9740-f18fed1d81d3",
+            "sourceStep": "\/api\/3\/workflow_steps\/d85fb780-6074-407e-8f51-8507da0ad5ba",
+            "label": "Cancel",
+            "isExecuted": false,
+            "group": null,
+            "uuid": "41b22c8c-0d56-4435-bfcb-498a4fe3544d"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "pick_tag -> setup",
+            "targetStep": "\/api\/3\/workflow_steps\/aa61a1e7-db5e-425a-ba4b-1f1cb3f3479f",
+            "sourceStep": "\/api\/3\/workflow_steps\/d85fb780-6074-407e-8f51-8507da0ad5ba",
+            "label": "Next",
+            "isExecuted": false,
+            "group": null,
+            "uuid": "5a37329a-ba8f-4f8f-8cdf-69a640a085f6"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "run_export -> wait_export",
+            "targetStep": "\/api\/3\/workflow_steps\/ae72b842-b6fb-407b-88f4-3ff3848228c6",
+            "sourceStep": "\/api\/3\/workflow_steps\/1161bb0c-9a9d-4509-bbab-f570cd947236",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "8c89d328-9f8d-4953-995c-a96e040dd269"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "setup -> validate",
+            "targetStep": "\/api\/3\/workflow_steps\/f1b7eb17-ccce-4e81-8d62-7c71ee8c024d",
+            "sourceStep": "\/api\/3\/workflow_steps\/aa61a1e7-db5e-425a-ba4b-1f1cb3f3479f",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "8b4c24ed-715c-4c03-8be7-89cf79815113"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Start -> get_profile_tags",
+            "targetStep": "\/api\/3\/workflow_steps\/c7122eff-1f66-4393-867e-e5063d93e761",
+            "sourceStep": "\/api\/3\/workflow_steps\/bc8e668a-1a06-4303-81e6-801e8a19052a",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "30f57d9a-8588-4d5b-9358-c6ebba42f445"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "update_template -> run_export",
+            "targetStep": "\/api\/3\/workflow_steps\/1161bb0c-9a9d-4509-bbab-f570cd947236",
+            "sourceStep": "\/api\/3\/workflow_steps\/42692436-902b-418d-86df-28b46e4e2fee",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "10e4c184-4751-4ae0-b4cd-2151b560c38b"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "validate -> build_export",
+            "targetStep": "\/api\/3\/workflow_steps\/ff388d67-23f6-4091-9adc-fbadb69cb030",
+            "sourceStep": "\/api\/3\/workflow_steps\/f1b7eb17-ccce-4e81-8d62-7c71ee8c024d",
+            "label": "valid",
+            "isExecuted": false,
+            "group": null,
+            "uuid": "03cf8d44-fbb6-4bd6-a6d3-251565089dbf"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "validate -> rejected",
+            "targetStep": "\/api\/3\/workflow_steps\/2c292f4c-9d7b-49fc-ad57-3d144669bb67",
+            "sourceStep": "\/api\/3\/workflow_steps\/f1b7eb17-ccce-4e81-8d62-7c71ee8c024d",
+            "label": "rejected",
+            "isExecuted": false,
+            "group": null,
+            "uuid": "f9c15476-ff42-4f86-8814-fc1286a4ff0c"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "wait_export -> done",
+            "targetStep": "\/api\/3\/workflow_steps\/95c51e4c-9d21-4ee2-9ec1-4a63bf713551",
+            "sourceStep": "\/api\/3\/workflow_steps\/ae72b842-b6fb-407b-88f4-3ff3848228c6",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "e60508bd-d19f-43f5-956e-452fefecb45f"
+        }
+    ],
+    "groups": [
+        {
+            "@type": "WorkflowGroup",
+            "name": "Details",
+            "description": "Creates an Export Template found in System Settings and exports all records and correlated records matching a tag as defined by the user selection.",
+            "type": "note",
+            "isCollapsed": false,
+            "hasTriggerStep": false,
+            "hideInLogs": false,
+            "metadata": [],
+            "reusable": false,
+            "top": "140",
+            "left": "40",
+            "height": "143",
+            "width": "363",
+            "uuid": "8f9138a2-98ab-45e7-a717-5f8e43aa6ddc",
+            "recordTags": []
+        }
+    ],
+    "priority": "\/api\/3\/picklists\/9e8d41e4-8ada-4a2c-bd02-07f62c6d0a00",
+    "playbookOrigin": "\/api\/3\/picklists\/b6d710a9-a8ec-41ec-8817-fe9fa062fcdd",
+    "isEditable": false,
+    "uuid": "12903bc4-bff0-4fa1-b543-d8d176987093",
+    "owners": [],
+    "isPrivate": false,
+    "deletedAt": null,
+    "recordTags": [
+        "ztpfAutomationProfile"
+    ]
+}
