@@ -1,7 +1,7 @@
 {
     "@type": "Workflow",
     "triggerLimit": null,
-    "name": "Create Run Group and Execute Steps",
+    "name": "Create RunGroup and Execute Steps",
     "aliasName": null,
     "tag": null,
     "description": "Queue Pending Action Steps on a Device",
@@ -21,6 +21,7 @@
             "description": null,
             "arguments": {
                 "arguments": {
+                    "tags": "{{vars.input.params.tags}}",
                     "device_ids": "{{vars.input.records|json_query('[].id')}}"
                 },
                 "apply_async": false,
@@ -47,13 +48,33 @@
                     "ztpf_devices"
                 ],
                 "__triggerLimit": true,
-                "inputVariables": [],
+                "inputVariables": [
+                    {
+                        "name": "tags",
+                        "type": "string",
+                        "label": "Tags",
+                        "tooltip": "Enter Tags, as comma or space separated, to the RunGroup and Devices",
+                        "dataType": "text",
+                        "formType": "text",
+                        "required": false,
+                        "_expanded": true,
+                        "defaultValue": null,
+                        "_previousName": "",
+                        "requiredCondition": "notrequired",
+                        "jinjaExpressionView": true,
+                        "useRecordFieldDefault": false,
+                        "_addRequiredConditions": false
+                    }
+                ],
                 "step_variables": {
                     "input": {
-                        "params": [],
+                        "params": {
+                            "tags": "{{vars.request.data[\"tags\"]}}"
+                        },
                         "records": "{{vars.input.records}}"
                     }
                 },
+                "_promptexpanded": true,
                 "triggerOnSource": true,
                 "displayConditions": {
                     "ztpf_devices": {

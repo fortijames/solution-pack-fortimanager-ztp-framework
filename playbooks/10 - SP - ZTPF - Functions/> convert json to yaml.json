@@ -23,11 +23,11 @@
             "name": "json2yaml",
             "description": null,
             "arguments": {
-                "config": "74c7e349-a99d-44ac-a576-8c1b158fc364",
+                "config": "97418e57-1556-40e2-aae4-3840f2cecf52",
                 "params": {
                     "python_function": "import json\r\nimport re\r\nimport yaml\r\n\r\ndef json_to_yaml(data, indent=2, sort_keys=False):\r\n    \"\"\"\r\n    Convert JSON to YAML.\r\n\r\n    Args:\r\n        data: JSON string or Python dict\/list.\r\n        indent: YAML indentation.\r\n        sort_keys: Sort dictionary keys.\r\n\r\n    Returns:\r\n        YAML string.\r\n    \"\"\"\r\n\r\n    # If it's a string, parse it as JSON\r\n    if isinstance(data, str):\r\n        data = data.strip()\r\n\r\n        # Fix accidental \"key:value\" (no space) if someone passed YAML\r\n        data = re.sub(r'(^|\\n)([ \\t-]*[^:\\n]+):([^\\s])',\r\n                      r'\\1\\2: \\3',\r\n                      data)\r\n\r\n        try:\r\n            data = json.loads(data)\r\n        except json.JSONDecodeError:\r\n            # Maybe it's actually YAML\r\n            data = yaml.safe_load(data)\r\n\r\n    return yaml.safe_dump(\r\n        data,\r\n        indent=indent,\r\n        sort_keys=sort_keys,\r\n        default_flow_style=False,\r\n        allow_unicode=True\r\n    )\r\n\r\n\r\njson_data = '''\r\n{{vars.input.params.json}}\r\n'''\r\n\r\nj = json_to_yaml(json_data)\r\nprint(repr(j))"
                 },
-                "version": "2.1.5",
+                "version": "2.2.1",
                 "connector": "code-snippet",
                 "operation": "python_inline_code_editor",
                 "operationTitle": "Execute Python Code",

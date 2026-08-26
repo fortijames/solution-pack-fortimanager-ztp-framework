@@ -10,7 +10,8 @@
     "singleRecordExecution": false,
     "remoteExecutableFlag": false,
     "parameters": [
-        "device_ids"
+        "device_ids",
+        "tags"
     ],
     "synchronous": false,
     "collection": "\/api\/3\/workflow_collections\/517fb52d-36f5-4bac-a344-7d4599d7dec6",
@@ -31,6 +32,7 @@
                 },
                 "resource": {
                     "__link": {
+                        "recordTags": "{{vars.tags}}",
                         "ztpfRunGroups": "{{vars.steps.create_run_group['@id']}}"
                     },
                     "ztpfRunning": false,
@@ -93,6 +95,9 @@
             "arguments": {
                 "resource": {
                     "name": "{{vars.ztpfGroup}}",
+                    "__link": {
+                        "recordTags": "{{vars.tags}}"
+                    },
                     "status": "\/api\/3\/picklists\/1f7e18dc-5763-4bd7-955c-0dd728a2cb6e",
                     "__replace": "",
                     "ztpfRunning": true
@@ -101,7 +106,7 @@
                 "collection": "\/api\/3\/ztpf_run_groups",
                 "__recommend": [],
                 "fieldOperation": {
-                    "recordTags": "Overwrite"
+                    "recordTags": "Append"
                 },
                 "step_variables": []
             },
@@ -319,6 +324,7 @@
             "arguments": {
                 "__triggerLimit": true,
                 "step_variables": {
+                    "tags": "{{vars.input.params.tags.replace(',',' ').split(' ')}}",
                     "input": {
                         "params": []
                     }

@@ -279,6 +279,30 @@
         },
         {
             "@type": "WorkflowStep",
+            "name": "update device status",
+            "description": null,
+            "arguments": {
+                "resource": {
+                    "status": "\/api\/3\/picklists\/b34f5642-8c93-4c09-8c50-28c3941ec257"
+                },
+                "operation": "Append",
+                "collection": "{{vars.input.records[0].ztpfDevices['@id']}}",
+                "__recommend": [],
+                "collectionType": "\/api\/3\/ztpf_devices",
+                "fieldOperation": {
+                    "recordTags": "Append"
+                },
+                "step_variables": []
+            },
+            "status": null,
+            "top": "800",
+            "left": "580",
+            "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928722",
+            "group": null,
+            "uuid": "04eb0c23-5370-482f-a2f4-c88dc9ee4d77"
+        },
+        {
+            "@type": "WorkflowStep",
             "name": "update step input",
             "description": null,
             "arguments": {
@@ -427,24 +451,34 @@
             "isExecuted": false,
             "group": null,
             "uuid": "1a79837e-ccbd-407b-b91b-f486ed015d38"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "update step input -> update device status",
+            "targetStep": "\/api\/3\/workflow_steps\/04eb0c23-5370-482f-a2f4-c88dc9ee4d77",
+            "sourceStep": "\/api\/3\/workflow_steps\/a5f64fa9-d613-4a61-9615-2be672c0394c",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "9f1d5df7-8aae-4c76-b562-ac8d40f18bd0"
         }
     ],
     "groups": [
         {
             "@type": "WorkflowGroup",
             "name": "Details",
-            "description": "Step status changed to pre-run. Review input args and handle updating the step where needed. If our inputs are valid then populate the action payload script in the step and mark the record ready.\n\nLook for render_script_on_preparing and if false skip render script.",
+            "description": "Step status changed to pre-run. Review input args and handle updating the step where needed. If our inputs are valid then populate the action payload script in the step and mark the record ready. Look for render_script_on_preparing and if false skip render script.\n\nUpdate Device with *Reviewing* status to check steps.",
             "type": "note",
             "isCollapsed": false,
             "hasTriggerStep": false,
             "hideInLogs": false,
             "metadata": [],
             "reusable": false,
-            "top": "120",
+            "top": "160",
             "left": "40",
-            "height": "162",
-            "width": "498",
-            "uuid": "8f5ca918-65cd-47ae-9e04-80eeb5cdea71",
+            "height": "187",
+            "width": "492",
+            "uuid": "577f7c4d-c1b4-400c-a07c-5b1384480467",
             "recordTags": []
         }
     ],

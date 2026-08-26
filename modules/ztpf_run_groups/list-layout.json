@@ -60,14 +60,14 @@
                                 }
                             }
                         ],
-                        "style": "col-lg-6"
+                        "style": "col-lg-4"
                     },
                     {
                         "widgets": [
                             {
                                 "type": "relationshipCount",
                                 "config": {
-                                    "wid": "fe70a28f-80d7-4236-afea-0e279999cab1",
+                                    "wid": "d259e77c-89cf-4b75-89b5-c3ef52c0fb97",
                                     "widgetAlwaysDisplay": true,
                                     "showTabularData": false,
                                     "query": {
@@ -109,7 +109,73 @@
                                 }
                             }
                         ],
-                        "style": "col-lg-6"
+                        "style": "col-lg-4"
+                    },
+                    {
+                        "widgets": [
+                            {
+                                "type": "chart",
+                                "config": {
+                                    "wid": "93a2b218-cfb0-4071-8d09-df05857e06fc",
+                                    "widgetAlwaysDisplay": true,
+                                    "showTabularData": false,
+                                    "query": {
+                                        "sort": [
+                                            {
+                                                "field": "ztpfDevices.name",
+                                                "direction": "ASC"
+                                            },
+                                            {
+                                                "field": "ztpfRunGroups.name",
+                                                "direction": "ASC"
+                                            }
+                                        ],
+                                        "limit": 2147483647,
+                                        "logic": "AND",
+                                        "filters": [],
+                                        "aggregates": [
+                                            {
+                                                "operator": "countdistinct",
+                                                "field": "*",
+                                                "alias": "total"
+                                            },
+                                            {
+                                                "operator": "select",
+                                                "alias": "ztpfDevices__name",
+                                                "field": "ztpfDevices.name"
+                                            },
+                                            {
+                                                "operator": "groupby",
+                                                "alias": "ztpfDevices__uuid",
+                                                "field": "ztpfDevices.uuid"
+                                            },
+                                            {
+                                                "operator": "select",
+                                                "alias": "ztpfRunGroups__name",
+                                                "field": "ztpfRunGroups.name"
+                                            },
+                                            {
+                                                "operator": "groupby",
+                                                "alias": "ztpfRunGroups__uuid",
+                                                "field": "ztpfRunGroups.uuid"
+                                            }
+                                        ]
+                                    },
+                                    "mapping": {
+                                        "firstGrouping": "ztpfDevices",
+                                        "secondGrouping": "ztpfRunGroups"
+                                    },
+                                    "assignedToSetting": "onlyMe",
+                                    "aggregate": true,
+                                    "viewType": "chart",
+                                    "title": "Steps by Device and RunGroup",
+                                    "resource": "ztpf_device_automation_steps",
+                                    "chart": "bar",
+                                    "widgetAlwaysExpanded": true
+                                }
+                            }
+                        ],
+                        "style": "col-lg-4"
                     }
                 ],
                 "wid": "cdba5b0a-ae66-4b33-82d8-0d4cabfeb11e",
