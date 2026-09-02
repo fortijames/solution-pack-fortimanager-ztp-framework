@@ -312,7 +312,8 @@
                     "status": "{{\"ztpfDeviceStepStatus\" | picklist(vars.step_status, \"@id\")}}",
                     "stepARGS": "{{vars.steps.refactor_step_arg.output|default('')}}",
                     "jinjaVars": "{{vars.steps.get_jinja_vars_and_script.output['jinja_vars']}}",
-                    "queueStatus": "{{\"ztpfDeviceStepStatus\" | picklist(vars.step_status, \"@id\")}}"
+                    "queueStatus": "{{\"ztpfDeviceStepStatus\" | picklist(vars.step_status, \"@id\")}}",
+                    "waitToCheckSeconds": "{%- if \"wait_check_time\" in vars.config_data -%}{{vars.config_data[\"wait_check_time\"]}}{%- else -%}60{%- endif -%}"
                 },
                 "operation": "Append",
                 "collection": "{{vars.input.records[0]['@id']}}",
@@ -467,17 +468,17 @@
         {
             "@type": "WorkflowGroup",
             "name": "Details",
-            "description": "Step status changed to pre-run. Review input args and handle updating the step where needed. If our inputs are valid then populate the action payload script in the step and mark the record ready. Look for render_script_on_preparing and if false skip render script.\n\nUpdate Device with *Reviewing* status to check steps.",
+            "description": "Step status changed to pre-run. \n\nReview input args and handle updating the step where needed. If our inputs are valid then populate the action payload script in the step and mark the record ready. Look for render_script_on_preparing and if false skip render script.\n\nLook for config: wait_check_time\n\nUpdate Device with *Reviewing* status to check steps.",
             "type": "note",
             "isCollapsed": false,
             "hasTriggerStep": false,
             "hideInLogs": false,
             "metadata": [],
             "reusable": false,
-            "top": "160",
+            "top": "120",
             "left": "40",
-            "height": "187",
-            "width": "492",
+            "height": "233",
+            "width": "491",
             "uuid": "577f7c4d-c1b4-400c-a07c-5b1384480467",
             "recordTags": []
         }

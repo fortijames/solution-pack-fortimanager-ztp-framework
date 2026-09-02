@@ -1,0 +1,208 @@
+{
+    "@type": "Workflow",
+    "triggerLimit": null,
+    "name": "> device step (Waiting Timer)",
+    "aliasName": null,
+    "tag": null,
+    "description": "Restart the waiting process",
+    "isActive": true,
+    "debug": false,
+    "singleRecordExecution": false,
+    "remoteExecutableFlag": false,
+    "parameters": [],
+    "synchronous": false,
+    "collection": "\/api\/3\/workflow_collections\/9cca11ea-b95a-4504-8385-ad42db358c36",
+    "versions": [],
+    "triggerStep": "\/api\/3\/workflow_steps\/54179293-f747-4648-b360-c2876004f343",
+    "steps": [
+        {
+            "@type": "WorkflowStep",
+            "name": "setup vars",
+            "description": null,
+            "arguments": {
+                "wait_seconds": "{%- set inp = vars.input.records[0].waitToCheckSeconds -%}\n{%- set num = 60 -%}\n{%- if inp and inp not in [None,''] -%}\n  {%- set num = inp -%}\n{%- endif -%}\n\n{% set variance = num * 0.30 %}\n{%- set num = range((num - variance)|int, (num + variance + 1)|int) \n                      | random \n-%}\n{{num}}"
+            },
+            "status": null,
+            "top": "40",
+            "left": "480",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "e662aed7-2ad6-4c2b-9e39-9c07cf8797c8"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Start",
+            "description": null,
+            "arguments": {
+                "resource": "ztpf_device_automation_steps",
+                "resources": [
+                    "ztpf_device_automation_steps"
+                ],
+                "__triggerLimit": true,
+                "step_variables": {
+                    "input": {
+                        "params": [],
+                        "records": [
+                            "{{vars.input.records[0]}}"
+                        ]
+                    }
+                },
+                "triggerOnSource": true,
+                "fieldbasedtrigger": {
+                    "sort": [],
+                    "limit": 30,
+                    "logic": "AND",
+                    "filters": [
+                        {
+                            "type": "object",
+                            "field": "status",
+                            "value": "",
+                            "_value": {
+                                "@id": "",
+                                "display": "",
+                                "itemValue": ""
+                            },
+                            "operator": "changed"
+                        },
+                        {
+                            "type": "object",
+                            "field": "status",
+                            "value": "\/api\/3\/picklists\/81d137b2-01bf-4a1c-a7ee-e68bd972d0bd",
+                            "_value": {
+                                "@id": "\/api\/3\/picklists\/81d137b2-01bf-4a1c-a7ee-e68bd972d0bd",
+                                "display": "Waiting Restart",
+                                "itemValue": "Waiting Restart"
+                            },
+                            "operator": "eq"
+                        }
+                    ]
+                },
+                "triggerOnReplicate": false
+            },
+            "status": null,
+            "top": "40",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/9300bf69-5063-486d-b3a6-47eb9da24872",
+            "group": null,
+            "uuid": "54179293-f747-4648-b360-c2876004f343"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "update status wait",
+            "description": null,
+            "arguments": {
+                "resource": {
+                    "status": "\/api\/3\/picklists\/9acf4837-07dc-4854-90f9-2010640d7c94",
+                    "stepWaiting": true
+                },
+                "operation": "Append",
+                "collection": "{{vars.input.records[0]['@id']}}",
+                "__recommend": [],
+                "collectionType": "\/api\/3\/ztpf_device_automation_steps",
+                "fieldOperation": {
+                    "recordTags": "Append"
+                },
+                "step_variables": []
+            },
+            "status": null,
+            "top": "400",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928722",
+            "group": null,
+            "uuid": "f360b291-ccb9-46b0-a4b5-b2a2ecb57aca"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "wait",
+            "description": null,
+            "arguments": {
+                "rule": {
+                    "actions": [
+                        {
+                            "type": "resume_playbook",
+                            "enabled": true,
+                            "channel_uuid": "e2ce87c2-c55a-11ec-9d64-0242ac120002"
+                        }
+                    ],
+                    "is_active": true,
+                    "event_source": "crudhub"
+                },
+                "type": "TimeBased",
+                "delay": {
+                    "days": 0,
+                    "hours": 0,
+                    "minutes": 0,
+                    "seconds": "{{vars.wait_seconds}}"
+                },
+                "step_variables": []
+            },
+            "status": null,
+            "top": "400",
+            "left": "480",
+            "stepType": "\/api\/3\/workflow_step_types\/6832e556-b9c7-497a-babe-feda3bd27dbf",
+            "group": null,
+            "uuid": "fbc2d1dd-4ac3-4d0a-a8a8-43b642305e45"
+        }
+    ],
+    "routes": [
+        {
+            "@type": "WorkflowRoute",
+            "name": "setup vars -> wait",
+            "targetStep": "\/api\/3\/workflow_steps\/fbc2d1dd-4ac3-4d0a-a8a8-43b642305e45",
+            "sourceStep": "\/api\/3\/workflow_steps\/e662aed7-2ad6-4c2b-9e39-9c07cf8797c8",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "daf0d480-bfc3-41c3-ac07-e154fbbfe8f2"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Start -> setup vars",
+            "targetStep": "\/api\/3\/workflow_steps\/e662aed7-2ad6-4c2b-9e39-9c07cf8797c8",
+            "sourceStep": "\/api\/3\/workflow_steps\/54179293-f747-4648-b360-c2876004f343",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "f9087f31-ad7f-42f5-bf9b-286062649dd3"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "wait -> update status wait",
+            "targetStep": "\/api\/3\/workflow_steps\/f360b291-ccb9-46b0-a4b5-b2a2ecb57aca",
+            "sourceStep": "\/api\/3\/workflow_steps\/fbc2d1dd-4ac3-4d0a-a8a8-43b642305e45",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "4b7850d7-5dd3-481c-a078-c86b8c41b2e1"
+        }
+    ],
+    "groups": [
+        {
+            "@type": "WorkflowGroup",
+            "name": "Details",
+            "description": "Wait and then Restart the waiting process by flipping the status from *Waiting Restart* to *Waiting*.\n\nThe wait_time is a variant of the time provided by the user with a random 0.30 range plus or minus the original number. This is to stagger playbooks and prevent the system from getting hit at the same time.",
+            "type": "note",
+            "isCollapsed": false,
+            "hasTriggerStep": false,
+            "hideInLogs": false,
+            "metadata": [],
+            "reusable": false,
+            "top": "140",
+            "left": "60",
+            "height": "193",
+            "width": "498",
+            "uuid": "e7b2c81d-fd10-47d8-aab9-5727c4a275cd",
+            "recordTags": []
+        }
+    ],
+    "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+    "playbookOrigin": "\/api\/3\/picklists\/b6d710a9-a8ec-41ec-8817-fe9fa062fcdd",
+    "isEditable": false,
+    "uuid": "f7b7c7e6-6a7d-4069-b04e-94af1d7279af",
+    "owners": [],
+    "isPrivate": false,
+    "deletedAt": null,
+    "recordTags": [
+        "ztpfDeviceAutomationStep"
+    ]
+}

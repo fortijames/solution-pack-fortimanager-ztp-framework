@@ -21,7 +21,9 @@
             "description": null,
             "arguments": {
                 "resource": {
-                    "status": "\/api\/3\/picklists\/91ff63f2-78cd-4bb5-92e3-36c99ec4d2c1"
+                    "status": "\/api\/3\/picklists\/91ff63f2-78cd-4bb5-92e3-36c99ec4d2c1",
+                    "stepStopTimestamp": "{{vars.empty_value}}",
+                    "stepStartTimestamp": "{{vars.empty_value}}"
                 },
                 "operation": "Append",
                 "collection": "{{vars.input.records[0]['@id']}}",
@@ -79,7 +81,8 @@
                     "input": {
                         "params": [],
                         "records": "{{vars.input.records}}"
-                    }
+                    },
+                    "empty_value": "''"
                 },
                 "triggerOnSource": true,
                 "displayConditions": {

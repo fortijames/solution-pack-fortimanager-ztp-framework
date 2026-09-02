@@ -1,0 +1,130 @@
+{
+    "@type": "Workflow",
+    "triggerLimit": null,
+    "name": "> get existing trigger keys",
+    "aliasName": null,
+    "tag": null,
+    "description": "get existing trigger keys",
+    "isActive": true,
+    "debug": false,
+    "singleRecordExecution": false,
+    "remoteExecutableFlag": false,
+    "parameters": [],
+    "synchronous": false,
+    "collection": "\/api\/3\/workflow_collections\/517fb52d-36f5-4bac-a344-7d4599d7dec6",
+    "versions": [],
+    "triggerStep": "\/api\/3\/workflow_steps\/d25dfdfc-a2f4-4611-8169-0c006854c59e",
+    "steps": [
+        {
+            "@type": "WorkflowStep",
+            "name": "find steps",
+            "description": null,
+            "arguments": {
+                "query": {
+                    "sort": [],
+                    "limit": 30,
+                    "logic": "AND",
+                    "filters": [],
+                    "__selectFields": [
+                        "triggerKey"
+                    ]
+                },
+                "module": "ztpf_device_automation_steps?$limit=5000",
+                "checkboxFields": true,
+                "step_variables": []
+            },
+            "status": null,
+            "top": "160",
+            "left": "440",
+            "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928770",
+            "group": null,
+            "uuid": "3718386b-c4c9-4f31-9119-d6eceff5d3c0"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "return",
+            "description": null,
+            "arguments": {
+                "output": "{{vars.steps.find_steps|json_query('[].triggerKey')|sort|unique}}"
+            },
+            "status": null,
+            "top": "260",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "b074b671-1848-461d-a482-53e66dd7b9c7"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Start",
+            "description": null,
+            "arguments": {
+                "__triggerLimit": true,
+                "step_variables": {
+                    "input": {
+                        "params": []
+                    }
+                },
+                "triggerOnSource": true,
+                "triggerOnReplicate": false
+            },
+            "status": null,
+            "top": "40",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/b348f017-9a94-471f-87f8-ce88b6a7ad62",
+            "group": null,
+            "uuid": "d25dfdfc-a2f4-4611-8169-0c006854c59e"
+        }
+    ],
+    "routes": [
+        {
+            "@type": "WorkflowRoute",
+            "name": "find steps -> trigger_keys",
+            "targetStep": "\/api\/3\/workflow_steps\/b074b671-1848-461d-a482-53e66dd7b9c7",
+            "sourceStep": "\/api\/3\/workflow_steps\/3718386b-c4c9-4f31-9119-d6eceff5d3c0",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "ee55e4da-d2e0-40cc-bd24-fe09a17ca2e7"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Start -> find steps",
+            "targetStep": "\/api\/3\/workflow_steps\/3718386b-c4c9-4f31-9119-d6eceff5d3c0",
+            "sourceStep": "\/api\/3\/workflow_steps\/d25dfdfc-a2f4-4611-8169-0c006854c59e",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "7cdd78fb-ebd7-4bf4-802f-d1c219a6f1e2"
+        }
+    ],
+    "groups": [
+        {
+            "@type": "WorkflowGroup",
+            "name": "Details",
+            "description": "Simply query all Trigger Keys from current steps and put them into a list.",
+            "type": "note",
+            "isCollapsed": false,
+            "hasTriggerStep": false,
+            "hideInLogs": false,
+            "metadata": [],
+            "reusable": false,
+            "top": "140",
+            "left": "40",
+            "height": "0",
+            "width": "300",
+            "uuid": "049b21fa-c8ce-44dd-a66f-e05d2d1e55dc",
+            "recordTags": []
+        }
+    ],
+    "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+    "playbookOrigin": "\/api\/3\/picklists\/b6d710a9-a8ec-41ec-8817-fe9fa062fcdd",
+    "isEditable": false,
+    "uuid": "b95a6437-1047-49bd-8487-caf95e73a63d",
+    "owners": [],
+    "isPrivate": false,
+    "deletedAt": null,
+    "recordTags": [
+        "ztpfDeviceAutomationStep"
+    ]
+}

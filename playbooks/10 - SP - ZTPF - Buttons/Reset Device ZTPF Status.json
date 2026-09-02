@@ -1,0 +1,118 @@
+{
+    "@type": "Workflow",
+    "triggerLimit": null,
+    "name": "Reset Device ZTPF Status",
+    "aliasName": null,
+    "tag": null,
+    "description": "Reset the ZTPF Status on selected devices",
+    "isActive": true,
+    "debug": false,
+    "singleRecordExecution": false,
+    "remoteExecutableFlag": false,
+    "parameters": [],
+    "synchronous": false,
+    "collection": "\/api\/3\/workflow_collections\/f0b56dc0-6c1e-4f5b-9199-c807800f028a",
+    "versions": [],
+    "triggerStep": "\/api\/3\/workflow_steps\/a93aee5e-c4ea-4702-94e9-ad4791ad7863",
+    "steps": [
+        {
+            "@type": "WorkflowStep",
+            "name": "Start",
+            "description": null,
+            "arguments": {
+                "route": "14327080-f18d-4064-a9bd-38e79aab9155",
+                "title": "Reset ZTPF Status",
+                "resources": [
+                    "ztpf_devices"
+                ],
+                "__triggerLimit": true,
+                "inputVariables": [],
+                "step_variables": {
+                    "input": {
+                        "params": [],
+                        "records": "{{vars.input.records}}"
+                    },
+                    "unchecked": "false",
+                    "empty_json": "{}"
+                },
+                "triggerOnSource": true,
+                "displayConditions": {
+                    "ztpf_devices": {
+                        "sort": [],
+                        "limit": 30,
+                        "logic": "AND",
+                        "filters": []
+                    }
+                },
+                "executeButtonText": "Execute",
+                "noRecordExecution": false,
+                "showToasterMessage": {
+                    "visible": false,
+                    "messageVisible": true
+                },
+                "triggerOnReplicate": false,
+                "singleRecordExecution": false
+            },
+            "status": null,
+            "top": "40",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/f414d039-bb0d-4e59-9c39-a8f1e880b18a",
+            "group": null,
+            "uuid": "a93aee5e-c4ea-4702-94e9-ad4791ad7863"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "update records",
+            "description": null,
+            "arguments": {
+                "for_each": {
+                    "item": "{{vars.input.records}}",
+                    "__bulk": true,
+                    "parallel": false,
+                    "condition": "",
+                    "batch_size": 100
+                },
+                "resource": {
+                    "status": "\/api\/3\/picklists\/2a2f34dc-4f3b-4434-aa58-ba995b2bf7c6",
+                    "ztpfRunning": "{{vars.unchecked}}",
+                    "ztpfArtifacts": "{{vars.empty_json}}"
+                },
+                "operation": "Append",
+                "collection": "{{vars.item['@id']}}",
+                "__recommend": [],
+                "collectionType": "\/api\/3\/ztpf_devices",
+                "fieldOperation": {
+                    "recordTags": "Append"
+                },
+                "step_variables": []
+            },
+            "status": null,
+            "top": "40",
+            "left": "360",
+            "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928722",
+            "group": null,
+            "uuid": "8efabf73-4d53-476b-809d-cf3a777c1ab3"
+        }
+    ],
+    "routes": [
+        {
+            "@type": "WorkflowRoute",
+            "name": "Start -> update records",
+            "targetStep": "\/api\/3\/workflow_steps\/8efabf73-4d53-476b-809d-cf3a777c1ab3",
+            "sourceStep": "\/api\/3\/workflow_steps\/a93aee5e-c4ea-4702-94e9-ad4791ad7863",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "e6210c29-9dad-432d-90d3-d20ded22432d"
+        }
+    ],
+    "groups": [],
+    "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+    "playbookOrigin": "\/api\/3\/picklists\/b6d710a9-a8ec-41ec-8817-fe9fa062fcdd",
+    "isEditable": false,
+    "uuid": "c03ac873-1baf-41c8-a196-250d4821358d",
+    "owners": [],
+    "isPrivate": false,
+    "deletedAt": null,
+    "recordTags": []
+}

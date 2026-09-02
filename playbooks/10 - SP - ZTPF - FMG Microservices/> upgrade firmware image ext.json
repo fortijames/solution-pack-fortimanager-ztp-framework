@@ -12,7 +12,9 @@
     "parameters": [
         "connector_config",
         "firmware",
-        "devices"
+        "devices",
+        "adom",
+        "track_task"
     ],
     "synchronous": false,
     "collection": "\/api\/3\/workflow_collections\/c15a8515-33ae-46d2-9166-fa6fa47ac762",
@@ -21,42 +23,42 @@
     "steps": [
         {
             "@type": "WorkflowStep",
-            "name": "fmg_api",
+            "name": "exec task",
             "description": null,
             "arguments": {
-                "arguments": {
-                    "exec_url": "{{vars.api_url}}",
-                    "exec_payload": "{{vars.api_payload}}",
-                    "task_timeout": "",
-                    "connector_config": "{{vars.connector_config}}",
-                    "task_stale_timeout": "{{vars.task_stale_timeout}}",
-                    "zero_percent_timeout": ""
+                "name": "Fortinet FortiManager JSON-RPC",
+                "config": "{{vars.connector_config}}",
+                "params": {
+                    "url": "{{vars.api_url}}",
+                    "data": "{{vars.api_payload}}",
+                    "track_task": false
                 },
-                "apply_async": false,
-                "step_variables": [],
-                "pass_parent_env": false,
-                "pass_input_record": false,
-                "workflowReference": "\/api\/3\/workflows\/ec1c9a17-98b1-40c3-bda5-7e3a9b315e70"
+                "version": "1.1.0",
+                "connector": "fortinet-fortimanager-json-rpc",
+                "operation": "json_rpc_execute",
+                "operationTitle": "JSON RPC Exec",
+                "pickFromTenant": false,
+                "step_variables": []
             },
             "status": null,
-            "top": "240",
+            "top": "280",
             "left": "520",
-            "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
+            "stepType": "\/api\/3\/workflow_step_types\/0bfed618-0316-11e7-93ae-92361f002671",
             "group": null,
-            "uuid": "4e780eff-91c8-42b2-9d31-a1cbf5ee145d"
+            "uuid": "46796596-9ab4-40d0-b6a7-849d952e8848"
         },
         {
             "@type": "WorkflowStep",
             "name": "return",
             "description": null,
             "arguments": {
-                "output": "{{vars.steps.fmg_api.output}}",
+                "output": "{{vars.steps.exec_task.data['execute_response']}}",
                 "params": "{{vars.input.params}}",
-                "status": "{%- set a = vars.steps.fmg_api -%}\n{%- set ret = {\"error\":false,\"msg\":\"Upgrade completed without error.\"} -%}\n{%- if a.status.error -%}\n  {%- do ret.update({\n      \"error\":true,\n      \"msg\":a.status.message\n    }\n  ) -%}\n{%- endif -%}\n{{ret}}"
+                "status": "{%- set a = vars.steps.exec_task.data -%}\n{%- set ret = {\"error\":false,\"msg\":\"Task Created without error.\"} -%}\n{%- if a.status.error -%}\n  {%- do ret.update({\n      \"error\":true,\n      \"msg\":a.status.message\n    }\n  ) -%}\n{%- endif -%}\n{{ret}}"
             },
             "status": null,
             "top": "280",
-            "left": "40",
+            "left": "20",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
             "uuid": "a21e3fb8-b48b-4c1c-bbdc-ad5927848b31"
@@ -66,10 +68,10 @@
             "name": "setup payload",
             "description": null,
             "arguments": {
-                "api_payload": "{%- set ret = \n    {\n      \"data\": {\n        \"adom\": \"demo\",\n        \"create_task\": \"enable\",\n        \"devices\": [],\n        \"flags\": 900\n      }\n    } \n-%}\n\n{%- for d in vars.devices -%}\n  {%- set d = {\"image\":vars.firmware,\"name\":d} -%}\n  {%- do ret.data.devices.append(d) -%}\n{%- endfor -%}\n\n{{ret}}"
+                "api_payload": "{%- set ret = \n    {\n      \"data\": {\n        \"adom\": vars.adom,\n        \"create_task\": \"enable\",\n        \"devices\": [],\n        \"flags\": 900\n      }\n    } \n-%}\n\n{%- for d in vars.devices -%}\n  {%- set d = {\"image\":vars.firmware,\"name\":d} -%}\n  {%- do ret.data.devices.append(d) -%}\n{%- endfor -%}\n\n{{ret}}"
             },
             "status": null,
-            "top": "140",
+            "top": "160",
             "left": "520",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
@@ -80,9 +82,11 @@
             "name": "setup vars",
             "description": null,
             "arguments": {
+                "adom": "{{vars.input.params.adom}}",
                 "api_url": "\/um\/image\/upgrade\/ext",
                 "devices": "{{vars.input.params.devices.split(\",\")}}",
                 "firmware": "{{vars.input.params.firmware}}",
+                "track_task": "{%- set inp = vars.input.params['track_task'] -%}\n{%- if inp == False -%}\n{{inp}}\n{%- else -%}\nTrue\n{%- endif -%}",
                 "connector_config": "{{vars.input.params['connector_config']}}",
                 "task_stale_timeout": "900"
             },
@@ -118,23 +122,23 @@
     "routes": [
         {
             "@type": "WorkflowRoute",
-            "name": "fmg_api -> return",
+            "name": "exec task -> return",
             "targetStep": "\/api\/3\/workflow_steps\/a21e3fb8-b48b-4c1c-bbdc-ad5927848b31",
-            "sourceStep": "\/api\/3\/workflow_steps\/4e780eff-91c8-42b2-9d31-a1cbf5ee145d",
+            "sourceStep": "\/api\/3\/workflow_steps\/46796596-9ab4-40d0-b6a7-849d952e8848",
             "label": null,
             "isExecuted": false,
             "group": null,
-            "uuid": "4c139b76-5367-49fd-add4-1fb1e4459567"
+            "uuid": "94e99af9-f3e4-4b11-bc18-6454536ae2ab"
         },
         {
             "@type": "WorkflowRoute",
-            "name": "setup payload -> fmg_api",
-            "targetStep": "\/api\/3\/workflow_steps\/4e780eff-91c8-42b2-9d31-a1cbf5ee145d",
+            "name": "setup payload -> exec task",
+            "targetStep": "\/api\/3\/workflow_steps\/46796596-9ab4-40d0-b6a7-849d952e8848",
             "sourceStep": "\/api\/3\/workflow_steps\/014b34fe-f9f3-4f69-9da7-83e318ff2079",
             "label": null,
             "isExecuted": false,
             "group": null,
-            "uuid": "45c66433-7dab-4afa-aac4-a2b20be43ef8"
+            "uuid": "3799d6e7-6849-417c-9ebe-1f019d2814d2"
         },
         {
             "@type": "WorkflowRoute",
@@ -169,9 +173,9 @@
             "metadata": [],
             "reusable": false,
             "top": "120",
-            "left": "160",
-            "height": "123",
-            "width": "279",
+            "left": "80",
+            "height": "126",
+            "width": "370",
             "uuid": "35d7de61-4a37-4cc5-9c1e-bcc790aa116d",
             "recordTags": []
         }

@@ -10,13 +10,35 @@
     "singleRecordExecution": false,
     "remoteExecutableFlag": false,
     "parameters": [
-        "trigger_step_input_record"
+        "device_step_id"
     ],
     "synchronous": false,
     "collection": "\/api\/3\/workflow_collections\/517fb52d-36f5-4bac-a344-7d4599d7dec6",
     "versions": [],
     "triggerStep": "\/api\/3\/workflow_steps\/21cc7345-aab8-4a37-b787-677fa9176eee",
     "steps": [
+        {
+            "@type": "WorkflowStep",
+            "name": "cancel pending steps",
+            "description": null,
+            "arguments": {
+                "arguments": {
+                    "new_status": "Canceled",
+                    "device_step_id": "{{vars.device_step_id}}"
+                },
+                "apply_async": false,
+                "step_variables": [],
+                "pass_parent_env": false,
+                "pass_input_record": false,
+                "workflowReference": "\/api\/3\/workflows\/350ee935-23be-4393-af37-8f1862071dc5"
+            },
+            "status": null,
+            "top": "480",
+            "left": "220",
+            "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
+            "group": null,
+            "uuid": "9344c0e3-1a8c-4d46-a431-bd8b5dce2257"
+        },
         {
             "@type": "WorkflowStep",
             "name": "complete step",
@@ -26,7 +48,6 @@
                     "status": "{{\"ztpfDeviceStepStatus\" | picklist(vars.step_status, \"@id\")}}",
                     "stepDone": false,
                     "stepTime": "{{vars.step_time}}",
-                    "queueStatus": "{{\"ztpfDeviceStepStatus\" | picklist(vars.step_status, \"@id\")}}",
                     "stepTimeSeconds": "{{vars.step_time_seconds}}"
                 },
                 "operation": "Append",
@@ -39,11 +60,47 @@
                 "step_variables": []
             },
             "status": null,
-            "top": "340",
-            "left": "460",
+            "top": "320",
+            "left": "1200",
             "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928722",
             "group": null,
             "uuid": "e1f64272-c2df-4dd8-a41a-0dd4ba96dbdc"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "find step",
+            "description": null,
+            "arguments": {
+                "query": {
+                    "sort": [],
+                    "limit": 30,
+                    "logic": "AND",
+                    "filters": [
+                        {
+                            "type": "primitive",
+                            "field": "id",
+                            "value": "{{vars.input.params['device_step_id']}}",
+                            "operator": "eq",
+                            "_operator": "eq"
+                        }
+                    ],
+                    "__selectFields": [
+                        "ztpfDevices",
+                        "status",
+                        "id",
+                        "ztpfAutomationActions"
+                    ]
+                },
+                "module": "ztpf_device_automation_steps?$limit=1",
+                "checkboxFields": true,
+                "step_variables": []
+            },
+            "status": null,
+            "top": "40",
+            "left": "340",
+            "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928770",
+            "group": null,
+            "uuid": "0ea4260d-055f-46ce-9ab4-07b9dbd94e65"
         },
         {
             "@type": "WorkflowStep",
@@ -51,12 +108,12 @@
             "description": null,
             "arguments": {
                 "step_time": "{% macro human_time(total_seconds) -%}\n    {%- set total_seconds = total_seconds | int -%}\n    {%- set days = total_seconds \/\/ 86400 -%}\n    {%- set hours = (total_seconds % 86400) \/\/ 3600 -%}\n    {%- set minutes = (total_seconds % 3600) \/\/ 60 -%}\n    {%- set seconds = total_seconds % 60 -%}\n\n    {%- set out = [] -%}\n\n    {%- if days > 0 -%}\n        {%- set _ = out.append(days ~ \"d\") -%}\n    {%- endif -%}\n\n    {%- if hours > 0 -%}\n        {%- set _ = out.append(hours ~ \"h\") -%}\n    {%- endif -%}\n\n    {%- if minutes > 0 -%}\n        {%- set _ = out.append(minutes ~ \"m\") -%}\n    {%- endif -%}\n\n    {%- if total_seconds < 600 and seconds > 0 -%}\n        {%- set _ = out.append(seconds ~ \"s\") -%}\n    {%- endif -%}\n\n    {%- if out | length == 0 -%}\n        0s\n    {%- else -%}\n        {{ out | join(\" \") }}\n    {%- endif -%}\n{%- endmacro %}\n\n{%- set step_seconds = vars.steps.update_step_stop.stepStopTimestamp\n - vars.steps.update_step_stop.stepStartTimestamp -%}\n\n{%- set total_seconds = step_seconds -%}\n{{human_time(total_seconds )}}",
-                "step_status": "{%- set ret = \"Complete\" -%}\n{%- if vars.steps.update_step_stop.outputSourceData.output.error -%}\n{%- set ret = \"Fail\" -%}\n{%- endif -%}\n{{ret}}",
+                "step_status": "{%- set ret = \"Complete\" -%}\n{%- if vars.steps.update_step_stop.outputSourceData.output.error or \"Fail\" in vars.current_status -%}\n{%- set ret = \"Fail\" -%}\n{%- endif -%}\n{{ret}}",
                 "step_time_seconds": "{%- set step_seconds = vars.steps.update_step_stop.stepStopTimestamp\n - vars.steps.update_step_stop.stepStartTimestamp \n-%}\n\n{{step_seconds}}"
             },
             "status": null,
-            "top": "280",
-            "left": "880",
+            "top": "240",
+            "left": "1200",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
             "uuid": "8c814a32-3f5f-4ed7-a83b-05edb1d40973"
@@ -66,6 +123,7 @@
             "name": "render action output",
             "description": null,
             "arguments": {
+                "when": "{{\"Fail\" not in vars.current_status}}",
                 "arguments": {
                     "device_step_id": "{{vars.device_step_id}}"
                 },
@@ -76,8 +134,8 @@
                 "workflowReference": "\/api\/3\/workflows\/28a1b591-dd4f-43f7-8f45-cbe21781f883"
             },
             "status": null,
-            "top": "140",
-            "left": "860",
+            "top": "160",
+            "left": "1200",
             "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
             "group": null,
             "uuid": "50902f0b-7175-4295-b773-daa0749cfd95"
@@ -113,8 +171,8 @@
                 "workflowReference": "\/api\/3\/workflows\/3bcc3bbf-7003-4676-9d49-abdcd4f5913b"
             },
             "status": null,
-            "top": "260",
-            "left": "40",
+            "top": "320",
+            "left": "220",
             "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
             "group": null,
             "uuid": "cbfe4271-7ea7-48f5-b3f0-0429641b61f2"
@@ -124,14 +182,15 @@
             "name": "setup vars",
             "description": null,
             "arguments": {
-                "device_id": "{{vars.input.params['trigger_step_input_record']['ztpfDevices'].id}}",
-                "automation_id": "{{vars.input.params['trigger_step_input_record']['ztpfAutomationActions'].id}}",
-                "device_step_id": "{{vars.input.params['trigger_step_input_record'].id}}",
-                "device_step_fqid": "{{vars.input.params['trigger_step_input_record']['@id']}}"
+                "device_id": "{{vars.steps.find_step[0].ztpfDevices.id}}",
+                "automation_id": "{{vars.steps.find_step[0].ztpfAutomationActions.id}}",
+                "current_status": "{{vars.steps.find_step[0].status.itemValue}}",
+                "device_step_id": "{{vars.steps.find_step[0].id}}",
+                "device_step_fqid": "{{vars.steps.find_step[0]['@id']}}"
             },
             "status": null,
             "top": "40",
-            "left": "360",
+            "left": "660",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
             "uuid": "60bb456d-1682-49ea-b182-30aeb7a330d6"
@@ -159,6 +218,54 @@
         },
         {
             "@type": "WorkflowStep",
+            "name": "step status path",
+            "description": null,
+            "arguments": {
+                "conditions": [
+                    {
+                        "option": "Uknown",
+                        "default": true,
+                        "step_iri": "\/api\/3\/workflow_steps\/cc57fba3-e010-4d22-a683-2e6967df91b6",
+                        "step_name": "Unknown Status"
+                    },
+                    {
+                        "option": "Complete",
+                        "step_iri": "\/api\/3\/workflow_steps\/cbfe4271-7ea7-48f5-b3f0-0429641b61f2",
+                        "condition": "{{ \"Complete\" in vars.step_status }}",
+                        "step_name": "run next automation step"
+                    },
+                    {
+                        "option": "Fail",
+                        "step_iri": "\/api\/3\/workflow_steps\/9344c0e3-1a8c-4d46-a431-bd8b5dce2257",
+                        "condition": "{{ \"Fail\" in vars.current_status }}",
+                        "step_name": "cancel pending steps"
+                    }
+                ],
+                "step_variables": []
+            },
+            "status": null,
+            "top": "400",
+            "left": "600",
+            "stepType": "\/api\/3\/workflow_step_types\/12254cf5-5db7-4b1a-8cb1-3af081924b28",
+            "group": null,
+            "uuid": "f6bfbbc3-38ce-4747-97ee-46771158ec03"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Unknown Status",
+            "description": null,
+            "arguments": {
+                "uknown_status": "{{vars.step_status}}"
+            },
+            "status": null,
+            "top": "560",
+            "left": "600",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "cc57fba3-e010-4d22-a683-2e6967df91b6"
+        },
+        {
+            "@type": "WorkflowStep",
             "name": "update step stop",
             "description": null,
             "arguments": {
@@ -176,7 +283,7 @@
             },
             "status": null,
             "top": "40",
-            "left": "680",
+            "left": "1000",
             "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928722",
             "group": null,
             "uuid": "109a2b64-a442-4f46-a347-d6eb7ee17b3a"
@@ -185,13 +292,23 @@
     "routes": [
         {
             "@type": "WorkflowRoute",
-            "name": "complete step -> run next automation step",
-            "targetStep": "\/api\/3\/workflow_steps\/cbfe4271-7ea7-48f5-b3f0-0429641b61f2",
+            "name": "complete step -> step status path",
+            "targetStep": "\/api\/3\/workflow_steps\/f6bfbbc3-38ce-4747-97ee-46771158ec03",
             "sourceStep": "\/api\/3\/workflow_steps\/e1f64272-c2df-4dd8-a41a-0dd4ba96dbdc",
             "label": null,
             "isExecuted": false,
             "group": null,
-            "uuid": "4eaf879b-ce10-4162-8397-aa6a49008069"
+            "uuid": "99acd4e6-6f09-4342-923c-6f8d8b73d882"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "find step -> setup vars",
+            "targetStep": "\/api\/3\/workflow_steps\/60bb456d-1682-49ea-b182-30aeb7a330d6",
+            "sourceStep": "\/api\/3\/workflow_steps\/0ea4260d-055f-46ce-9ab4-07b9dbd94e65",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "757456e0-765b-4d23-a2dc-717df449679d"
         },
         {
             "@type": "WorkflowRoute",
@@ -235,13 +352,43 @@
         },
         {
             "@type": "WorkflowRoute",
-            "name": "Start -> setup vars",
-            "targetStep": "\/api\/3\/workflow_steps\/60bb456d-1682-49ea-b182-30aeb7a330d6",
+            "name": "Start -> find step",
+            "targetStep": "\/api\/3\/workflow_steps\/0ea4260d-055f-46ce-9ab4-07b9dbd94e65",
             "sourceStep": "\/api\/3\/workflow_steps\/21cc7345-aab8-4a37-b787-677fa9176eee",
             "label": null,
             "isExecuted": false,
             "group": null,
-            "uuid": "df10c7e4-ee9d-4ca2-b729-a04d7d2c43a1"
+            "uuid": "1fae70f9-eca8-4cdc-a139-6ef0bb634b9b"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "step status path -> cancel pending steps",
+            "targetStep": "\/api\/3\/workflow_steps\/9344c0e3-1a8c-4d46-a431-bd8b5dce2257",
+            "sourceStep": "\/api\/3\/workflow_steps\/f6bfbbc3-38ce-4747-97ee-46771158ec03",
+            "label": "Fail",
+            "isExecuted": false,
+            "group": null,
+            "uuid": "35369175-9de4-4da4-a72c-1e0e277e79b9"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "step status path -> run next automation step",
+            "targetStep": "\/api\/3\/workflow_steps\/cbfe4271-7ea7-48f5-b3f0-0429641b61f2",
+            "sourceStep": "\/api\/3\/workflow_steps\/f6bfbbc3-38ce-4747-97ee-46771158ec03",
+            "label": "Complete",
+            "isExecuted": false,
+            "group": null,
+            "uuid": "9491ba28-8b71-449f-9db6-7a6989fd1ab3"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "step status path -> Unknown Status",
+            "targetStep": "\/api\/3\/workflow_steps\/cc57fba3-e010-4d22-a683-2e6967df91b6",
+            "sourceStep": "\/api\/3\/workflow_steps\/f6bfbbc3-38ce-4747-97ee-46771158ec03",
+            "label": "Uknown",
+            "isExecuted": false,
+            "group": null,
+            "uuid": "c91da639-1b1b-4f7d-bb81-10691e57415b"
         },
         {
             "@type": "WorkflowRoute",
@@ -258,7 +405,7 @@
         {
             "@type": "WorkflowGroup",
             "name": "Details",
-            "description": "Update step stop time and then render the results of the action before completing the step. We do not set the step done because the RunGroup record will do this. \n\nFinish by kicking off the run next step playbooks.",
+            "description": "Update step stop time and then render the results of the action before completing the step. We do not set the step done because the RunGroup record will do this. \n\nFinish by kicking off the run next step playbooks IF the status is equal to *Complete*.",
             "type": "note",
             "isCollapsed": false,
             "hasTriggerStep": false,
@@ -266,9 +413,9 @@
             "metadata": [],
             "reusable": false,
             "top": "120",
-            "left": "380",
-            "height": "163",
-            "width": "442",
+            "left": "400",
+            "height": "177",
+            "width": "448",
             "uuid": "d1874191-ed1f-40ab-94e5-ba21cca9ff7b",
             "recordTags": []
         }

@@ -1,0 +1,473 @@
+{
+    "@type": "Workflow",
+    "triggerLimit": null,
+    "name": "> device step (Waiting)",
+    "aliasName": null,
+    "tag": null,
+    "description": "Step changed to waiting and can be handled different based on the trigger key.",
+    "isActive": true,
+    "debug": false,
+    "singleRecordExecution": false,
+    "remoteExecutableFlag": false,
+    "parameters": [],
+    "synchronous": false,
+    "collection": "\/api\/3\/workflow_collections\/9cca11ea-b95a-4504-8385-ad42db358c36",
+    "versions": [],
+    "triggerStep": "\/api\/3\/workflow_steps\/74651324-9ffd-48f7-9a6c-820f5633ce67",
+    "steps": [
+        {
+            "@type": "WorkflowStep",
+            "name": "done waiting",
+            "description": null,
+            "arguments": {
+                "resource": {
+                    "stepWaiting": "{{vars.uncheck}}",
+                    "ztpfArtifacts": "{{vars.steps.run_check_by_trigger_key.output.ztpfArtifacts}}"
+                },
+                "operation": "Append",
+                "collection": "{{vars.input.records[0]['@id']}}",
+                "__recommend": [],
+                "collectionType": "\/api\/3\/ztpf_device_automation_steps",
+                "fieldOperation": {
+                    "recordTags": "Append"
+                },
+                "step_variables": []
+            },
+            "status": null,
+            "top": "460",
+            "left": "420",
+            "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928722",
+            "group": null,
+            "uuid": "31531e80-fb9f-4eaf-8eba-aed5721c4927"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "fail step",
+            "description": null,
+            "arguments": {
+                "resource": {
+                    "status": "\/api\/3\/picklists\/30515ef9-5192-4329-86db-9a47b6c8db65",
+                    "outputText": "{{vars.error_msg}}",
+                    "outputMarkdown": "**{{vars.error_msg}}**"
+                },
+                "operation": "Append",
+                "collection": "{{vars.input.records[0]['@id']}}",
+                "__recommend": [],
+                "collectionType": "\/api\/3\/ztpf_device_automation_steps",
+                "fieldOperation": {
+                    "recordTags": "Append"
+                },
+                "step_variables": []
+            },
+            "status": null,
+            "top": "540",
+            "left": "20",
+            "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928722",
+            "group": null,
+            "uuid": "cccb9dde-11f6-4e35-95fa-f2fe14c666ba"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "is done waiting",
+            "description": null,
+            "arguments": {
+                "conditions": [
+                    {
+                        "option": "Yes",
+                        "default": true,
+                        "step_iri": "\/api\/3\/workflow_steps\/31531e80-fb9f-4eaf-8eba-aed5721c4927",
+                        "step_name": "done waiting"
+                    },
+                    {
+                        "option": "No",
+                        "step_iri": "\/api\/3\/workflow_steps\/1c4e2f15-9069-4b72-87c2-b3710a8da158",
+                        "condition": "{{ vars.steps.run_check_by_trigger_key.output['step_status'] == \"Waiting\" }}",
+                        "step_name": "still waiting"
+                    }
+                ],
+                "step_variables": []
+            },
+            "status": null,
+            "top": "400",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/12254cf5-5db7-4b1a-8cb1-3af081924b28",
+            "group": null,
+            "uuid": "98727fce-6598-4162-aae4-21cae52f1ea4"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "no wait check",
+            "description": null,
+            "arguments": {
+                "error_msg": "Please see administrator. No Wait Check Playbook defined for Trigger Key {{vars.input.records[0].triggerKey}}."
+            },
+            "status": null,
+            "top": "540",
+            "left": "1040",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "f269e236-c4c9-442a-b094-3bec942ab4e8"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "run check by trigger key",
+            "description": null,
+            "arguments": {
+                "arguments": {
+                    "device_step_id": "{{vars.device_step_id}}"
+                },
+                "apply_async": false,
+                "step_variables": [],
+                "pass_parent_env": false,
+                "pass_input_record": false,
+                "workflowReference": "{{vars.run_playbook}}"
+            },
+            "status": null,
+            "top": "260",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
+            "group": null,
+            "uuid": "d71b6e11-fac5-4ed2-846f-8dd384789d00"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "setup vars",
+            "description": null,
+            "arguments": {
+                "check": "true",
+                "uncheck": "false",
+                "run_playbook": "{{vars.triggerkey_idx[vars.input.records[0].triggerKey].pb}}",
+                "wait_seconds": "{%- set inp = vars.input.records[0].waitToCheckSeconds -%}\n{%- if not inp or inp in [None,''] -%}\n60\n{%- else -%}\n{{inp}}\n{%- endif -%}",
+                "device_step_id": "{{vars.input.records[0].id}}"
+            },
+            "status": null,
+            "top": "80",
+            "left": "640",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "11baa3d3-225f-452f-bd4d-4273d5b0a6d4"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Start",
+            "description": null,
+            "arguments": {
+                "resource": "ztpf_device_automation_steps",
+                "resources": [
+                    "ztpf_device_automation_steps"
+                ],
+                "__triggerLimit": true,
+                "step_variables": {
+                    "input": {
+                        "params": [],
+                        "records": [
+                            "{{vars.input.records[0]}}"
+                        ]
+                    }
+                },
+                "triggerOnSource": true,
+                "fieldbasedtrigger": {
+                    "sort": [],
+                    "limit": 30,
+                    "logic": "AND",
+                    "filters": [
+                        {
+                            "type": "object",
+                            "field": "status",
+                            "value": "",
+                            "_value": {
+                                "@id": "",
+                                "display": "",
+                                "itemValue": ""
+                            },
+                            "operator": "changed"
+                        },
+                        {
+                            "type": "object",
+                            "field": "status",
+                            "value": "\/api\/3\/picklists\/9acf4837-07dc-4854-90f9-2010640d7c94",
+                            "_value": {
+                                "@id": "\/api\/3\/picklists\/9acf4837-07dc-4854-90f9-2010640d7c94",
+                                "display": "Waiting",
+                                "itemValue": "Waiting"
+                            },
+                            "operator": "eq"
+                        }
+                    ]
+                },
+                "triggerOnReplicate": false
+            },
+            "status": null,
+            "top": "40",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/9300bf69-5063-486d-b3a6-47eb9da24872",
+            "group": null,
+            "uuid": "74651324-9ffd-48f7-9a6c-820f5633ce67"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "still waiting",
+            "description": null,
+            "arguments": {
+                "resource": {
+                    "status": "\/api\/3\/picklists\/81d137b2-01bf-4a1c-a7ee-e68bd972d0bd",
+                    "stepWaiting": "{{vars.check}}",
+                    "ztpfArtifacts": "{{vars.steps.run_check_by_trigger_key.output.ztpfArtifacts}}"
+                },
+                "operation": "Append",
+                "collection": "{{vars.input.records[0]['@id']}}",
+                "__recommend": [],
+                "collectionType": "\/api\/3\/ztpf_device_automation_steps",
+                "fieldOperation": {
+                    "recordTags": "Append"
+                },
+                "step_variables": []
+            },
+            "status": null,
+            "top": "340",
+            "left": "420",
+            "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928722",
+            "group": null,
+            "uuid": "1c4e2f15-9069-4b72-87c2-b3710a8da158"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "trigger key index",
+            "description": null,
+            "arguments": {
+                "triggerkey_idx": "{\n  \"FortiManager DeviceDB\":{\n    \"pb\":\"\"\n  },\n  \"FortiManager Install Device Config\":{\n    \"pb\":\"\"\n  },\n  \"FortiManager Remote CLI\":{\n    \"pb\":\"\"\n  },\n  \"FortiManager Upgrade Device Firmware\":{\n    \"pb\":\"f5d67d86-4797-401a-825e-b41ee02f4053\"\n  },\n  \"ZTPF Report\":{\n    \"pb\":\"\"\n  }\n}"
+            },
+            "status": null,
+            "top": "40",
+            "left": "340",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "3c2771f9-483c-40bc-9dd3-a59ed43e8280"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "update step waiting check",
+            "description": null,
+            "arguments": {
+                "resource": {
+                    "status": "\/api\/3\/picklists\/eccf4d3b-29f3-45ee-a9d9-9546b79bf3da",
+                    "stepWaiting": true
+                },
+                "operation": "Append",
+                "collection": "{{vars.input.records[0]['@id']}}",
+                "__recommend": [],
+                "collectionType": "\/api\/3\/ztpf_device_automation_steps",
+                "fieldOperation": {
+                    "recordTags": "Append"
+                },
+                "step_variables": []
+            },
+            "status": null,
+            "top": "260",
+            "left": "340",
+            "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928722",
+            "group": null,
+            "uuid": "11db51fe-a785-4f5e-a9f5-8f0ed92c41c5"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "wait before check",
+            "description": null,
+            "arguments": {
+                "rule": {
+                    "actions": [
+                        {
+                            "type": "resume_playbook",
+                            "enabled": true,
+                            "channel_uuid": "e2ce87c2-c55a-11ec-9d64-0242ac120002"
+                        }
+                    ],
+                    "is_active": true,
+                    "event_source": "crudhub"
+                },
+                "type": "TimeBased",
+                "delay": {
+                    "days": 0,
+                    "hours": 0,
+                    "minutes": 0,
+                    "seconds": 1
+                }
+            },
+            "status": null,
+            "top": "220",
+            "left": "640",
+            "stepType": "\/api\/3\/workflow_step_types\/6832e556-b9c7-497a-babe-feda3bd27dbf",
+            "group": null,
+            "uuid": "a83d33f1-3410-4d85-80bc-08662c8572ba"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "wait playbook found",
+            "description": null,
+            "arguments": {
+                "conditions": [
+                    {
+                        "option": "Wait Check Playbook Missing",
+                        "default": true,
+                        "step_iri": "\/api\/3\/workflow_steps\/f269e236-c4c9-442a-b094-3bec942ab4e8",
+                        "step_name": "no wait check"
+                    },
+                    {
+                        "option": "Wait and Check",
+                        "step_iri": "\/api\/3\/workflow_steps\/a83d33f1-3410-4d85-80bc-08662c8572ba",
+                        "condition": "{{ vars.run_playbook is defined and vars.run_playbook != '' }}",
+                        "step_name": "wait before check"
+                    }
+                ],
+                "step_variables": []
+            },
+            "status": null,
+            "top": "140",
+            "left": "1040",
+            "stepType": "\/api\/3\/workflow_step_types\/12254cf5-5db7-4b1a-8cb1-3af081924b28",
+            "group": null,
+            "uuid": "e7bc1a64-fbb1-4a10-95ee-d858990e033e"
+        }
+    ],
+    "routes": [
+        {
+            "@type": "WorkflowRoute",
+            "name": "is done waiting -> done waiting",
+            "targetStep": "\/api\/3\/workflow_steps\/31531e80-fb9f-4eaf-8eba-aed5721c4927",
+            "sourceStep": "\/api\/3\/workflow_steps\/98727fce-6598-4162-aae4-21cae52f1ea4",
+            "label": "Yes",
+            "isExecuted": false,
+            "group": null,
+            "uuid": "f7694999-7de2-48a3-99e8-f00330948e9b"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "is done waiting -> still waiting",
+            "targetStep": "\/api\/3\/workflow_steps\/1c4e2f15-9069-4b72-87c2-b3710a8da158",
+            "sourceStep": "\/api\/3\/workflow_steps\/98727fce-6598-4162-aae4-21cae52f1ea4",
+            "label": "No",
+            "isExecuted": false,
+            "group": null,
+            "uuid": "d8ba23df-284d-4c9e-861b-46949124b596"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "no wait check -> fail step",
+            "targetStep": "\/api\/3\/workflow_steps\/cccb9dde-11f6-4e35-95fa-f2fe14c666ba",
+            "sourceStep": "\/api\/3\/workflow_steps\/f269e236-c4c9-442a-b094-3bec942ab4e8",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "245b509d-5f72-4618-bd8e-a4eb71cb76c1"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "run check by trigger key -> is done waiting",
+            "targetStep": "\/api\/3\/workflow_steps\/98727fce-6598-4162-aae4-21cae52f1ea4",
+            "sourceStep": "\/api\/3\/workflow_steps\/d71b6e11-fac5-4ed2-846f-8dd384789d00",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "a8d8ec9a-c027-4307-a23d-c7040ed40a12"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "setup vars -> wait playbook",
+            "targetStep": "\/api\/3\/workflow_steps\/e7bc1a64-fbb1-4a10-95ee-d858990e033e",
+            "sourceStep": "\/api\/3\/workflow_steps\/11baa3d3-225f-452f-bd4d-4273d5b0a6d4",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "acf49abf-93d8-49a4-a0cc-083cbf52fcc4"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Start -> trigger key index",
+            "targetStep": "\/api\/3\/workflow_steps\/3c2771f9-483c-40bc-9dd3-a59ed43e8280",
+            "sourceStep": "\/api\/3\/workflow_steps\/74651324-9ffd-48f7-9a6c-820f5633ce67",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "1032cb39-1932-4078-9b37-58280192fb42"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "trigger key index -> setup vars",
+            "targetStep": "\/api\/3\/workflow_steps\/11baa3d3-225f-452f-bd4d-4273d5b0a6d4",
+            "sourceStep": "\/api\/3\/workflow_steps\/3c2771f9-483c-40bc-9dd3-a59ed43e8280",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "d10a0839-636c-4884-a1bd-a5d347c6bd7d"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "update step waiting check -> wait check by trigger key",
+            "targetStep": "\/api\/3\/workflow_steps\/d71b6e11-fac5-4ed2-846f-8dd384789d00",
+            "sourceStep": "\/api\/3\/workflow_steps\/11db51fe-a785-4f5e-a9f5-8f0ed92c41c5",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "55def5d0-f381-4a91-a28c-44f63a6b3262"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "wait before check -> update step waiting check",
+            "targetStep": "\/api\/3\/workflow_steps\/11db51fe-a785-4f5e-a9f5-8f0ed92c41c5",
+            "sourceStep": "\/api\/3\/workflow_steps\/a83d33f1-3410-4d85-80bc-08662c8572ba",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "b823b2dc-db62-4043-be18-ad81349950cf"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "wait playbook -> no wait check",
+            "targetStep": "\/api\/3\/workflow_steps\/f269e236-c4c9-442a-b094-3bec942ab4e8",
+            "sourceStep": "\/api\/3\/workflow_steps\/e7bc1a64-fbb1-4a10-95ee-d858990e033e",
+            "label": "Wait Check Playbook Missing",
+            "isExecuted": false,
+            "group": null,
+            "uuid": "a6898967-a202-484d-9834-2537b0a28f18"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "wait playbook -> wait before check",
+            "targetStep": "\/api\/3\/workflow_steps\/a83d33f1-3410-4d85-80bc-08662c8572ba",
+            "sourceStep": "\/api\/3\/workflow_steps\/e7bc1a64-fbb1-4a10-95ee-d858990e033e",
+            "label": "Wait and Check",
+            "isExecuted": false,
+            "group": null,
+            "uuid": "b90f3668-39d9-4f31-9c5f-99adc186b229"
+        }
+    ],
+    "groups": [
+        {
+            "@type": "WorkflowGroup",
+            "name": "Details",
+            "description": "When step is set to wait launch the playbook based on the trigger key value.",
+            "type": "note",
+            "isCollapsed": false,
+            "hasTriggerStep": false,
+            "hideInLogs": false,
+            "metadata": [],
+            "reusable": false,
+            "top": "120",
+            "left": "60",
+            "height": "104",
+            "width": "498",
+            "uuid": "72f40e88-e7f4-4dbb-8b1e-2766db758660",
+            "recordTags": []
+        }
+    ],
+    "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+    "playbookOrigin": "\/api\/3\/picklists\/b6d710a9-a8ec-41ec-8817-fe9fa062fcdd",
+    "isEditable": false,
+    "uuid": "bf9b524e-03e9-4317-be8c-ba243edc3d87",
+    "owners": [],
+    "isPrivate": false,
+    "deletedAt": null,
+    "recordTags": [
+        "ztpfDeviceAutomationStep"
+    ]
+}

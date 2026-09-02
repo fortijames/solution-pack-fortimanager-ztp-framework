@@ -324,7 +324,7 @@
             "arguments": {
                 "__triggerLimit": true,
                 "step_variables": {
-                    "tags": "{{vars.input.params.tags.replace(',',' ').split(' ')}}",
+                    "tags": "{%- if vars.input.params.tags -%}{{vars.input.params.tags.replace(',',' ').split(' ')}}\n{%- endif -%}",
                     "input": {
                         "params": []
                     }

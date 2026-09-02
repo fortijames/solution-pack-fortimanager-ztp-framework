@@ -65,7 +65,7 @@
             "description": null,
             "arguments": {
                 "total_time": "{% macro human_time(total_seconds) -%}\n    {%- set total_seconds = total_seconds | int -%}\n    {%- set days = total_seconds \/\/ 86400 -%}\n    {%- set hours = (total_seconds % 86400) \/\/ 3600 -%}\n    {%- set minutes = (total_seconds % 3600) \/\/ 60 -%}\n    {%- set seconds = total_seconds % 60 -%}\n\n    {%- set out = [] -%}\n\n    {%- if days > 0 -%}\n        {%- set _ = out.append(days ~ \"d\") -%}\n    {%- endif -%}\n\n    {%- if hours > 0 -%}\n        {%- set _ = out.append(hours ~ \"h\") -%}\n    {%- endif -%}\n\n    {%- if minutes > 0 -%}\n        {%- set _ = out.append(minutes ~ \"m\") -%}\n    {%- endif -%}\n\n    {%- if total_seconds < 600 and seconds > 0 -%}\n        {%- set _ = out.append(seconds ~ \"s\") -%}\n    {%- endif -%}\n\n    {%- if out | length == 0 -%}\n        0s\n    {%- else -%}\n        {{ out | join(\" \") }}\n    {%- endif -%}\n{%- endmacro %}\n\n{%- set start_min =  vars.step_results.steps_stopped\n                          |json_query('[].stepStartTimestamp')\n                          |min\n-%}\n{%- set stop_max =  vars.step_results.steps_stopped\n                          |json_query('[].stepStopTimestamp')\n                          |max\n-%}\n\n{%- set total_seconds = stop_max - start_min  -%}\n{{human_time(total_seconds )}}",
-                "rungroup_status": "Complete",
+                "rungroup_status": "{%- set ret = \"Complete\" -%}\n\n{%- if \"Fail\" in vars.step_results.states -%}\n  {%- set ret = \"Fail\" -%}\n{%- endif -%}\n\n{{ret}}",
                 "total_time_seconds": "{%- set start_min =  vars.step_results.steps_stopped\n                          |json_query('[].stepStartTimestamp')\n                          |min\n-%}\n{%- set stop_max =  vars.step_results.steps_stopped\n                          |json_query('[].stepStopTimestamp')\n                          |max\n-%}\n{%- set total_seconds = stop_max - start_min  -%}\n{{total_seconds}}",
                 "ztpfRunning_checkbox": "false"
             },
@@ -172,7 +172,7 @@
             "name": "step_results",
             "description": null,
             "arguments": {
-                "step_results": "{%- set ret = {\n  \"total_steps\": 0,\n  \"device_ids\": [],\n  \"device_records\": [],\n  \"steps_stopped\":[],\n  \"steps_pending\":[]\n} -%}\n\n{%- for r in vars.steps.find_steps -%}\n  {%- do ret.update({\"total_steps\":ret.total_steps + 1}) -%}\n  {%- if r.ztpfDevices.id not in ret.device_ids -%}\n    {%- do ret.device_ids.append(r.ztpfDevices.id) -%}\n    {%- do ret.device_records.append(r.ztpfDevices) -%}\n  {%- endif -%}\n  {%- if r.stepStopTimestamp -%}\n    {%- do ret.steps_stopped.append(r) -%}\n  {%- else -%}\n    {%- do ret.steps_pending.append(r) -%}\n  {%- endif -%}\n{%- endfor -%}\n\n{{ret}}"
+                "step_results": "{%- set ret = {\n  \"total_steps\": 0,\n  \"device_ids\": [],\n  \"device_records\": [],\n  \"steps_stopped\":[],\n  \"steps_pending\":[],\n  \"status2steps\":{},\n  \"status_count\":{},\n  \"states\":[],\n} -%}\n\n{%- for r in vars.steps.find_steps -%}\n  {%- set status = r.status.itemValue -%}\n  {%- do ret.update({\"total_steps\":ret.total_steps + 1}) -%}\n  {%- if r.ztpfDevices.id not in ret.device_ids -%}\n    {%- do ret.device_ids.append(r.ztpfDevices.id) -%}\n    {%- do ret.device_records.append(r.ztpfDevices) -%}\n  {%- endif -%}\n  {%- if status not in ret.status2steps -%}\n    {%- do ret.status2steps.update({status:[]}) -%}\n    {%- do ret.status_count.update({status:0}) -%}\n    {%- do ret.states.append(status) -%}\n  {%- endif -%}\n  {%- if r.stepStopTimestamp -%}\n    {%- do ret.steps_stopped.append(r) -%}\n  {%- else -%}\n    {%- do ret.steps_pending.append(r) -%}\n  {%- endif -%}\n  {%- do ret.status2steps[status].append(r) -%}\n  {%- do ret.status_count.update({status:ret.status_count[status] + 1}) -%}\n{%- endfor -%}\n\n{{ret}}"
             },
             "status": null,
             "top": "120",
@@ -235,7 +235,7 @@
                 "step_variables": []
             },
             "status": null,
-            "top": "480",
+            "top": "580",
             "left": "800",
             "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928722",
             "group": null,
@@ -296,7 +296,7 @@
                 "step_variables": []
             },
             "status": null,
-            "top": "400",
+            "top": "500",
             "left": "800",
             "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928722",
             "group": null,

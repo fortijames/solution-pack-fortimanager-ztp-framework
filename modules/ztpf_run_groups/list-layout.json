@@ -11,7 +11,7 @@
                             {
                                 "type": "chart",
                                 "config": {
-                                    "wid": "d294060e-a77b-4656-9a82-84bc838c3df7",
+                                    "wid": "3129bd48-0da3-4c06-98d5-cb23c12b15a2",
                                     "widgetAlwaysDisplay": true,
                                     "showTabularData": false,
                                     "query": {
@@ -53,7 +53,56 @@
                                     "assignedToSetting": "all",
                                     "aggregate": true,
                                     "viewType": "chart",
-                                    "title": "Status",
+                                    "title": "RunGroups by Status",
+                                    "resource": "ztpf_run_groups",
+                                    "chart": "pie",
+                                    "widgetAlwaysExpanded": true
+                                }
+                            }
+                        ],
+                        "style": "col-lg-4"
+                    },
+                    {
+                        "widgets": [
+                            {
+                                "type": "chart",
+                                "config": {
+                                    "wid": "d294060e-a77b-4656-9a82-84bc838c3df7",
+                                    "widgetAlwaysDisplay": true,
+                                    "showTabularData": false,
+                                    "query": {
+                                        "sort": [],
+                                        "limit": 2147483647,
+                                        "logic": "AND",
+                                        "filters": [
+                                            {
+                                                "field": "recordTags",
+                                                "operator": "isnull",
+                                                "value": "false",
+                                                "_value": "false",
+                                                "type": "array"
+                                            }
+                                        ],
+                                        "aggregates": [
+                                            {
+                                                "operator": "countdistinct",
+                                                "field": "*",
+                                                "alias": "total"
+                                            },
+                                            {
+                                                "operator": "groupby",
+                                                "alias": "recordTags",
+                                                "field": "recordTags.uuid"
+                                            }
+                                        ]
+                                    },
+                                    "mapping": {
+                                        "fieldName": "recordTags"
+                                    },
+                                    "assignedToSetting": "all",
+                                    "aggregate": true,
+                                    "viewType": "chart",
+                                    "title": "RunGroups by Tags",
                                     "resource": "ztpf_run_groups",
                                     "chart": "pie",
                                     "widgetAlwaysExpanded": true
@@ -110,7 +159,15 @@
                             }
                         ],
                         "style": "col-lg-4"
-                    },
+                    }
+                ],
+                "wid": "cdba5b0a-ae66-4b33-82d8-0d4cabfeb11e",
+                "collapsible": false,
+                "collapsibleIndex": 0,
+                "_collapsed": false
+            },
+            {
+                "columns": [
                     {
                         "widgets": [
                             {
@@ -120,67 +177,48 @@
                                     "widgetAlwaysDisplay": true,
                                     "showTabularData": false,
                                     "query": {
-                                        "sort": [
-                                            {
-                                                "field": "ztpfDevices.name",
-                                                "direction": "ASC"
-                                            },
-                                            {
-                                                "field": "ztpfRunGroups.name",
-                                                "direction": "ASC"
-                                            }
-                                        ],
+                                        "sort": [],
                                         "limit": 2147483647,
                                         "logic": "AND",
                                         "filters": [],
                                         "aggregates": [
                                             {
-                                                "operator": "countdistinct",
-                                                "field": "*",
-                                                "alias": "total"
+                                                "operator": "select",
+                                                "alias": "uuid",
+                                                "field": "ztpfRunGroups.uuid"
                                             },
                                             {
                                                 "operator": "select",
-                                                "alias": "ztpfDevices__name",
-                                                "field": "ztpfDevices.name"
-                                            },
-                                            {
-                                                "operator": "groupby",
-                                                "alias": "ztpfDevices__uuid",
-                                                "field": "ztpfDevices.uuid"
-                                            },
-                                            {
-                                                "operator": "select",
-                                                "alias": "ztpfRunGroups__name",
+                                                "alias": "name",
                                                 "field": "ztpfRunGroups.name"
                                             },
                                             {
-                                                "operator": "groupby",
-                                                "alias": "ztpfRunGroups__uuid",
-                                                "field": "ztpfRunGroups.uuid"
+                                                "operator": "select",
+                                                "alias": "stepStopTimestamp",
+                                                "field": "stepStopTimestamp"
                                             }
                                         ]
                                     },
                                     "mapping": {
-                                        "firstGrouping": "ztpfDevices",
-                                        "secondGrouping": "ztpfRunGroups"
+                                        "fieldName": "ztpfRunGroups",
+                                        "dateFieldName": "stepStopTimestamp",
+                                        "timeScope": "day",
+                                        "dateFormat": "%b %e"
                                     },
-                                    "assignedToSetting": "onlyMe",
+                                    "assignedToSetting": "all",
                                     "aggregate": true,
                                     "viewType": "chart",
-                                    "title": "Steps by Device and RunGroup",
+                                    "title": "Step Count by RunGroup and Stop Time",
                                     "resource": "ztpf_device_automation_steps",
-                                    "chart": "bar",
+                                    "chart": "timeseries",
                                     "widgetAlwaysExpanded": true
                                 }
                             }
                         ],
-                        "style": "col-lg-4"
+                        "style": "col-lg-12"
                     }
                 ],
-                "wid": "cdba5b0a-ae66-4b33-82d8-0d4cabfeb11e",
-                "collapsible": false,
-                "collapsibleIndex": 0,
+                "wid": "14f6e8d0-e06a-4321-901d-5645296e1934",
                 "_collapsed": false
             },
             {

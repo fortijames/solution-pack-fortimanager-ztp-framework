@@ -5,7 +5,7 @@
     "aliasName": null,
     "tag": null,
     "description": "Step changed to running for given Action Category and Type.",
-    "isActive": true,
+    "isActive": false,
     "debug": false,
     "singleRecordExecution": false,
     "remoteExecutableFlag": false,
@@ -114,6 +114,12 @@
                             "value": "FortiManager Upgrade Device Firmware",
                             "operator": "eq",
                             "_operator": "eq"
+                        },
+                        {
+                            "type": "datetime",
+                            "field": "stepStartTimestamp",
+                            "value": "true",
+                            "operator": "isnull"
                         }
                     ]
                 },
