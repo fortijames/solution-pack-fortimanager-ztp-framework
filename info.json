@@ -11,8 +11,8 @@
     "description": "A solution framework to manage one or more FortiManagers and attached Fortinet Devices. Build a ZTP Flow that will perform onboarding, lifecycle, and/or offboarding objectives for devices. Create a single pane of glass dashboard for multiple FortiManagers and attached devices. Create reports for devices using jinja to simplify data collection. Interact with external users and/or systems to collect device metadata required for various tasks.",
     "help": "https://github.com/fortinet-fortisoar/solution-pack-fortimanager-ztp-framework/blob/release/2.0.0/README.md",
     "category": [
-        "Compliance and Reporting",
         "Centralized Security Management",
+        "Compliance and Reporting",
         "DevOps and Digital Operations",
         "Utilities"
     ],
@@ -21,7 +21,7 @@
     "postInstallConfig": {
         "enabled": false
     },
-    "date": "2026-08-12T20:04:10+00:00",
+    "date": "2026-09-03T15:54:02+00:00",
     "contents": {
         "picklistNames": [
             {
@@ -278,19 +278,16 @@
         ],
         "widgets": [
             {
-                "apiName": "playbookButtons",
-                "name": "Playbook Buttons"
+                "apiName": "ztpAutomationGraph",
+                "name": "ZTP Automation Step Graph"
             },
             {
                 "apiName": "playbookExecutionWizard",
                 "name": "Playbook Execution Wizard"
-            }
-        ],
-        "recordSets": [
+            },
             {
-                "name": "ztpfQuickLinks",
-                "apiName": "ztpf_quick_links",
-                "count": 1
+                "apiName": "playbookButtons",
+                "name": "Playbook Buttons"
             }
         ]
     }
