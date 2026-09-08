@@ -271,7 +271,7 @@
         },
         {
             "@type": "WorkflowStep",
-            "name": "wait before check",
+            "name": "wait 1s before check",
             "description": null,
             "arguments": {
                 "rule": {
@@ -445,7 +445,7 @@
         {
             "@type": "WorkflowGroup",
             "name": "Details",
-            "description": "When step is set to wait launch the playbook based on the trigger key value.",
+            "description": "When step is set to wait launch the playbook based on the trigger key value. This playbook does not wait but sets the status *wait timer* to trigger a wait. When the wait is done the status is set back to *wait* which will then perform the *wait check*.",
             "type": "note",
             "isCollapsed": false,
             "hasTriggerStep": false,
@@ -454,9 +454,26 @@
             "reusable": false,
             "top": "120",
             "left": "60",
-            "height": "104",
+            "height": "128",
             "width": "498",
             "uuid": "72f40e88-e7f4-4dbb-8b1e-2766db758660",
+            "recordTags": []
+        },
+        {
+            "@type": "WorkflowGroup",
+            "name": "Fail Details",
+            "description": "If the action called for a wait but there is not a wait process or this action we have to fail.",
+            "type": "note",
+            "isCollapsed": false,
+            "hasTriggerStep": false,
+            "hideInLogs": false,
+            "metadata": [],
+            "reusable": false,
+            "top": "360",
+            "left": "760",
+            "height": "100",
+            "width": "361",
+            "uuid": "fb230dff-0873-4310-92ad-ef12e0959896",
             "recordTags": []
         }
     ],

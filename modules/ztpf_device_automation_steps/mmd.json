@@ -1208,50 +1208,6 @@
         },
         {
             "@type": "AttributeMetadata",
-            "type": "object",
-            "name": "ztpfArtifacts",
-            "length": null,
-            "formType": "object",
-            "dataSource": null,
-            "searchable": false,
-            "peerReplicable": true,
-            "system": false,
-            "encrypted": false,
-            "gridColumn": false,
-            "collection": false,
-            "inversedField": null,
-            "ownsRelationship": false,
-            "validation": {
-                "required": false,
-                "minlength": 0,
-                "maxlength": 10485761,
-                "_enableRange": false
-            },
-            "bulkAction": {
-                "allow": false,
-                "buttonText": "",
-                "buttonIcon": "",
-                "buttonClass": "btn btn-default btn-sm"
-            },
-            "dataSourceFilters": null,
-            "defaultValue": null,
-            "tooltip": "ZTPF Data while running on this automation step.",
-            "visibility": true,
-            "htmlEscape": false,
-            "orphanRemoval": null,
-            "readable": true,
-            "writeable": true,
-            "identifier": null,
-            "unique": false,
-            "recommend": false,
-            "skipSerialization": false,
-            "displayName": "{{ ztpfArtifacts }}",
-            "descriptions": {
-                "singular": "ztpfArtifacts"
-            }
-        },
-        {
-            "@type": "AttributeMetadata",
             "type": "integer",
             "name": "waitToCheckSeconds",
             "length": null,
@@ -1291,6 +1247,50 @@
             "displayName": "{{ waitToCheckSeconds }}",
             "descriptions": {
                 "singular": "Wait to Check Seconds"
+            }
+        },
+        {
+            "@type": "AttributeMetadata",
+            "type": "object",
+            "name": "ztpfArtifacts",
+            "length": null,
+            "formType": "object",
+            "dataSource": null,
+            "searchable": false,
+            "peerReplicable": true,
+            "system": false,
+            "encrypted": false,
+            "gridColumn": false,
+            "collection": false,
+            "inversedField": null,
+            "ownsRelationship": false,
+            "validation": {
+                "required": false,
+                "minlength": 0,
+                "maxlength": 10485761,
+                "_enableRange": false
+            },
+            "bulkAction": {
+                "allow": false,
+                "buttonText": "",
+                "buttonIcon": "",
+                "buttonClass": "btn btn-default btn-sm"
+            },
+            "dataSourceFilters": null,
+            "defaultValue": null,
+            "tooltip": "ZTPF Data while running on this automation step.",
+            "visibility": true,
+            "htmlEscape": false,
+            "orphanRemoval": null,
+            "readable": true,
+            "writeable": true,
+            "identifier": null,
+            "unique": false,
+            "recommend": false,
+            "skipSerialization": false,
+            "displayName": "{{ ztpfArtifacts }}",
+            "descriptions": {
+                "singular": "ztpfArtifacts DEPRECATED"
             }
         },
         {
@@ -1435,6 +1435,49 @@
             "displayName": "{{ ztpfGroup }}",
             "descriptions": {
                 "singular": "ztpfGroup DEPRECATED"
+            }
+        },
+        {
+            "@type": "AttributeMetadata",
+            "type": "boolean",
+            "name": "reportingStep",
+            "length": null,
+            "formType": "checkbox",
+            "dataSource": null,
+            "searchable": true,
+            "peerReplicable": true,
+            "system": false,
+            "encrypted": false,
+            "gridColumn": false,
+            "collection": false,
+            "inversedField": null,
+            "ownsRelationship": false,
+            "validation": {
+                "required": false,
+                "minlength": 0,
+                "maxlength": 10485761
+            },
+            "bulkAction": {
+                "allow": false,
+                "buttonText": "",
+                "buttonIcon": "",
+                "buttonClass": "btn btn-default btn-sm"
+            },
+            "dataSourceFilters": null,
+            "defaultValue": "",
+            "tooltip": "Step designed to be a reporting step and should be considered in a report.",
+            "visibility": true,
+            "htmlEscape": false,
+            "orphanRemoval": null,
+            "readable": true,
+            "writeable": true,
+            "identifier": null,
+            "unique": false,
+            "recommend": false,
+            "skipSerialization": false,
+            "displayName": "{{ reportingStep }}",
+            "descriptions": {
+                "singular": "Reporting Step"
             }
         }
     ],

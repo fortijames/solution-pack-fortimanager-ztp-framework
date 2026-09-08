@@ -1,7 +1,7 @@
 {
     "@type": "Workflow",
     "triggerLimit": null,
-    "name": "> run action from step_id - FortiManager DeviceDB",
+    "name": "> running step - FortiManager Device Script",
     "aliasName": null,
     "tag": null,
     "description": "Run a script on a device using the step_id and script type",
@@ -10,8 +10,7 @@
     "singleRecordExecution": false,
     "remoteExecutableFlag": false,
     "parameters": [
-        "device_step_id",
-        "script_type"
+        "device_step_id"
     ],
     "synchronous": false,
     "collection": "\/api\/3\/workflow_collections\/517fb52d-36f5-4bac-a344-7d4599d7dec6",
@@ -48,7 +47,7 @@
                 "step_variables": []
             },
             "status": null,
-            "top": "40",
+            "top": "80",
             "left": "620",
             "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928770",
             "group": null,
@@ -75,9 +74,10 @@
                     "__selectFields": [
                         "ztpfDevices",
                         "name",
+                        "ztpfAutomationActions",
                         "script",
                         "id",
-                        "ztpfAutomationActions"
+                        "triggerKey"
                     ]
                 },
                 "module": "ztpf_device_automation_steps?$limit=1",
@@ -129,7 +129,7 @@
                 "workflowReference": "\/api\/3\/workflows\/e8bd1b7e-d9fb-4064-8a0f-501697f48e5b"
             },
             "status": null,
-            "top": "200",
+            "top": "240",
             "left": "620",
             "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
             "group": null,
@@ -141,10 +141,10 @@
             "description": null,
             "arguments": {
                 "step_status": "{%- set ret = \"Complete\" -%}\n{%- if vars.steps.run_action.output['exec_script'].status.error -%}\n  {%- set ret = \"Failed\" -%}\n{%- endif -%}\n{{ret}}",
-                "script_results": "{%- set base = vars.steps.run_action.output -%}\n{%- set ret = {\n    \"output\":base.exec_script.output,\n    \"log\":base.script_log[0].output.data.get_response\n} -%}\n{{ret}}"
+                "script_results": "{%- set base = vars.steps.run_action.output -%}\n{%- set ret = {\n    \"task\":base.exec_script.output,\n    \"log\":base.script_log[0].output.data.get_response\n} -%}\n{{ret}}"
             },
             "status": null,
-            "top": "280",
+            "top": "320",
             "left": "620",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
@@ -159,13 +159,13 @@
                 "device": "{{vars.steps.find_device[0].name}}",
                 "fmg_version": "{{vars.steps.find_device[0].ztpfManagers.firmware}}",
                 "script_name": "ztpf-{{vars.steps.find_device[0].name}}-step{{vars.input.params['device_step_id']}}-{{arrow.utcnow().int_timestamp}}",
-                "script_type": "{{vars.input.params['script_type']}}",
+                "script_type": "{%- set ret = vars.steps.find_step[0].triggerKey.split(' ')[1:]|join(\" \") -%}\n{%- set ret = ret.replace(\" Script\",\"\") -%}\n{{ret}}",
                 "script_contents": "{{vars.steps.find_step[0].script}}",
                 "connector_config": "{{vars.steps.find_device[0].ztpfManagers.connectorConfig}}",
                 "device_step_fqid": "{{vars.steps.find_step[0]['@id']}}"
             },
             "status": null,
-            "top": "120",
+            "top": "160",
             "left": "620",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
@@ -261,13 +261,13 @@
         },
         {
             "@type": "WorkflowRoute",
-            "name": "setup vars -> run script",
+            "name": "setup vars -> run action",
             "targetStep": "\/api\/3\/workflow_steps\/059771d2-ad66-44e9-9d76-4893782ed204",
             "sourceStep": "\/api\/3\/workflow_steps\/741b7b42-1af7-4cb3-a1f7-20d8513c719a",
             "label": null,
             "isExecuted": false,
             "group": null,
-            "uuid": "21af5b4b-e6d3-4933-ad3b-1f588c364432"
+            "uuid": "06144818-b402-4a53-a1d5-823dcd1e3f0d"
         },
         {
             "@type": "WorkflowRoute",
@@ -317,6 +317,7 @@
     "isPrivate": false,
     "deletedAt": null,
     "recordTags": [
+        "step_status_running",
         "ztpfDeviceAutomationStep"
     ]
 }

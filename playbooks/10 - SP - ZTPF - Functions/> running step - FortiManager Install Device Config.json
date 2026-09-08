@@ -1,7 +1,7 @@
 {
     "@type": "Workflow",
     "triggerLimit": null,
-    "name": "> run action from step_id - fortimanager device install config",
+    "name": "> running step - FortiManager Install Device Config",
     "aliasName": null,
     "tag": null,
     "description": "Run Action on Device.",
@@ -136,7 +136,7 @@
             "description": null,
             "arguments": {
                 "step_status": "{%- set ret = \"Complete\" -%}\n\n{%- if vars.steps.install_config.output.error -%}\n  {%- set ret = \"Failed\" -%}\n{%- endif -%}\n{{ret}}",
-                "script_results": "{%- set base = vars.steps.install_config.output -%}\n{%- set ret = {\n    \"output\":base\n} -%}\n{{ret}}"
+                "script_results": "{%- set base = vars.steps.install_config.output -%}\n{%- set ret = {\n    \"task\":base\n} -%}\n{{ret}}"
             },
             "status": null,
             "top": "320",
@@ -310,6 +310,7 @@
     "isPrivate": false,
     "deletedAt": null,
     "recordTags": [
+        "step_status_running",
         "ztpfDeviceAutomationStep"
     ]
 }

@@ -72,8 +72,8 @@
                 "step_variables": []
             },
             "status": null,
-            "top": "668",
-            "left": "1041",
+            "top": "660",
+            "left": "1040",
             "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928770",
             "group": null,
             "uuid": "15d1fa7b-07c4-49f6-ba55-67f13ea9fbf4"
@@ -111,8 +111,8 @@
             "description": null,
             "arguments": [],
             "status": null,
-            "top": "340",
-            "left": "40",
+            "top": "360",
+            "left": "160",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
             "uuid": "3bdb09e2-1683-431d-b556-e8daeec5cf4b"
@@ -143,9 +143,9 @@
             "name": "setup vars",
             "description": null,
             "arguments": {
-                "run_playbook": "{{vars.triggerkey_idx[vars.input.records[0].triggerKey].pb}}",
+                "run_playbook": "{{vars.triggerkey_idx[vars.triggerkey].pb}}",
                 "device_step_id": "{{vars.input.records[0].id}}",
-                "missing_automation_error_msg": "Please see administrator. No Automatoin Playbook defined for Trigger Key `{{vars.input.records[0].triggerKey}}`."
+                "missing_automation_error_msg": "Please see administrator. No Automation Playbook defined for Trigger Key `{{vars.input.records[0].triggerKey}}`."
             },
             "status": null,
             "top": "40",
@@ -226,7 +226,7 @@
                 "workflowReference": "\/api\/3\/workflows\/9e61ba1a-4371-4d35-825d-9cea8f79feff"
             },
             "status": null,
-            "top": "500",
+            "top": "540",
             "left": "680",
             "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
             "group": null,
@@ -287,7 +287,8 @@
             "name": "trigger key index",
             "description": null,
             "arguments": {
-                "triggerkey_idx": "{\n  \"FortiManager DeviceDB\":{\n    \"pb\":\"\"\n  },\n  \"FortiManager Install Device Config\":{\n    \"pb\":\"\"\n  },\n  \"FortiManager Remote CLI\":{\n    \"pb\":\"\"\n  },\n  \"FortiManager Upgrade Device Firmware\":{\n    \"pb\":\"c6005971-b284-4b3e-8e47-006f14942899\"\n  },\n  \"ZTPF Validate Data\": {\n    \"pb\":\"8a95fd4c-8061-44c8-8a8c-03372338f218\"\n  },\n  \"ZTPF Report\":{\n    \"pb\":\"13c165ac-38fc-41c4-b20f-cb90394c3d71\"\n  }\n}"
+                "triggerkey": "{{vars.input.records[0].triggerKey}}",
+                "triggerkey_idx": "{\n  \"FortiManager DeviceDB Script\":{\n    \"pb\":\"9339cf20-07e5-419c-b995-68d4d897d525\"\n  },\n  \"FortiManager PolicyDB Script\":{\n    \"pb\":\"9339cf20-07e5-419c-b995-68d4d897d525\"\n  },\n  \"FortiManager Remote CLI Script\":{\n    \"pb\":\"9339cf20-07e5-419c-b995-68d4d897d525\"\n  },\n  \"FortiManager Remote TCL Script\":{\n    \"pb\":\"9339cf20-07e5-419c-b995-68d4d897d525\"\n  },\n  \"FortiManager Install Device Config\":{\n    \"pb\":\"cfd50d73-78a7-40cc-9f7a-2d2ea3458f04\"\n  },\n  \"FortiManager Upgrade Device Firmware\":{\n    \"pb\":\"c6005971-b284-4b3e-8e47-006f14942899\"\n  },\n  \"ZTPF Diff Step Output\": {\n    \"pb\":\"f23963fd-d890-44a1-8f93-d966d669e769\"\n  },\n  \"ZTPF Validate Data\": {\n    \"pb\":\"8a95fd4c-8061-44c8-8a8c-03372338f218\"\n  },\n  \"ZTPF Collect Artifacts\":{\n    \"pb\":\"13c165ac-38fc-41c4-b20f-cb90394c3d71\"\n  }\n}"
             },
             "status": null,
             "top": "40",
@@ -498,7 +499,7 @@
             "reusable": false,
             "top": "120",
             "left": "60",
-            "height": "181",
+            "height": "226",
             "width": "498",
             "uuid": "1db88920-bc89-4ef2-a5a5-38c5dd5f36b0",
             "recordTags": []

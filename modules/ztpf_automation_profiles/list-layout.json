@@ -18,7 +18,15 @@
                                         "sort": [],
                                         "limit": 2147483647,
                                         "logic": "AND",
-                                        "filters": [],
+                                        "filters": [
+                                            {
+                                                "field": "recordTags",
+                                                "operator": "isnull",
+                                                "value": "false",
+                                                "_value": "false",
+                                                "type": "array"
+                                            }
+                                        ],
                                         "aggregates": [
                                             {
                                                 "operator": "countdistinct",
@@ -46,11 +54,62 @@
                                 }
                             }
                         ],
-                        "style": "col-lg-12"
+                        "style": "col-lg-6"
+                    },
+                    {
+                        "widgets": [
+                            {
+                                "type": "chart",
+                                "config": {
+                                    "wid": "4a575f54-ce8d-4c6d-aea3-fc54664fc1cf",
+                                    "widgetAlwaysDisplay": true,
+                                    "showTabularData": false,
+                                    "query": {
+                                        "sort": [],
+                                        "limit": 2147483647,
+                                        "logic": "AND",
+                                        "filters": [],
+                                        "aggregates": [
+                                            {
+                                                "operator": "countdistinct",
+                                                "field": "*",
+                                                "alias": "total"
+                                            },
+                                            {
+                                                "operator": "groupby",
+                                                "alias": "uuid",
+                                                "field": "ztpfAutomationProfiles.uuid"
+                                            },
+                                            {
+                                                "operator": "groupby",
+                                                "alias": "name",
+                                                "field": "ztpfAutomationProfiles.name"
+                                            }
+                                        ]
+                                    },
+                                    "mapping": {
+                                        "fieldName": "ztpfAutomationProfiles",
+                                        "displayValues": [
+                                            "name"
+                                        ]
+                                    },
+                                    "assignedToSetting": "onlyMe",
+                                    "aggregate": true,
+                                    "viewType": "chart",
+                                    "title": "Step Count by Profile",
+                                    "widgetAlwaysExpanded": true,
+                                    "resource": "ztpf_automation_profile_steps",
+                                    "chart": "pie"
+                                }
+                            }
+                        ],
+                        "style": "col-lg-6"
                     }
                 ],
                 "wid": "596649ab-ae56-49d1-9576-bbd935705d5e",
-                "_collapsed": false
+                "_collapsed": false,
+                "collapsible": false,
+                "collapsibleIndex": 0
             },
             {
                 "columns": [
@@ -67,9 +126,14 @@
                                         "recordTags",
                                         "modifyDate"
                                     ],
-                                    "expandableCol": [],
+                                    "expandableCol": [
+                                        {
+                                            "openTab": false,
+                                            "name": "description"
+                                        }
+                                    ],
                                     "relationshipField": [],
-                                    "checkboxStatus": false,
+                                    "checkboxStatus": true,
                                     "editableFields": false,
                                     "actionButtons": [
                                         {

@@ -292,6 +292,40 @@
                                                                             }
                                                                         },
                                                                         {
+                                                                            "type": "editableFormGroup",
+                                                                            "config": {
+                                                                                "wid": "e22f053b-7e3a-4d00-8ab8-bad3d1a1b614",
+                                                                                "rows": [
+                                                                                    {
+                                                                                        "columns": [
+                                                                                            {
+                                                                                                "fields": [
+                                                                                                    {
+                                                                                                        "name": "category",
+                                                                                                        "highlightMode": true,
+                                                                                                        "linky": true,
+                                                                                                        "readOnly": true
+                                                                                                    }
+                                                                                                ],
+                                                                                                "style": "col-lg-6"
+                                                                                            },
+                                                                                            {
+                                                                                                "fields": [
+                                                                                                    {
+                                                                                                        "name": "type",
+                                                                                                        "highlightMode": true,
+                                                                                                        "linky": true,
+                                                                                                        "readOnly": true
+                                                                                                    }
+                                                                                                ],
+                                                                                                "style": "col-lg-6"
+                                                                                            }
+                                                                                        ]
+                                                                                    }
+                                                                                ]
+                                                                            }
+                                                                        },
+                                                                        {
                                                                             "type": "playbookButtons-1.1.1",
                                                                             "config": {
                                                                                 "wid": "44d51d9d-7c53-4374-bd1f-053b73a78a88",
@@ -509,7 +543,7 @@
                                                                         {
                                                                             "type": "editableFormGroup",
                                                                             "config": {
-                                                                                "wid": "3eda83d8-583c-4588-af88-a48f818a20be",
+                                                                                "wid": "fa53b271-488c-48f0-805b-6585227c4068",
                                                                                 "rows": [
                                                                                     {
                                                                                         "columns": [
@@ -522,7 +556,7 @@
                                                                                                         "readOnly": false
                                                                                                     }
                                                                                                 ],
-                                                                                                "style": "col-lg-6"
+                                                                                                "style": "col-lg-4"
                                                                                             },
                                                                                             {
                                                                                                 "fields": [
@@ -533,7 +567,18 @@
                                                                                                         "readOnly": false
                                                                                                     }
                                                                                                 ],
-                                                                                                "style": "col-lg-6"
+                                                                                                "style": "col-lg-4"
+                                                                                            },
+                                                                                            {
+                                                                                                "fields": [
+                                                                                                    {
+                                                                                                        "name": "outputToMetadataRecordTemplate",
+                                                                                                        "highlightMode": true,
+                                                                                                        "linky": true,
+                                                                                                        "readOnly": false
+                                                                                                    }
+                                                                                                ],
+                                                                                                "style": "col-lg-4"
                                                                                             }
                                                                                         ]
                                                                                     }
@@ -669,7 +714,7 @@
                                                 "visible": true
                                             },
                                             "icon": "icon icon-test-configuration",
-                                            "show": true,
+                                            "show": false,
                                             "visible": true
                                         },
                                         {
@@ -736,7 +781,15 @@
                                                                                         "columns": [
                                                                                             {
                                                                                                 "openTab": false,
+                                                                                                "name": "outputSourceData"
+                                                                                            },
+                                                                                            {
+                                                                                                "openTab": false,
                                                                                                 "name": "outputMarkdown"
+                                                                                            },
+                                                                                            {
+                                                                                                "openTab": false,
+                                                                                                "name": "outputText"
                                                                                             }
                                                                                         ],
                                                                                         "checkBox": true
@@ -783,7 +836,7 @@
                                                 "visible": true
                                             },
                                             "icon": "fa fa-align-left",
-                                            "show": false,
+                                            "show": true,
                                             "visible": true
                                         }
                                     ]

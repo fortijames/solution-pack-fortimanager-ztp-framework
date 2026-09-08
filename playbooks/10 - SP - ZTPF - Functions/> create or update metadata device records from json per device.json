@@ -1,0 +1,340 @@
+{
+    "@type": "Workflow",
+    "triggerLimit": null,
+    "name": "> create or update metadata device records from json per device",
+    "aliasName": null,
+    "tag": null,
+    "description": "Using a json input create or update metadata device records",
+    "isActive": true,
+    "debug": false,
+    "singleRecordExecution": false,
+    "remoteExecutableFlag": false,
+    "parameters": [
+        "metadata_input",
+        "device_id"
+    ],
+    "synchronous": false,
+    "collection": "\/api\/3\/workflow_collections\/517fb52d-36f5-4bac-a344-7d4599d7dec6",
+    "versions": [],
+    "triggerStep": "\/api\/3\/workflow_steps\/e02f3de5-8491-4965-8b3b-b050e4455f2a",
+    "steps": [
+        {
+            "@type": "WorkflowStep",
+            "name": "create metadata",
+            "description": null,
+            "arguments": {
+                "when": "{{vars.new_metadata|length > 0}}",
+                "for_each": {
+                    "item": "{{vars.new_metadata}}",
+                    "__bulk": true,
+                    "parallel": false,
+                    "condition": "",
+                    "batch_size": 100
+                },
+                "resource": {
+                    "name": "{{vars.item.name}}",
+                    "type": "{{\"ztpfMetadataType\" | picklist(vars.item.type, \"@id\")}}",
+                    "status": "\/api\/3\/picklists\/589e0a44-3aa9-4e49-ae62-e28199344659",
+                    "dataJSON": "{%- if vars.item.type == \"JSON\" -%}{{vars.item.value}}{%- endif -%}",
+                    "dataText": "{%- if vars.item.type == \"Text\" -%}{{vars.item.value}}{%- endif -%}",
+                    "__replace": "",
+                    "ztpfDevices": "{{vars.steps.find_device[0]['@id']}}"
+                },
+                "operation": "Overwrite",
+                "collection": "\/api\/3\/ztpf_metadata_devices",
+                "__recommend": [],
+                "fieldOperation": {
+                    "recordTags": "Overwrite"
+                },
+                "step_variables": []
+            },
+            "status": null,
+            "top": "360",
+            "left": "540",
+            "stepType": "\/api\/3\/workflow_step_types\/2597053c-e718-44b4-8394-4d40fe26d357",
+            "group": null,
+            "uuid": "ef151204-7b28-41e1-a5a6-e6e6c75cf7bf"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "find device",
+            "description": null,
+            "arguments": {
+                "query": {
+                    "sort": [],
+                    "limit": 30,
+                    "logic": "AND",
+                    "filters": [
+                        {
+                            "type": "primitive",
+                            "field": "id",
+                            "value": "{{vars.input.params['device_id']}}",
+                            "operator": "eq",
+                            "_operator": "eq"
+                        }
+                    ],
+                    "__selectFields": [
+                        "id"
+                    ]
+                },
+                "module": "ztpf_devices?$limit=1",
+                "checkboxFields": true,
+                "step_variables": []
+            },
+            "status": null,
+            "top": "80",
+            "left": "560",
+            "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928770",
+            "group": null,
+            "uuid": "49274603-56f0-4da9-930a-9fbab7a4f25c"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "find metadata",
+            "description": null,
+            "arguments": {
+                "query": {
+                    "sort": [],
+                    "limit": 30,
+                    "logic": "AND",
+                    "filters": [
+                        {
+                            "type": "object",
+                            "field": "ztpfDevices",
+                            "value": "{{vars.steps.find_device[0]['@id']}}",
+                            "_value": {
+                                "@id": "{{vars.steps.find_device[0]['@id']}}",
+                                "display": "",
+                                "itemValue": ""
+                            },
+                            "operator": "eq"
+                        }
+                    ],
+                    "__selectFields": [
+                        "id",
+                        "name",
+                        "type"
+                    ]
+                },
+                "module": "ztpf_metadata_devices?$limit=5000",
+                "checkboxFields": true,
+                "step_variables": []
+            },
+            "status": null,
+            "top": "160",
+            "left": "380",
+            "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928770",
+            "group": null,
+            "uuid": "8d6edfea-e88b-46e3-bd2e-55b042e860d7"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "new_metadata",
+            "description": null,
+            "arguments": {
+                "new_metadata": "{%- set ret = [] -%}\n\n{%- set md = vars.input.params.metadata_input -%}\n{%- set existing_mds  = vars.steps.find_metadata -%}\n{%- set existing_md_names = existing_mds|json_query('[].name') -%}\n\n{%- for m in md -%}\n  {%- if m not in existing_md_names -%}\n    {%- if md[m] is string -%}\n      {%- do ret.append({\"type\":\"Text\",\"name\":m,\"value\":md[m]}) -%}\n    {%- else -%}\n      {%- do ret.append({\"type\":\"JSON\",\"name\":m,\"value\":md[m]}) -%}\n    {%- endif -%}\n  {%- endif -%}\n{%- endfor -%}\n\n{{ret}}"
+            },
+            "status": null,
+            "top": "280",
+            "left": "540",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "af022c07-b992-46fd-9461-3acbeb37550b"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "return",
+            "description": null,
+            "arguments": {
+                "output": "{%- set ret = {\"updated\":{},\"created\":{}} -%}\n\n{%- if vars.new_metadata|length > 0 -%}\n{%- do ret.update({\"created\":vars.steps.create_metadata }) -%}\n{%- endif -%}\n\n{%- if vars.update_metadata|length > 0 -%}\n{%- do ret.update({\"updated\":vars.steps.update_metadata}) -%}\n{%- endif -%}\n\n{{ret}}",
+                "params": "{{vars.input.params}}",
+                "status": "{\n  \"status\": {\n    \"msg\": \"Metadata should be done.\",\n    \"error\": false\n  }\n}"
+            },
+            "status": null,
+            "top": "480",
+            "left": "380",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "db10207c-2383-4305-8006-941bf4a9cba8"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Start",
+            "description": null,
+            "arguments": {
+                "__triggerLimit": true,
+                "step_variables": {
+                    "input": {
+                        "params": []
+                    }
+                },
+                "triggerOnSource": true,
+                "triggerOnReplicate": false
+            },
+            "status": null,
+            "top": "40",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/b348f017-9a94-471f-87f8-ce88b6a7ad62",
+            "group": null,
+            "uuid": "e02f3de5-8491-4965-8b3b-b050e4455f2a"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "update metadata",
+            "description": null,
+            "arguments": {
+                "when": "{{vars.update_metadata|length > 0}}",
+                "for_each": {
+                    "item": "{{vars.update_metadata}}",
+                    "__bulk": true,
+                    "parallel": false,
+                    "condition": "",
+                    "batch_size": 100
+                },
+                "resource": {
+                    "dataJSON": "{%- if vars.item.type == \"JSON\" -%}{{vars.item.value}}{%- endif -%}",
+                    "dataText": "{%- if vars.item.type == \"Text\" -%}{{vars.item.value}}{%- endif -%}"
+                },
+                "operation": "Append",
+                "collection": "{{vars.item.record}}",
+                "__recommend": [],
+                "collectionType": "\/api\/3\/ztpf_metadata_devices",
+                "fieldOperation": {
+                    "recordTags": "Append"
+                },
+                "step_variables": []
+            },
+            "status": null,
+            "top": "360",
+            "left": "220",
+            "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928722",
+            "group": null,
+            "uuid": "6c5f7473-7dee-4581-a9a5-236755b76ea4"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "update_metadata",
+            "description": null,
+            "arguments": {
+                "update_metadata": "{%- set ret = [] -%}\n\n{%- set md = vars.input.params.metadata_input -%}\n{%- set existing_mds  = vars.steps.find_metadata -%}\n{%- set existing_md_names = existing_mds|json_query('[].name') -%}\n\n{%- for m in md -%}\n  {%- if m in existing_md_names -%}\n      {%- set md_record = existing_mds\n                  | json_query('[?name==`{}`]'.format(m)) \n      -%}\n      {%- do ret.append({\n        \"name\":m,\n        \"value\":md[m],\n        \"record\":md_record[0][\"@id\"],\n        \"type\":md_record[0].type.itemValue\n      }) -%}\n  {%- endif -%}\n{%- endfor -%}\n\n{{ret}}"
+            },
+            "status": null,
+            "top": "280",
+            "left": "220",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "127276ee-9cd3-4318-aa07-4d32486106a8"
+        }
+    ],
+    "routes": [
+        {
+            "@type": "WorkflowRoute",
+            "name": "create metadata -> return",
+            "targetStep": "\/api\/3\/workflow_steps\/db10207c-2383-4305-8006-941bf4a9cba8",
+            "sourceStep": "\/api\/3\/workflow_steps\/ef151204-7b28-41e1-a5a6-e6e6c75cf7bf",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "ea59f051-9892-4652-bc1e-f80800b66c62"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "find device -> find metadata",
+            "targetStep": "\/api\/3\/workflow_steps\/8d6edfea-e88b-46e3-bd2e-55b042e860d7",
+            "sourceStep": "\/api\/3\/workflow_steps\/49274603-56f0-4da9-930a-9fbab7a4f25c",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "212e34a2-3ccc-4d9a-8d47-b32938e6a9a2"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "find metadata -> new_metadata_strings",
+            "targetStep": "\/api\/3\/workflow_steps\/af022c07-b992-46fd-9461-3acbeb37550b",
+            "sourceStep": "\/api\/3\/workflow_steps\/8d6edfea-e88b-46e3-bd2e-55b042e860d7",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "c8fe4798-785f-4c7a-bb20-6f7afe84503f"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "find metadata -> update_metadata",
+            "targetStep": "\/api\/3\/workflow_steps\/127276ee-9cd3-4318-aa07-4d32486106a8",
+            "sourceStep": "\/api\/3\/workflow_steps\/8d6edfea-e88b-46e3-bd2e-55b042e860d7",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "41c65f75-88af-4f2b-a590-ce17be914e18"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "new_metadata -> create metadata",
+            "targetStep": "\/api\/3\/workflow_steps\/ef151204-7b28-41e1-a5a6-e6e6c75cf7bf",
+            "sourceStep": "\/api\/3\/workflow_steps\/af022c07-b992-46fd-9461-3acbeb37550b",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "cd35f39c-66d8-437f-ab38-d0fece8e6651"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Start -> find device",
+            "targetStep": "\/api\/3\/workflow_steps\/49274603-56f0-4da9-930a-9fbab7a4f25c",
+            "sourceStep": "\/api\/3\/workflow_steps\/e02f3de5-8491-4965-8b3b-b050e4455f2a",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "fb18f5bb-0e3d-44b8-9aec-a4703141070f"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "update metadata -> return",
+            "targetStep": "\/api\/3\/workflow_steps\/db10207c-2383-4305-8006-941bf4a9cba8",
+            "sourceStep": "\/api\/3\/workflow_steps\/6c5f7473-7dee-4581-a9a5-236755b76ea4",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "81a52c62-5401-441a-a7d6-b177859cf4a1"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "update_metadata -> update metadata",
+            "targetStep": "\/api\/3\/workflow_steps\/6c5f7473-7dee-4581-a9a5-236755b76ea4",
+            "sourceStep": "\/api\/3\/workflow_steps\/127276ee-9cd3-4318-aa07-4d32486106a8",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "97102c54-c605-44b3-9169-fc390ea232eb"
+        }
+    ],
+    "groups": [
+        {
+            "@type": "WorkflowGroup",
+            "name": "Details",
+            "description": "Create or Update Metadata Records. New records are currently created as the status *Ok* and should be changed to *New* once the trigger for data integrity is added.",
+            "type": "note",
+            "isCollapsed": false,
+            "hasTriggerStep": false,
+            "hideInLogs": false,
+            "metadata": [],
+            "reusable": false,
+            "top": "120",
+            "left": "40",
+            "height": "154",
+            "width": "293",
+            "uuid": "09c4869d-cebc-4706-ab60-7d6cb482d309",
+            "recordTags": []
+        }
+    ],
+    "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+    "playbookOrigin": "\/api\/3\/picklists\/b6d710a9-a8ec-41ec-8817-fe9fa062fcdd",
+    "isEditable": false,
+    "uuid": "76eb1274-08c5-4006-b834-31ea07289c2a",
+    "owners": [],
+    "isPrivate": false,
+    "deletedAt": null,
+    "recordTags": [
+        "ztpfMetadataDevice"
+    ]
+}

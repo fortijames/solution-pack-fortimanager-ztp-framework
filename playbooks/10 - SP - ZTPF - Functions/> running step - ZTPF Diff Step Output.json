@@ -1,7 +1,7 @@
 {
     "@type": "Workflow",
     "triggerLimit": null,
-    "name": "> run action from step_id - ZTPF Diff Step Output",
+    "name": "> running step - ZTPF Diff Step Output",
     "aliasName": null,
     "tag": null,
     "description": "Run a script on a device using the step_id and script type",
@@ -246,7 +246,7 @@
             "description": null,
             "arguments": {
                 "step_status": "{%- set ret = \"Complete\" -%}\n{%- if vars.steps.run_action.output['exec_script'].status.error -%}\n  {%- set ret = \"Failed\" -%}\n{%- endif -%}\n{{ret}}",
-                "script_results": "{%- set base = vars.steps.run_action -%}\n{%- set ret = {\n    \"output\":base.output,\n} -%}\n{{ret}}"
+                "script_results": "{%- set base = vars.steps.run_action -%}\n{%- set ret = {\n    \"diff\":base.output,\n} -%}\n{{ret}}"
             },
             "status": null,
             "top": "280",
@@ -431,6 +431,7 @@
     "isPrivate": false,
     "deletedAt": null,
     "recordTags": [
+        "step_status_running",
         "ztpfDeviceAutomationStep"
     ]
 }

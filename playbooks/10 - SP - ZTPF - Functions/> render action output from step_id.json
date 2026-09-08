@@ -40,8 +40,9 @@
                         "ztpfAutomationActions",
                         "jinjaVars",
                         "outputSourceData",
+                        "outputType",
                         "id",
-                        "outputType"
+                        "ztpfDevices"
                     ]
                 },
                 "module": "ztpf_device_automation_steps?$limit=1",
@@ -57,6 +58,53 @@
         },
         {
             "@type": "WorkflowStep",
+            "name": "jinja to create metadata",
+            "description": null,
+            "arguments": {
+                "when": "{{vars.steps.find_step[0].ztpfAutomationActions.outputToMetadataRecordTemplate}}",
+                "arguments": {
+                    "script_vars": "{{vars.jinja_vars}}",
+                    "yaml2json_flag": "true",
+                    "script_template": "{{vars.steps.find_step[0].ztpfAutomationActions.outputToMetadataRecordTemplate}}"
+                },
+                "apply_async": false,
+                "step_variables": [],
+                "pass_parent_env": false,
+                "pass_input_record": false,
+                "workflowReference": "\/api\/3\/workflows\/b9e9fe1a-4964-4631-ba81-97987676884d"
+            },
+            "status": null,
+            "top": "620",
+            "left": "340",
+            "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
+            "group": null,
+            "uuid": "fed7a8ae-145c-4ddc-9c22-b12b49df705d"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "manage metadata",
+            "description": null,
+            "arguments": {
+                "when": "{{vars.steps.jinja_to_create_metadata.output}}",
+                "arguments": {
+                    "device_id": "{{vars.steps.find_step[0].ztpfDevices.id}}",
+                    "metadata_input": "{{vars.steps.jinja_to_create_metadata.output}}"
+                },
+                "apply_async": false,
+                "step_variables": [],
+                "pass_parent_env": false,
+                "pass_input_record": false,
+                "workflowReference": "\/api\/3\/workflows\/76eb1274-08c5-4006-b834-31ea07289c2a"
+            },
+            "status": null,
+            "top": "620",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
+            "group": null,
+            "uuid": "b247b758-79e9-4960-b4f8-15f023281d38"
+        },
+        {
+            "@type": "WorkflowStep",
             "name": "output vars",
             "description": null,
             "arguments": {
@@ -67,8 +115,8 @@
                 "output_markdown": "{%- set rout = vars.steps.render_jinja_MARKDOWN -%}\n\n{%- if rout -%}\n{{rout.output| regex_replace('^\"|\"$', '')}}\n{%- endif -%}"
             },
             "status": null,
-            "top": "440",
-            "left": "340",
+            "top": "340",
+            "left": "40",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
             "uuid": "7bb60fd8-fc32-4881-b845-3a6c63ff366a"
@@ -199,7 +247,7 @@
             "description": null,
             "arguments": {
                 "step_fqid": "{{vars.steps.find_step[0]['@id']}}",
-                "jinja_vars": "{%- set ret = vars.steps.find_step[0].jinjaVars -%}\n{%- do ret.update({\"source\":vars.steps.find_step[0].outputSourceData}) -%}\n{{ret}}"
+                "jinja_vars": "{%- set ret = vars.steps.find_step[0].jinjaVars -%}\n{%- do ret.update({\"output\":vars.steps.find_step[0].outputSourceData}) -%}\n{{ret}}"
             },
             "status": null,
             "top": "40",
@@ -315,6 +363,16 @@
         },
         {
             "@type": "WorkflowRoute",
+            "name": "jinja to create metadata -> manage metadata",
+            "targetStep": "\/api\/3\/workflow_steps\/b247b758-79e9-4960-b4f8-15f023281d38",
+            "sourceStep": "\/api\/3\/workflow_steps\/fed7a8ae-145c-4ddc-9c22-b12b49df705d",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "c9b13eb0-4696-4a23-8d84-e7952ca9fe0f"
+        },
+        {
+            "@type": "WorkflowRoute",
             "name": "output vars -> update step",
             "targetStep": "\/api\/3\/workflow_steps\/c50bca9a-270f-495a-bd83-9be399a6643e",
             "sourceStep": "\/api\/3\/workflow_steps\/7bb60fd8-fc32-4881-b845-3a6c63ff366a",
@@ -365,13 +423,23 @@
         },
         {
             "@type": "WorkflowRoute",
+            "name": "status yaml2json -> jinja to create metadata",
+            "targetStep": "\/api\/3\/workflow_steps\/fed7a8ae-145c-4ddc-9c22-b12b49df705d",
+            "sourceStep": "\/api\/3\/workflow_steps\/095e64ff-0fbe-4896-8364-dc5d491b25ff",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "25b3eace-bf1e-4ff0-89f3-bfaef43cb4a1"
+        },
+        {
+            "@type": "WorkflowRoute",
             "name": "status yaml2json -> output vars",
             "targetStep": "\/api\/3\/workflow_steps\/7bb60fd8-fc32-4881-b845-3a6c63ff366a",
             "sourceStep": "\/api\/3\/workflow_steps\/095e64ff-0fbe-4896-8364-dc5d491b25ff",
             "label": null,
             "isExecuted": false,
             "group": null,
-            "uuid": "cffa96f0-91ff-4c19-a3cf-7a92542ca3d0"
+            "uuid": "e60ba615-97db-41e3-80e2-07d37ce3eb02"
         },
         {
             "@type": "WorkflowRoute",
@@ -396,10 +464,27 @@
             "metadata": [],
             "reusable": false,
             "top": "120",
-            "left": "100",
-            "height": "104",
-            "width": "469",
+            "left": "40",
+            "height": "112",
+            "width": "477",
             "uuid": "4a647dde-b522-4534-a04c-e9a82bbc2f0b",
+            "recordTags": []
+        },
+        {
+            "@type": "WorkflowGroup",
+            "name": "Metadata",
+            "description": "If the Output template that creates metadata is filled out launch the process to create or update metadata records.",
+            "type": "note",
+            "isCollapsed": false,
+            "hasTriggerStep": false,
+            "hideInLogs": false,
+            "metadata": [],
+            "reusable": false,
+            "top": "440",
+            "left": "40",
+            "height": "118",
+            "width": "377",
+            "uuid": "0ce98c6d-32f7-4ea5-866d-279f1f86f39d",
             "recordTags": []
         }
     ],

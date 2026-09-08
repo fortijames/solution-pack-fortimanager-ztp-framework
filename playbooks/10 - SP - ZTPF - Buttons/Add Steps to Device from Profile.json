@@ -17,6 +17,56 @@
     "steps": [
         {
             "@type": "WorkflowStep",
+            "name": "create rungroup",
+            "description": null,
+            "arguments": {
+                "arguments": {
+                    "tags": "{{vars.steps.select_profile.input.tags}}",
+                    "device_ids": "{{ vars.input.records | json_query('[].id') }}"
+                },
+                "apply_async": false,
+                "step_variables": [],
+                "pass_parent_env": false,
+                "pass_input_record": false,
+                "workflowReference": "\/api\/3\/workflows\/74daec60-01f3-4df9-af50-4a5ff3c8c3e6"
+            },
+            "status": null,
+            "top": "620",
+            "left": "460",
+            "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
+            "group": null,
+            "uuid": "40c1fce2-9858-4c59-a6c2-ec95a52ef8ae"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "create rungroup needed",
+            "description": null,
+            "arguments": {
+                "conditions": [
+                    {
+                        "option": "No",
+                        "default": true,
+                        "step_iri": "\/api\/3\/workflow_steps\/e94e6c6b-ff83-42b3-83e9-8fbf0e65f20a",
+                        "step_name": "done"
+                    },
+                    {
+                        "option": "Yes",
+                        "step_iri": "\/api\/3\/workflow_steps\/6ae190a6-e4e4-4acf-a4ee-62f04dbab6ab",
+                        "condition": "{{ vars.steps.select_profile.input.createRunGroupAndExecuteSteps }}",
+                        "step_name": "wait for device ready"
+                    }
+                ],
+                "step_variables": []
+            },
+            "status": null,
+            "top": "400",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/12254cf5-5db7-4b1a-8cb1-3af081924b28",
+            "group": null,
+            "uuid": "75b512b1-66c3-4b76-9fbf-67fad2d50ed9"
+        },
+        {
+            "@type": "WorkflowStep",
             "name": "create steps from profile",
             "description": null,
             "arguments": {
@@ -37,11 +87,23 @@
                 "workflowReference": "\/api\/3\/workflows\/6d3e2df8-cb50-44a8-a3c4-f988f7546689"
             },
             "status": null,
-            "top": "280",
+            "top": "300",
             "left": "40",
             "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
             "group": null,
             "uuid": "942a07a1-cace-4f38-8496-b15caa3ed0bc"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "done",
+            "description": null,
+            "arguments": [],
+            "status": null,
+            "top": "500",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "e94e6c6b-ff83-42b3-83e9-8fbf0e65f20a"
         },
         {
             "@type": "WorkflowStep",
@@ -77,7 +139,7 @@
                 "profile": "{%- set recs = vars.steps.Find_Profiles -%}\n{%- set opts = [] -%}\n{%- for r in recs -%}\n{%- set o = r -%}\n{%- set on = r.name -%}\n{%- do o.update({\n  \"_option\": on\n}) -%}\n{%- do opts.append(o) -%}\n{%- endfor -%}\n{\n  \"records\": {{opts}},\n  \"options\": {{opts|json_query('[]._option')|sort}}\n}"
             },
             "status": null,
-            "top": "120",
+            "top": "100",
             "left": "660",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
@@ -91,11 +153,23 @@
                 "profile_selected": "{{vars.profile.records\n  | json_query('[?_option==`{}`]'\n    .format(vars.steps.select_profile.input.profile)\n)\n}}"
             },
             "status": null,
-            "top": "280",
+            "top": "300",
             "left": "660",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
             "uuid": "14e4b543-277a-4163-8937-50528c944cbd"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "ready timeout 15m",
+            "description": null,
+            "arguments": [],
+            "status": null,
+            "top": "620",
+            "left": "780",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "5b519c9a-3f60-4da8-a3f4-ca7b183cf4b2"
         },
         {
             "@type": "WorkflowStep",
@@ -105,8 +179,8 @@
                 "type": "InputBased",
                 "input": {
                     "schema": {
-                        "title": "Select Action",
-                        "description": "Select a profile to add.",
+                        "title": "Select Automation Profile",
+                        "description": "Select an automation profile to add steps to this device. Optionally create a run group and execute steps when the device moves to the status `Ready` indicating the steps have completed the preparation steps. \n\n*This prompt will timeout in 5 minutes*",
                         "inputVariables": [
                             {
                                 "name": "profile",
@@ -119,7 +193,7 @@
                                 "dataType": "dynamicList",
                                 "formType": "dynamicList",
                                 "required": false,
-                                "_expanded": true,
+                                "_expanded": false,
                                 "mmdUpdate": true,
                                 "collection": false,
                                 "searchable": false,
@@ -133,6 +207,63 @@
                                 "jinjaExpressionView": true,
                                 "useRecordFieldDefault": false,
                                 "_addRequiredConditions": false
+                            },
+                            {
+                                "name": "createRunGroupAndExecuteSteps",
+                                "type": "boolean",
+                                "label": "Create Run Group and Execute Steps",
+                                "title": "Checkbox",
+                                "usable": true,
+                                "tooltip": "When the device is ready create a rungroup and excute steps.",
+                                "dataType": "checkbox",
+                                "formType": "checkbox",
+                                "required": false,
+                                "_expanded": false,
+                                "mmdUpdate": true,
+                                "collection": false,
+                                "searchable": true,
+                                "templateUrl": "app\/components\/form\/fields\/checkbox.html",
+                                "defaultValue": null,
+                                "_previousName": "",
+                                "playbookField": true,
+                                "lengthConstraint": false,
+                                "allowedEncryption": false,
+                                "allowedGridColumn": true,
+                                "requiredCondition": "notrequired",
+                                "jinjaExpressionView": true,
+                                "useRecordFieldDefault": false,
+                                "_addRequiredConditions": false
+                            },
+                            {
+                                "name": "tags",
+                                "type": "string",
+                                "label": "Tags",
+                                "tooltip": "Enter Tags, as comma or space separated, to the RunGroup and Devices",
+                                "dataType": "text",
+                                "formType": "text",
+                                "required": false,
+                                "_expanded": false,
+                                "defaultValue": null,
+                                "_previousName": "",
+                                "visibilityQuery": {
+                                    "sort": [],
+                                    "limit": 30,
+                                    "logic": "AND",
+                                    "filters": [
+                                        {
+                                            "type": "primitive",
+                                            "field": "createRunGroupAndExecuteSteps",
+                                            "value": true,
+                                            "operator": "eq",
+                                            "_operator": "eq"
+                                        }
+                                    ]
+                                },
+                                "requiredCondition": "notrequired",
+                                "jinjaExpressionView": true,
+                                "useRecordFieldDefault": false,
+                                "_addRequiredConditions": false,
+                                "_addVisibilityConditions": true
                             }
                         ]
                     }
@@ -141,7 +272,7 @@
                 "timeout": {
                     "days": 0,
                     "hours": 0,
-                    "minutes": 1,
+                    "minutes": 5,
                     "step_iri": "\/api\/3\/workflow_steps\/53f84930-f827-4062-8610-6f1f98f3bd7d"
                 },
                 "agent_id": null,
@@ -206,7 +337,7 @@
                         "records": "{{vars.input.records}}"
                     }
                 },
-                "_promptexpanded": false,
+                "_promptexpanded": true,
                 "triggerOnSource": true,
                 "displayConditions": {
                     "ztpf_devices": {
@@ -252,6 +383,76 @@
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
             "uuid": "53f84930-f827-4062-8610-6f1f98f3bd7d"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "wait for device ready",
+            "description": null,
+            "arguments": {
+                "rule": {
+                    "actions": [
+                        {
+                            "type": "resume_playbook",
+                            "enabled": true,
+                            "channel_uuid": "e2ce87c2-c55a-11ec-9d64-0242ac120002"
+                        }
+                    ],
+                    "is_active": true,
+                    "event_type": "update",
+                    "entity_name": "ztpfDevices",
+                    "entity_type": "ztpf_devices",
+                    "event_source": "crudhub",
+                    "trigger_condition": {
+                        "sort": [],
+                        "limit": 30,
+                        "logic": "AND",
+                        "filters": [
+                            {
+                                "type": "object",
+                                "field": "status",
+                                "value": "\/api\/3\/picklists\/ce18fc5e-a91a-4bb5-9ced-887cb01a0517",
+                                "_value": {
+                                    "@id": "\/api\/3\/picklists\/ce18fc5e-a91a-4bb5-9ced-887cb01a0517",
+                                    "display": "Ready",
+                                    "itemValue": "Ready"
+                                },
+                                "operator": "eq"
+                            },
+                            {
+                                "type": "primitive",
+                                "field": "id",
+                                "value": "{{vars.item.id}}",
+                                "operator": "eq",
+                                "_operator": "eq"
+                            }
+                        ]
+                    }
+                },
+                "type": "ConditionBased",
+                "delay": {
+                    "days": 0,
+                    "hours": 0,
+                    "minutes": 0,
+                    "seconds": 0
+                },
+                "timeout": {
+                    "days": 0,
+                    "hours": 0,
+                    "minutes": 15,
+                    "step_iri": "\/api\/3\/workflow_steps\/5b519c9a-3f60-4da8-a3f4-ca7b183cf4b2"
+                },
+                "for_each": {
+                    "item": "{{vars.input.records}}",
+                    "condition": ""
+                },
+                "step_variables": []
+            },
+            "status": null,
+            "top": "520",
+            "left": "620",
+            "stepType": "\/api\/3\/workflow_step_types\/6832e556-b9c7-497a-babe-feda3bd27dbf",
+            "group": null,
+            "uuid": "6ae190a6-e4e4-4acf-a4ee-62f04dbab6ab"
         }
     ],
     "routes": [
@@ -264,6 +465,46 @@
             "isExecuted": false,
             "group": null,
             "uuid": "e04952f4-2eef-4df2-ab50-69f05a483286"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "create rungroup -> done",
+            "targetStep": "\/api\/3\/workflow_steps\/e94e6c6b-ff83-42b3-83e9-8fbf0e65f20a",
+            "sourceStep": "\/api\/3\/workflow_steps\/40c1fce2-9858-4c59-a6c2-ec95a52ef8ae",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "4d55f38d-05e4-477d-8fe3-2944b13942c8"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "create steps from profile -> create steps needed",
+            "targetStep": "\/api\/3\/workflow_steps\/75b512b1-66c3-4b76-9fbf-67fad2d50ed9",
+            "sourceStep": "\/api\/3\/workflow_steps\/942a07a1-cace-4f38-8496-b15caa3ed0bc",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "6ad0854b-069e-4c1f-9e06-9d229ca34802"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "create steps needed -> done",
+            "targetStep": "\/api\/3\/workflow_steps\/e94e6c6b-ff83-42b3-83e9-8fbf0e65f20a",
+            "sourceStep": "\/api\/3\/workflow_steps\/75b512b1-66c3-4b76-9fbf-67fad2d50ed9",
+            "label": "No",
+            "isExecuted": false,
+            "group": null,
+            "uuid": "30edd01a-81ec-46d0-8464-a2816f317c73"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "create steps needed -> wait for device ready",
+            "targetStep": "\/api\/3\/workflow_steps\/6ae190a6-e4e4-4acf-a4ee-62f04dbab6ab",
+            "sourceStep": "\/api\/3\/workflow_steps\/75b512b1-66c3-4b76-9fbf-67fad2d50ed9",
+            "label": "Yes",
+            "isExecuted": false,
+            "group": null,
+            "uuid": "ab4892ec-72bf-4060-9f98-73e04ef1f749"
         },
         {
             "@type": "WorkflowRoute",
@@ -314,13 +555,33 @@
             "isExecuted": false,
             "group": null,
             "uuid": "e161e942-5feb-4df0-b651-089e6512967e"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "wait for device ready -> create rungroup",
+            "targetStep": "\/api\/3\/workflow_steps\/40c1fce2-9858-4c59-a6c2-ec95a52ef8ae",
+            "sourceStep": "\/api\/3\/workflow_steps\/6ae190a6-e4e4-4acf-a4ee-62f04dbab6ab",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "d777bb58-eb94-4ef7-93b2-95b47bc79926"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "wait for device ready -> ready timeout",
+            "targetStep": "\/api\/3\/workflow_steps\/5b519c9a-3f60-4da8-a3f4-ca7b183cf4b2",
+            "sourceStep": "\/api\/3\/workflow_steps\/6ae190a6-e4e4-4acf-a4ee-62f04dbab6ab",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "559839e3-baf8-4038-9849-1abeebef4c31"
         }
     ],
     "groups": [
         {
             "@type": "WorkflowGroup",
             "name": "Details",
-            "description": "Prompt the user to add a profile and create a new action record on the device.",
+            "description": "Prompt the user to add a profile and create a new action record on the device. \n\nIf selected, wait for the device to go to *Ready* which is controlled by the device going in and out of reviewing while checking the steps. This process currently has a 15 min timeout if the preparation takes too long for the device to go to ready.",
             "type": "note",
             "isCollapsed": false,
             "hasTriggerStep": false,
@@ -328,9 +589,9 @@
             "metadata": [],
             "reusable": false,
             "top": "120",
-            "left": "100",
-            "height": "114",
-            "width": "438",
+            "left": "80",
+            "height": "161",
+            "width": "498",
             "uuid": "c17fa927-290c-40d6-8951-a091198b19e7",
             "recordTags": []
         }
@@ -343,7 +604,6 @@
     "isPrivate": false,
     "deletedAt": null,
     "recordTags": [
-        "TODO",
         "ztpfAutomationAction",
         "ztpfDevice"
     ]

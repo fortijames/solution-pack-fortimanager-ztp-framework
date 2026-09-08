@@ -38,8 +38,8 @@
                 "step_variables": []
             },
             "status": null,
-            "top": "400",
-            "left": "1040",
+            "top": "520",
+            "left": "540",
             "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928722",
             "group": null,
             "uuid": "4e01df57-9373-4ec2-91d5-ba415f2290b3"
@@ -73,8 +73,8 @@
                 "step_variables": []
             },
             "status": null,
-            "top": "40",
-            "left": "1040",
+            "top": "200",
+            "left": "920",
             "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928770",
             "group": null,
             "uuid": "0bf2ab7b-e1ad-4dff-89d9-507a43af7d88"
@@ -96,8 +96,8 @@
                 "workflowReference": "\/api\/3\/workflows\/6ed8988b-5216-4fb3-94e5-0be09ec2ac0a"
             },
             "status": null,
-            "top": "320",
-            "left": "1040",
+            "top": "440",
+            "left": "540",
             "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
             "group": null,
             "uuid": "e0c9e8dd-7e2b-497d-9153-36a9f96410ec"
@@ -150,11 +150,12 @@
                 "device_id": "{{vars.input.params['trigger_step_input_record']['ztpfDevices'].id}}",
                 "step_fqid": "{{vars.input.params['trigger_step_input_record']['@id']}}",
                 "automation_id": "{{vars.input.params['trigger_step_input_record']['ztpfAutomationActions'].id}}",
-                "refresh_step_script": "{%- set ret = false -%}\n{%- if vars.input.params['trigger_step_input_record'].script in ['',None] -%}\n  {%- set ret = true -%}\n{%- elif vars.step_args_json.config.render_script_on_running == true -%}\n  {%- set ret = true -%}\n{%- endif -%}\n{{ret}}"
+                "refresh_step_script": "{%- set ret = false -%}\n{%- if vars.input.params['trigger_step_input_record'].script in ['',None] -%}\n  {%- set ret = true -%}\n{%- elif vars.step_args_json.config.render_script_on_running == true -%}\n  {%- set ret = true -%}\n{%- endif -%}\n{{ret}}",
+                "sync_source_data_device": "{%- set ret = false -%}\n{%- if vars.step_args_json.config.sync_source_data_device == true -%}\n  {%- set ret = true -%}\n{%- endif -%}\n{{ret}}"
             },
             "status": null,
             "top": "40",
-            "left": "740",
+            "left": "760",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
             "uuid": "b60ae986-63b2-4e57-9dae-a6326f453e80"
@@ -186,8 +187,8 @@
             "description": null,
             "arguments": [],
             "status": null,
-            "top": "320",
-            "left": "420",
+            "top": "440",
+            "left": "40",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
             "uuid": "65f82e95-951b-4325-b6ed-15b848bb2e4d"
@@ -212,11 +213,33 @@
                 "step_variables": []
             },
             "status": null,
-            "top": "240",
-            "left": "1040",
+            "top": "360",
+            "left": "540",
             "stepType": "\/api\/3\/workflow_step_types\/12254cf5-5db7-4b1a-8cb1-3af081924b28",
             "group": null,
             "uuid": "c85f6808-de4a-4648-a514-c365ef431db0"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "sync source data device",
+            "description": null,
+            "arguments": {
+                "when": "{{vars.sync_source_data_device}}",
+                "arguments": {
+                    "record_ids": "[{{vars.device_id}}]"
+                },
+                "apply_async": false,
+                "step_variables": [],
+                "pass_parent_env": false,
+                "pass_input_record": false,
+                "workflowReference": "\/api\/3\/workflows\/379c3a43-af7e-4a27-bdbf-1207d2697378"
+            },
+            "status": null,
+            "top": "120",
+            "left": "920",
+            "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
+            "group": null,
+            "uuid": "805903cd-37ed-4301-80ea-9870609302d2"
         },
         {
             "@type": "WorkflowStep",
@@ -286,13 +309,13 @@
         },
         {
             "@type": "WorkflowRoute",
-            "name": "setup vars -> find action",
-            "targetStep": "\/api\/3\/workflow_steps\/0bf2ab7b-e1ad-4dff-89d9-507a43af7d88",
+            "name": "setup vars -> sync source data device",
+            "targetStep": "\/api\/3\/workflow_steps\/805903cd-37ed-4301-80ea-9870609302d2",
             "sourceStep": "\/api\/3\/workflow_steps\/b60ae986-63b2-4e57-9dae-a6326f453e80",
             "label": null,
             "isExecuted": false,
             "group": null,
-            "uuid": "7a478931-fe97-4b1c-ba26-4479dcdfa35c"
+            "uuid": "6cd22a5e-9903-49a3-bac4-d8fd4d217088"
         },
         {
             "@type": "WorkflowRoute",
@@ -336,6 +359,16 @@
         },
         {
             "@type": "WorkflowRoute",
+            "name": "sync source data device -> find action",
+            "targetStep": "\/api\/3\/workflow_steps\/0bf2ab7b-e1ad-4dff-89d9-507a43af7d88",
+            "sourceStep": "\/api\/3\/workflow_steps\/805903cd-37ed-4301-80ea-9870609302d2",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "53e93585-8f41-449b-a1e0-4c443a49b75e"
+        },
+        {
+            "@type": "WorkflowRoute",
             "name": "update step start -> return",
             "targetStep": "\/api\/3\/workflow_steps\/f3bcf02f-50e4-4b84-84dc-640bfcbebb5e",
             "sourceStep": "\/api\/3\/workflow_steps\/2c4ea334-993c-4aaa-a263-a47e562f0c87",
@@ -349,7 +382,7 @@
         {
             "@type": "WorkflowGroup",
             "name": "Details",
-            "description": "Find action details and prepare step with jinja_vars and a rendered action script. Update the start time of the step.\n\nconfig options:\n - render_script_prerun",
+            "description": "Find action details and prepare step with jinja_vars and a rendered action script. Update the start time of the step.\n\nconfig options:\n  render_script_on_preparing: true or false\n  render_script_on_running: true or false\n  sync_source_data_device: true or false\n  wait_check_time: seconds",
             "type": "note",
             "isCollapsed": false,
             "hasTriggerStep": false,
@@ -358,8 +391,8 @@
             "reusable": false,
             "top": "120",
             "left": "340",
-            "height": "152",
-            "width": "443",
+            "height": "221",
+            "width": "445",
             "uuid": "6ce1758f-0bf1-4669-8e63-1d957a5a9186",
             "recordTags": []
         }
