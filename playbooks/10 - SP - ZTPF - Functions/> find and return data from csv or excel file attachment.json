@@ -1,0 +1,466 @@
+{
+    "@type": "Workflow",
+    "triggerLimit": null,
+    "name": "> find and return data from csv or excel file attachment",
+    "aliasName": null,
+    "tag": null,
+    "description": "Find file attachments in this FortiSOAR and data matching a search.",
+    "isActive": true,
+    "debug": false,
+    "singleRecordExecution": false,
+    "remoteExecutableFlag": false,
+    "parameters": [
+        "filename",
+        "filter",
+        "filetags"
+    ],
+    "synchronous": false,
+    "collection": "\/api\/3\/workflow_collections\/517fb52d-36f5-4bac-a344-7d4599d7dec6",
+    "versions": [],
+    "triggerStep": "\/api\/3\/workflow_steps\/c2810fea-d6e4-4c8e-8073-fe86ba11f67f",
+    "steps": [
+        {
+            "@type": "WorkflowStep",
+            "name": "extract_file_data",
+            "description": null,
+            "arguments": {
+                "file_data": "{%- set clean_results = [] -%}\n{%- set dirty_results = vars.steps.get_file_data | json_query('[].data[]') -%}\n{% for item in dirty_results%}\n{%- if item | length > 1-%}\n{% do clean_results.append(item)%}\n{% else%}\n{% for row in item | json_query('Sheet1[]')%}\n{% do clean_results.append(row)%}\n{%endfor%}\n{% endif%}\n{%endfor%}\n{{clean_results}}"
+            },
+            "status": null,
+            "top": "380",
+            "left": "600",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "fad87aa5-a5f2-4890-9860-446cee12a8ad"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "filtered_data",
+            "description": null,
+            "arguments": {
+                "filtered_data": "{% set final_dict = {} -%}\n{% set field = vars.filter.column -%}\n{% set param = vars.filter.value -%}\n{% set relevant_dictionaries = vars.file_data | json_query('[?{} ==`{}`]'.format(field,param)) -%}\n{% for item in relevant_dictionaries -%}\n\t{% do final_dict.update(item) -%}\n{% endfor -%}\n{{final_dict }}"
+            },
+            "status": null,
+            "top": "460",
+            "left": "600",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "c342e168-9972-494c-b829-dc05b271b16a"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "find file method",
+            "description": null,
+            "arguments": {
+                "conditions": [
+                    {
+                        "default": true,
+                        "step_iri": "\/api\/3\/workflow_steps\/304401bf-a1e5-4612-af4d-971befc687f8",
+                        "step_name": "find files"
+                    },
+                    {
+                        "step_iri": "\/api\/3\/workflow_steps\/7c47b90d-6616-46b6-a770-e6ea99ca1b85",
+                        "condition": "{{ vars.filename not in ['',None] }}",
+                        "step_name": "find files by name"
+                    },
+                    {
+                        "step_iri": "\/api\/3\/workflow_steps\/0fa181a4-f241-48da-b6c9-5caf915cabda",
+                        "condition": "{{ vars.filetags|length > 0 }}",
+                        "step_name": "find files by tags"
+                    }
+                ],
+                "step_variables": []
+            },
+            "status": null,
+            "top": "40",
+            "left": "640",
+            "stepType": "\/api\/3\/workflow_step_types\/12254cf5-5db7-4b1a-8cb1-3af081924b28",
+            "group": null,
+            "uuid": "20929670-7934-4df0-914c-1390dec37062"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "find files",
+            "description": null,
+            "arguments": {
+                "query": {
+                    "sort": [
+                        {
+                            "field": "createDate",
+                            "direction": "ASC",
+                            "_fieldName": "createDate",
+                            "_fieldTitle": "Created On"
+                        }
+                    ],
+                    "limit": 30,
+                    "logic": "AND",
+                    "filters": [
+                        {
+                            "type": "object",
+                            "field": "type",
+                            "value": "\/api\/3\/picklists\/9ad4871c-ef9a-4e44-a0e7-cc320041ad6f",
+                            "_value": {
+                                "@id": "\/api\/3\/picklists\/9ad4871c-ef9a-4e44-a0e7-cc320041ad6f",
+                                "display": "Metadata",
+                                "itemValue": "Metadata"
+                            },
+                            "operator": "eq"
+                        }
+                    ],
+                    "__selectFields": [
+                        "id",
+                        "name",
+                        "file",
+                        "type"
+                    ]
+                },
+                "module": "attachments?$limit=5000",
+                "checkboxFields": true,
+                "step_variables": {
+                    "find_files_results": "{{vars.steps.find_files}}"
+                }
+            },
+            "status": null,
+            "top": "100",
+            "left": "960",
+            "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928770",
+            "group": null,
+            "uuid": "304401bf-a1e5-4612-af4d-971befc687f8"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "find files by name",
+            "description": null,
+            "arguments": {
+                "query": {
+                    "sort": [
+                        {
+                            "field": "createDate",
+                            "direction": "ASC",
+                            "_fieldName": "createDate",
+                            "_fieldTitle": "Created On"
+                        }
+                    ],
+                    "limit": 30,
+                    "logic": "AND",
+                    "filters": [
+                        {
+                            "type": "primitive",
+                            "field": "name",
+                            "value": "%{{vars.filename}}%",
+                            "operator": "like",
+                            "_operator": "like"
+                        },
+                        {
+                            "type": "object",
+                            "field": "type",
+                            "value": "\/api\/3\/picklists\/9ad4871c-ef9a-4e44-a0e7-cc320041ad6f",
+                            "_value": {
+                                "@id": "\/api\/3\/picklists\/9ad4871c-ef9a-4e44-a0e7-cc320041ad6f",
+                                "display": "Metadata",
+                                "itemValue": "Metadata"
+                            },
+                            "operator": "eq"
+                        }
+                    ],
+                    "__selectFields": [
+                        "name",
+                        "file",
+                        "type",
+                        "id"
+                    ]
+                },
+                "module": "attachments?$limit=5000",
+                "checkboxFields": true,
+                "step_variables": {
+                    "find_files_results": "{{vars.steps.find_files_by_name}}"
+                }
+            },
+            "status": null,
+            "top": "160",
+            "left": "960",
+            "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928770",
+            "group": null,
+            "uuid": "7c47b90d-6616-46b6-a770-e6ea99ca1b85"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "find files by tags",
+            "description": null,
+            "arguments": {
+                "query": {
+                    "sort": [
+                        {
+                            "field": "createDate",
+                            "direction": "ASC",
+                            "_fieldName": "createDate",
+                            "_fieldTitle": "Created On"
+                        }
+                    ],
+                    "limit": 30,
+                    "logic": "AND",
+                    "filters": [
+                        {
+                            "type": "object",
+                            "field": "type",
+                            "value": "\/api\/3\/picklists\/9ad4871c-ef9a-4e44-a0e7-cc320041ad6f",
+                            "_value": {
+                                "@id": "\/api\/3\/picklists\/9ad4871c-ef9a-4e44-a0e7-cc320041ad6f",
+                                "display": "Metadata",
+                                "itemValue": "Metadata"
+                            },
+                            "operator": "eq"
+                        },
+                        {
+                            "type": "array",
+                            "field": "recordTags",
+                            "value": "{{vars.filetags}}",
+                            "_value": "{{vars.filetags}}",
+                            "operator": "in"
+                        }
+                    ],
+                    "__selectFields": [
+                        "id",
+                        "name",
+                        "file",
+                        "type"
+                    ]
+                },
+                "module": "attachments?$limit=5000",
+                "checkboxFields": true,
+                "step_variables": {
+                    "find_files_results": "{{vars.steps.find_files_by_tags}}"
+                }
+            },
+            "status": null,
+            "top": "220",
+            "left": "960",
+            "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928770",
+            "group": null,
+            "uuid": "0fa181a4-f241-48da-b6c9-5caf915cabda"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "get_file_data",
+            "description": null,
+            "arguments": {
+                "params": {
+                    "iri": "{{vars.item.file['@id']}}",
+                    "type": "record IRI",
+                    "file_type": "{{\"CSV\" if \".csv\" in vars.item.file.filename else \"XLS, XLSX\" if \"xls\" in vars.item.file.filename or \"xlsx\" in vars.item.file.filename}}"
+                },
+                "version": "3.7.2",
+                "for_each": {
+                    "item": "{{vars.find_files_results}}",
+                    "parallel": false,
+                    "condition": "{{vars.item.file.filename | lower | regex_search('\\.(csv|xls|xlsx)$')}}"
+                },
+                "connector": "cyops_utilities",
+                "operation": "convert_to_json",
+                "operationTitle": "Utils: Convert XML, CSV, XLS or XLSX Files to Dictionary",
+                "step_variables": []
+            },
+            "status": null,
+            "top": "300",
+            "left": "600",
+            "stepType": "\/api\/3\/workflow_step_types\/0109f35d-090b-4a2b-bd8a-94cbc3508562",
+            "group": null,
+            "uuid": "7d1bf3d3-759a-4d34-b837-e02202d7db85"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "return",
+            "description": null,
+            "arguments": {
+                "output": "{{vars.filtered_data}}",
+                "params": "{{vars.input.params}}",
+                "status": "{%- set files = vars.find_files_results | json_query('[].file.filename') -%}\n{%- set file_count = files|length -%}\n\n{%- set status = {\n  \"error\":false,\n  \"msg\": \"No errors seen searching \" + file_count|string + \" files: \" \n   + files|join(\", \")\n} -%}\n\n{%- if vars.filtered_data|length == 0 -%}\n{%- do status.update({\n  \"error\":true,\n  \"msg\": \"Nothing found searching files: \" + files|join(\", \")\n}) -%}\n{%- endif -%}\n\n{{status}}"
+            },
+            "status": null,
+            "top": "120",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "05b31558-d9b2-43bd-87b0-aae63aa8a7db"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "setup vars",
+            "description": null,
+            "arguments": {
+                "filter": "{{vars.input.params.filter}}",
+                "filename": "{%- set inp = vars.input.params.filename -%}\n{%- if inp not in ['',None,Null] -%}\n{{inp}}\n{%- else -%}\n''\n{%- endif -%}",
+                "filetags": "{%- set inp = vars.input.params.filetags -%}\n{%- if inp not in ['',None,Null] -%}\n{{inp.replace(' ',',').split(',')}}\n{%- else -%}\n[]\n{%- endif -%}",
+                "file_fields": "[\"Name\",\"File\",\"Type\",\"ID\"]"
+            },
+            "status": null,
+            "top": "40",
+            "left": "340",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "58174034-1cf5-48a7-90b3-239622c14378"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Start",
+            "description": null,
+            "arguments": {
+                "__triggerLimit": true,
+                "step_variables": {
+                    "input": {
+                        "params": []
+                    }
+                },
+                "triggerOnSource": true,
+                "triggerOnReplicate": false
+            },
+            "status": null,
+            "top": "40",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/b348f017-9a94-471f-87f8-ce88b6a7ad62",
+            "group": null,
+            "uuid": "c2810fea-d6e4-4c8e-8073-fe86ba11f67f"
+        }
+    ],
+    "routes": [
+        {
+            "@type": "WorkflowRoute",
+            "name": "extract_file_data -> find_input",
+            "targetStep": "\/api\/3\/workflow_steps\/c342e168-9972-494c-b829-dc05b271b16a",
+            "sourceStep": "\/api\/3\/workflow_steps\/fad87aa5-a5f2-4890-9860-446cee12a8ad",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "05282bc1-2711-4b83-858a-edb541529d8f"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "find file method -> Copy 1 of find files by name",
+            "targetStep": "\/api\/3\/workflow_steps\/0fa181a4-f241-48da-b6c9-5caf915cabda",
+            "sourceStep": "\/api\/3\/workflow_steps\/20929670-7934-4df0-914c-1390dec37062",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "4c3aadc9-3b17-4da4-99d4-e2b1f372cfae"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "find file method -> Copy of find files by name",
+            "targetStep": "\/api\/3\/workflow_steps\/304401bf-a1e5-4612-af4d-971befc687f8",
+            "sourceStep": "\/api\/3\/workflow_steps\/20929670-7934-4df0-914c-1390dec37062",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "4d715c77-babf-4e90-98df-c9767490d143"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "find file method -> find files by name",
+            "targetStep": "\/api\/3\/workflow_steps\/7c47b90d-6616-46b6-a770-e6ea99ca1b85",
+            "sourceStep": "\/api\/3\/workflow_steps\/20929670-7934-4df0-914c-1390dec37062",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "6da1b6d3-b2a2-422e-b8f3-0e088060cf2f"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "find files by name -> get_file_data",
+            "targetStep": "\/api\/3\/workflow_steps\/7d1bf3d3-759a-4d34-b837-e02202d7db85",
+            "sourceStep": "\/api\/3\/workflow_steps\/7c47b90d-6616-46b6-a770-e6ea99ca1b85",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "c0a20be8-0d46-412b-97cb-9ea0b7dac0ad"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "find files by tags -> get_file_data",
+            "targetStep": "\/api\/3\/workflow_steps\/7d1bf3d3-759a-4d34-b837-e02202d7db85",
+            "sourceStep": "\/api\/3\/workflow_steps\/0fa181a4-f241-48da-b6c9-5caf915cabda",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "11ea4eb6-080f-4878-8494-0ec954873ddd"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "find files -> get_file_data",
+            "targetStep": "\/api\/3\/workflow_steps\/7d1bf3d3-759a-4d34-b837-e02202d7db85",
+            "sourceStep": "\/api\/3\/workflow_steps\/304401bf-a1e5-4612-af4d-971befc687f8",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "32765ff9-23d0-42ee-99e7-9d16107d1905"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "find_input -> return",
+            "targetStep": "\/api\/3\/workflow_steps\/05b31558-d9b2-43bd-87b0-aae63aa8a7db",
+            "sourceStep": "\/api\/3\/workflow_steps\/c342e168-9972-494c-b829-dc05b271b16a",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "b8ee9864-4eee-440b-91f0-334316949d22"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "get_file_data -> extract_file_data",
+            "targetStep": "\/api\/3\/workflow_steps\/fad87aa5-a5f2-4890-9860-446cee12a8ad",
+            "sourceStep": "\/api\/3\/workflow_steps\/7d1bf3d3-759a-4d34-b837-e02202d7db85",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "533c353e-dae6-4cec-9ce4-888b6ae22a0e"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "setup vars -> find file method",
+            "targetStep": "\/api\/3\/workflow_steps\/20929670-7934-4df0-914c-1390dec37062",
+            "sourceStep": "\/api\/3\/workflow_steps\/58174034-1cf5-48a7-90b3-239622c14378",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "222ec285-b096-4493-afad-60def1905bc0"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Start -> setup vars",
+            "targetStep": "\/api\/3\/workflow_steps\/58174034-1cf5-48a7-90b3-239622c14378",
+            "sourceStep": "\/api\/3\/workflow_steps\/c2810fea-d6e4-4c8e-8073-fe86ba11f67f",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "314efb10-ea5c-4101-a4a9-0ad5a7a9fa4c"
+        }
+    ],
+    "groups": [
+        {
+            "@type": "WorkflowGroup",
+            "name": "Find Files",
+            "description": "Find file attachments by name contains, by tag includes, or all files. Return the findings to find_files. When processing files only focus on files with the name ending in .csv, .xlx, or .xlsx.",
+            "type": "note",
+            "isCollapsed": false,
+            "hasTriggerStep": false,
+            "hideInLogs": false,
+            "metadata": [],
+            "reusable": false,
+            "top": "120",
+            "left": "560",
+            "height": "153",
+            "width": "319",
+            "uuid": "9dd5e65c-a17a-4b5b-b9aa-7af026f68ae5",
+            "recordTags": []
+        }
+    ],
+    "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+    "playbookOrigin": "\/api\/3\/picklists\/b6d710a9-a8ec-41ec-8817-fe9fa062fcdd",
+    "isEditable": false,
+    "uuid": "f472ba48-77d4-42e0-b09c-92243d14f94d",
+    "owners": [],
+    "isPrivate": false,
+    "deletedAt": null,
+    "recordTags": [
+        "ztpfMetadataSource"
+    ]
+}
