@@ -20,16 +20,38 @@
                                         "dataText",
                                         "dataJSON",
                                         "dataSecret",
-                                        "id"
+                                        "id",
+                                        "recordTags",
+                                        "modifyDate"
                                     ],
-                                    "expandableCol": [],
+                                    "expandableCol": [
+                                        {
+                                            "openTab": false,
+                                            "name": "dataText"
+                                        },
+                                        {
+                                            "openTab": false,
+                                            "name": "dataSecret"
+                                        },
+                                        {
+                                            "openTab": false,
+                                            "name": "dataJSON"
+                                        }
+                                    ],
                                     "relationshipField": [],
-                                    "checkboxStatus": false,
+                                    "checkboxStatus": true,
                                     "editableFields": false,
                                     "actionButtons": [],
                                     "query": {
-                                        "sort": [],
-                                        "limit": 30,
+                                        "sort": [
+                                            {
+                                                "direction": "DESC",
+                                                "field": "modifyDate",
+                                                "_fieldTitle": "Modified On",
+                                                "_fieldName": "modifyDate"
+                                            }
+                                        ],
+                                        "limit": 250,
                                         "logic": "AND",
                                         "filters": []
                                     }

@@ -62,9 +62,8 @@
                         }
                     ],
                     "__selectFields": [
-                        "id",
                         "stepWaiting",
-                        "ztpfArtifacts"
+                        "id"
                     ]
                 },
                 "module": "ztpf_device_automation_steps?$limit=1",
@@ -72,7 +71,7 @@
                 "step_variables": []
             },
             "status": null,
-            "top": "660",
+            "top": "680",
             "left": "1040",
             "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928770",
             "group": null,
@@ -145,6 +144,7 @@
             "arguments": {
                 "run_playbook": "{{vars.triggerkey_idx[vars.triggerkey].pb}}",
                 "device_step_id": "{{vars.input.records[0].id}}",
+                "waiting_timeout": "false",
                 "missing_automation_error_msg": "Please see administrator. No Automation Playbook defined for Trigger Key `{{vars.input.records[0].triggerKey}}`."
             },
             "status": null,
@@ -344,14 +344,33 @@
                     "minutes": 0,
                     "seconds": 0
                 },
+                "timeout": {
+                    "days": 0,
+                    "hours": 1,
+                    "step_iri": "\/api\/3\/workflow_steps\/f494f25e-aac2-4b68-b42c-578e904f0a7b"
+                },
                 "step_variables": []
             },
             "status": null,
-            "top": "580",
+            "top": "600",
             "left": "1040",
             "stepType": "\/api\/3\/workflow_step_types\/6832e556-b9c7-497a-babe-feda3bd27dbf",
             "group": null,
             "uuid": "8a98604e-ef05-4308-ab99-da8178d29881"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "waiting_timeout 1hr",
+            "description": null,
+            "arguments": {
+                "waiting_timeout": "true"
+            },
+            "status": null,
+            "top": "640",
+            "left": "1380",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "f494f25e-aac2-4b68-b42c-578e904f0a7b"
         }
     ],
     "routes": [
@@ -484,13 +503,33 @@
             "isExecuted": false,
             "group": null,
             "uuid": "7873ee96-82be-4e42-beb0-8c707c5276ef"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "waiting for step -> waiting timeout",
+            "targetStep": "\/api\/3\/workflow_steps\/f494f25e-aac2-4b68-b42c-578e904f0a7b",
+            "sourceStep": "\/api\/3\/workflow_steps\/8a98604e-ef05-4308-ab99-da8178d29881",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "0d618847-db4e-454e-baf2-db81bea117bd"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "waiting timeout -> latest step data",
+            "targetStep": "\/api\/3\/workflow_steps\/15d1fa7b-07c4-49f6-ba55-67f13ea9fbf4",
+            "sourceStep": "\/api\/3\/workflow_steps\/f494f25e-aac2-4b68-b42c-578e904f0a7b",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "93a41afd-a117-40bc-bebf-4df86be61566"
         }
     ],
     "groups": [
         {
             "@type": "WorkflowGroup",
             "name": "Details",
-            "description": "Step status changed to running. Lookup the playbook id based on the trigger key from the index and run that playbook if defined.\n\nRunning playbook for the trigger should return in the output *waiting:true* if required. We will then monitor the field *step waiting* checkbox only to release the wait.",
+            "description": "Step status changed to running. Lookup the playbook id based on the trigger key from the index and run that playbook if defined.\n\nRunning playbook for the trigger should return in the output *waiting:true* if required. We will then monitor the field *step waiting* checkbox only to release the wait.\n\nCurrently we only wait 1hr for a step to complete.",
             "type": "note",
             "isCollapsed": false,
             "hasTriggerStep": false,

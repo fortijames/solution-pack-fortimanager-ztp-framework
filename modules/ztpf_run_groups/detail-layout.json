@@ -159,6 +159,10 @@
                                                                                                                     "columns": [
                                                                                                                         {
                                                                                                                             "openTab": false,
+                                                                                                                            "name": "outputSourceData"
+                                                                                                                        },
+                                                                                                                        {
+                                                                                                                            "openTab": false,
                                                                                                                             "name": "outputMarkdown"
                                                                                                                         }
                                                                                                                     ],
@@ -206,11 +210,11 @@
                                                                             "visible": true
                                                                         },
                                                                         "icon": "fa fa-file-text-o",
-                                                                        "show": true,
+                                                                        "show": false,
                                                                         "visible": true
                                                                     },
                                                                     {
-                                                                        "title": "Report Markdown",
+                                                                        "title": "Reporting Steps",
                                                                         "active": 0,
                                                                         "widget": {
                                                                             "type": "rows",
@@ -222,19 +226,6 @@
                                                                                             {
                                                                                                 "widgets": [
                                                                                                     {
-                                                                                                        "type": "sectionHeader",
-                                                                                                        "config": {
-                                                                                                            "wid": "cddcbc4e-5d0a-494e-a78c-e759fe07bb1d",
-                                                                                                            "query": {
-                                                                                                                "filters": [],
-                                                                                                                "sort": [],
-                                                                                                                "limit": 10
-                                                                                                            },
-                                                                                                            "editorType": "html",
-                                                                                                            "sectionText": ""
-                                                                                                        }
-                                                                                                    },
-                                                                                                    {
                                                                                                         "type": "relationship.lineItem",
                                                                                                         "config": {
                                                                                                             "wid": "8b2478f5-31da-4053-863d-1ec15f5676c6",
@@ -242,26 +233,38 @@
                                                                                                                 "sort": [
                                                                                                                     {
                                                                                                                         "direction": "DESC",
-                                                                                                                        "field": "stepStopTimestamp",
-                                                                                                                        "_fieldTitle": "Stop Timestamp",
-                                                                                                                        "_fieldName": "stepStopTimestamp"
+                                                                                                                        "field": "stepStopTimestamp"
                                                                                                                     },
                                                                                                                     {
                                                                                                                         "direction": "ASC",
-                                                                                                                        "field": "stepNumber",
-                                                                                                                        "_fieldTitle": "Step Number",
-                                                                                                                        "_fieldName": "stepNumber"
+                                                                                                                        "field": "stepNumber"
                                                                                                                     }
                                                                                                                 ],
                                                                                                                 "limit": 50,
                                                                                                                 "logic": "AND",
-                                                                                                                "filters": []
+                                                                                                                "filters": [
+                                                                                                                    {
+                                                                                                                        "field": "reportingStep",
+                                                                                                                        "operator": "eq",
+                                                                                                                        "_operator": "eq",
+                                                                                                                        "value": true,
+                                                                                                                        "type": "primitive"
+                                                                                                                    }
+                                                                                                                ]
                                                                                                             },
                                                                                                             "mapping": {
                                                                                                                 "assignedToPerson": ""
                                                                                                             },
                                                                                                             "assignedToSetting": "all",
                                                                                                             "columns": [
+                                                                                                                {
+                                                                                                                    "column_name": "outputStatus",
+                                                                                                                    "display_type": "block"
+                                                                                                                },
+                                                                                                                {
+                                                                                                                    "column_name": "outputStatusMessage",
+                                                                                                                    "display_type": "block"
+                                                                                                                },
                                                                                                                 {
                                                                                                                     "column_name": "ztpfDevices",
                                                                                                                     "display_type": "block"
@@ -287,7 +290,7 @@
                                                                                                                     "display_type": "inline"
                                                                                                                 }
                                                                                                             ],
-                                                                                                            "title": "Steps",
+                                                                                                            "title": "Steps with Reporting Enabled",
                                                                                                             "module": "ztpf_device_automation_steps",
                                                                                                             "fieldName": "ztpfDeviceAutomationSteps"
                                                                                                         }
@@ -304,7 +307,7 @@
                                                                             "visible": true
                                                                         },
                                                                         "icon": "icon icon-generate-incident-summary-report",
-                                                                        "show": false,
+                                                                        "show": true,
                                                                         "visible": true
                                                                     },
                                                                     {
