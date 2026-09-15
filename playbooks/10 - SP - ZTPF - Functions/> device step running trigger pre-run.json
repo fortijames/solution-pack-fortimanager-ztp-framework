@@ -38,7 +38,7 @@
                 "step_variables": []
             },
             "status": null,
-            "top": "540",
+            "top": "580",
             "left": "540",
             "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928722",
             "group": null,
@@ -73,8 +73,8 @@
                 "step_variables": []
             },
             "status": null,
-            "top": "200",
-            "left": "920",
+            "top": "240",
+            "left": "900",
             "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928770",
             "group": null,
             "uuid": "0bf2ab7b-e1ad-4dff-89d9-507a43af7d88"
@@ -96,7 +96,7 @@
                 "workflowReference": "\/api\/3\/workflows\/6ed8988b-5216-4fb3-94e5-0be09ec2ac0a"
             },
             "status": null,
-            "top": "460",
+            "top": "500",
             "left": "540",
             "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
             "group": null,
@@ -156,7 +156,7 @@
             },
             "status": null,
             "top": "40",
-            "left": "760",
+            "left": "740",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
             "uuid": "b60ae986-63b2-4e57-9dae-a6326f453e80"
@@ -201,11 +201,13 @@
             "arguments": {
                 "conditions": [
                     {
+                        "option": "No",
                         "default": true,
                         "step_iri": "\/api\/3\/workflow_steps\/65f82e95-951b-4325-b6ed-15b848bb2e4d",
                         "step_name": "step ready"
                     },
                     {
+                        "option": "Yes",
                         "step_iri": "\/api\/3\/workflow_steps\/e0c9e8dd-7e2b-497d-9153-36a9f96410ec",
                         "condition": "{{ vars.refresh_step_script }}",
                         "step_name": "get jinja_vars and script"
@@ -236,8 +238,8 @@
                 "workflowReference": "\/api\/3\/workflows\/379c3a43-af7e-4a27-bdbf-1207d2697378"
             },
             "status": null,
-            "top": "120",
-            "left": "920",
+            "top": "160",
+            "left": "900",
             "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
             "group": null,
             "uuid": "805903cd-37ed-4301-80ea-9870609302d2"
@@ -261,8 +263,8 @@
                 "step_variables": []
             },
             "status": null,
-            "top": "280",
-            "left": "60",
+            "top": "380",
+            "left": "840",
             "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928722",
             "group": null,
             "uuid": "2c4ea334-993c-4aaa-a263-a47e562f0c87"
@@ -281,13 +283,13 @@
         },
         {
             "@type": "WorkflowRoute",
-            "name": "find action -> step script needed",
-            "targetStep": "\/api\/3\/workflow_steps\/c85f6808-de4a-4648-a514-c365ef431db0",
+            "name": "find action -> update step start",
+            "targetStep": "\/api\/3\/workflow_steps\/2c4ea334-993c-4aaa-a263-a47e562f0c87",
             "sourceStep": "\/api\/3\/workflow_steps\/0bf2ab7b-e1ad-4dff-89d9-507a43af7d88",
             "label": null,
             "isExecuted": false,
             "group": null,
-            "uuid": "dbb13917-a260-47e5-8c29-a3d9c4085263"
+            "uuid": "173fb742-0083-434e-853a-6cd81c3c8d38"
         },
         {
             "@type": "WorkflowRoute",
@@ -331,20 +333,20 @@
         },
         {
             "@type": "WorkflowRoute",
-            "name": "step ready -> update step start",
-            "targetStep": "\/api\/3\/workflow_steps\/2c4ea334-993c-4aaa-a263-a47e562f0c87",
+            "name": "step ready -> return",
+            "targetStep": "\/api\/3\/workflow_steps\/f3bcf02f-50e4-4b84-84dc-640bfcbebb5e",
             "sourceStep": "\/api\/3\/workflow_steps\/65f82e95-951b-4325-b6ed-15b848bb2e4d",
             "label": null,
             "isExecuted": false,
             "group": null,
-            "uuid": "b4cc0bde-92ab-4530-9b1e-16388f273f4f"
+            "uuid": "701440a2-354e-46b5-9f49-ee4ac3d185b4"
         },
         {
             "@type": "WorkflowRoute",
             "name": "step script needed -> get jinja_vars and script",
             "targetStep": "\/api\/3\/workflow_steps\/e0c9e8dd-7e2b-497d-9153-36a9f96410ec",
             "sourceStep": "\/api\/3\/workflow_steps\/c85f6808-de4a-4648-a514-c365ef431db0",
-            "label": null,
+            "label": "Yes",
             "isExecuted": false,
             "group": null,
             "uuid": "535eec00-186d-453c-943d-f592e435fb9e"
@@ -354,7 +356,7 @@
             "name": "step script needed -> step ready",
             "targetStep": "\/api\/3\/workflow_steps\/65f82e95-951b-4325-b6ed-15b848bb2e4d",
             "sourceStep": "\/api\/3\/workflow_steps\/c85f6808-de4a-4648-a514-c365ef431db0",
-            "label": null,
+            "label": "No",
             "isExecuted": false,
             "group": null,
             "uuid": "ba87b451-90e5-406c-9cfa-1f78d5c4e940"
@@ -371,13 +373,13 @@
         },
         {
             "@type": "WorkflowRoute",
-            "name": "update step start -> return",
-            "targetStep": "\/api\/3\/workflow_steps\/f3bcf02f-50e4-4b84-84dc-640bfcbebb5e",
+            "name": "update step start -> step script needed",
+            "targetStep": "\/api\/3\/workflow_steps\/c85f6808-de4a-4648-a514-c365ef431db0",
             "sourceStep": "\/api\/3\/workflow_steps\/2c4ea334-993c-4aaa-a263-a47e562f0c87",
             "label": null,
             "isExecuted": false,
             "group": null,
-            "uuid": "a00bfcdb-2bc0-4a98-bb03-542fdaaade9e"
+            "uuid": "992cee94-977f-468d-b322-6bcf7cc53c15"
         }
     ],
     "groups": [
@@ -392,10 +394,27 @@
             "metadata": [],
             "reusable": false,
             "top": "120",
-            "left": "360",
-            "height": "233",
-            "width": "452",
+            "left": "340",
+            "height": "236",
+            "width": "491",
             "uuid": "6ce1758f-0bf1-4669-8e63-1d957a5a9186",
+            "recordTags": []
+        },
+        {
+            "@type": "WorkflowGroup",
+            "name": "Start Step",
+            "description": "Starting the step time here as collecting data for this step needs to be included in this time. If the step has been setup during the *Prepare* phase the time to complete a step can be decreased.\n\nStep reporting flag is set here if needed.",
+            "type": "note",
+            "isCollapsed": false,
+            "hasTriggerStep": false,
+            "hideInLogs": false,
+            "metadata": [],
+            "reusable": false,
+            "top": "440",
+            "left": "840",
+            "height": "149",
+            "width": "474",
+            "uuid": "75b2e20d-c73c-4d0c-bdaf-36b81448e84d",
             "recordTags": []
         }
     ],

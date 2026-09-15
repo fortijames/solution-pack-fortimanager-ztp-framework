@@ -210,7 +210,7 @@
                                                                             "visible": true
                                                                         },
                                                                         "icon": "fa fa-file-text-o",
-                                                                        "show": false,
+                                                                        "show": true,
                                                                         "visible": true
                                                                     },
                                                                     {
@@ -233,11 +233,15 @@
                                                                                                                 "sort": [
                                                                                                                     {
                                                                                                                         "direction": "DESC",
-                                                                                                                        "field": "stepStopTimestamp"
+                                                                                                                        "field": "stepStopTimestamp",
+                                                                                                                        "_fieldTitle": "Stop Timestamp",
+                                                                                                                        "_fieldName": "stepStopTimestamp"
                                                                                                                     },
                                                                                                                     {
                                                                                                                         "direction": "ASC",
-                                                                                                                        "field": "stepNumber"
+                                                                                                                        "field": "stepNumber",
+                                                                                                                        "_fieldTitle": "Step Number",
+                                                                                                                        "_fieldName": "stepNumber"
                                                                                                                     }
                                                                                                                 ],
                                                                                                                 "limit": 50,
@@ -258,11 +262,7 @@
                                                                                                             "assignedToSetting": "all",
                                                                                                             "columns": [
                                                                                                                 {
-                                                                                                                    "column_name": "outputStatus",
-                                                                                                                    "display_type": "block"
-                                                                                                                },
-                                                                                                                {
-                                                                                                                    "column_name": "outputStatusMessage",
+                                                                                                                    "column_name": "id",
                                                                                                                     "display_type": "block"
                                                                                                                 },
                                                                                                                 {
@@ -274,19 +274,15 @@
                                                                                                                     "display_type": "block"
                                                                                                                 },
                                                                                                                 {
-                                                                                                                    "column_name": "stepNumber",
+                                                                                                                    "column_name": "outputStatus",
                                                                                                                     "display_type": "block"
                                                                                                                 },
                                                                                                                 {
-                                                                                                                    "column_name": "ztpfAutomationActions",
+                                                                                                                    "column_name": "outputStatusMessage",
                                                                                                                     "display_type": "block"
                                                                                                                 },
                                                                                                                 {
                                                                                                                     "column_name": "outputMarkdown",
-                                                                                                                    "display_type": "inline"
-                                                                                                                },
-                                                                                                                {
-                                                                                                                    "column_name": "stepTime",
                                                                                                                     "display_type": "inline"
                                                                                                                 }
                                                                                                             ],
@@ -307,20 +303,6 @@
                                                                             "visible": true
                                                                         },
                                                                         "icon": "icon icon-generate-incident-summary-report",
-                                                                        "show": true,
-                                                                        "visible": true
-                                                                    },
-                                                                    {
-                                                                        "title": "TEST",
-                                                                        "active": 0,
-                                                                        "widget": {
-                                                                            "type": "editableForm",
-                                                                            "config": {
-                                                                                "wid": "c105fd3e-dca4-4472-85ec-ae13b5580951"
-                                                                            },
-                                                                            "visible": true
-                                                                        },
-                                                                        "icon": "fa fa-none",
                                                                         "show": false,
                                                                         "visible": true
                                                                     }

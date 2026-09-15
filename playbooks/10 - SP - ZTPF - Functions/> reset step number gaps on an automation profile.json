@@ -1,0 +1,230 @@
+{
+    "@type": "Workflow",
+    "triggerLimit": null,
+    "name": "> reset step number gaps on an automation profile",
+    "aliasName": null,
+    "tag": null,
+    "description": "Use the profile_id to find the profile steps and reset the order to fill gaps",
+    "isActive": true,
+    "debug": false,
+    "singleRecordExecution": false,
+    "remoteExecutableFlag": false,
+    "parameters": [
+        "profile_id"
+    ],
+    "synchronous": false,
+    "collection": "\/api\/3\/workflow_collections\/517fb52d-36f5-4bac-a344-7d4599d7dec6",
+    "versions": [],
+    "triggerStep": "\/api\/3\/workflow_steps\/743adc4c-8b52-4c4e-aa3c-e6452a3c391f",
+    "steps": [
+        {
+            "@type": "WorkflowStep",
+            "name": "find profile",
+            "description": null,
+            "arguments": {
+                "query": {
+                    "sort": [],
+                    "limit": 30,
+                    "logic": "AND",
+                    "filters": [
+                        {
+                            "type": "primitive",
+                            "field": "id",
+                            "value": "{{vars.input.params['profile_id']}}",
+                            "operator": "eq",
+                            "_operator": "eq"
+                        }
+                    ],
+                    "__selectFields": [
+                        "id",
+                        "name"
+                    ]
+                },
+                "module": "ztpf_automation_profiles?$limit=1",
+                "checkboxFields": true,
+                "step_variables": []
+            },
+            "status": null,
+            "top": "40",
+            "left": "340",
+            "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928770",
+            "group": null,
+            "uuid": "ebf2ab3e-ca07-48a2-98bb-efa9f3f8e02e"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "find the first step",
+            "description": null,
+            "arguments": {
+                "query": {
+                    "sort": [
+                        {
+                            "field": "stepSequence",
+                            "direction": "ASC",
+                            "_fieldName": "stepSequence",
+                            "_fieldTitle": "Step Number"
+                        }
+                    ],
+                    "limit": 30,
+                    "logic": "AND",
+                    "filters": [
+                        {
+                            "type": "object",
+                            "field": "ztpfAutomationProfiles",
+                            "value": "{{vars.steps.find_profile[0]['@id']}}",
+                            "_value": {
+                                "@id": "{{vars.steps.find_profile[0]['@id']}}",
+                                "display": "{{vars.steps.find_profile[0]['@id']}}",
+                                "itemValue": ""
+                            },
+                            "operator": "eq"
+                        }
+                    ],
+                    "__selectFields": [
+                        "id",
+                        "stepSequence"
+                    ]
+                },
+                "module": "ztpf_automation_profile_steps?$limit=1",
+                "checkboxFields": true,
+                "step_variables": []
+            },
+            "status": null,
+            "top": "140",
+            "left": "640",
+            "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928770",
+            "group": null,
+            "uuid": "fca7447d-98df-4ede-9626-375e5e641f72"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "move first step",
+            "description": null,
+            "arguments": {
+                "arguments": {
+                    "new_step_number": "1",
+                    "profile_step_id": "{{vars.steps.find_the_first_step[0].id}}"
+                },
+                "apply_async": false,
+                "step_variables": [],
+                "pass_parent_env": false,
+                "pass_input_record": false,
+                "workflowReference": "\/api\/3\/workflows\/c0a01e5e-a212-422f-9425-3df1b01dfd51"
+            },
+            "status": null,
+            "top": "240",
+            "left": "340",
+            "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
+            "group": null,
+            "uuid": "f39102c7-3406-4446-b77e-b696dbe79829"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "return",
+            "description": null,
+            "arguments": {
+                "output": "{{vars.steps.move_first_step.output}}",
+                "params": "{{vars.input.params}}",
+                "status": "{%- set status = {\"error\":true,\"msg\":\"No Steps Reset\"} -%}\n{%- set steps = vars.steps.move_first_step.output -%}\n{%- if steps|length > 0 -%}\n  {%- do status.update(\n      {\n        \"error\":false,\n        \"msg\": \"Reset \" \n                    + steps|length|string \n                    + \" Steps.\"\n      }) \n  -%}\n{%- endif -%}\n{{status}}"
+            },
+            "status": null,
+            "top": "240",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "fcdf814f-0a28-4a11-80c8-9fbfdd64a0ac"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Start",
+            "description": null,
+            "arguments": {
+                "__triggerLimit": true,
+                "step_variables": {
+                    "input": {
+                        "params": []
+                    }
+                },
+                "triggerOnSource": true,
+                "triggerOnReplicate": false
+            },
+            "status": null,
+            "top": "40",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/b348f017-9a94-471f-87f8-ce88b6a7ad62",
+            "group": null,
+            "uuid": "743adc4c-8b52-4c4e-aa3c-e6452a3c391f"
+        }
+    ],
+    "routes": [
+        {
+            "@type": "WorkflowRoute",
+            "name": "find profile -> find the first step",
+            "targetStep": "\/api\/3\/workflow_steps\/fca7447d-98df-4ede-9626-375e5e641f72",
+            "sourceStep": "\/api\/3\/workflow_steps\/ebf2ab3e-ca07-48a2-98bb-efa9f3f8e02e",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "310277d5-b6e8-47a3-b3d6-92b559c5a9b4"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "find the first step -> move first step",
+            "targetStep": "\/api\/3\/workflow_steps\/f39102c7-3406-4446-b77e-b696dbe79829",
+            "sourceStep": "\/api\/3\/workflow_steps\/fca7447d-98df-4ede-9626-375e5e641f72",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "c3ff8c57-cfb2-48c3-9342-710268a3a2d6"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "move first step -> return",
+            "targetStep": "\/api\/3\/workflow_steps\/fcdf814f-0a28-4a11-80c8-9fbfdd64a0ac",
+            "sourceStep": "\/api\/3\/workflow_steps\/f39102c7-3406-4446-b77e-b696dbe79829",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "5eac4165-7811-4508-b100-fe86f6b3d4d8"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Start -> find profile",
+            "targetStep": "\/api\/3\/workflow_steps\/ebf2ab3e-ca07-48a2-98bb-efa9f3f8e02e",
+            "sourceStep": "\/api\/3\/workflow_steps\/743adc4c-8b52-4c4e-aa3c-e6452a3c391f",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "7ad17604-e6fd-45ca-9d4c-d283e3e992cc"
+        }
+    ],
+    "groups": [
+        {
+            "@type": "WorkflowGroup",
+            "name": "Details",
+            "description": "Find the first step in the profile and move it to step 1. If it is already step1 the entire stack of steps will still be reset and all gaps will be filled.",
+            "type": "note",
+            "isCollapsed": false,
+            "hasTriggerStep": false,
+            "hideInLogs": false,
+            "metadata": [],
+            "reusable": false,
+            "top": "120",
+            "left": "60",
+            "height": "103",
+            "width": "488",
+            "uuid": "7b56b7a1-5ab7-4dc7-84be-606a41c5ac31",
+            "recordTags": []
+        }
+    ],
+    "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+    "playbookOrigin": "\/api\/3\/picklists\/b6d710a9-a8ec-41ec-8817-fe9fa062fcdd",
+    "isEditable": true,
+    "uuid": "455a50a1-a2fa-4923-8e65-6aa5cd20f973",
+    "owners": [],
+    "isPrivate": false,
+    "deletedAt": null,
+    "recordTags": [
+        "ztpfAutomationProfile"
+    ]
+}

@@ -148,8 +148,8 @@
                 "type": "InputBased",
                 "input": {
                     "schema": {
-                        "title": "Steps Updated",
-                        "description": "The following Steps were Updated:\n\n| Step Number | Name |\n| ----------------- | ------- | \n{%- for s in vars.steps.move_step_number.output %}\n| {{s.stepSequence|string}} | {{s.name}}( {{s.id|string}} ) |\n{%- endfor %}\n",
+                        "title": "Step Order Updated",
+                        "description": "The following Steps **were updated**:\n\n| Step Number | Name |\n| ----------------- | ------- | \n{%- for s in vars.steps.move_step_number.output %}\n| {{s.stepSequence|string}} | {{s.name}}( {{s.id|string}} ) |\n{%- endfor %}\n",
                         "inputVariables": []
                     }
                 },
@@ -158,7 +158,7 @@
                     "days": 0,
                     "hours": 0,
                     "minutes": 1,
-                    "step_iri": "\/api\/3\/workflow_steps\/2b3ffd5f-6e1b-4f49-ac7b-b7d35e9ba240"
+                    "step_iri": "\/api\/3\/workflow_steps\/d9b06a86-efdd-4909-9899-c1e83693eecc"
                 },
                 "agent_id": null,
                 "resources": "ztpf_device_automation_steps",
@@ -198,6 +198,18 @@
             "stepType": "\/api\/3\/workflow_step_types\/fc04082a-d7dc-4299-96fb-6837b1baa0fe",
             "group": null,
             "uuid": "3ee6b0c5-d1a6-4f7f-ab42-e99a343c7874"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "timeout",
+            "description": null,
+            "arguments": [],
+            "status": null,
+            "top": "120",
+            "left": "680",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "d9b06a86-efdd-4909-9899-c1e83693eecc"
         }
     ],
     "routes": [
@@ -230,6 +242,16 @@
             "isExecuted": false,
             "group": null,
             "uuid": "67a41e04-4326-4861-aa26-2928a6c94fe4"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Steps Updated -> timeout",
+            "targetStep": "\/api\/3\/workflow_steps\/d9b06a86-efdd-4909-9899-c1e83693eecc",
+            "sourceStep": "\/api\/3\/workflow_steps\/3ee6b0c5-d1a6-4f7f-ab42-e99a343c7874",
+            "label": "",
+            "isExecuted": false,
+            "group": null,
+            "uuid": "c80079b4-4c4a-4334-9631-2f98b687458a"
         }
     ],
     "groups": [],

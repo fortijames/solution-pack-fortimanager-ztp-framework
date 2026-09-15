@@ -74,8 +74,8 @@
                 "workflowReference": "\/api\/3\/workflows\/b9e9fe1a-4964-4631-ba81-97987676884d"
             },
             "status": null,
-            "top": "620",
-            "left": "340",
+            "top": "460",
+            "left": "360",
             "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
             "group": null,
             "uuid": "fed7a8ae-145c-4ddc-9c22-b12b49df705d"
@@ -97,8 +97,8 @@
                 "workflowReference": "\/api\/3\/workflows\/76eb1274-08c5-4006-b834-31ea07289c2a"
             },
             "status": null,
-            "top": "620",
-            "left": "40",
+            "top": "460",
+            "left": "120",
             "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
             "group": null,
             "uuid": "b247b758-79e9-4960-b4f8-15f023281d38"
@@ -115,8 +115,8 @@
                 "output_markdown": "{%- set rout = vars.steps.render_jinja_MARKDOWN -%}\n\n{%- if rout -%}\n{{rout.output| regex_replace('^\"|\"$', '')}}\n{%- endif -%}"
             },
             "status": null,
-            "top": "340",
-            "left": "40",
+            "top": "380",
+            "left": "20",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
             "uuid": "7bb60fd8-fc32-4881-b845-3a6c63ff366a"
@@ -140,7 +140,7 @@
             },
             "status": null,
             "top": "320",
-            "left": "640",
+            "left": "700",
             "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
             "group": null,
             "uuid": "665f594e-58b9-4186-8628-f3740497159e"
@@ -164,7 +164,7 @@
             },
             "status": null,
             "top": "400",
-            "left": "640",
+            "left": "700",
             "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
             "group": null,
             "uuid": "864b10f0-f8c5-4869-bc33-2bc3ec330957"
@@ -188,7 +188,7 @@
             },
             "status": null,
             "top": "160",
-            "left": "640",
+            "left": "700",
             "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
             "group": null,
             "uuid": "d1dfc551-1b67-4793-8cc1-301b4329b816"
@@ -211,8 +211,8 @@
                 "workflowReference": "\/api\/3\/workflows\/b9e9fe1a-4964-4631-ba81-97987676884d"
             },
             "status": null,
-            "top": "480",
-            "left": "640",
+            "top": "260",
+            "left": "360",
             "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
             "group": null,
             "uuid": "79aac4c5-936b-4bb9-8b96-45339df411b5"
@@ -236,7 +236,7 @@
             },
             "status": null,
             "top": "240",
-            "left": "640",
+            "left": "700",
             "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
             "group": null,
             "uuid": "6b1c3a9f-5fbd-4165-af03-34bda51ffda6"
@@ -294,8 +294,8 @@
                 "workflowReference": "\/api\/3\/workflows\/e8a9ca65-8ba2-4da5-993a-e98d1e22283c"
             },
             "status": null,
-            "top": "560",
-            "left": "640",
+            "top": "340",
+            "left": "360",
             "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
             "group": null,
             "uuid": "095e64ff-0fbe-4896-8364-dc5d491b25ff"
@@ -323,8 +323,8 @@
                 "step_variables": []
             },
             "status": null,
-            "top": "240",
-            "left": "40",
+            "top": "300",
+            "left": "20",
             "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928722",
             "group": null,
             "uuid": "c50bca9a-270f-495a-bd83-9be399a6643e"
@@ -464,15 +464,15 @@
             "metadata": [],
             "reusable": false,
             "top": "120",
-            "left": "40",
-            "height": "112",
-            "width": "477",
+            "left": "20",
+            "height": "157",
+            "width": "292",
             "uuid": "4a647dde-b522-4534-a04c-e9a82bbc2f0b",
             "recordTags": []
         },
         {
             "@type": "WorkflowGroup",
-            "name": "Metadata",
+            "name": "Device Metadata",
             "description": "If the Output template that creates metadata is filled out launch the process to create or update metadata records.",
             "type": "note",
             "isCollapsed": false,
@@ -480,11 +480,45 @@
             "hideInLogs": false,
             "metadata": [],
             "reusable": false,
-            "top": "440",
-            "left": "40",
+            "top": "520",
+            "left": "180",
             "height": "118",
             "width": "377",
             "uuid": "0ce98c6d-32f7-4ea5-866d-279f1f86f39d",
+            "recordTags": []
+        },
+        {
+            "@type": "WorkflowGroup",
+            "name": "Output Types",
+            "description": "Output types are rendered when the automation action has templates defined for these types of output formats.",
+            "type": "note",
+            "isCollapsed": false,
+            "hasTriggerStep": false,
+            "hideInLogs": false,
+            "metadata": [],
+            "reusable": false,
+            "top": "160",
+            "left": "960",
+            "height": "134",
+            "width": "285",
+            "uuid": "91ccb210-c7e5-419f-a313-46c4b9efa5c6",
+            "recordTags": []
+        },
+        {
+            "@type": "WorkflowGroup",
+            "name": "Status",
+            "description": "The status template will manage the step status.",
+            "type": "note",
+            "isCollapsed": false,
+            "hasTriggerStep": false,
+            "hideInLogs": false,
+            "metadata": [],
+            "reusable": false,
+            "top": "180",
+            "left": "340",
+            "height": "0",
+            "width": "300",
+            "uuid": "ca9897ca-1e3e-4bc1-be3d-700e9b02861b",
             "recordTags": []
         }
     ],

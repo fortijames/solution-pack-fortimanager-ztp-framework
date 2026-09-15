@@ -33,8 +33,8 @@
                 "workflowReference": "\/api\/3\/workflows\/350ee935-23be-4393-af37-8f1862071dc5"
             },
             "status": null,
-            "top": "480",
-            "left": "220",
+            "top": "460",
+            "left": "40",
             "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
             "group": null,
             "uuid": "9344c0e3-1a8c-4d46-a431-bd8b5dce2257"
@@ -61,7 +61,7 @@
             },
             "status": null,
             "top": "320",
-            "left": "1200",
+            "left": "920",
             "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928722",
             "group": null,
             "uuid": "e1f64272-c2df-4dd8-a41a-0dd4ba96dbdc"
@@ -113,7 +113,7 @@
             },
             "status": null,
             "top": "240",
-            "left": "1200",
+            "left": "920",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
             "uuid": "8c814a32-3f5f-4ed7-a83b-05edb1d40973"
@@ -135,7 +135,7 @@
             },
             "status": null,
             "top": "160",
-            "left": "1200",
+            "left": "920",
             "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
             "group": null,
             "uuid": "50902f0b-7175-4295-b773-daa0749cfd95"
@@ -171,8 +171,8 @@
                 "workflowReference": "\/api\/3\/workflows\/3bcc3bbf-7003-4676-9d49-abdcd4f5913b"
             },
             "status": null,
-            "top": "320",
-            "left": "220",
+            "top": "200",
+            "left": "40",
             "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
             "group": null,
             "uuid": "cbfe4271-7ea7-48f5-b3f0-0429641b61f2"
@@ -190,7 +190,7 @@
             },
             "status": null,
             "top": "40",
-            "left": "660",
+            "left": "620",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
             "uuid": "60bb456d-1682-49ea-b182-30aeb7a330d6"
@@ -244,22 +244,22 @@
                 "step_variables": []
             },
             "status": null,
-            "top": "400",
-            "left": "600",
+            "top": "320",
+            "left": "340",
             "stepType": "\/api\/3\/workflow_step_types\/12254cf5-5db7-4b1a-8cb1-3af081924b28",
             "group": null,
             "uuid": "f6bfbbc3-38ce-4747-97ee-46771158ec03"
         },
         {
             "@type": "WorkflowStep",
-            "name": "Unknown Status",
+            "name": "uknown_status",
             "description": null,
             "arguments": {
                 "uknown_status": "{{vars.step_status}}"
             },
             "status": null,
-            "top": "560",
-            "left": "600",
+            "top": "540",
+            "left": "420",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
             "uuid": "cc57fba3-e010-4d22-a683-2e6967df91b6"
@@ -282,8 +282,8 @@
                 "step_variables": []
             },
             "status": null,
-            "top": "40",
-            "left": "1000",
+            "top": "80",
+            "left": "920",
             "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928722",
             "group": null,
             "uuid": "109a2b64-a442-4f46-a347-d6eb7ee17b3a"
@@ -413,10 +413,27 @@
             "metadata": [],
             "reusable": false,
             "top": "120",
-            "left": "400",
-            "height": "177",
-            "width": "448",
+            "left": "380",
+            "height": "176",
+            "width": "498",
             "uuid": "d1874191-ed1f-40ab-94e5-ba21cca9ff7b",
+            "recordTags": []
+        },
+        {
+            "@type": "WorkflowGroup",
+            "name": "Fail step",
+            "description": "On fail of step run the playbook that will find and cancel the rest of the steps on the device in the rungroup.",
+            "type": "note",
+            "isCollapsed": false,
+            "hasTriggerStep": false,
+            "hideInLogs": false,
+            "metadata": [],
+            "reusable": false,
+            "top": "520",
+            "left": "20",
+            "height": "117",
+            "width": "376",
+            "uuid": "307b50fb-71e9-465b-a528-caf628ba99d2",
             "recordTags": []
         }
     ],

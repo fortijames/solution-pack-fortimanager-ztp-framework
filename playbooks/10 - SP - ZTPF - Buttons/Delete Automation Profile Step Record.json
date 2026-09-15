@@ -1,0 +1,294 @@
+{
+    "@type": "Workflow",
+    "triggerLimit": null,
+    "name": "Delete Automation Profile Step Record",
+    "aliasName": null,
+    "tag": null,
+    "description": "Delete one or more step records on demand.",
+    "isActive": true,
+    "debug": false,
+    "singleRecordExecution": false,
+    "remoteExecutableFlag": false,
+    "parameters": [],
+    "synchronous": false,
+    "collection": "\/api\/3\/workflow_collections\/f0b56dc0-6c1e-4f5b-9199-c807800f028a",
+    "versions": [],
+    "triggerStep": "\/api\/3\/workflow_steps\/572f448b-6a21-4318-8084-eb5e0cedf28e",
+    "steps": [
+        {
+            "@type": "WorkflowStep",
+            "name": "cancel or timeout",
+            "description": null,
+            "arguments": [],
+            "status": null,
+            "top": "160",
+            "left": "540",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "27b0691c-96a6-4d12-84e1-ef0a5a1883c3"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "confirm delete",
+            "description": null,
+            "arguments": {
+                "type": "InputBased",
+                "input": {
+                    "schema": {
+                        "title": "Delete Steps",
+                        "description": "Delete the following steps? \n\n| ID  | Name  |\n| --- | --------- |\n{%- for r in vars.input.records %}\n| {{r.id}} | {{r.name}}  |\n{%- endfor %}",
+                        "inputVariables": []
+                    }
+                },
+                "record": "",
+                "timeout": {
+                    "days": 0,
+                    "hours": 0,
+                    "minutes": 3,
+                    "step_iri": "\/api\/3\/workflow_steps\/27b0691c-96a6-4d12-84e1-ef0a5a1883c3"
+                },
+                "agent_id": null,
+                "resources": "ztpf_device_automation_steps",
+                "is_approval": false,
+                "owner_detail": {
+                    "isAssigned": false,
+                    "emailRecipients": ""
+                },
+                "isRecordLinked": false,
+                "step_variables": [],
+                "response_mapping": {
+                    "options": [
+                        {
+                            "option": "Yes",
+                            "primary": true,
+                            "step_iri": "\/api\/3\/workflow_steps\/335a425e-15e8-4b7a-b1c7-743431a9dcd5"
+                        },
+                        {
+                            "option": "No",
+                            "step_iri": "\/api\/3\/workflow_steps\/27b0691c-96a6-4d12-84e1-ef0a5a1883c3"
+                        }
+                    ],
+                    "duplicateOption": false,
+                    "customSuccessMessage": "Awaiting Playbook resumed successfully."
+                },
+                "email_notification": {
+                    "enabled": false,
+                    "smtpParameters": []
+                },
+                "customEmailExternal": false,
+                "inline_channel_list": [],
+                "external_channel_list": [],
+                "unauthenticated_input": false,
+                "external_email_subject": null,
+                "internal_email_subject": "A FortiSOAR playbook is requesting your input",
+                "custom_email_body_external": null,
+                "external_email_attachments": null
+            },
+            "status": null,
+            "top": "40",
+            "left": "360",
+            "stepType": "\/api\/3\/workflow_step_types\/fc04082a-d7dc-4299-96fb-6837b1baa0fe",
+            "group": null,
+            "uuid": "2a4a9978-6edb-43a6-a761-fc28a6472c1a"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "delete step",
+            "description": null,
+            "arguments": {
+                "params": {
+                    "iri": "{{vars.item['@id']}}",
+                    "body": "",
+                    "method": "DELETE"
+                },
+                "version": "3.7.2",
+                "for_each": {
+                    "item": "{{vars.input.records}}",
+                    "__bulk": false,
+                    "parallel": true,
+                    "condition": ""
+                },
+                "connector": "cyops_utilities",
+                "operation": "make_cyops_request",
+                "operationTitle": "FSR: Make FortiSOAR API Call",
+                "step_variables": []
+            },
+            "status": null,
+            "top": "260",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/0109f35d-090b-4a2b-bd8a-94cbc3508562",
+            "group": null,
+            "uuid": "07a867c2-19ad-4b5a-b964-ab9af33ac0e9"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "reset steps per profile",
+            "description": null,
+            "arguments": {
+                "for_each": {
+                    "item": "{{vars.profile_ids}}",
+                    "parallel": false,
+                    "condition": ""
+                },
+                "arguments": {
+                    "profile_id": "{{vars.item}}"
+                },
+                "apply_async": false,
+                "step_variables": [],
+                "pass_parent_env": false,
+                "pass_input_record": false,
+                "workflowReference": "\/api\/3\/workflows\/455a50a1-a2fa-4923-8e65-6aa5cd20f973"
+            },
+            "status": null,
+            "top": "340",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
+            "group": null,
+            "uuid": "0d6a85dd-bc96-4a86-a88b-5072f356588b"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Start",
+            "description": null,
+            "arguments": {
+                "route": "8a447f0d-e191-4815-8513-00cd39027a69",
+                "title": "Delete Step",
+                "resources": [
+                    "ztpf_automation_profile_steps"
+                ],
+                "__triggerLimit": true,
+                "inputVariables": [],
+                "step_variables": {
+                    "input": {
+                        "params": [],
+                        "records": "{{vars.input.records}}"
+                    }
+                },
+                "triggerOnSource": true,
+                "displayConditions": {
+                    "ztpf_device_automation_steps": {
+                        "sort": [],
+                        "limit": 30,
+                        "logic": "AND",
+                        "filters": []
+                    },
+                    "ztpf_automation_profile_steps": {
+                        "sort": [],
+                        "limit": 30,
+                        "logic": "AND",
+                        "filters": []
+                    }
+                },
+                "executeButtonText": "Execute",
+                "noRecordExecution": false,
+                "showToasterMessage": {
+                    "visible": false,
+                    "messageVisible": true
+                },
+                "triggerOnReplicate": false,
+                "singleRecordExecution": false
+            },
+            "status": null,
+            "top": "40",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/f414d039-bb0d-4e59-9c39-a8f1e880b18a",
+            "group": null,
+            "uuid": "572f448b-6a21-4318-8084-eb5e0cedf28e"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "yes",
+            "description": null,
+            "arguments": {
+                "profile_ids": "{{vars.input.records\n | json_query('[].ztpfAutomationProfiles')\n | json_query('[][\"id\"][]')\n | unique\n}}"
+            },
+            "status": null,
+            "top": "260",
+            "left": "360",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "335a425e-15e8-4b7a-b1c7-743431a9dcd5"
+        }
+    ],
+    "routes": [
+        {
+            "@type": "WorkflowRoute",
+            "name": "confirm delete -> cancel or timeout",
+            "targetStep": "\/api\/3\/workflow_steps\/27b0691c-96a6-4d12-84e1-ef0a5a1883c3",
+            "sourceStep": "\/api\/3\/workflow_steps\/2a4a9978-6edb-43a6-a761-fc28a6472c1a",
+            "label": "No",
+            "isExecuted": false,
+            "group": null,
+            "uuid": "03c3c4ac-2eff-4174-b36c-a34cf943c96f"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "confirm delete -> yes",
+            "targetStep": "\/api\/3\/workflow_steps\/335a425e-15e8-4b7a-b1c7-743431a9dcd5",
+            "sourceStep": "\/api\/3\/workflow_steps\/2a4a9978-6edb-43a6-a761-fc28a6472c1a",
+            "label": "Yes",
+            "isExecuted": false,
+            "group": null,
+            "uuid": "f1584989-8444-4c07-88ce-33f537debaaa"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "delete step -> reset steps per profile",
+            "targetStep": "\/api\/3\/workflow_steps\/0d6a85dd-bc96-4a86-a88b-5072f356588b",
+            "sourceStep": "\/api\/3\/workflow_steps\/07a867c2-19ad-4b5a-b964-ab9af33ac0e9",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "52274fb9-f686-4c1f-a858-93390c0a5797"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Start -> confirm delete",
+            "targetStep": "\/api\/3\/workflow_steps\/2a4a9978-6edb-43a6-a761-fc28a6472c1a",
+            "sourceStep": "\/api\/3\/workflow_steps\/572f448b-6a21-4318-8084-eb5e0cedf28e",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "8a5c5ee6-2bea-4b54-9c3e-c4b4f4a932b5"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "yes -> delete step",
+            "targetStep": "\/api\/3\/workflow_steps\/07a867c2-19ad-4b5a-b964-ab9af33ac0e9",
+            "sourceStep": "\/api\/3\/workflow_steps\/335a425e-15e8-4b7a-b1c7-743431a9dcd5",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "8215a44f-05f3-479f-8bd3-ec909228c36e"
+        }
+    ],
+    "groups": [
+        {
+            "@type": "WorkflowGroup",
+            "name": "Details",
+            "description": "Delete steps from the grid view to make deleting easier from the profile steps grid.",
+            "type": "note",
+            "isCollapsed": false,
+            "hasTriggerStep": false,
+            "hideInLogs": false,
+            "metadata": [],
+            "reusable": false,
+            "top": "120",
+            "left": "40",
+            "height": "103",
+            "width": "383",
+            "uuid": "a220ff15-8856-4860-a2a7-ddf83e694964",
+            "recordTags": []
+        }
+    ],
+    "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+    "playbookOrigin": "\/api\/3\/picklists\/b6d710a9-a8ec-41ec-8817-fe9fa062fcdd",
+    "isEditable": true,
+    "uuid": "0a1d85b6-0f5d-4c41-a0e1-a303360ff44b",
+    "owners": [],
+    "isPrivate": false,
+    "deletedAt": null,
+    "recordTags": [
+        "ztpfAutomationProfileStep"
+    ]
+}

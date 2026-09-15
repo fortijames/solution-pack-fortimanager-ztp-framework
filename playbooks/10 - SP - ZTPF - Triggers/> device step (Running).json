@@ -37,7 +37,7 @@
                 "step_variables": []
             },
             "status": null,
-            "top": "220",
+            "top": "160",
             "left": "1040",
             "stepType": "\/api\/3\/workflow_step_types\/12254cf5-5db7-4b1a-8cb1-3af081924b28",
             "group": null,
@@ -71,8 +71,8 @@
                 "step_variables": []
             },
             "status": null,
-            "top": "680",
-            "left": "1040",
+            "top": "460",
+            "left": "1080",
             "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928770",
             "group": null,
             "uuid": "15d1fa7b-07c4-49f6-ba55-67f13ea9fbf4"
@@ -98,8 +98,8 @@
                 "step_variables": []
             },
             "status": null,
-            "top": "300",
-            "left": "680",
+            "top": "120",
+            "left": "640",
             "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928722",
             "group": null,
             "uuid": "49276c2a-e1e4-47d0-9e5f-9d407f7b9a7f"
@@ -110,8 +110,8 @@
             "description": null,
             "arguments": [],
             "status": null,
-            "top": "360",
-            "left": "160",
+            "top": "280",
+            "left": "60",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
             "uuid": "3bdb09e2-1683-431d-b556-e8daeec5cf4b"
@@ -131,8 +131,8 @@
                 "workflowReference": "{{vars.run_playbook}}"
             },
             "status": null,
-            "top": "340",
-            "left": "1040",
+            "top": "220",
+            "left": "640",
             "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
             "group": null,
             "uuid": "7cc089cd-2dba-4f99-9899-5b8d310ec01d"
@@ -226,8 +226,8 @@
                 "workflowReference": "\/api\/3\/workflows\/9e61ba1a-4371-4d35-825d-9cea8f79feff"
             },
             "status": null,
-            "top": "540",
-            "left": "680",
+            "top": "380",
+            "left": "440",
             "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
             "group": null,
             "uuid": "c281faff-592c-49e7-bef0-2553b0a98856"
@@ -248,15 +248,15 @@
                 "workflowReference": "\/api\/3\/workflows\/1c59904d-0333-48f4-a608-d73a85117e81"
             },
             "status": null,
-            "top": "140",
-            "left": "680",
+            "top": "40",
+            "left": "1040",
             "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
             "group": null,
             "uuid": "c4087ae9-bc90-4408-9609-92bd95353ad6"
         },
         {
             "@type": "WorkflowStep",
-            "name": "step waiting",
+            "name": "step waiting needed",
             "description": null,
             "arguments": {
                 "conditions": [
@@ -276,8 +276,8 @@
                 "step_variables": []
             },
             "status": null,
-            "top": "420",
-            "left": "1040",
+            "top": "280",
+            "left": "1080",
             "stepType": "\/api\/3\/workflow_step_types\/12254cf5-5db7-4b1a-8cb1-3af081924b28",
             "group": null,
             "uuid": "173b6825-a9e9-45aa-8340-704da952e369"
@@ -352,8 +352,8 @@
                 "step_variables": []
             },
             "status": null,
-            "top": "600",
-            "left": "1040",
+            "top": "360",
+            "left": "1080",
             "stepType": "\/api\/3\/workflow_step_types\/6832e556-b9c7-497a-babe-feda3bd27dbf",
             "group": null,
             "uuid": "8a98604e-ef05-4308-ab99-da8178d29881"
@@ -366,8 +366,8 @@
                 "waiting_timeout": "true"
             },
             "status": null,
-            "top": "640",
-            "left": "1380",
+            "top": "400",
+            "left": "1400",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
             "uuid": "f494f25e-aac2-4b68-b42c-578e904f0a7b"
@@ -529,7 +529,7 @@
         {
             "@type": "WorkflowGroup",
             "name": "Details",
-            "description": "Step status changed to running. Lookup the playbook id based on the trigger key from the index and run that playbook if defined.\n\nRunning playbook for the trigger should return in the output *waiting:true* if required. We will then monitor the field *step waiting* checkbox only to release the wait.\n\nCurrently we only wait 1hr for a step to complete.",
+            "description": "Step status changed to running. Lookup the playbook id based on the trigger key from the index and run that playbook if defined.",
             "type": "note",
             "isCollapsed": false,
             "hasTriggerStep": false,
@@ -538,9 +538,26 @@
             "reusable": false,
             "top": "120",
             "left": "60",
-            "height": "226",
-            "width": "498",
+            "height": "131",
+            "width": "497",
             "uuid": "1db88920-bc89-4ef2-a5a5-38c5dd5f36b0",
+            "recordTags": []
+        },
+        {
+            "@type": "WorkflowGroup",
+            "name": "Waiting Step",
+            "description": "Running playbook for the trigger should return in the output *waiting:true* if required. We will then monitor the field *step waiting* checkbox only to release the wait. This will be handled by the *Waiting* and *Waiting Timer* states until the required condition has been met.  \n\nCurrently we only wait 1hr for a step to complete.",
+            "type": "note",
+            "isCollapsed": false,
+            "hasTriggerStep": false,
+            "hideInLogs": false,
+            "metadata": [],
+            "reusable": false,
+            "top": "160",
+            "left": "1320",
+            "height": "212",
+            "width": "387",
+            "uuid": "b0de859b-dbce-41fb-91a1-f8b779c0f4aa",
             "recordTags": []
         }
     ],

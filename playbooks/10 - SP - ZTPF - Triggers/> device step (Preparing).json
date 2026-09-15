@@ -211,7 +211,7 @@
                 "step_args": "{{vars.input.records[0].stepARGS}}",
                 "step_name": "{{vars.input.records[0].name}}",
                 "jinja_vars": "{%- set ret = vars.input.records[0].jinjaVars -%}\n{%- if vars.steps.get_device_jinja_vars.output -%}\n  {%- set ret = ret | combine(vars.steps.get_device_jinja_vars.output) -%}\n{%- endif -%}\n{{ret}}",
-                "config_default": "{\"render_script_on_preparing\": true }"
+                "config_default": "{\n  \"render_script_on_preparing\": false,\n  \"wait_check_time\": 60,\n  \"sync_source_data_device\": false\n}"
             },
             "status": null,
             "top": "40",
@@ -477,8 +477,8 @@
             "reusable": false,
             "top": "120",
             "left": "40",
-            "height": "233",
-            "width": "491",
+            "height": "262",
+            "width": "492",
             "uuid": "577f7c4d-c1b4-400c-a07c-5b1384480467",
             "recordTags": []
         }
