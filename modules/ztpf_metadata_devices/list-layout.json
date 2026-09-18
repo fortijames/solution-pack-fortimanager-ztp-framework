@@ -9,6 +9,160 @@
                     {
                         "widgets": [
                             {
+                                "type": "chart",
+                                "config": {
+                                    "wid": "5118f6ce-8cca-49b2-b5f8-5abc56387a4e",
+                                    "widgetAlwaysDisplay": true,
+                                    "showTabularData": false,
+                                    "query": {
+                                        "sort": [],
+                                        "limit": 2147483647,
+                                        "logic": "AND",
+                                        "filters": [],
+                                        "aggregates": [
+                                            {
+                                                "operator": "countdistinct",
+                                                "field": "*",
+                                                "alias": "total"
+                                            },
+                                            {
+                                                "operator": "groupby",
+                                                "alias": "uuid",
+                                                "field": "ztpfDevices.uuid"
+                                            },
+                                            {
+                                                "operator": "groupby",
+                                                "alias": "name",
+                                                "field": "ztpfDevices.name"
+                                            }
+                                        ]
+                                    },
+                                    "mapping": {
+                                        "fieldName": "ztpfDevices",
+                                        "displayValues": [
+                                            "name"
+                                        ]
+                                    },
+                                    "assignedToSetting": "onlyMe",
+                                    "aggregate": true,
+                                    "viewType": "chart",
+                                    "title": "Devices",
+                                    "widgetAlwaysExpanded": true,
+                                    "resource": "ztpf_metadata_devices",
+                                    "chart": "pie"
+                                }
+                            }
+                        ],
+                        "style": "col-lg-4"
+                    },
+                    {
+                        "widgets": [
+                            {
+                                "type": "chart",
+                                "config": {
+                                    "wid": "827ba02e-86da-4061-b799-2b77261503cb",
+                                    "widgetAlwaysDisplay": true,
+                                    "showTabularData": false,
+                                    "query": {
+                                        "sort": [
+                                            {
+                                                "field": "type.orderIndex",
+                                                "direction": "ASC"
+                                            }
+                                        ],
+                                        "limit": 2147483647,
+                                        "logic": "AND",
+                                        "filters": [],
+                                        "aggregates": [
+                                            {
+                                                "operator": "countdistinct",
+                                                "field": "*",
+                                                "alias": "total"
+                                            },
+                                            {
+                                                "operator": "groupby",
+                                                "alias": "type",
+                                                "field": "type.itemValue"
+                                            },
+                                            {
+                                                "operator": "groupby",
+                                                "alias": "color",
+                                                "field": "type.color"
+                                            },
+                                            {
+                                                "operator": "groupby",
+                                                "alias": "orderIndex",
+                                                "field": "type.orderIndex"
+                                            }
+                                        ]
+                                    },
+                                    "mapping": {
+                                        "fieldName": "type"
+                                    },
+                                    "assignedToSetting": "onlyMe",
+                                    "aggregate": true,
+                                    "viewType": "chart",
+                                    "title": "Metadata Types",
+                                    "widgetAlwaysExpanded": true,
+                                    "resource": "ztpf_metadata_devices",
+                                    "chart": "pie"
+                                }
+                            }
+                        ],
+                        "style": "col-lg-4"
+                    },
+                    {
+                        "widgets": [
+                            {
+                                "type": "chart",
+                                "config": {
+                                    "wid": "0a47c540-830e-4f99-8a40-0be2a40a9f86",
+                                    "widgetAlwaysDisplay": true,
+                                    "showTabularData": false,
+                                    "query": {
+                                        "sort": [],
+                                        "limit": 2147483647,
+                                        "logic": "AND",
+                                        "filters": [],
+                                        "aggregates": [
+                                            {
+                                                "operator": "countdistinct",
+                                                "field": "*",
+                                                "alias": "total"
+                                            },
+                                            {
+                                                "operator": "groupby",
+                                                "alias": "name",
+                                                "field": "name"
+                                            }
+                                        ]
+                                    },
+                                    "mapping": {
+                                        "fieldName": "name"
+                                    },
+                                    "assignedToSetting": "onlyMe",
+                                    "aggregate": true,
+                                    "viewType": "chart",
+                                    "title": "Metadata Names",
+                                    "widgetAlwaysExpanded": true,
+                                    "resource": "ztpf_metadata_devices",
+                                    "chart": "pie"
+                                }
+                            }
+                        ],
+                        "style": "col-lg-4"
+                    }
+                ],
+                "wid": "f3fc006c-06ca-453c-8c65-c44d42c41005",
+                "_collapsed": false,
+                "collapsible": false,
+                "collapsibleIndex": 0
+            },
+            {
+                "columns": [
+                    {
+                        "widgets": [
+                            {
                                 "type": "grid",
                                 "config": {
                                     "wid": "ade75c76-7202-4d98-9d47-8e4d535d3fde",

@@ -1,0 +1,53 @@
+{
+    "@context": "\/api\/3\/contexts\/Dashboard",
+    "@type": "Dashboard",
+    "isDefault": false,
+    "hidden": false,
+    "uuid": "967c8609-f568-4b13-9c46-7c7654581fdc",
+    "displayName": "ZTPF Dashboard - Run Group and Device Report",
+    "type": "rows",
+    "templateType": "dashboard",
+    "roles": [],
+    "parentTemplateId": null,
+    "config": {
+        "rows": [
+            {
+                "columns": [
+                    {
+                        "widgets": [
+                            {
+                                "type": "ztpRunReport-1.0.15",
+                                "config": {
+                                    "wid": "fbcfb5ab-8a5b-4167-adde-9cad96393302",
+                                    "title": "ZTPF Reporting",
+                                    "scope": "latest",
+                                    "layout": "groups",
+                                    "runGroupLimit": 25,
+                                    "stepPage": 1000,
+                                    "groupPage": 500,
+                                    "refreshSecs": 0,
+                                    "showTrend": true,
+                                    "showRunGroups": true,
+                                    "openInNewTab": true,
+                                    "autoExpandGroups": 1,
+                                    "prefetchDevices": 4,
+                                    "range": "7d",
+                                    "showTags": true
+                                }
+                            }
+                        ],
+                        "style": "col-lg-12"
+                    }
+                ],
+                "wid": "2d0112ea-3e05-4258-b93c-4306bb291c4e",
+                "_collapsed": false
+            }
+        ],
+        "wid": "7ad30576-493e-45b7-ba48-07f65799f860",
+        "metadata": {
+            "customTemplateTitle": "COMPONENTS.BREADCRUMB.DASHBOARD"
+        }
+    },
+    "filterArray": [],
+    "updateDate": null
+}
