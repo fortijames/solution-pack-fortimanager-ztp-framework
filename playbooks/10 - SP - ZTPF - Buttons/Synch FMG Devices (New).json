@@ -17,6 +17,18 @@
     "steps": [
         {
             "@type": "WorkflowStep",
+            "name": "cancel or timeout",
+            "description": null,
+            "arguments": [],
+            "status": null,
+            "top": "180",
+            "left": "720",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "bfa9bb8a-cd43-42c7-809a-ffdb05e1636c"
+        },
+        {
+            "@type": "WorkflowStep",
             "name": "create managers",
             "description": null,
             "arguments": {
@@ -150,7 +162,7 @@
                     "days": 0,
                     "hours": 0,
                     "minutes": 1,
-                    "step_iri": "\/api\/3\/workflow_steps\/370cb9f9-1c77-4fe1-b771-910dec7b2e7b"
+                    "step_iri": "\/api\/3\/workflow_steps\/bfa9bb8a-cd43-42c7-809a-ffdb05e1636c"
                 },
                 "agent_id": null,
                 "resources": "ztpf_managers",
@@ -166,6 +178,10 @@
                         {
                             "option": "Proceed",
                             "step_iri": "\/api\/3\/workflow_steps\/e8b9fb21-c2b7-4384-8182-5169fc54c3c5"
+                        },
+                        {
+                            "option": "Cancel",
+                            "step_iri": "\/api\/3\/workflow_steps\/bfa9bb8a-cd43-42c7-809a-ffdb05e1636c"
                         }
                     ],
                     "duplicateOption": false,
@@ -193,15 +209,34 @@
         },
         {
             "@type": "WorkflowStep",
-            "name": "prompt timeout",
+            "name": "set record done",
             "description": null,
-            "arguments": [],
+            "arguments": {
+                "for_each": {
+                    "item": "{{vars.input.records}}",
+                    "__bulk": true,
+                    "parallel": false,
+                    "condition": "",
+                    "batch_size": 100
+                },
+                "resource": {
+                    "status": "\/api\/3\/picklists\/2a2f34dc-4f3b-4434-aa58-ba995b2bf7c6"
+                },
+                "operation": "Append",
+                "collection": "{{vars.item['@id']}}",
+                "__recommend": [],
+                "collectionType": "\/api\/3\/ztpf_managers",
+                "fieldOperation": {
+                    "recordTags": "Append"
+                },
+                "step_variables": []
+            },
             "status": null,
-            "top": "300",
-            "left": "680",
-            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "top": "280",
+            "left": "720",
+            "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928722",
             "group": null,
-            "uuid": "370cb9f9-1c77-4fe1-b771-910dec7b2e7b"
+            "uuid": "1ee56ae3-43e8-4c59-9bde-c3e78c504c72"
         },
         {
             "@type": "WorkflowStep",
@@ -312,6 +347,16 @@
     "routes": [
         {
             "@type": "WorkflowRoute",
+            "name": "cancel or timeout -> Copy of set record updating",
+            "targetStep": "\/api\/3\/workflow_steps\/1ee56ae3-43e8-4c59-9bde-c3e78c504c72",
+            "sourceStep": "\/api\/3\/workflow_steps\/bfa9bb8a-cd43-42c7-809a-ffdb05e1636c",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "c54aca1c-3fca-45af-ade7-d74c9c4024fd"
+        },
+        {
+            "@type": "WorkflowRoute",
             "name": "create managers -> get new devices",
             "targetStep": "\/api\/3\/workflow_steps\/6a752ea4-0c19-4cb0-8296-68523789512b",
             "sourceStep": "\/api\/3\/workflow_steps\/e8b9fb21-c2b7-4384-8182-5169fc54c3c5",
@@ -322,6 +367,16 @@
         },
         {
             "@type": "WorkflowRoute",
+            "name": "prompt get device type -> cancel or timeout",
+            "targetStep": "\/api\/3\/workflow_steps\/bfa9bb8a-cd43-42c7-809a-ffdb05e1636c",
+            "sourceStep": "\/api\/3\/workflow_steps\/78e3cf51-a835-4b2e-a44f-72aa9bd5fc68",
+            "label": "Cancel",
+            "isExecuted": false,
+            "group": null,
+            "uuid": "fee3f335-50a5-4cf0-8b63-c1b93e499731"
+        },
+        {
+            "@type": "WorkflowRoute",
             "name": "prompt get device type -> create api_filter",
             "targetStep": "\/api\/3\/workflow_steps\/e8b9fb21-c2b7-4384-8182-5169fc54c3c5",
             "sourceStep": "\/api\/3\/workflow_steps\/78e3cf51-a835-4b2e-a44f-72aa9bd5fc68",
@@ -329,16 +384,6 @@
             "isExecuted": false,
             "group": null,
             "uuid": "b3a14f96-242e-4da8-851e-f64b17092397"
-        },
-        {
-            "@type": "WorkflowRoute",
-            "name": "prompt get device type -> prompt timeout",
-            "targetStep": "\/api\/3\/workflow_steps\/370cb9f9-1c77-4fe1-b771-910dec7b2e7b",
-            "sourceStep": "\/api\/3\/workflow_steps\/78e3cf51-a835-4b2e-a44f-72aa9bd5fc68",
-            "label": "",
-            "isExecuted": false,
-            "group": null,
-            "uuid": "3bbd9a83-7689-41ad-acaa-80cab0e528d8"
         },
         {
             "@type": "WorkflowRoute",
@@ -375,17 +420,17 @@
         {
             "@type": "WorkflowGroup",
             "name": "Details",
-            "description": "Retrieve new FGs from the FMG.",
+            "description": "Retrieve new FGs from the FMG. Use the method for retrieving devices what the user selects.",
             "type": "note",
             "isCollapsed": false,
             "hasTriggerStep": false,
             "hideInLogs": false,
             "metadata": [],
             "reusable": false,
-            "top": "120",
-            "left": "640",
-            "height": "117",
-            "width": "402",
+            "top": "40",
+            "left": "680",
+            "height": "84",
+            "width": "379",
             "uuid": "dc8e1637-108c-4d77-a953-86af3cc7304b",
             "recordTags": []
         }

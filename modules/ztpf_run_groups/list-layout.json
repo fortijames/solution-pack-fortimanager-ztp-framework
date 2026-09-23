@@ -60,56 +60,7 @@
                                 }
                             }
                         ],
-                        "style": "col-lg-4"
-                    },
-                    {
-                        "widgets": [
-                            {
-                                "type": "chart",
-                                "config": {
-                                    "wid": "d294060e-a77b-4656-9a82-84bc838c3df7",
-                                    "widgetAlwaysDisplay": true,
-                                    "showTabularData": false,
-                                    "query": {
-                                        "sort": [],
-                                        "limit": 2147483647,
-                                        "logic": "AND",
-                                        "filters": [
-                                            {
-                                                "field": "recordTags",
-                                                "operator": "isnull",
-                                                "value": "false",
-                                                "_value": "false",
-                                                "type": "array"
-                                            }
-                                        ],
-                                        "aggregates": [
-                                            {
-                                                "operator": "countdistinct",
-                                                "field": "*",
-                                                "alias": "total"
-                                            },
-                                            {
-                                                "operator": "groupby",
-                                                "alias": "recordTags",
-                                                "field": "recordTags.uuid"
-                                            }
-                                        ]
-                                    },
-                                    "mapping": {
-                                        "fieldName": "recordTags"
-                                    },
-                                    "assignedToSetting": "all",
-                                    "aggregate": true,
-                                    "viewType": "chart",
-                                    "title": "RunGroups by Tags",
-                                    "resource": "ztpf_run_groups",
-                                    "chart": "pie",
-                                    "widgetAlwaysExpanded": true
-                                }
-                            }
-                        ],
-                        "style": "col-lg-4"
+                        "style": "col-lg-6"
                     },
                     {
                         "widgets": [
@@ -158,13 +109,66 @@
                                 }
                             }
                         ],
-                        "style": "col-lg-4"
+                        "style": "col-lg-6"
                     }
                 ],
                 "wid": "cdba5b0a-ae66-4b33-82d8-0d4cabfeb11e",
                 "collapsible": false,
                 "collapsibleIndex": 0,
                 "_collapsed": false
+            },
+            {
+                "columns": [
+                    {
+                        "widgets": [
+                            {
+                                "type": "chart",
+                                "config": {
+                                    "wid": "d294060e-a77b-4656-9a82-84bc838c3df7",
+                                    "widgetAlwaysDisplay": true,
+                                    "showTabularData": false,
+                                    "query": {
+                                        "sort": [],
+                                        "limit": 2147483647,
+                                        "logic": "AND",
+                                        "filters": [
+                                            {
+                                                "field": "recordTags",
+                                                "operator": "isnull",
+                                                "value": "false",
+                                                "_value": "false",
+                                                "type": "array"
+                                            }
+                                        ],
+                                        "aggregates": [
+                                            {
+                                                "operator": "countdistinct",
+                                                "field": "*",
+                                                "alias": "total"
+                                            },
+                                            {
+                                                "operator": "groupby",
+                                                "alias": "recordTags",
+                                                "field": "recordTags.uuid"
+                                            }
+                                        ]
+                                    },
+                                    "mapping": {
+                                        "fieldName": "recordTags"
+                                    },
+                                    "assignedToSetting": "all",
+                                    "aggregate": true,
+                                    "viewType": "chart",
+                                    "title": "RunGroups by Tags",
+                                    "resource": "ztpf_run_groups",
+                                    "chart": "pie",
+                                    "widgetAlwaysExpanded": true
+                                }
+                            }
+                        ]
+                    }
+                ],
+                "wid": "ca71faca-e390-404c-ac54-9da58bc9e3b5"
             },
             {
                 "columns": [

@@ -108,7 +108,7 @@
             "description": null,
             "arguments": {
                 "step_time": "{% macro human_time(total_seconds) -%}\n    {%- set total_seconds = total_seconds | int -%}\n    {%- set days = total_seconds \/\/ 86400 -%}\n    {%- set hours = (total_seconds % 86400) \/\/ 3600 -%}\n    {%- set minutes = (total_seconds % 3600) \/\/ 60 -%}\n    {%- set seconds = total_seconds % 60 -%}\n\n    {%- set out = [] -%}\n\n    {%- if days > 0 -%}\n        {%- set _ = out.append(days ~ \"d\") -%}\n    {%- endif -%}\n\n    {%- if hours > 0 -%}\n        {%- set _ = out.append(hours ~ \"h\") -%}\n    {%- endif -%}\n\n    {%- if minutes > 0 -%}\n        {%- set _ = out.append(minutes ~ \"m\") -%}\n    {%- endif -%}\n\n    {%- if total_seconds < 600 and seconds > 0 -%}\n        {%- set _ = out.append(seconds ~ \"s\") -%}\n    {%- endif -%}\n\n    {%- if out | length == 0 -%}\n        0s\n    {%- else -%}\n        {{ out | join(\" \") }}\n    {%- endif -%}\n{%- endmacro %}\n\n{%- set step_seconds = vars.steps.update_step_stop.stepStopTimestamp\n - vars.steps.update_step_stop.stepStartTimestamp -%}\n\n{%- set total_seconds = step_seconds -%}\n{{human_time(total_seconds )}}",
-                "step_status": "{%- set ret = \"Complete\" -%}\n{%- if vars.steps.update_step_stop.outputSourceData.output.error or \"Fail\" in vars.current_status -%}\n{%- set ret = \"Fail\" -%}\n{%- endif -%}\n{{ret}}",
+                "step_status": "{%- set ret = \"Complete\" -%}\n{%- set step_output_status = vars.steps.render_action_output.status.itemValue -%}\n{%- if vars.steps.update_step_stop.outputSourceData.output.error or \"Fail\" in vars.current_status or \"Fail\" in step_output_status -%}\n{%- set ret = \"Fail\" -%}\n{%- endif -%}\n{{ret}}",
                 "step_time_seconds": "{%- set step_seconds = vars.steps.update_step_stop.stepStopTimestamp\n - vars.steps.update_step_stop.stepStartTimestamp \n-%}\n\n{{step_seconds}}"
             },
             "status": null,
@@ -226,7 +226,7 @@
                         "option": "Uknown",
                         "default": true,
                         "step_iri": "\/api\/3\/workflow_steps\/cc57fba3-e010-4d22-a683-2e6967df91b6",
-                        "step_name": "Unknown Status"
+                        "step_name": "uknown_status"
                     },
                     {
                         "option": "Complete",
@@ -237,7 +237,7 @@
                     {
                         "option": "Fail",
                         "step_iri": "\/api\/3\/workflow_steps\/9344c0e3-1a8c-4d46-a431-bd8b5dce2257",
-                        "condition": "{{ \"Fail\" in vars.current_status }}",
+                        "condition": "{{ \"Fail\" in vars.step_status }}",
                         "step_name": "cancel pending steps"
                     }
                 ],
@@ -405,7 +405,7 @@
         {
             "@type": "WorkflowGroup",
             "name": "Details",
-            "description": "Update step stop time and then render the results of the action before completing the step. We do not set the step done because the RunGroup record will do this. \n\nFinish by kicking off the run next step playbooks IF the status is equal to *Complete*.",
+            "description": "Update step stop time and then render the results of the action before completing the step. We do not set the step done because the RunGroup record will do this. \n\nFinish by kicking off the run next step playbooks IF the status is equal to *Complete*. The render output step can override the status to fail if set.",
             "type": "note",
             "isCollapsed": false,
             "hasTriggerStep": false,

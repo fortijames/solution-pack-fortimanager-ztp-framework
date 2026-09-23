@@ -36,13 +36,14 @@
                         }
                     ],
                     "__selectFields": [
+                        "ztpfDevices",
                         "name",
                         "ztpfAutomationActions",
                         "jinjaVars",
                         "outputSourceData",
                         "outputType",
                         "id",
-                        "ztpfDevices"
+                        "status"
                     ]
                 },
                 "module": "ztpf_device_automation_steps?$limit=1",
@@ -111,6 +112,7 @@
                 "output_html": "{%- set rout = vars.steps.render_jinja_HTML -%}\n\n{%- if rout -%}\n{{rout.output| regex_replace('^\"|\"$', '')}}\n{%- endif -%}",
                 "output_json": "{%- set rout = vars.steps.render_jinja_JSON -%}\n\n{%- if rout -%}\n{{rout.output}}\n{%- endif -%}",
                 "output_text": "{%- set rout = vars.steps.render_jinja_TEXT \n-%}\n\n{%- if rout -%}\n{{rout.output| regex_replace('^\"|\"$', '')}}\n{%- endif -%}",
+                "step_status": "{%- if \"status\" in vars.steps.status_yaml2json.output -%}\n{{vars.steps.status_yaml2json.output.status}}\n{%- else -%}\n{{vars.step_status}}\n{%- endif -%}",
                 "output_status": "{%- set ret = {\n  \"status\": \"OK\",\n  \"message\": \"No Output Status Template\"\n} -%}\n{%- set status = vars.steps.status_yaml2json.output -%}\n{%- if status -%}\n  {%- do ret.update({\"message\":status.message}) -%}\n  {%- if status.exception -%}\n    {%- do ret.update({\"status\":\"Exceptions Found\"}) -%}    \n  {%- endif -%}\n{%- endif -%}\n{{ret}}",
                 "output_markdown": "{%- set rout = vars.steps.render_jinja_MARKDOWN -%}\n\n{%- if rout -%}\n{{rout.output| regex_replace('^\"|\"$', '')}}\n{%- endif -%}"
             },
@@ -140,7 +142,7 @@
             },
             "status": null,
             "top": "320",
-            "left": "700",
+            "left": "980",
             "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
             "group": null,
             "uuid": "665f594e-58b9-4186-8628-f3740497159e"
@@ -164,7 +166,7 @@
             },
             "status": null,
             "top": "400",
-            "left": "700",
+            "left": "680",
             "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
             "group": null,
             "uuid": "864b10f0-f8c5-4869-bc33-2bc3ec330957"
@@ -188,7 +190,7 @@
             },
             "status": null,
             "top": "160",
-            "left": "700",
+            "left": "680",
             "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
             "group": null,
             "uuid": "d1dfc551-1b67-4793-8cc1-301b4329b816"
@@ -236,7 +238,7 @@
             },
             "status": null,
             "top": "240",
-            "left": "700",
+            "left": "980",
             "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
             "group": null,
             "uuid": "6b1c3a9f-5fbd-4165-af03-34bda51ffda6"
@@ -247,7 +249,8 @@
             "description": null,
             "arguments": {
                 "step_fqid": "{{vars.steps.find_step[0]['@id']}}",
-                "jinja_vars": "{%- set ret = vars.steps.find_step[0].jinjaVars -%}\n{%- do ret.update({\"output\":vars.steps.find_step[0].outputSourceData}) -%}\n{{ret}}"
+                "jinja_vars": "{%- set ret = vars.steps.find_step[0].jinjaVars -%}\n{%- do ret.update({\"output\":vars.steps.find_step[0].outputSourceData}) -%}\n{{ret}}",
+                "step_status": "{{vars.steps.find_step[0].status.itemValue}}"
             },
             "status": null,
             "top": "40",
@@ -306,6 +309,7 @@
             "description": null,
             "arguments": {
                 "resource": {
+                    "status": "{{\"ztpfDeviceStepStatus\" | picklist(vars.step_status, \"@id\")}}",
                     "outputHTML": "<p>{{vars.output_html}}<\/p>",
                     "outputJSON": "{{vars.output_json}}",
                     "outputText": "{{vars.output_text}}",
@@ -497,8 +501,8 @@
             "hideInLogs": false,
             "metadata": [],
             "reusable": false,
-            "top": "160",
-            "left": "960",
+            "top": "240",
+            "left": "680",
             "height": "134",
             "width": "285",
             "uuid": "91ccb210-c7e5-419f-a313-46c4b9efa5c6",
@@ -507,17 +511,17 @@
         {
             "@type": "WorkflowGroup",
             "name": "Status",
-            "description": "The status template will manage the step status.",
+            "description": "The status template will manage the step output status and step status. IF the output status includes a \"status\" then we will override the step status with that value.",
             "type": "note",
             "isCollapsed": false,
             "hasTriggerStep": false,
             "hideInLogs": false,
             "metadata": [],
             "reusable": false,
-            "top": "180",
+            "top": "120",
             "left": "340",
-            "height": "0",
-            "width": "300",
+            "height": "144",
+            "width": "317",
             "uuid": "ca9897ca-1e3e-4bc1-be3d-700e9b02861b",
             "recordTags": []
         }

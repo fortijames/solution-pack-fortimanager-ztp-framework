@@ -1,7 +1,7 @@
 {
     "@type": "Workflow",
     "triggerLimit": null,
-    "name": "> set status of steps not done on device in rungroup",
+    "name": "> set status of steps on device in rungroup",
     "aliasName": null,
     "tag": null,
     "description": "Set the status of steps based on in a rungroup and attached to a device",
@@ -194,6 +194,9 @@
                 },
                 "resource": {
                     "status": "{{\"ztpfDeviceStepStatus\" | picklist(vars.input.params['new_status'], \"@id\")}}",
+                    "stepTime": "{%- if vars.set_stop_time -%}0s{%- endif -%}",
+                    "outputStatus": "{%- if vars.set_stop_time -%}{{\"ztpfDeviceStepOutputStatus\" | picklist(\"Incomplete\", \"@id\")}}{%- endif -%}",
+                    "stepTimeSeconds": "{%- if vars.set_stop_time -%}0{%- endif -%}",
                     "stepStopTimestamp": "{%- if vars.set_stop_time -%}{{arrow.utcnow().int_timestamp}}{%- endif -%}",
                     "stepStartTimestamp": "{%- if vars.set_stop_time -%}{{arrow.utcnow().int_timestamp}}{%- endif -%}"
                 },
@@ -270,7 +273,7 @@
         {
             "@type": "WorkflowGroup",
             "name": "Details",
-            "description": "Find all steps not marked done and in the same rungroup and device as the input step.\n\nUpdate the status from the input.",
+            "description": "Find all steps not marked done and in the same rungroup and device as the input step. Update the status from the input.\n\nIf the status is canceled or aborted then updated the stop time and output status as the post process will not be executed.",
             "type": "note",
             "isCollapsed": false,
             "hasTriggerStep": false,
@@ -279,7 +282,7 @@
             "reusable": false,
             "top": "120",
             "left": "100",
-            "height": "142",
+            "height": "172",
             "width": "498",
             "uuid": "148a888f-59d0-4505-a5a5-b2601f56df29",
             "recordTags": []
