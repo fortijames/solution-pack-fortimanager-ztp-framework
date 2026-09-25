@@ -22,7 +22,7 @@
             "name": "create step_args_yaml",
             "description": null,
             "arguments": {
-                "step_args_yaml": "{%- set args = vars.input.params['step_args'] -%}\n\n{%- macro render_section(name, data) -%}\n  {%- set out = [] -%}\n  {%- if data -%}\n{{ name }}:\n  {%- for key, value in data.items() %}\n    {%- if value in [None,''] -%}\n      {%- set value = \"<INPUT NEEDED>\" -%}\n    {%- endif -%}\n      {%- do out.append(\"  \" + key + \": \" + value|string) -%}\n  {%- endfor %}\n{{out|sort|join(\"\\n\")}}\n  {%- endif -%}\n{%- endmacro -%}\n\n{%- if args -%}\n{{ render_section(\"input\", args.get(\"input\")) }}\n{{ render_section(\"config\", args.get(\"config\")) }}\n{%- endif -%}"
+                "step_args_yaml": "{%- set args = vars.input.params['step_args'] -%}\n\n{%- macro render_section(name, data) -%}\n  {%- set out = [] -%}\n  {%- if data -%}\n{{ name }}:\n  {%- for key, value in data.items() %}\n    {%- if value in [None,''] -%}\n      {%- set value = \"<INPUT NEEDED>\" -%}\n    {%- endif -%}\n      {%- do out.append(\"  \" + key + \": \" + value|string) -%}\n  {%- endfor %}\n{{out|sort|join(\"\\n\")}}\n  {%- endif -%}\n{%- endmacro -%}\n\n{%- if args -%}\n{%- if args.input -%}\n{{ render_section(\"input\", args.get(\"input\")) }}\n{%- endif -%}\n{%- if args.config %}\n{{ render_section(\"config\", args.get(\"config\")) }}\n{%- endif -%}\n{%- endif -%}"
             },
             "status": null,
             "top": "140",

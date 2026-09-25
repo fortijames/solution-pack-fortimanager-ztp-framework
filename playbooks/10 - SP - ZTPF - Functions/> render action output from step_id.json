@@ -75,8 +75,8 @@
                 "workflowReference": "\/api\/3\/workflows\/b9e9fe1a-4964-4631-ba81-97987676884d"
             },
             "status": null,
-            "top": "460",
-            "left": "360",
+            "top": "500",
+            "left": "320",
             "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
             "group": null,
             "uuid": "fed7a8ae-145c-4ddc-9c22-b12b49df705d"
@@ -98,8 +98,8 @@
                 "workflowReference": "\/api\/3\/workflows\/76eb1274-08c5-4006-b834-31ea07289c2a"
             },
             "status": null,
-            "top": "460",
-            "left": "120",
+            "top": "500",
+            "left": "80",
             "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
             "group": null,
             "uuid": "b247b758-79e9-4960-b4f8-15f023281d38"
@@ -112,7 +112,7 @@
                 "output_html": "{%- set rout = vars.steps.render_jinja_HTML -%}\n\n{%- if rout -%}\n{{rout.output| regex_replace('^\"|\"$', '')}}\n{%- endif -%}",
                 "output_json": "{%- set rout = vars.steps.render_jinja_JSON -%}\n\n{%- if rout -%}\n{{rout.output}}\n{%- endif -%}",
                 "output_text": "{%- set rout = vars.steps.render_jinja_TEXT \n-%}\n\n{%- if rout -%}\n{{rout.output| regex_replace('^\"|\"$', '')}}\n{%- endif -%}",
-                "step_status": "{%- if \"status\" in vars.steps.status_yaml2json.output -%}\n{{vars.steps.status_yaml2json.output.status}}\n{%- else -%}\n{{vars.step_status}}\n{%- endif -%}",
+                "step_status": "{%- if vars.steps.status_yaml2json.output.fail -%}\n\"Fail\"\n{%- elif vars.steps.status_yaml2json.output.abort -%}\n\"Abort\"\n{%- elif \"status\" in vars.steps.status_yaml2json.output -%}\n{{vars.steps.status_yaml2json.output.status}}\n{%- else -%}\n{{vars.step_status}}\n{%- endif -%}",
                 "output_status": "{%- set ret = {\n  \"status\": \"OK\",\n  \"message\": \"No Output Status Template\"\n} -%}\n{%- set status = vars.steps.status_yaml2json.output -%}\n{%- if status -%}\n  {%- do ret.update({\"message\":status.message}) -%}\n  {%- if status.exception -%}\n    {%- do ret.update({\"status\":\"Exceptions Found\"}) -%}    \n  {%- endif -%}\n{%- endif -%}\n{{ret}}",
                 "output_markdown": "{%- set rout = vars.steps.render_jinja_MARKDOWN -%}\n\n{%- if rout -%}\n{{rout.output| regex_replace('^\"|\"$', '')}}\n{%- endif -%}"
             },
@@ -213,7 +213,7 @@
                 "workflowReference": "\/api\/3\/workflows\/b9e9fe1a-4964-4631-ba81-97987676884d"
             },
             "status": null,
-            "top": "260",
+            "top": "320",
             "left": "360",
             "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
             "group": null,
@@ -297,7 +297,7 @@
                 "workflowReference": "\/api\/3\/workflows\/e8a9ca65-8ba2-4da5-993a-e98d1e22283c"
             },
             "status": null,
-            "top": "340",
+            "top": "400",
             "left": "360",
             "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
             "group": null,
@@ -377,6 +377,16 @@
         },
         {
             "@type": "WorkflowRoute",
+            "name": "manage metadata -> output vars",
+            "targetStep": "\/api\/3\/workflow_steps\/7bb60fd8-fc32-4881-b845-3a6c63ff366a",
+            "sourceStep": "\/api\/3\/workflow_steps\/b247b758-79e9-4960-b4f8-15f023281d38",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "6c0d96cb-7973-4ef4-b39f-4a5db97417c7"
+        },
+        {
+            "@type": "WorkflowRoute",
             "name": "output vars -> update step",
             "targetStep": "\/api\/3\/workflow_steps\/c50bca9a-270f-495a-bd83-9be399a6643e",
             "sourceStep": "\/api\/3\/workflow_steps\/7bb60fd8-fc32-4881-b845-3a6c63ff366a",
@@ -437,16 +447,6 @@
         },
         {
             "@type": "WorkflowRoute",
-            "name": "status yaml2json -> output vars",
-            "targetStep": "\/api\/3\/workflow_steps\/7bb60fd8-fc32-4881-b845-3a6c63ff366a",
-            "sourceStep": "\/api\/3\/workflow_steps\/095e64ff-0fbe-4896-8364-dc5d491b25ff",
-            "label": null,
-            "isExecuted": false,
-            "group": null,
-            "uuid": "e60ba615-97db-41e3-80e2-07d37ce3eb02"
-        },
-        {
-            "@type": "WorkflowRoute",
             "name": "update jinja_vars -> render jinja",
             "targetStep": "\/api\/3\/workflow_steps\/d1dfc551-1b67-4793-8cc1-301b4329b816",
             "sourceStep": "\/api\/3\/workflow_steps\/85d3a526-d57e-4c51-bd8a-22e4df19613d",
@@ -484,8 +484,8 @@
             "hideInLogs": false,
             "metadata": [],
             "reusable": false,
-            "top": "520",
-            "left": "180",
+            "top": "560",
+            "left": "140",
             "height": "118",
             "width": "377",
             "uuid": "0ce98c6d-32f7-4ea5-866d-279f1f86f39d",
@@ -511,7 +511,7 @@
         {
             "@type": "WorkflowGroup",
             "name": "Status",
-            "description": "The status template will manage the step output status and step status. IF the output status includes a \"status\" then we will override the step status with that value.",
+            "description": "The status template will manage the step output status and step status. IF the output status includes a \"status\" we need to set then we will override the step status with that value.\n\nHandles Fail or Abort output template status.",
             "type": "note",
             "isCollapsed": false,
             "hasTriggerStep": false,
@@ -520,8 +520,8 @@
             "reusable": false,
             "top": "120",
             "left": "340",
-            "height": "144",
-            "width": "317",
+            "height": "203",
+            "width": "307",
             "uuid": "ca9897ca-1e3e-4bc1-be3d-700e9b02861b",
             "recordTags": []
         }

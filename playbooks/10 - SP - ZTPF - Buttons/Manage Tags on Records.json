@@ -1,7 +1,7 @@
 {
     "@type": "Workflow",
     "triggerLimit": null,
-    "name": "Manage Tags on Templates",
+    "name": "Manage Tags on Records",
     "aliasName": null,
     "tag": null,
     "description": "Manage Tags of the selected record(s)",
@@ -101,6 +101,30 @@
         },
         {
             "@type": "WorkflowStep",
+            "name": "get ztpfDevice",
+            "description": null,
+            "arguments": {
+                "when": "{{vars.get_linked}}",
+                "arguments": {
+                    "record_ids": "{{vars.record_ids}}"
+                },
+                "apply_async": false,
+                "step_variables": {
+                    "type2record": "{{vars.steps.get_ztpfDevice.output}}"
+                },
+                "pass_parent_env": false,
+                "pass_input_record": false,
+                "workflowReference": "\/api\/3\/workflows\/7776196e-1630-4977-87c3-d0bd2cd0f542"
+            },
+            "status": null,
+            "top": "880",
+            "left": "100",
+            "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
+            "group": null,
+            "uuid": "c2e08cac-9b9c-4426-b661-051aec3d1da0"
+        },
+        {
+            "@type": "WorkflowStep",
             "name": "get ztpfMetadataSource",
             "description": null,
             "arguments": {
@@ -122,6 +146,30 @@
             "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
             "group": null,
             "uuid": "7d3a2770-a59a-4709-b032-4db22072c6b7"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "get ztpfRunGroup",
+            "description": null,
+            "arguments": {
+                "when": "{{vars.get_linked}}",
+                "arguments": {
+                    "record_ids": "{{vars.record_ids}}"
+                },
+                "apply_async": false,
+                "step_variables": {
+                    "type2record": "{{vars.steps.get_ztpfRunGroup.output}}"
+                },
+                "pass_parent_env": false,
+                "pass_input_record": false,
+                "workflowReference": "\/api\/3\/workflows\/0e73d8c1-6190-48ab-8249-8d7077a9d4f5"
+            },
+            "status": null,
+            "top": "960",
+            "left": "100",
+            "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
+            "group": null,
+            "uuid": "bed32c63-f253-4a4c-8603-eb89074d415c"
         },
         {
             "@type": "WorkflowStep",
@@ -153,8 +201,13 @@
             "description": null,
             "arguments": {
                 "when": "{{vars.record_type != 'ztpfAutomationAction' and vars.type2record['ztpfAutomationAction']|length > 0}}",
+                "for_each": {
+                    "item": "{{vars.tag_names}}",
+                    "parallel": false,
+                    "condition": ""
+                },
                 "arguments": {
-                    "tag_name": "{{vars.tag_name}}",
+                    "tag_name": "{{vars.item}}",
                     "record_ids": "{{vars.type2record['ztpfAutomationAction']}}",
                     "tag_action": "{{vars.tag_action}}",
                     "record_type": "ztpfAutomationAction"
@@ -178,8 +231,13 @@
             "description": null,
             "arguments": {
                 "when": "{{vars.record_type != 'ztpfAutomationProfile' and vars.type2record['ztpfAutomationProfile']|length > 0}}",
+                "for_each": {
+                    "item": "{{vars.tag_names}}",
+                    "parallel": false,
+                    "condition": ""
+                },
                 "arguments": {
-                    "tag_name": "{{vars.tag_name}}",
+                    "tag_name": "{{vars.item}}",
                     "record_ids": "{{vars.type2record['ztpfAutomationProfile']}}",
                     "tag_action": "{{vars.tag_action}}",
                     "record_type": "ztpfAutomationProfile"
@@ -203,8 +261,13 @@
             "description": null,
             "arguments": {
                 "when": "{{vars.record_type != 'ztpfAutomationProfileStep' and vars.type2record['ztpfAutomationProfileStep']|length > 0}}",
+                "for_each": {
+                    "item": "{{vars.tag_names}}",
+                    "parallel": false,
+                    "condition": ""
+                },
                 "arguments": {
-                    "tag_name": "{{vars.tag_name}}",
+                    "tag_name": "{{vars.item}}",
                     "record_ids": "{{vars.type2record['ztpfAutomationProfileStep']}}",
                     "tag_action": "{{vars.tag_action}}",
                     "record_type": "ztpfAutomationProfileStep"
@@ -228,8 +291,13 @@
             "description": null,
             "arguments": {
                 "when": "{{vars.record_type != 'ztpfMetadataSource' and  vars.type2record['ztpfMetadataSource']|length > 0}}",
+                "for_each": {
+                    "item": "{{vars.tag_names}}",
+                    "parallel": false,
+                    "condition": ""
+                },
                 "arguments": {
-                    "tag_name": "{{vars.tag_name}}",
+                    "tag_name": "{{vars.item}}",
                     "record_ids": "{{vars.type2record['ztpfMetadataSource']}}",
                     "tag_action": "{{vars.tag_action}}",
                     "record_type": "ztpfMetadataSource"
@@ -253,8 +321,13 @@
             "description": null,
             "arguments": {
                 "when": "{{vars.record_type != 'ztpfTemplate' and vars.type2record['ztpfTemplate']|length > 0}}",
+                "for_each": {
+                    "item": "{{vars.tag_names}}",
+                    "parallel": false,
+                    "condition": ""
+                },
                 "arguments": {
-                    "tag_name": "{{vars.tag_name}}",
+                    "tag_name": "{{vars.item}}",
                     "record_ids": "{{vars.type2record['ztpfTemplate']}}",
                     "tag_action": "{{vars.tag_action}}",
                     "record_type": "ztpfTemplate"
@@ -313,6 +386,18 @@
                         "step_iri": "\/api\/3\/workflow_steps\/7d3a2770-a59a-4709-b032-4db22072c6b7",
                         "condition": "{{ vars.record_type == \"ztpfMetadataSource\" }}",
                         "step_name": "get ztpfMetadataSource"
+                    },
+                    {
+                        "option": "6",
+                        "step_iri": "\/api\/3\/workflow_steps\/c2e08cac-9b9c-4426-b661-051aec3d1da0",
+                        "condition": "{{ vars.record_type == \"ztpfDevice\" }}",
+                        "step_name": "get ztpfDevice"
+                    },
+                    {
+                        "option": "7",
+                        "step_iri": "\/api\/3\/workflow_steps\/bed32c63-f253-4a4c-8603-eb89074d415c",
+                        "condition": "{{ vars.record_type == \"ztpfRunGroup\" }}",
+                        "step_name": "get ztpfRunGroup"
                     }
                 ],
                 "step_variables": []
@@ -335,6 +420,37 @@
                         "title": "Manage Tags",
                         "description": "What would you like to do? ",
                         "inputVariables": [
+                            {
+                                "name": "recordType",
+                                "type": "string",
+                                "label": "Record Type",
+                                "tooltip": "",
+                                "dataType": "text",
+                                "formType": "text",
+                                "required": false,
+                                "_expanded": false,
+                                "defaultValue": "{{vars.record_type}}",
+                                "_previousName": "rEcordType",
+                                "visibilityQuery": {
+                                    "sort": [],
+                                    "limit": 30,
+                                    "logic": "AND",
+                                    "filters": [
+                                        {
+                                            "type": "primitive",
+                                            "field": "recordType",
+                                            "value": "true",
+                                            "operator": "isnull",
+                                            "_operator": "isnull"
+                                        }
+                                    ]
+                                },
+                                "requiredCondition": "notrequired",
+                                "jinjaExpressionView": true,
+                                "useRecordFieldDefault": false,
+                                "_addRequiredConditions": false,
+                                "_addVisibilityConditions": true
+                            },
                             {
                                 "name": "action",
                                 "type": "array",
@@ -365,7 +481,7 @@
                                 "name": "tag",
                                 "type": "string",
                                 "label": "Tag",
-                                "tooltip": "Add new tag to selected records",
+                                "tooltip": "Add new tags, comma or space separated, to selected records",
                                 "dataType": "text",
                                 "formType": "text",
                                 "required": false,
@@ -414,10 +530,11 @@
                                 "_expanded": false,
                                 "mmdUpdate": true,
                                 "collection": false,
+                                "isMultiple": true,
                                 "searchable": false,
                                 "templateUrl": "app\/components\/form\/fields\/dynamicList.html",
                                 "defaultValue": null,
-                                "_previousName": "seleTag",
+                                "_previousName": "selectTag",
                                 "playbookField": true,
                                 "visibilityQuery": {
                                     "sort": [],
@@ -479,6 +596,21 @@
                                             "value": "false",
                                             "_value": "false",
                                             "operator": "isnull"
+                                        },
+                                        {
+                                            "type": "array",
+                                            "field": "recordType",
+                                            "value": [
+                                                "ztpfDevice",
+                                                "ztpfRunGroup"
+                                            ],
+                                            "module": "recordType",
+                                            "display": "",
+                                            "operator": "nin",
+                                            "template": "tags",
+                                            "OPERATOR_KEY": "$",
+                                            "previousOperator": "nin",
+                                            "previousTemplate": "tags"
                                         }
                                     ]
                                 },
@@ -550,7 +682,8 @@
             "name": "prompt vars",
             "description": null,
             "arguments": {
-                "tag_name": "{{vars.steps.prompt_action.input.tag \n  or vars.steps.prompt_action.input.selectTag\n}}",
+                "tag_name": "{{\n  vars.steps.prompt_action.input.tag \n  or vars.steps.prompt_action.input.selectTag\n}}",
+                "tag_names": "{%- if vars.steps.prompt_action.input.tag -%}\n{{vars.steps.prompt_action.input.tag.replace(',',' ').split(' ')}}\n{%- elif vars.steps.prompt_action.input.selectTag -%}\n{{vars.steps.prompt_action.input.selectTag}}\n{%- else -%}\n[\"purge\"]\n{%- endif -%}",
                 "get_linked": "{{vars.steps.prompt_action.input.recursive}}",
                 "tag_action": "{%- set ret = vars.steps.prompt_action.input.action -%}\n{%- if ret|lower == \"copy\" -%}\n  {%- set ret = \"Add\" -%}\n{%- endif -%}\n{{ret}}"
             },
@@ -590,7 +723,9 @@
                     "ztpf_templates",
                     "ztpf_automation_actions",
                     "ztpf_automation_profiles",
-                    "ztpf_automation_profile_steps"
+                    "ztpf_automation_profile_steps",
+                    "ztpf_devices",
+                    "ztpf_run_groups"
                 ],
                 "__triggerLimit": true,
                 "inputVariables": [],
@@ -602,7 +737,19 @@
                 },
                 "triggerOnSource": true,
                 "displayConditions": {
+                    "ztpf_devices": {
+                        "sort": [],
+                        "limit": 30,
+                        "logic": "AND",
+                        "filters": []
+                    },
                     "ztpf_templates": {
+                        "sort": [],
+                        "limit": 30,
+                        "logic": "AND",
+                        "filters": []
+                    },
+                    "ztpf_run_groups": {
                         "sort": [],
                         "limit": 30,
                         "logic": "AND",
@@ -668,8 +815,13 @@
             "name": "update tags selected",
             "description": null,
             "arguments": {
+                "for_each": {
+                    "item": "{{vars.tag_names}}",
+                    "parallel": false,
+                    "condition": ""
+                },
                 "arguments": {
-                    "tag_name": "{{vars.tag_name}}",
+                    "tag_name": "{{vars.item}}",
                     "record_ids": "{{vars.record_ids}}",
                     "tag_action": "{{vars.tag_action}}",
                     "record_type": "{{vars.record_type}}"
@@ -721,6 +873,16 @@
         },
         {
             "@type": "WorkflowRoute",
+            "name": "get ztpfDevice -> update tags selected",
+            "targetStep": "\/api\/3\/workflow_steps\/4d204462-a607-4d74-a16e-d68024d12a76",
+            "sourceStep": "\/api\/3\/workflow_steps\/c2e08cac-9b9c-4426-b661-051aec3d1da0",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "ca0693aa-9e95-46b8-a2cb-01f549f2430b"
+        },
+        {
+            "@type": "WorkflowRoute",
             "name": "get ztpfMetadataSource -> update tags selected",
             "targetStep": "\/api\/3\/workflow_steps\/4d204462-a607-4d74-a16e-d68024d12a76",
             "sourceStep": "\/api\/3\/workflow_steps\/7d3a2770-a59a-4709-b032-4db22072c6b7",
@@ -728,6 +890,16 @@
             "isExecuted": false,
             "group": null,
             "uuid": "4e3f4a53-cac8-4253-8e1d-6ec7f3d6cfe9"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "get ztpfRunGroup -> update tags selected",
+            "targetStep": "\/api\/3\/workflow_steps\/4d204462-a607-4d74-a16e-d68024d12a76",
+            "sourceStep": "\/api\/3\/workflow_steps\/bed32c63-f253-4a4c-8603-eb89074d415c",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "b392b30e-18eb-452d-8b1e-e3815c0b13c1"
         },
         {
             "@type": "WorkflowRoute",
@@ -751,6 +923,16 @@
         },
         {
             "@type": "WorkflowRoute",
+            "name": "module type -> Copy of get ztpfDevice",
+            "targetStep": "\/api\/3\/workflow_steps\/bed32c63-f253-4a4c-8603-eb89074d415c",
+            "sourceStep": "\/api\/3\/workflow_steps\/53390f79-8bb8-4277-87fb-107abf6a18a3",
+            "label": "7",
+            "isExecuted": false,
+            "group": null,
+            "uuid": "07149486-537c-4971-b1cd-14e7bcbe6660"
+        },
+        {
+            "@type": "WorkflowRoute",
             "name": "module type -> get ztpfAutomationAction",
             "targetStep": "\/api\/3\/workflow_steps\/bc016c4a-b043-4da4-9ee5-118db7b4d083",
             "sourceStep": "\/api\/3\/workflow_steps\/53390f79-8bb8-4277-87fb-107abf6a18a3",
@@ -768,6 +950,16 @@
             "isExecuted": false,
             "group": null,
             "uuid": "8fba91cd-6e15-440e-b862-281cf1a44296"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "module type -> get ztpfDevice",
+            "targetStep": "\/api\/3\/workflow_steps\/c2e08cac-9b9c-4426-b661-051aec3d1da0",
+            "sourceStep": "\/api\/3\/workflow_steps\/53390f79-8bb8-4277-87fb-107abf6a18a3",
+            "label": "6",
+            "isExecuted": false,
+            "group": null,
+            "uuid": "003d59cd-2f84-48bf-89ba-516de108bec2"
         },
         {
             "@type": "WorkflowRoute",
@@ -827,7 +1019,7 @@
             "label": null,
             "isExecuted": false,
             "group": null,
-            "uuid": "7bfdd856-35d0-480c-beb4-c4558c0b8ba0"
+            "uuid": "b82aa8d2-4afc-497f-87a1-435b4ee1c505"
         },
         {
             "@type": "WorkflowRoute",
@@ -921,18 +1113,35 @@
         {
             "@type": "WorkflowGroup",
             "name": "Modules",
-            "description": "Module Types:\n - ztpfAutomationProfile\n - ztpfAutomationProfileStep\n - ztpfAutomationAction\n - ztpfTemplate\n - ztpfMetadataSource",
+            "description": "Module Types:\n - ztpfAutomationProfile\n - ztpfAutomationProfileStep\n - ztpfAutomationAction\n - ztpfTemplate\n - ztpfMetadataSource\n - ztpfDevice",
             "type": "note",
             "isCollapsed": false,
             "hasTriggerStep": false,
             "hideInLogs": false,
             "metadata": [],
             "reusable": false,
-            "top": "140",
+            "top": "120",
             "left": "80",
-            "height": "178",
-            "width": "369",
+            "height": "197",
+            "width": "370",
             "uuid": "b8fcb6d1-27ac-4db7-acd8-a7030741981f",
+            "recordTags": []
+        },
+        {
+            "@type": "WorkflowGroup",
+            "name": "Special Records",
+            "description": "Currently Device and Run Group Tag Management only does root records.",
+            "type": "note",
+            "isCollapsed": false,
+            "hasTriggerStep": false,
+            "hideInLogs": false,
+            "metadata": [],
+            "reusable": false,
+            "top": "880",
+            "left": "580",
+            "height": "102",
+            "width": "284",
+            "uuid": "bb3f6fa0-8ddf-45c8-bae5-1fc867d7bcc5",
             "recordTags": []
         },
         {
@@ -945,8 +1154,8 @@
             "hideInLogs": false,
             "metadata": [],
             "reusable": false,
-            "top": "480",
-            "left": "560",
+            "top": "460",
+            "left": "580",
             "height": "138",
             "width": "290",
             "uuid": "8d8a0e11-2da4-45f1-8e0e-cbb72a9fd260",
@@ -962,6 +1171,9 @@
     "deletedAt": null,
     "recordTags": [
         "ztpfAutomationAction",
+        "ztpfAutomationProfile",
+        "ztpfAutomationProfileStep",
+        "ztpfDevice",
         "ztpfMetadataSource",
         "ztpfTemplates"
     ]

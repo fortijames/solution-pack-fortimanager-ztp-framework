@@ -64,7 +64,7 @@
             "name": "rungroup status complete",
             "description": null,
             "arguments": {
-                "rungroup_status": "{%- set ret = \"Complete\" -%}\n\n{%- if \"Fail\" in vars.step_results.states -%}\n  {%- set ret = \"Fail\" -%}\n{%- endif -%}\n\n{{ret}}",
+                "rungroup_status": "{%- set ret = \"Complete\" -%}\n\n{%- if \"Fail\" in vars.step_results.states -%}\n  {%- set ret = \"Fail Detected\" -%}\n{%- elif \"Abort\" in vars.step_results.states -%}\n  {%- set ret = \"Abort Detected\" -%}\n{%- endif -%}\n\n{{ret}}",
                 "ztpfRunning_checkbox": "false"
             },
             "status": null,

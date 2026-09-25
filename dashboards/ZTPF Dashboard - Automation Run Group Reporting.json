@@ -4,7 +4,7 @@
     "isDefault": false,
     "hidden": false,
     "uuid": "967c8609-f568-4b13-9c46-7c7654581fdc",
-    "displayName": "ZTPF Dashboard - Run Group and Device Report",
+    "displayName": "ZTPF Dashboard - Automation Run Group Reporting",
     "type": "rows",
     "templateType": "dashboard",
     "roles": [],
@@ -19,7 +19,7 @@
                                 "type": "ztpRunReport-1.0.15",
                                 "config": {
                                     "wid": "fbcfb5ab-8a5b-4167-adde-9cad96393302",
-                                    "title": "ZTPF Reporting",
+                                    "title": "Select Time Scale and Automation Filters to Build Report",
                                     "scope": "latest",
                                     "layout": "groups",
                                     "runGroupLimit": 25,
@@ -32,7 +32,10 @@
                                     "autoExpandGroups": 1,
                                     "prefetchDevices": 4,
                                     "range": "7d",
-                                    "showTags": true
+                                    "showTags": true,
+                                    "showRunAutomation": true,
+                                    "automationPlaybook": "Add Steps to Device from Profile",
+                                    "automationDeviceStatus": "Ok"
                                 }
                             }
                         ],

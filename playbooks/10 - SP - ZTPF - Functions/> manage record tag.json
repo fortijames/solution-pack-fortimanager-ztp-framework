@@ -1,7 +1,7 @@
 {
     "@type": "Workflow",
     "triggerLimit": null,
-    "name": "> manage record tags - template modules",
+    "name": "> manage record tag",
     "aliasName": null,
     "tag": null,
     "description": "Provides various tag management options.",
@@ -48,8 +48,8 @@
                 "step_variables": []
             },
             "status": null,
-            "top": "440",
-            "left": "780",
+            "top": "420",
+            "left": "860",
             "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928722",
             "group": null,
             "uuid": "8b44dafb-9271-483e-a223-b831644b1fea"
@@ -82,8 +82,8 @@
                 "step_variables": []
             },
             "status": null,
-            "top": "520",
-            "left": "780",
+            "top": "500",
+            "left": "860",
             "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928722",
             "group": null,
             "uuid": "40db9ef3-2988-47ac-b217-6d9b6eea5f95"
@@ -116,11 +116,45 @@
                 "step_variables": []
             },
             "status": null,
-            "top": "600",
-            "left": "780",
+            "top": "580",
+            "left": "860",
             "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928722",
             "group": null,
             "uuid": "a183781b-5c1e-40f1-8b66-13a7468559e7"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "add ztpfDevice",
+            "description": null,
+            "arguments": {
+                "when": "{{vars.tag_action|lower in [\"add\"]}}",
+                "for_each": {
+                    "item": "{{vars.steps.find_ztpfDevice}}",
+                    "__bulk": true,
+                    "parallel": false,
+                    "condition": "",
+                    "batch_size": 100
+                },
+                "resource": {
+                    "__link": {
+                        "recordTags": "{{vars.tag_name}}"
+                    }
+                },
+                "operation": "Append",
+                "collection": "{{vars.item['@id']}}",
+                "__recommend": [],
+                "collectionType": "\/api\/3\/ztpf_devices",
+                "fieldOperation": {
+                    "recordTags": "Append"
+                },
+                "step_variables": []
+            },
+            "status": null,
+            "top": "660",
+            "left": "860",
+            "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928722",
+            "group": null,
+            "uuid": "f4e04ff1-68fa-4ca6-a15d-1b39dc42f2ce"
         },
         {
             "@type": "WorkflowStep",
@@ -150,11 +184,45 @@
                 "step_variables": []
             },
             "status": null,
-            "top": "280",
-            "left": "780",
+            "top": "260",
+            "left": "860",
             "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928722",
             "group": null,
             "uuid": "5b5d9d29-f27d-49ff-87fe-58d24e63327c"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "add ztpfRunGroup",
+            "description": null,
+            "arguments": {
+                "when": "{{vars.tag_action|lower in [\"add\"]}}",
+                "for_each": {
+                    "item": "{{vars.steps.find_ztpfRunGroup}}",
+                    "__bulk": true,
+                    "parallel": false,
+                    "condition": "",
+                    "batch_size": 100
+                },
+                "resource": {
+                    "__link": {
+                        "recordTags": "{{vars.tag_name}}"
+                    }
+                },
+                "operation": "Append",
+                "collection": "{{vars.item['@id']}}",
+                "__recommend": [],
+                "collectionType": "\/api\/3\/ztpf_run_groups",
+                "fieldOperation": {
+                    "recordTags": "Append"
+                },
+                "step_variables": []
+            },
+            "status": null,
+            "top": "740",
+            "left": "860",
+            "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928722",
+            "group": null,
+            "uuid": "d396ea14-1c74-4e6e-be8a-c4cd4f61b070"
         },
         {
             "@type": "WorkflowStep",
@@ -184,8 +252,8 @@
                 "step_variables": []
             },
             "status": null,
-            "top": "360",
-            "left": "780",
+            "top": "340",
+            "left": "860",
             "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928722",
             "group": null,
             "uuid": "e931be63-2283-4684-9d2d-3710e4a60ef8"
@@ -216,8 +284,8 @@
                 "step_variables": []
             },
             "status": null,
-            "top": "440",
-            "left": "1060",
+            "top": "420",
+            "left": "1140",
             "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928722",
             "group": null,
             "uuid": "faa8e8f8-a5b3-463d-88c2-b3a87c5cf5ac"
@@ -248,8 +316,8 @@
                 "step_variables": []
             },
             "status": null,
-            "top": "520",
-            "left": "1060",
+            "top": "500",
+            "left": "1140",
             "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928722",
             "group": null,
             "uuid": "713a3bf1-86eb-4574-8e4d-3737438ecc7c"
@@ -280,11 +348,43 @@
                 "step_variables": []
             },
             "status": null,
-            "top": "600",
-            "left": "1060",
+            "top": "580",
+            "left": "1140",
             "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928722",
             "group": null,
             "uuid": "ab40921d-8b15-4241-9a8f-033a944673b0"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "delete ztpfDevice",
+            "description": null,
+            "arguments": {
+                "when": "{{vars.tag_action|lower in [\"delete\"]}}",
+                "for_each": {
+                    "item": "{{vars.steps.find_ztpfDevice}}",
+                    "__bulk": true,
+                    "parallel": false,
+                    "condition": "",
+                    "batch_size": 100
+                },
+                "resource": {
+                    "recordTags": "{{vars.item.recordTags|reject('equalto', vars.tag_name)|list}}"
+                },
+                "operation": "Append",
+                "collection": "{{vars.item['@id']}}",
+                "__recommend": [],
+                "collectionType": "\/api\/3\/ztpf_devices",
+                "fieldOperation": {
+                    "recordTags": "Overwrite"
+                },
+                "step_variables": []
+            },
+            "status": null,
+            "top": "660",
+            "left": "1140",
+            "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928722",
+            "group": null,
+            "uuid": "253b488c-e647-41a9-b406-0a391ee71f8e"
         },
         {
             "@type": "WorkflowStep",
@@ -312,11 +412,43 @@
                 "step_variables": []
             },
             "status": null,
-            "top": "280",
-            "left": "1060",
+            "top": "260",
+            "left": "1140",
             "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928722",
             "group": null,
             "uuid": "33052f2e-f8e5-4e45-b338-1b9fb07058d1"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "delete ztpfRunGroup",
+            "description": null,
+            "arguments": {
+                "when": "{{vars.tag_action|lower in [\"delete\"]}}",
+                "for_each": {
+                    "item": "{{vars.steps.find_ztpfRunGroup}}",
+                    "__bulk": true,
+                    "parallel": false,
+                    "condition": "",
+                    "batch_size": 100
+                },
+                "resource": {
+                    "recordTags": "{{vars.item.recordTags|reject('equalto', vars.tag_name)|list}}"
+                },
+                "operation": "Append",
+                "collection": "{{vars.item['@id']}}",
+                "__recommend": [],
+                "collectionType": "\/api\/3\/ztpf_run_groups",
+                "fieldOperation": {
+                    "recordTags": "Overwrite"
+                },
+                "step_variables": []
+            },
+            "status": null,
+            "top": "740",
+            "left": "1140",
+            "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928722",
+            "group": null,
+            "uuid": "c5bb8276-16f1-45ca-bdc9-3e37e42dcadf"
         },
         {
             "@type": "WorkflowStep",
@@ -344,8 +476,8 @@
                 "step_variables": []
             },
             "status": null,
-            "top": "360",
-            "left": "1060",
+            "top": "340",
+            "left": "1140",
             "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928722",
             "group": null,
             "uuid": "7db80158-373d-4112-850b-bbe16420ac18"
@@ -378,7 +510,7 @@
                 "step_variables": []
             },
             "status": null,
-            "top": "440",
+            "top": "420",
             "left": "500",
             "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928770",
             "group": null,
@@ -412,7 +544,7 @@
                 "step_variables": []
             },
             "status": null,
-            "top": "520",
+            "top": "500",
             "left": "500",
             "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928770",
             "group": null,
@@ -442,11 +574,41 @@
                 "step_variables": []
             },
             "status": null,
-            "top": "600",
+            "top": "580",
             "left": "500",
             "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928770",
             "group": null,
             "uuid": "aaba709b-dc1c-4351-bd70-f11c0b759d99"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "find ztpfDevice",
+            "description": null,
+            "arguments": {
+                "query": {
+                    "sort": [],
+                    "limit": 30,
+                    "logic": "AND",
+                    "filters": [
+                        {
+                            "type": "primitive",
+                            "field": "id",
+                            "value": "{{vars.record_ids}}",
+                            "operator": "in",
+                            "_operator": "in"
+                        }
+                    ]
+                },
+                "module": "ztpf_devices?$limit=5000",
+                "checkboxFields": true,
+                "step_variables": []
+            },
+            "status": null,
+            "top": "660",
+            "left": "500",
+            "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928770",
+            "group": null,
+            "uuid": "a4febf12-7fa7-4ecc-b855-076b56781f5e"
         },
         {
             "@type": "WorkflowStep",
@@ -478,11 +640,41 @@
                 "step_variables": []
             },
             "status": null,
-            "top": "280",
+            "top": "260",
             "left": "500",
             "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928770",
             "group": null,
             "uuid": "722adce7-1b28-4203-b929-bf18a4e7d222"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "find ztpfRunGroup",
+            "description": null,
+            "arguments": {
+                "query": {
+                    "sort": [],
+                    "limit": 30,
+                    "logic": "AND",
+                    "filters": [
+                        {
+                            "type": "primitive",
+                            "field": "id",
+                            "value": "{{vars.record_ids}}",
+                            "operator": "in",
+                            "_operator": "in"
+                        }
+                    ]
+                },
+                "module": "ztpf_run_groups?$limit=5000",
+                "checkboxFields": true,
+                "step_variables": []
+            },
+            "status": null,
+            "top": "740",
+            "left": "500",
+            "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928770",
+            "group": null,
+            "uuid": "e5ef2613-da59-4ac5-9e85-6cc1db93af04"
         },
         {
             "@type": "WorkflowStep",
@@ -512,7 +704,7 @@
                 "step_variables": []
             },
             "status": null,
-            "top": "360",
+            "top": "340",
             "left": "500",
             "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928770",
             "group": null,
@@ -559,13 +751,25 @@
                         "step_iri": "\/api\/3\/workflow_steps\/aaba709b-dc1c-4351-bd70-f11c0b759d99",
                         "condition": "{{ vars.record_type == \"ztpfAutomationProfileStep\" }}",
                         "step_name": "find ztpfAutomationProfileStep"
+                    },
+                    {
+                        "option": "6",
+                        "step_iri": "\/api\/3\/workflow_steps\/a4febf12-7fa7-4ecc-b855-076b56781f5e",
+                        "condition": "{{ vars.record_type == \"ztpfDevice\" }}",
+                        "step_name": "find ztpfDevice"
+                    },
+                    {
+                        "option": "7",
+                        "step_iri": "\/api\/3\/workflow_steps\/e5ef2613-da59-4ac5-9e85-6cc1db93af04",
+                        "condition": "{{ vars.record_type == \"ztpfRunGroup\" }}",
+                        "step_name": "Copy of find ztpfDevice"
                     }
                 ],
                 "step_variables": []
             },
             "status": null,
-            "top": "100",
-            "left": "680",
+            "top": "20",
+            "left": "920",
             "stepType": "\/api\/3\/workflow_step_types\/12254cf5-5db7-4b1a-8cb1-3af081924b28",
             "group": null,
             "uuid": "ded9a80b-0e93-4763-8d15-5ce1fabb537b"
@@ -596,8 +800,8 @@
                 "step_variables": []
             },
             "status": null,
-            "top": "440",
-            "left": "1340",
+            "top": "420",
+            "left": "1420",
             "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928722",
             "group": null,
             "uuid": "8f3dc660-3717-4046-8c95-cad421c7921e"
@@ -628,8 +832,8 @@
                 "step_variables": []
             },
             "status": null,
-            "top": "520",
-            "left": "1340",
+            "top": "500",
+            "left": "1420",
             "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928722",
             "group": null,
             "uuid": "d41fd392-39bd-4e37-993c-ee4d34020172"
@@ -660,11 +864,43 @@
                 "step_variables": []
             },
             "status": null,
-            "top": "600",
-            "left": "1340",
+            "top": "580",
+            "left": "1420",
             "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928722",
             "group": null,
             "uuid": "58563d5d-806d-4db5-b6d7-d5a950950db2"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "purge ztpfDevice",
+            "description": null,
+            "arguments": {
+                "when": "{{vars.tag_action|lower in [\"purge\"]}}",
+                "for_each": {
+                    "item": "{{vars.steps.find_ztpfDevice}}",
+                    "__bulk": true,
+                    "parallel": false,
+                    "condition": "",
+                    "batch_size": 100
+                },
+                "resource": {
+                    "recordTags": "{{vars.empty_list}}"
+                },
+                "operation": "Append",
+                "collection": "{{vars.item['@id']}}",
+                "__recommend": [],
+                "collectionType": "\/api\/3\/ztpf_devices",
+                "fieldOperation": {
+                    "recordTags": "Overwrite"
+                },
+                "step_variables": []
+            },
+            "status": null,
+            "top": "660",
+            "left": "1420",
+            "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928722",
+            "group": null,
+            "uuid": "931cb3fc-543c-4493-96e0-2bced58494d0"
         },
         {
             "@type": "WorkflowStep",
@@ -692,11 +928,43 @@
                 "step_variables": []
             },
             "status": null,
-            "top": "280",
-            "left": "1340",
+            "top": "260",
+            "left": "1420",
             "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928722",
             "group": null,
             "uuid": "865119c0-0cad-47b6-8225-9698eccc0e8b"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "purge ztpfRunGroup",
+            "description": null,
+            "arguments": {
+                "when": "{{vars.tag_action|lower in [\"purge\"]}}",
+                "for_each": {
+                    "item": "{{vars.steps.find_ztpfRunGroup}}",
+                    "__bulk": true,
+                    "parallel": false,
+                    "condition": "",
+                    "batch_size": 100
+                },
+                "resource": {
+                    "recordTags": "{{vars.empty_list}}"
+                },
+                "operation": "Append",
+                "collection": "{{vars.item['@id']}}",
+                "__recommend": [],
+                "collectionType": "\/api\/3\/ztpf_run_groups",
+                "fieldOperation": {
+                    "recordTags": "Overwrite"
+                },
+                "step_variables": []
+            },
+            "status": null,
+            "top": "740",
+            "left": "1420",
+            "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928722",
+            "group": null,
+            "uuid": "61f916ee-8668-4e3b-b1b2-b4a0d48a31a9"
         },
         {
             "@type": "WorkflowStep",
@@ -724,8 +992,8 @@
                 "step_variables": []
             },
             "status": null,
-            "top": "360",
-            "left": "1340",
+            "top": "340",
+            "left": "1420",
             "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928722",
             "group": null,
             "uuid": "53624af0-ddce-4456-95cb-6df14942f379"
@@ -739,8 +1007,8 @@
                 "params": "{{vars.input.params}}"
             },
             "status": null,
-            "top": "440",
-            "left": "1660",
+            "top": "500",
+            "left": "1800",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
             "uuid": "159ebe69-53b9-4247-99f1-114a1e703914"
@@ -792,8 +1060,8 @@
                 "unknown_type": "{{vars.record_type}}"
             },
             "status": null,
-            "top": "60",
-            "left": "980",
+            "top": "160",
+            "left": "920",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
             "uuid": "93728ad4-119c-425c-95a0-52f4f79d1a84"
@@ -832,6 +1100,16 @@
         },
         {
             "@type": "WorkflowRoute",
+            "name": "add ztpfDevice -> Copy of add ztpfDevice",
+            "targetStep": "\/api\/3\/workflow_steps\/253b488c-e647-41a9-b406-0a391ee71f8e",
+            "sourceStep": "\/api\/3\/workflow_steps\/f4e04ff1-68fa-4ca6-a15d-1b39dc42f2ce",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "2f71758b-e261-4092-a281-767f7cc414fd"
+        },
+        {
+            "@type": "WorkflowRoute",
             "name": "add ztpfMetadataSource -> Copy of add ztpfMetadataSource",
             "targetStep": "\/api\/3\/workflow_steps\/33052f2e-f8e5-4e45-b338-1b9fb07058d1",
             "sourceStep": "\/api\/3\/workflow_steps\/5b5d9d29-f27d-49ff-87fe-58d24e63327c",
@@ -839,6 +1117,16 @@
             "isExecuted": false,
             "group": null,
             "uuid": "7afc0292-02a7-4b4b-9f2f-aca92112e8a8"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "add ztpfRunGroup -> Copy of add ztpfRunGroup",
+            "targetStep": "\/api\/3\/workflow_steps\/c5bb8276-16f1-45ca-bdc9-3e37e42dcadf",
+            "sourceStep": "\/api\/3\/workflow_steps\/d396ea14-1c74-4e6e-be8a-c4cd4f61b070",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "9775dbea-3df5-45e7-bc75-5a219b7211d9"
         },
         {
             "@type": "WorkflowRoute",
@@ -859,6 +1147,16 @@
             "isExecuted": false,
             "group": null,
             "uuid": "5cba67b9-56c4-4969-9938-d2805642ddec"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Copy of delete ztpfDevice -> return",
+            "targetStep": "\/api\/3\/workflow_steps\/159ebe69-53b9-4247-99f1-114a1e703914",
+            "sourceStep": "\/api\/3\/workflow_steps\/931cb3fc-543c-4493-96e0-2bced58494d0",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "eea9247f-4fa3-4601-ab6f-318a49cf25d1"
         },
         {
             "@type": "WorkflowRoute",
@@ -892,6 +1190,16 @@
         },
         {
             "@type": "WorkflowRoute",
+            "name": "delete ztpfDevice -> Copy of delete ztpfDevice",
+            "targetStep": "\/api\/3\/workflow_steps\/931cb3fc-543c-4493-96e0-2bced58494d0",
+            "sourceStep": "\/api\/3\/workflow_steps\/253b488c-e647-41a9-b406-0a391ee71f8e",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "128bad9f-ef95-4353-9e61-897f9a460934"
+        },
+        {
+            "@type": "WorkflowRoute",
             "name": "delete ztpfMetadataSource -> Copy of delete ztpfMetadataSource",
             "targetStep": "\/api\/3\/workflow_steps\/865119c0-0cad-47b6-8225-9698eccc0e8b",
             "sourceStep": "\/api\/3\/workflow_steps\/33052f2e-f8e5-4e45-b338-1b9fb07058d1",
@@ -899,6 +1207,16 @@
             "isExecuted": false,
             "group": null,
             "uuid": "f2b8e610-8f17-4c43-874c-307768a2d75e"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "delete ztpfRunGroup -> Copy of delete ztpfRunGroup",
+            "targetStep": "\/api\/3\/workflow_steps\/61f916ee-8668-4e3b-b1b2-b4a0d48a31a9",
+            "sourceStep": "\/api\/3\/workflow_steps\/c5bb8276-16f1-45ca-bdc9-3e37e42dcadf",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "a4085d18-8898-4521-8390-d0792d14ab0b"
         },
         {
             "@type": "WorkflowRoute",
@@ -942,6 +1260,26 @@
         },
         {
             "@type": "WorkflowRoute",
+            "name": "find ztpfAutomationProfileStep -> Copy of find ztpfAutomationProfileStep",
+            "targetStep": "\/api\/3\/workflow_steps\/a4febf12-7fa7-4ecc-b855-076b56781f5e",
+            "sourceStep": "\/api\/3\/workflow_steps\/aaba709b-dc1c-4351-bd70-f11c0b759d99",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "d286b3e2-2a69-40df-a081-4652db843596"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "find ztpfDevice -> Copy of add ztpfAutomationProfile",
+            "targetStep": "\/api\/3\/workflow_steps\/f4e04ff1-68fa-4ca6-a15d-1b39dc42f2ce",
+            "sourceStep": "\/api\/3\/workflow_steps\/a4febf12-7fa7-4ecc-b855-076b56781f5e",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "7b417720-dc0f-43ab-bede-d84a3c518b4e"
+        },
+        {
+            "@type": "WorkflowRoute",
             "name": "find ztpfMetadataSource -> add tag ztpfMetadataSource",
             "targetStep": "\/api\/3\/workflow_steps\/5b5d9d29-f27d-49ff-87fe-58d24e63327c",
             "sourceStep": "\/api\/3\/workflow_steps\/722adce7-1b28-4203-b929-bf18a4e7d222",
@@ -949,6 +1287,16 @@
             "isExecuted": false,
             "group": null,
             "uuid": "be1ed03c-2eec-491c-8f6d-5917b375b570"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "find ztpfRunGroup -> Copy 1 of add ztpfDevice",
+            "targetStep": "\/api\/3\/workflow_steps\/d396ea14-1c74-4e6e-be8a-c4cd4f61b070",
+            "sourceStep": "\/api\/3\/workflow_steps\/e5ef2613-da59-4ac5-9e85-6cc1db93af04",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "dfe54e77-c438-42d0-9050-0987a90c1a57"
         },
         {
             "@type": "WorkflowRoute",
@@ -982,6 +1330,16 @@
         },
         {
             "@type": "WorkflowRoute",
+            "name": "module type -> Copy of find ztpfDevice",
+            "targetStep": "\/api\/3\/workflow_steps\/e5ef2613-da59-4ac5-9e85-6cc1db93af04",
+            "sourceStep": "\/api\/3\/workflow_steps\/ded9a80b-0e93-4763-8d15-5ce1fabb537b",
+            "label": "7",
+            "isExecuted": false,
+            "group": null,
+            "uuid": "9d7549e9-ea20-47c5-b6b2-188dd2c46d51"
+        },
+        {
+            "@type": "WorkflowRoute",
             "name": "module type -> find ztpfAutomationAction",
             "targetStep": "\/api\/3\/workflow_steps\/675edf7f-9be7-4de9-afa3-c2c1e48415eb",
             "sourceStep": "\/api\/3\/workflow_steps\/ded9a80b-0e93-4763-8d15-5ce1fabb537b",
@@ -989,6 +1347,16 @@
             "isExecuted": false,
             "group": null,
             "uuid": "da593a32-c1b3-4dee-8093-08f7f23d421b"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "module type -> find ztpfDevice",
+            "targetStep": "\/api\/3\/workflow_steps\/a4febf12-7fa7-4ecc-b855-076b56781f5e",
+            "sourceStep": "\/api\/3\/workflow_steps\/ded9a80b-0e93-4763-8d15-5ce1fabb537b",
+            "label": "6",
+            "isExecuted": false,
+            "group": null,
+            "uuid": "13e49a40-3665-4684-b3ff-5f2e7acd218e"
         },
         {
             "@type": "WorkflowRoute",
@@ -1052,6 +1420,16 @@
         },
         {
             "@type": "WorkflowRoute",
+            "name": "purge ztpfRunGroup -> return",
+            "targetStep": "\/api\/3\/workflow_steps\/159ebe69-53b9-4247-99f1-114a1e703914",
+            "sourceStep": "\/api\/3\/workflow_steps\/61f916ee-8668-4e3b-b1b2-b4a0d48a31a9",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "c5ca8116-e445-4c2b-8a0d-59f809c344c1"
+        },
+        {
+            "@type": "WorkflowRoute",
             "name": "purge ztpfTemplate -> return",
             "targetStep": "\/api\/3\/workflow_steps\/159ebe69-53b9-4247-99f1-114a1e703914",
             "sourceStep": "\/api\/3\/workflow_steps\/53624af0-ddce-4456-95cb-6df14942f379",
@@ -1102,7 +1480,7 @@
         {
             "@type": "WorkflowGroup",
             "name": "Modules",
-            "description": "Module Types:\n - ztpfAutomationProfile\n - ztpfAutomationProfileStep\n - ztpfAutomationAction\n - ztpfTemplate\n - ztpfMetadataSource",
+            "description": "Module Types:\n - ztpfAutomationProfile\n - ztpfAutomationProfileStep\n - ztpfAutomationAction\n - ztpfTemplate\n - ztpfMetadataSource\n - ztpfDevice\n - ztpfRunGroup",
             "type": "note",
             "isCollapsed": false,
             "hasTriggerStep": false,
@@ -1111,8 +1489,8 @@
             "reusable": false,
             "top": "100",
             "left": "40",
-            "height": "199",
-            "width": "441",
+            "height": "205",
+            "width": "438",
             "uuid": "27a4858b-c7e0-40c0-a4cb-1fc28a8d52bc",
             "recordTags": []
         }
@@ -1126,7 +1504,10 @@
     "deletedAt": null,
     "recordTags": [
         "ztpfAutomationAction",
+        "ztpfAutomationProfile",
+        "ztpfAutomationProfileStep",
+        "ztpfDevice",
         "ztpfMetadataSource",
-        "ztpfTemplates"
+        "ztpfTemplate"
     ]
 }

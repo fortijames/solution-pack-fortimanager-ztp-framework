@@ -17,7 +17,7 @@
                                     "query": {
                                         "sort": [
                                             {
-                                                "field": "queueStatus.orderIndex",
+                                                "field": "status.orderIndex",
                                                 "direction": "ASC"
                                             }
                                         ],
@@ -32,23 +32,23 @@
                                             },
                                             {
                                                 "operator": "groupby",
-                                                "alias": "queueStatus",
-                                                "field": "queueStatus.itemValue"
+                                                "alias": "status",
+                                                "field": "status.itemValue"
                                             },
                                             {
                                                 "operator": "groupby",
                                                 "alias": "color",
-                                                "field": "queueStatus.color"
+                                                "field": "status.color"
                                             },
                                             {
                                                 "operator": "groupby",
                                                 "alias": "orderIndex",
-                                                "field": "queueStatus.orderIndex"
+                                                "field": "status.orderIndex"
                                             }
                                         ]
                                     },
                                     "mapping": {
-                                        "fieldName": "queueStatus"
+                                        "fieldName": "status"
                                     },
                                     "assignedToSetting": "all",
                                     "aggregate": true,

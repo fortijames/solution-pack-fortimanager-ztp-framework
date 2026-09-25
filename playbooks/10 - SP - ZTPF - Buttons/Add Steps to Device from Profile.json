@@ -21,7 +21,7 @@
             "description": null,
             "arguments": {
                 "arguments": {
-                    "tags": "{{vars.steps.select_profile.input.tags}}",
+                    "tags": "{{vars.user_tags|join(\",\")}}",
                     "device_ids": "{{ vars.input.records | json_query('[].id') }}"
                 },
                 "apply_async": false,
@@ -147,7 +147,9 @@
                 },
                 "module": "ztpf_run_groups?$limit=5000",
                 "checkboxFields": true,
-                "step_variables": []
+                "step_variables": {
+                    "rungroup_tags": "{{vars.steps.find_rungroup_tags|json_query('[].recordTags[]')|unique|sort}}"
+                }
             },
             "status": null,
             "top": "120",
@@ -172,13 +174,14 @@
         },
         {
             "@type": "WorkflowStep",
-            "name": "profile selected",
+            "name": "profile selected and tags",
             "description": null,
             "arguments": {
+                "user_tags": "{%- set tags = [] -%}\n\n{%- if pickFromExistingTags -%}\n  {%- for t in vars.steps.select_profile.input.pickFromExistingTags -%}\n    {%- do tags.append(t) -%}\n  {%- endfor -%}\n{%- endif -%}\n\n{%- if vars.steps.select_profile.input.tags -%}\n  {%- for t in vars.steps.select_profile.input.tags.replace(' ',',').split(',') -%}\n    {%- do tags.append(t) -%}\n  {%- endfor -%}\n{%- endif -%}\n\n{{tags|unique|sort}}",
                 "profile_selected": "{{vars.profile.records\n  | json_query('[?_option==`{}`]'\n    .format(vars.steps.select_profile.input.profile)\n)\n}}"
             },
             "status": null,
-            "top": "340",
+            "top": "300",
             "left": "600",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
@@ -204,8 +207,8 @@
                 "type": "InputBased",
                 "input": {
                     "schema": {
-                        "title": "Select Automation Profile",
-                        "description": "Select an automation profile to add steps to this device. Optionally create a run group and execute steps when the device moves to the status `Ready` indicating the steps have completed the preparation steps. \n\n\nRun Tags from last Run Groups:\n```\n{{vars.steps.find_rungroup_tags|json_query('[].recordTags[]')|unique|sort|join(\" \")}}\n```\n\n*This prompt will timeout in 5 minutes*",
+                        "title": "Select Automation Profile and Run Options",
+                        "description": "1. Select an automation profile to add steps to the selected devices.\n2. Optionally create a run group, with tags, and execute steps **after** the device moves to the status `Ready` indicating the steps have completed the preparation steps. \n3. Monitor the Device Status during the automation process. \n\n*This prompt will timeout in 5 minutes*",
                         "inputVariables": [
                             {
                                 "name": "profile",
@@ -263,11 +266,11 @@
                                 "name": "tags",
                                 "type": "string",
                                 "label": "Tags",
-                                "tooltip": "Enter Tags, as comma or space separated, to the RunGroup and Devices",
+                                "tooltip": "Add Tags, as comma or space separated, to the RunGroup and Devices",
                                 "dataType": "text",
                                 "formType": "text",
                                 "required": false,
-                                "_expanded": false,
+                                "_expanded": true,
                                 "defaultValue": null,
                                 "_previousName": "",
                                 "visibilityQuery": {
@@ -284,6 +287,48 @@
                                         }
                                     ]
                                 },
+                                "requiredCondition": "notrequired",
+                                "jinjaExpressionView": true,
+                                "useRecordFieldDefault": false,
+                                "_addRequiredConditions": false,
+                                "_addVisibilityConditions": true
+                            },
+                            {
+                                "name": "pickFromExistingTags",
+                                "type": "array",
+                                "label": "Pick from Existing Tags",
+                                "title": "Dynamic List",
+                                "usable": true,
+                                "options": "{{vars.rungroup_tags}}",
+                                "tooltip": "Pick from ags that already exist.",
+                                "dataType": "dynamicList",
+                                "formType": "dynamicList",
+                                "required": false,
+                                "_expanded": true,
+                                "mmdUpdate": true,
+                                "collection": false,
+                                "isMultiple": true,
+                                "searchable": false,
+                                "templateUrl": "app\/components\/form\/fields\/dynamicList.html",
+                                "defaultValue": null,
+                                "_previousName": "selectExistingTags",
+                                "playbookField": true,
+                                "visibilityQuery": {
+                                    "sort": [],
+                                    "limit": 30,
+                                    "logic": "AND",
+                                    "filters": [
+                                        {
+                                            "type": "primitive",
+                                            "field": "createRunGroupAndExecuteSteps",
+                                            "value": true,
+                                            "operator": "eq",
+                                            "_operator": "eq"
+                                        }
+                                    ]
+                                },
+                                "lengthConstraint": true,
+                                "allowedGridColumn": false,
                                 "requiredCondition": "notrequired",
                                 "jinjaExpressionView": true,
                                 "useRecordFieldDefault": false,
@@ -338,7 +383,7 @@
                 "external_email_attachments": null
             },
             "status": null,
-            "top": "220",
+            "top": "200",
             "left": "600",
             "stepType": "\/api\/3\/workflow_step_types\/fc04082a-d7dc-4299-96fb-6837b1baa0fe",
             "group": null,
@@ -404,7 +449,7 @@
             "arguments": [],
             "status": null,
             "top": "160",
-            "left": "920",
+            "left": "1040",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
             "uuid": "53f84930-f827-4062-8610-6f1f98f3bd7d"
@@ -563,13 +608,13 @@
         },
         {
             "@type": "WorkflowRoute",
-            "name": "profile selected -> create steps from profile",
+            "name": "profile selected and tags -> create steps from profile",
             "targetStep": "\/api\/3\/workflow_steps\/942a07a1-cace-4f38-8496-b15caa3ed0bc",
             "sourceStep": "\/api\/3\/workflow_steps\/14e4b543-277a-4163-8937-50528c944cbd",
             "label": null,
             "isExecuted": false,
             "group": null,
-            "uuid": "182b95f8-828b-4b35-a84b-acc926470656"
+            "uuid": "0d2c1d0f-f43c-486d-91b9-a461eb2abc3b"
         },
         {
             "@type": "WorkflowRoute",
@@ -623,10 +668,10 @@
             "hideInLogs": false,
             "metadata": [],
             "reusable": false,
-            "top": "120",
+            "top": "100",
             "left": "80",
-            "height": "161",
-            "width": "498",
+            "height": "194",
+            "width": "497",
             "uuid": "c17fa927-290c-40d6-8951-a091198b19e7",
             "recordTags": []
         }
