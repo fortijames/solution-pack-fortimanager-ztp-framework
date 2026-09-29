@@ -19,6 +19,20 @@
     "steps": [
         {
             "@type": "WorkflowStep",
+            "name": "check and step status",
+            "description": null,
+            "arguments": {
+                "check_status": "{%- set status = {\n    \"status\": \"Failed\" ,\n    \"msg\": \"Check status not found. See Administrator.\" \n  }\n-%}\n\n{%- set task_status = vars.steps.get_task_status.output -%}\n\n{%- if \"tot_percent\" in task_status and \"start_tm\" in task_status -%}\n  {% set dur =  arrow.utcnow().int_timestamp \n                       - vars.steps.get_task_status.output.start_tm -%}\n  \n  {%- if task_status[\"tot_percent\"] == 0 and dur > vars.zero_pct_timeout -%}\n    {%- do status.update({\n      \"status\": \"Fail\",\n      \"msg\": \"Zero percent timeout of \" \n        +  vars.zero_pct_timeout|string\n        + \".\"\n    }) -%}\n  {%- elif task_status[\"tot_percent\"] < 100 -%}\n    {%- do status.update({\n      \"status\": \"Waiting\",\n      \"msg\": \"Still waiting on 100 percent complete.\"\n    }) -%}\n  {%- elif task_status[\"tot_percent\"] == 100 -%}\n    {%- do status.update({\n      \"status\": \"Running\",\n      \"msg\": \"Task is 100%.\"\n    }) -%}\n  {%- endif -%}\n  \n{%- endif %}\n\n{{status}}"
+            },
+            "status": null,
+            "top": "300",
+            "left": "620",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "d936ee59-8a0c-4eec-a5d4-383d7469ab8c"
+        },
+        {
+            "@type": "WorkflowStep",
             "name": "find step",
             "description": null,
             "arguments": {
@@ -37,8 +51,10 @@
                     ],
                     "__selectFields": [
                         "jinjaVars",
+                        "stepStartTimestamp",
+                        "outputSourceData",
                         "id",
-                        "outputSourceData"
+                        "status"
                     ]
                 },
                 "module": "ztpf_device_automation_steps?$limit=1",
@@ -68,7 +84,7 @@
                 "workflowReference": "\/api\/3\/workflows\/5dfe3ac9-8b91-448a-9592-37022ff03e02"
             },
             "status": null,
-            "top": "260",
+            "top": "140",
             "left": "620",
             "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
             "group": null,
@@ -82,7 +98,7 @@
                 "output_source_data": "{%- set za = vars.steps.find_step[0].outputSourceData -%}\n{%- do za.update({\"task_status\":vars.steps.get_task_status.output}) -%}\n{{za}}"
             },
             "status": null,
-            "top": "340",
+            "top": "220",
             "left": "620",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
@@ -93,7 +109,7 @@
             "name": "return",
             "description": null,
             "arguments": {
-                "output": "{%- set ret = {} -%}\n{%- do ret.update({\n  \"step_status\": vars.step_status\n}) -%}\n{{ret}}",
+                "output": "{%- set ret = {} -%}\n{%- do ret.update({\n  \"check_status\": vars.check_status.status,\n  \"message\": vars.check_status.msg\n}) -%}\n{{ret}}",
                 "params": "{{vars.input.params}}"
             },
             "status": null,
@@ -109,10 +125,11 @@
             "description": null,
             "arguments": {
                 "fmg_task_id": "{{vars.steps.find_step[0].outputSourceData.create_task.taskid}}",
-                "connector_config": "{{vars.steps.find_step[0].jinjaVars.record.manager.connector_config}}"
+                "connector_config": "{{vars.steps.find_step[0].jinjaVars.record.manager.connector_config}}",
+                "zero_pct_timeout": "120"
             },
             "status": null,
-            "top": "180",
+            "top": "60",
             "left": "620",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
@@ -141,22 +158,8 @@
         },
         {
             "@type": "WorkflowStep",
-            "name": "step status",
-            "description": null,
-            "arguments": {
-                "step_status": "{%- set task_status = vars.steps.get_task_status.output -%}\n{%- set ret = \"Failed\" -%}\n{%- if \"tot_percent\" in task_status -%}\n  {%- if task_status[\"tot_percent\"] < 100 -%}\n    {%- set ret = \"Waiting\" -%}\n  {%- else -%}\n    {%- set ret = \"Running\" -%}\n  {%- endif -%}\n{%- endif -%}\n{{ret}}"
-            },
-            "status": null,
-            "top": "420",
-            "left": "620",
-            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
-            "group": null,
-            "uuid": "d936ee59-8a0c-4eec-a5d4-383d7469ab8c"
-        },
-        {
-            "@type": "WorkflowStep",
             "name": "update step source data",
-            "description": null,
+            "description": "Update Source Data with check status and make sure the step waiting flag is still enabled.",
             "arguments": {
                 "resource": {
                     "stepWaiting": true,
@@ -255,7 +258,7 @@
         {
             "@type": "WorkflowGroup",
             "name": "Details",
-            "description": "Use step source data to find the task id and lookup the task status. If the status is less then 100 then assume we need to continue to be set to *Wait*.\n\nReturn the status of the step so the step is handled for waiting or running.",
+            "description": "Use step source data to find the task id and lookup the task status. If the status is less then 100 pct then assume we need to continue to be set to *Wait*. If the status is not as expected or 0 pct for too long we fail. \n\nReturn the check_status of the step so the step can be handled for waiting, running, or failed.",
             "type": "note",
             "isCollapsed": false,
             "hasTriggerStep": false,
@@ -263,9 +266,9 @@
             "metadata": [],
             "reusable": false,
             "top": "120",
-            "left": "100",
-            "height": "176",
-            "width": "430",
+            "left": "120",
+            "height": "198",
+            "width": "426",
             "uuid": "4d4e36e7-f70d-4219-8f29-5d7b9d6ed254",
             "recordTags": []
         }

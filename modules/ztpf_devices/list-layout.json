@@ -9,9 +9,33 @@
                     {
                         "widgets": [
                             {
+                                "type": "sectionHeader",
+                                "config": {
+                                    "wid": "27d7eb06-fd31-4aa7-9d05-f52b95ae9ff1",
+                                    "query": {
+                                        "filters": [],
+                                        "sort": [],
+                                        "limit": 10
+                                    },
+                                    "editorType": "html",
+                                    "sectionText": "<p><a rel=\"noopener\" target=\"_blank\" href=\"\/?qid=967c8609-f568-4b13-9c46-7c7654581fdc&amp;rr=r:7d~l:groups\">ZTPF Dashboard - Automation Run Group Reporting<\/a><\/p>"
+                                }
+                            }
+                        ],
+                        "style": "col-lg-12"
+                    }
+                ],
+                "wid": "0c654806-feec-49f9-b86a-1e6cb0f060f1",
+                "_collapsed": false
+            },
+            {
+                "columns": [
+                    {
+                        "widgets": [
+                            {
                                 "type": "chart",
                                 "config": {
-                                    "wid": "34f63d66-9911-445e-8235-8c14b38a9ce1",
+                                    "wid": "d471f423-5f79-4dc2-a220-324c0973a3f6",
                                     "widgetAlwaysDisplay": true,
                                     "showTabularData": false,
                                     "query": {
@@ -54,7 +78,49 @@
                                 }
                             }
                         ],
-                        "style": "col-lg-6"
+                        "style": "col-lg-4"
+                    },
+                    {
+                        "widgets": [
+                            {
+                                "type": "chart",
+                                "config": {
+                                    "wid": "34f63d66-9911-445e-8235-8c14b38a9ce1",
+                                    "widgetAlwaysDisplay": true,
+                                    "showTabularData": false,
+                                    "query": {
+                                        "sort": [],
+                                        "limit": 2147483647,
+                                        "logic": "AND",
+                                        "filters": [],
+                                        "aggregates": [
+                                            {
+                                                "operator": "countdistinct",
+                                                "field": "*",
+                                                "alias": "total"
+                                            },
+                                            {
+                                                "operator": "groupby",
+                                                "alias": "adom",
+                                                "field": "adom"
+                                            }
+                                        ]
+                                    },
+                                    "mapping": {
+                                        "fieldName": "adom"
+                                    },
+                                    "assignedToSetting": "all",
+                                    "aggregate": true,
+                                    "viewType": "chart",
+                                    "title": "ADOMs",
+                                    "resource": "ztpf_devices",
+                                    "chart": "donut",
+                                    "showCount": true,
+                                    "widgetAlwaysExpanded": true
+                                }
+                            }
+                        ],
+                        "style": "col-lg-4"
                     },
                     {
                         "widgets": [
@@ -114,7 +180,7 @@
                                 }
                             }
                         ],
-                        "style": "col-lg-6"
+                        "style": "col-lg-4"
                     }
                 ],
                 "wid": "ae44543c-1706-46dc-b66e-06869f783bae",
@@ -171,10 +237,12 @@
                                     "widgetAlwaysExpanded": true
                                 }
                             }
-                        ]
+                        ],
+                        "style": "col-lg-12"
                     }
                 ],
-                "wid": "74402c59-1c44-4dad-8488-c3f95f3fa648"
+                "wid": "74402c59-1c44-4dad-8488-c3f95f3fa648",
+                "_collapsed": false
             },
             {
                 "columns": [

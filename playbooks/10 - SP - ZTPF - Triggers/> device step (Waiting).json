@@ -17,31 +17,6 @@
     "steps": [
         {
             "@type": "WorkflowStep",
-            "name": "done waiting",
-            "description": null,
-            "arguments": {
-                "resource": {
-                    "stepWaiting": "{{vars.uncheck}}",
-                    "ztpfArtifacts": "{{vars.steps.run_check_by_trigger_key.output.ztpfArtifacts}}"
-                },
-                "operation": "Append",
-                "collection": "{{vars.input.records[0]['@id']}}",
-                "__recommend": [],
-                "collectionType": "\/api\/3\/ztpf_device_automation_steps",
-                "fieldOperation": {
-                    "recordTags": "Append"
-                },
-                "step_variables": []
-            },
-            "status": null,
-            "top": "460",
-            "left": "420",
-            "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928722",
-            "group": null,
-            "uuid": "31531e80-fb9f-4eaf-8eba-aed5721c4927"
-        },
-        {
-            "@type": "WorkflowStep",
             "name": "fail step",
             "description": null,
             "arguments": {
@@ -60,8 +35,8 @@
                 "step_variables": []
             },
             "status": null,
-            "top": "540",
-            "left": "20",
+            "top": "460",
+            "left": "1440",
             "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928722",
             "group": null,
             "uuid": "cccb9dde-11f6-4e35-95fa-f2fe14c666ba"
@@ -73,22 +48,22 @@
             "arguments": {
                 "conditions": [
                     {
-                        "option": "Yes",
-                        "default": true,
-                        "step_iri": "\/api\/3\/workflow_steps\/31531e80-fb9f-4eaf-8eba-aed5721c4927",
-                        "step_name": "done waiting"
-                    },
-                    {
                         "option": "No",
                         "step_iri": "\/api\/3\/workflow_steps\/1c4e2f15-9069-4b72-87c2-b3710a8da158",
-                        "condition": "{{ vars.steps.run_check_by_trigger_key.output['step_status'] == \"Waiting\" }}",
+                        "condition": "{{ vars.steps.run_check_by_trigger_key.output['check_status'] == \"Waiting\" }}",
                         "step_name": "still waiting"
+                    },
+                    {
+                        "option": "Yes",
+                        "default": true,
+                        "step_iri": "\/api\/3\/workflow_steps\/d60b4fdd-3b08-401f-a81b-f496637f6899",
+                        "step_name": "step done vars"
                     }
                 ],
                 "step_variables": []
             },
             "status": null,
-            "top": "400",
+            "top": "420",
             "left": "40",
             "stepType": "\/api\/3\/workflow_step_types\/12254cf5-5db7-4b1a-8cb1-3af081924b28",
             "group": null,
@@ -102,8 +77,8 @@
                 "error_msg": "Please see administrator. No Wait Check Playbook defined for Trigger Key {{vars.input.records[0].triggerKey}}."
             },
             "status": null,
-            "top": "540",
-            "left": "1040",
+            "top": "360",
+            "left": "1440",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
             "uuid": "f269e236-c4c9-442a-b094-3bec942ab4e8"
@@ -206,13 +181,26 @@
         },
         {
             "@type": "WorkflowStep",
-            "name": "still waiting",
+            "name": "step done vars",
             "description": null,
+            "arguments": {
+                "done_waiting": "{%- set check_status = vars.steps.run_check_by_trigger_key.output['check_status'] -%}\n{%- set check_msg = vars.steps.run_check_by_trigger_key.output['message'] -%}\n{%- set ret = {\n  \"status\":\"Running\",\n  \"msg\":\"No waiting check message.\"\n} -%}\n\n{%- if check_status -%}\n  {%- do ret.update({\"status\":check_status}) -%}\n  {%- if check_msg -%}\n    {%- do ret.update({\"msg\":msg}) -%}\n  {%- endif -%}\n{%- else -%}\n  {%- do ret.update({\"msg\":\"Check Status did not return properly. See Administrator.\"}) -%}\n{%- endif -%}\n{{ret}}"
+            },
+            "status": null,
+            "top": "480",
+            "left": "340",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "d60b4fdd-3b08-401f-a81b-f496637f6899"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "still waiting",
+            "description": "Set Status to Wait Timer to wait for next check. When the timer is done this playbook will be triggered again. Also make sure the step waiting flag stays enabled.",
             "arguments": {
                 "resource": {
                     "status": "\/api\/3\/picklists\/81d137b2-01bf-4a1c-a7ee-e68bd972d0bd",
-                    "stepWaiting": "{{vars.check}}",
-                    "ztpfArtifacts": "{{vars.steps.run_check_by_trigger_key.output.ztpfArtifacts}}"
+                    "stepWaiting": "{{vars.check}}"
                 },
                 "operation": "Append",
                 "collection": "{{vars.input.records[0]['@id']}}",
@@ -224,8 +212,8 @@
                 "step_variables": []
             },
             "status": null,
-            "top": "340",
-            "left": "420",
+            "top": "360",
+            "left": "340",
             "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928722",
             "group": null,
             "uuid": "1c4e2f15-9069-4b72-87c2-b3710a8da158"
@@ -246,8 +234,35 @@
         },
         {
             "@type": "WorkflowStep",
+            "name": "update step done waiting",
+            "description": "Uncheck waiting flag and set the step status if needed.",
+            "arguments": {
+                "resource": {
+                    "status": "{{\"ztpfDeviceStepStatus\" | picklist(vars.done_waiting.status, \"@id\")}}",
+                    "outputText": "{%- if vars.done_waiting.msg -%}\n{{vars.done_waiting.msg}}\n{%- endif -%}",
+                    "stepWaiting": "{{vars.uncheck}}",
+                    "outputMarkdown": "{%- if vars.done_waiting.msg -%}\n{{vars.done_waiting.msg}}\n{%- endif -%}"
+                },
+                "operation": "Append",
+                "collection": "{{vars.input.records[0]['@id']}}",
+                "__recommend": [],
+                "collectionType": "\/api\/3\/ztpf_device_automation_steps",
+                "fieldOperation": {
+                    "recordTags": "Append"
+                },
+                "step_variables": []
+            },
+            "status": null,
+            "top": "480",
+            "left": "640",
+            "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928722",
+            "group": null,
+            "uuid": "31531e80-fb9f-4eaf-8eba-aed5721c4927"
+        },
+        {
+            "@type": "WorkflowStep",
             "name": "update step waiting check",
-            "description": null,
+            "description": "Step Status changed to Waiting Check before performing a check. Make sure the Step Waiting toggle is still enabled.",
             "arguments": {
                 "resource": {
                     "status": "\/api\/3\/picklists\/eccf4d3b-29f3-45ee-a9d9-9546b79bf3da",
@@ -332,13 +347,13 @@
     "routes": [
         {
             "@type": "WorkflowRoute",
-            "name": "is done waiting -> done waiting",
-            "targetStep": "\/api\/3\/workflow_steps\/31531e80-fb9f-4eaf-8eba-aed5721c4927",
+            "name": "is done waiting -> step done vars",
+            "targetStep": "\/api\/3\/workflow_steps\/d60b4fdd-3b08-401f-a81b-f496637f6899",
             "sourceStep": "\/api\/3\/workflow_steps\/98727fce-6598-4162-aae4-21cae52f1ea4",
             "label": "Yes",
             "isExecuted": false,
             "group": null,
-            "uuid": "f7694999-7de2-48a3-99e8-f00330948e9b"
+            "uuid": "4f76c0a1-702f-4803-8a46-0c49a7e0171b"
         },
         {
             "@type": "WorkflowRoute",
@@ -389,6 +404,16 @@
             "isExecuted": false,
             "group": null,
             "uuid": "1032cb39-1932-4078-9b37-58280192fb42"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "step done vars -> update step done waiting",
+            "targetStep": "\/api\/3\/workflow_steps\/31531e80-fb9f-4eaf-8eba-aed5721c4927",
+            "sourceStep": "\/api\/3\/workflow_steps\/d60b4fdd-3b08-401f-a81b-f496637f6899",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "9151f9df-6c24-4760-b275-cb7671bc7e52"
         },
         {
             "@type": "WorkflowRoute",
@@ -445,7 +470,7 @@
         {
             "@type": "WorkflowGroup",
             "name": "Details",
-            "description": "When step is set to wait launch the playbook based on the trigger key value. This playbook does not wait but sets the status *wait timer* to trigger a wait. When the wait is done the status is set back to *wait* which will then perform the *wait check*.",
+            "description": "When step is set to wait launch the playbook based on the trigger key value. This playbook does not wait but sets the status *wait timer* to trigger a wait. When the wait is done the check_status is set back to *wait* which will then perform the *wait check*.",
             "type": "note",
             "isCollapsed": false,
             "hasTriggerStep": false,
@@ -461,7 +486,7 @@
         },
         {
             "@type": "WorkflowGroup",
-            "name": "Fail Details",
+            "name": "No Wait Fail",
             "description": "If the action called for a wait but there is not a wait process or this action we have to fail.",
             "type": "note",
             "isCollapsed": false,
@@ -469,8 +494,8 @@
             "hideInLogs": false,
             "metadata": [],
             "reusable": false,
-            "top": "360",
-            "left": "760",
+            "top": "240",
+            "left": "1360",
             "height": "100",
             "width": "361",
             "uuid": "fb230dff-0873-4310-92ad-ef12e0959896",

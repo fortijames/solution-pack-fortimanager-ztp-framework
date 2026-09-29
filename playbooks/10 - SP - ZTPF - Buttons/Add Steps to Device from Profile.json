@@ -177,7 +177,7 @@
             "name": "profile selected and tags",
             "description": null,
             "arguments": {
-                "user_tags": "{%- set tags = [] -%}\n\n{%- if pickFromExistingTags -%}\n  {%- for t in vars.steps.select_profile.input.pickFromExistingTags -%}\n    {%- do tags.append(t) -%}\n  {%- endfor -%}\n{%- endif -%}\n\n{%- if vars.steps.select_profile.input.tags -%}\n  {%- for t in vars.steps.select_profile.input.tags.replace(' ',',').split(',') -%}\n    {%- do tags.append(t) -%}\n  {%- endfor -%}\n{%- endif -%}\n\n{{tags|unique|sort}}",
+                "user_tags": "{%- set tags = [] -%}\n\n{%- set pickFromExistingTags  = vars.steps.select_profile.input.pickFromExistingTags -%}\n{%- set addTags = vars.steps.select_profile.input.tags -%}\n\n\n{%- if pickFromExistingTags -%}\n  {%- for t in pickFromExistingTags -%}\n    {%- do tags.append(t) -%}\n  {%- endfor -%}\n{%- endif -%}\n\n{%- if addTags  -%}\n  {%- for t in addTags.replace(' ',',').split(',') -%}\n    {%- do tags.append(t) -%}\n  {%- endfor -%}\n{%- endif -%}\n\n{{tags|unique|sort}}",
                 "profile_selected": "{{vars.profile.records\n  | json_query('[?_option==`{}`]'\n    .format(vars.steps.select_profile.input.profile)\n)\n}}"
             },
             "status": null,

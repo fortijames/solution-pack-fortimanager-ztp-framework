@@ -45,40 +45,6 @@
         },
         {
             "@type": "WorkflowStep",
-            "name": "latest step data",
-            "description": null,
-            "arguments": {
-                "query": {
-                    "sort": [],
-                    "limit": 30,
-                    "logic": "AND",
-                    "filters": [
-                        {
-                            "type": "primitive",
-                            "field": "id",
-                            "value": "{{vars.input.records[0].id}}",
-                            "operator": "eq",
-                            "_operator": "eq"
-                        }
-                    ],
-                    "__selectFields": [
-                        "stepWaiting",
-                        "id"
-                    ]
-                },
-                "module": "ztpf_device_automation_steps?$limit=1",
-                "checkboxFields": true,
-                "step_variables": []
-            },
-            "status": null,
-            "top": "460",
-            "left": "1080",
-            "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928770",
-            "group": null,
-            "uuid": "15d1fa7b-07c4-49f6-ba55-67f13ea9fbf4"
-        },
-        {
-            "@type": "WorkflowStep",
             "name": "no step automation",
             "description": null,
             "arguments": {
@@ -98,8 +64,8 @@
                 "step_variables": []
             },
             "status": null,
-            "top": "120",
-            "left": "640",
+            "top": "140",
+            "left": "520",
             "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928722",
             "group": null,
             "uuid": "49276c2a-e1e4-47d0-9e5f-9d407f7b9a7f"
@@ -132,7 +98,7 @@
             },
             "status": null,
             "top": "220",
-            "left": "640",
+            "left": "520",
             "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
             "group": null,
             "uuid": "7cc089cd-2dba-4f99-9899-5b8d310ec01d"
@@ -226,8 +192,8 @@
                 "workflowReference": "\/api\/3\/workflows\/9e61ba1a-4371-4d35-825d-9cea8f79feff"
             },
             "status": null,
-            "top": "380",
-            "left": "440",
+            "top": "400",
+            "left": "60",
             "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
             "group": null,
             "uuid": "c281faff-592c-49e7-bef0-2553b0a98856"
@@ -276,8 +242,8 @@
                 "step_variables": []
             },
             "status": null,
-            "top": "280",
-            "left": "1080",
+            "top": "340",
+            "left": "720",
             "stepType": "\/api\/3\/workflow_step_types\/12254cf5-5db7-4b1a-8cb1-3af081924b28",
             "group": null,
             "uuid": "173b6825-a9e9-45aa-8340-704da952e369"
@@ -352,8 +318,8 @@
                 "step_variables": []
             },
             "status": null,
-            "top": "360",
-            "left": "1080",
+            "top": "480",
+            "left": "720",
             "stepType": "\/api\/3\/workflow_step_types\/6832e556-b9c7-497a-babe-feda3bd27dbf",
             "group": null,
             "uuid": "8a98604e-ef05-4308-ab99-da8178d29881"
@@ -366,24 +332,14 @@
                 "waiting_timeout": "true"
             },
             "status": null,
-            "top": "400",
-            "left": "1400",
+            "top": "540",
+            "left": "60",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
             "uuid": "f494f25e-aac2-4b68-b42c-578e904f0a7b"
         }
     ],
     "routes": [
-        {
-            "@type": "WorkflowRoute",
-            "name": "current step -> step post_run",
-            "targetStep": "\/api\/3\/workflow_steps\/c281faff-592c-49e7-bef0-2553b0a98856",
-            "sourceStep": "\/api\/3\/workflow_steps\/15d1fa7b-07c4-49f6-ba55-67f13ea9fbf4",
-            "label": null,
-            "isExecuted": false,
-            "group": null,
-            "uuid": "da7fe478-78b8-4c42-8ed0-e836c29a6827"
-        },
         {
             "@type": "WorkflowRoute",
             "name": "no step automation -> step post_run",
@@ -496,13 +452,13 @@
         },
         {
             "@type": "WorkflowRoute",
-            "name": "waiting for step -> current step",
-            "targetStep": "\/api\/3\/workflow_steps\/15d1fa7b-07c4-49f6-ba55-67f13ea9fbf4",
+            "name": "waiting for step -> step post_run",
+            "targetStep": "\/api\/3\/workflow_steps\/c281faff-592c-49e7-bef0-2553b0a98856",
             "sourceStep": "\/api\/3\/workflow_steps\/8a98604e-ef05-4308-ab99-da8178d29881",
             "label": null,
             "isExecuted": false,
             "group": null,
-            "uuid": "7873ee96-82be-4e42-beb0-8c707c5276ef"
+            "uuid": "63335440-9848-4510-b612-82facf67379a"
         },
         {
             "@type": "WorkflowRoute",
@@ -516,13 +472,13 @@
         },
         {
             "@type": "WorkflowRoute",
-            "name": "waiting timeout -> latest step data",
-            "targetStep": "\/api\/3\/workflow_steps\/15d1fa7b-07c4-49f6-ba55-67f13ea9fbf4",
+            "name": "waiting_timeout 1hr -> step post_run",
+            "targetStep": "\/api\/3\/workflow_steps\/c281faff-592c-49e7-bef0-2553b0a98856",
             "sourceStep": "\/api\/3\/workflow_steps\/f494f25e-aac2-4b68-b42c-578e904f0a7b",
             "label": null,
             "isExecuted": false,
             "group": null,
-            "uuid": "93a41afd-a117-40bc-bebf-4df86be61566"
+            "uuid": "4d655a60-a6b6-4cdc-84b0-3d121d14a62a"
         }
     ],
     "groups": [
@@ -538,8 +494,8 @@
             "reusable": false,
             "top": "120",
             "left": "60",
-            "height": "131",
-            "width": "497",
+            "height": "129",
+            "width": "267",
             "uuid": "1db88920-bc89-4ef2-a5a5-38c5dd5f36b0",
             "recordTags": []
         },
@@ -553,8 +509,8 @@
             "hideInLogs": false,
             "metadata": [],
             "reusable": false,
-            "top": "160",
-            "left": "1320",
+            "top": "340",
+            "left": "980",
             "height": "212",
             "width": "387",
             "uuid": "b0de859b-dbce-41fb-91a1-f8b779c0f4aa",
