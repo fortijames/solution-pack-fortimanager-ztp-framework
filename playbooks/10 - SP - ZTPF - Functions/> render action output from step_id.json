@@ -38,12 +38,13 @@
                     "__selectFields": [
                         "ztpfDevices",
                         "name",
+                        "status",
                         "ztpfAutomationActions",
                         "jinjaVars",
                         "outputSourceData",
                         "outputType",
                         "id",
-                        "status"
+                        "recordTags"
                     ]
                 },
                 "module": "ztpf_device_automation_steps?$limit=1",
@@ -88,6 +89,7 @@
             "arguments": {
                 "when": "{{vars.steps.jinja_to_create_metadata.output}}",
                 "arguments": {
+                    "tags": "{{vars.tags|join(\",\")}}",
                     "device_id": "{{vars.steps.find_step[0].ztpfDevices.id}}",
                     "metadata_input": "{{vars.steps.jinja_to_create_metadata.output}}"
                 },
@@ -112,9 +114,8 @@
                 "output_html": "{%- set rout = vars.steps.render_jinja_HTML -%}\n\n{%- if rout -%}\n{{rout.output| regex_replace('^\"|\"$', '')}}\n{%- endif -%}",
                 "output_json": "{%- set rout = vars.steps.render_jinja_JSON -%}\n\n{%- if rout -%}\n{{rout.output}}\n{%- endif -%}",
                 "output_text": "{%- set rout = vars.steps.render_jinja_TEXT \n-%}\n\n{%- if rout -%}\n{{rout.output| regex_replace('^\"|\"$', '')}}\n{%- endif -%}",
-                "step_status": "{%- if vars.steps.status_yaml2json.output.fail -%}\n\"Fail\"\n{%- elif vars.steps.status_yaml2json.output.abort -%}\n\"Abort\"\n{%- elif \"status\" in vars.steps.status_yaml2json.output -%}\n{{vars.steps.status_yaml2json.output.status}}\n{%- else -%}\n{{vars.step_status}}\n{%- endif -%}",
-                "output_status": "{%- set ret = {\n  \"status\": \"OK\",\n  \"message\": \"No Output Status Template\"\n} -%}\n{%- set status = vars.steps.status_yaml2json.output -%}\n{%- if status -%}\n  {%- do ret.update({\"message\":status.message}) -%}\n  {%- if status.exception -%}\n    {%- do ret.update({\"status\":\"Exceptions Found\"}) -%}    \n  {%- endif -%}\n{%- endif -%}\n{{ret}}",
-                "output_markdown": "{%- set rout = vars.steps.render_jinja_MARKDOWN -%}\n\n{%- if rout -%}\n{{rout.output| regex_replace('^\"|\"$', '')}}\n{%- endif -%}"
+                "output_markdown": "{%- set rout = vars.steps.render_jinja_MARKDOWN -%}\n\n{%- if rout -%}\n{{rout.output| regex_replace('^\"|\"$', '')}}\n{%- endif -%}",
+                "step_status_final": "{%- set ret = {\n  \"status\":vars.step_status,\n  \"output_status\":\"Ok\",\n  \"output_status_message\":vars.steps.status_yaml2json.output.message,\n  \"done\": false\n} -%}\n\n{%- if vars.steps.status_yaml2json.output in ['',None] -%}\n  {%- do ret.update({\n    \"status\":\"Fail\",\n    \"output_status\":\"Incomplete\",\n    \"output_status_message\":\n      \"Output Status YAML Null. See administrator.\",\n    \"done\": true\n  }) -%}\n{%- endif -%}\n\n{%- if not ret.done and vars.steps.status_yaml2json.output.exception -%}\n  {%- do ret.update({\n    \"output_status\":\"Exceptions Found\"\n  }) -%}\n{%- endif -%}\n\n{%- if not ret.done and vars.steps.status_yaml2json.output.fail -%}\n  {%- do ret.update({\n    \"status\":\"Fail\",\n    \"done\":true\n  }) -%}\n{%- endif -%}\n\n{%- if not ret.done and vars.steps.status_yaml2json.output.abort -%}\n  {%- do ret.update({\n    \"status\":\"Abort\",\n    \"done\":true\n  }) -%}\n{%- endif -%}\n\n{%- if not ret.done and \"status\" in vars.steps.status_yaml2json.output -%}\n  {%- do ret.update({\"status\":\n          vars.steps.status_yaml2json.output.status}) \n  -%}\n{%- endif -%}\n\n{%- do ret.update({\"done\": true}) -%}\n\n{{ret}}"
             },
             "status": null,
             "top": "380",
@@ -248,6 +249,7 @@
             "name": "setup vars",
             "description": null,
             "arguments": {
+                "tags": "{{vars.steps.find_step[0].recordTags}}",
                 "step_fqid": "{{vars.steps.find_step[0]['@id']}}",
                 "jinja_vars": "{%- set ret = vars.steps.find_step[0].jinjaVars -%}\n{%- do ret.update({\"output\":vars.steps.find_step[0].outputSourceData}) -%}\n{{ret}}",
                 "step_status": "{{vars.steps.find_step[0].status.itemValue}}"
@@ -309,13 +311,13 @@
             "description": null,
             "arguments": {
                 "resource": {
-                    "status": "{{\"ztpfDeviceStepStatus\" | picklist(vars.step_status, \"@id\")}}",
+                    "status": "{{\"ztpfDeviceStepStatus\" | picklist(vars.step_status_final.status, \"@id\")}}",
                     "outputHTML": "<p>{{vars.output_html}}<\/p>",
                     "outputJSON": "{{vars.output_json}}",
                     "outputText": "{{vars.output_text}}",
-                    "outputStatus": "{{\"ztpfDeviceStepOutputStatus\" | picklist(vars.output_status.status, \"@id\")}}",
+                    "outputStatus": "{{\"ztpfDeviceStepOutputStatus\" | picklist(vars.step_status_final.output_status, \"@id\")}}",
                     "outputMarkdown": "{{vars.output_markdown}}",
-                    "outputStatusMessage": "{{vars.output_status.message}}"
+                    "outputStatusMessage": "{{vars.step_status_final.output_status_message}}"
                 },
                 "operation": "Append",
                 "collection": "{{vars.step_fqid}}",

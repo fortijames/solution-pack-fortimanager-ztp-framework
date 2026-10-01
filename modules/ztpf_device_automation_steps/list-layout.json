@@ -11,7 +11,7 @@
                             {
                                 "type": "chart",
                                 "config": {
-                                    "wid": "cc2a6aa5-4563-419a-9f9c-165e4192961d",
+                                    "wid": "6082e453-5d37-43af-b18b-658b713b1f4d",
                                     "widgetAlwaysDisplay": true,
                                     "showTabularData": false,
                                     "query": {
@@ -61,10 +61,162 @@
                                 }
                             }
                         ],
-                        "style": "col-lg-12"
+                        "style": "col-lg-6"
+                    },
+                    {
+                        "widgets": [
+                            {
+                                "type": "chart",
+                                "config": {
+                                    "wid": "cc2a6aa5-4563-419a-9f9c-165e4192961d",
+                                    "widgetAlwaysDisplay": true,
+                                    "showTabularData": false,
+                                    "query": {
+                                        "sort": [],
+                                        "limit": 2147483647,
+                                        "logic": "AND",
+                                        "filters": [
+                                            {
+                                                "field": "recordTags",
+                                                "operator": "isnull",
+                                                "value": "false",
+                                                "_value": "false",
+                                                "type": "array"
+                                            }
+                                        ],
+                                        "aggregates": [
+                                            {
+                                                "operator": "countdistinct",
+                                                "field": "*",
+                                                "alias": "total"
+                                            },
+                                            {
+                                                "operator": "groupby",
+                                                "alias": "recordTags",
+                                                "field": "recordTags.uuid"
+                                            }
+                                        ]
+                                    },
+                                    "mapping": {
+                                        "fieldName": "recordTags"
+                                    },
+                                    "assignedToSetting": "all",
+                                    "aggregate": true,
+                                    "viewType": "chart",
+                                    "title": "Tags",
+                                    "resource": "ztpf_device_automation_steps",
+                                    "chart": "pie",
+                                    "showCount": true,
+                                    "widgetAlwaysExpanded": true
+                                }
+                            }
+                        ],
+                        "style": "col-lg-6"
                     }
                 ],
                 "wid": "f9a16267-e477-451e-a07c-3bb63f96faaa",
+                "_collapsed": false,
+                "collapsible": false,
+                "collapsibleIndex": 0
+            },
+            {
+                "columns": [
+                    {
+                        "widgets": [
+                            {
+                                "type": "chart",
+                                "config": {
+                                    "wid": "4e3e37c6-e9e9-4ab8-83e4-e91c3e367498",
+                                    "widgetAlwaysDisplay": true,
+                                    "showTabularData": false,
+                                    "query": {
+                                        "sort": [],
+                                        "limit": 2147483647,
+                                        "logic": "AND",
+                                        "filters": [],
+                                        "aggregates": [
+                                            {
+                                                "operator": "countdistinct",
+                                                "field": "*",
+                                                "alias": "total"
+                                            },
+                                            {
+                                                "operator": "groupby",
+                                                "alias": "uuid",
+                                                "field": "ztpfAutomationActions.uuid"
+                                            },
+                                            {
+                                                "operator": "groupby",
+                                                "alias": "name",
+                                                "field": "ztpfAutomationActions.name"
+                                            }
+                                        ]
+                                    },
+                                    "mapping": {
+                                        "fieldName": "ztpfAutomationActions",
+                                        "displayValues": [
+                                            "name"
+                                        ]
+                                    },
+                                    "assignedToSetting": "onlyMe",
+                                    "aggregate": true,
+                                    "viewType": "chart",
+                                    "title": "Automation Actions",
+                                    "resource": "ztpf_device_automation_steps",
+                                    "chart": "pie",
+                                    "widgetAlwaysExpanded": true
+                                }
+                            },
+                            {
+                                "type": "chart",
+                                "config": {
+                                    "wid": "d84e2081-b870-4c91-8a9e-70a3361919ed",
+                                    "widgetAlwaysDisplay": true,
+                                    "showTabularData": false,
+                                    "query": {
+                                        "sort": [],
+                                        "limit": 2147483647,
+                                        "logic": "AND",
+                                        "filters": [],
+                                        "aggregates": [
+                                            {
+                                                "operator": "select",
+                                                "alias": "uuid",
+                                                "field": "ztpfDevices.uuid"
+                                            },
+                                            {
+                                                "operator": "select",
+                                                "alias": "name",
+                                                "field": "ztpfDevices.name"
+                                            },
+                                            {
+                                                "operator": "select",
+                                                "alias": "stepStartTimestamp",
+                                                "field": "stepStartTimestamp"
+                                            }
+                                        ]
+                                    },
+                                    "mapping": {
+                                        "fieldName": "ztpfDevices",
+                                        "dateFieldName": "stepStartTimestamp",
+                                        "timeScope": "day",
+                                        "dateFormat": "%b %e"
+                                    },
+                                    "assignedToSetting": "all",
+                                    "aggregate": true,
+                                    "viewType": "chart",
+                                    "title": "Automation Actions Started by Device",
+                                    "resource": "ztpf_device_automation_steps",
+                                    "chart": "timeseries",
+                                    "widgetAlwaysExpanded": true,
+                                    "barStyle": "horizontal"
+                                }
+                            }
+                        ],
+                        "style": "col-lg-12"
+                    }
+                ],
+                "wid": "c47d3314-f275-46f0-8e54-86404cd1d64a",
                 "_collapsed": false
             },
             {
@@ -74,7 +226,7 @@
                             {
                                 "type": "grid",
                                 "config": {
-                                    "wid": "db1e2359-de16-4fbd-871a-cbf698f80fcd",
+                                    "wid": "5851b250-d602-4ba5-8de0-9c774d3b7076",
                                     "module": "ztpf_device_automation_steps",
                                     "columns": [
                                         "id",

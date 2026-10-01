@@ -17,9 +17,17 @@
                                     "widgetAlwaysDisplay": true,
                                     "query": {
                                         "sort": [],
-                                        "limit": 10,
+                                        "limit": 1,
                                         "logic": "AND",
-                                        "filters": []
+                                        "filters": [
+                                            {
+                                                "field": "name",
+                                                "operator": "eq",
+                                                "_operator": "eq",
+                                                "value": "ZTPF Quick Links",
+                                                "type": "primitive"
+                                            }
+                                        ]
                                     },
                                     "recordTitle": {
                                         "type": "sectionHeader",
@@ -49,32 +57,51 @@
                                                 }
                                             ]
                                         }
-                                    ]
+                                    ],
+                                    "title": ""
                                 }
                             }
                         ],
-                        "style": "col-lg-12"
-                    }
-                ],
-                "wid": "2114d47a-11ba-4ee2-adbe-b2534e739b79",
-                "_collapsed": false
-            },
-            {
-                "columns": [
+                        "style": "col-lg-3",
+                        "collapsedText": "Example"
+                    },
                     {
                         "widgets": [
                             {
                                 "type": "grid",
                                 "config": {
-                                    "wid": "71212211-9613-4df9-9282-be424ff18a02"
+                                    "wid": "71212211-9613-4df9-9282-be424ff18a02",
+                                    "module": "ztpf_quick_links",
+                                    "columns": [
+                                        "id",
+                                        "name"
+                                    ],
+                                    "expandableCol": [
+                                        {
+                                            "openTab": false,
+                                            "name": "quickLinks"
+                                        }
+                                    ],
+                                    "relationshipField": [],
+                                    "checkboxStatus": true,
+                                    "editableFields": false,
+                                    "actionButtons": [],
+                                    "query": {
+                                        "sort": [],
+                                        "limit": 30,
+                                        "logic": "AND",
+                                        "filters": []
+                                    }
                                 }
                             }
                         ],
-                        "style": "col-lg-12"
+                        "style": "col-lg-9"
                     }
                 ],
-                "wid": "da1df008-63a4-4238-a25a-0026bceb1abf",
-                "_collapsed": false
+                "wid": "2114d47a-11ba-4ee2-adbe-b2534e739b79",
+                "_collapsed": true,
+                "collapsible": true,
+                "collapsibleIndex": 0
             }
         ],
         "wid": "2e69b1ec-39dc-47e1-8890-201d04b70e5e",

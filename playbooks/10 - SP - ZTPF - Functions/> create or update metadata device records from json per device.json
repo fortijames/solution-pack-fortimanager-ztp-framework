@@ -11,7 +11,8 @@
     "remoteExecutableFlag": false,
     "parameters": [
         "metadata_input",
-        "device_id"
+        "device_id",
+        "tags"
     ],
     "synchronous": false,
     "collection": "\/api\/3\/workflow_collections\/517fb52d-36f5-4bac-a344-7d4599d7dec6",
@@ -34,6 +35,9 @@
                 "resource": {
                     "name": "{{vars.item.name}}",
                     "type": "{{\"ztpfMetadataType\" | picklist(vars.item.type, \"@id\")}}",
+                    "__link": {
+                        "recordTags": "{{vars.tags}}"
+                    },
                     "status": "\/api\/3\/picklists\/589e0a44-3aa9-4e49-ae62-e28199344659",
                     "dataJSON": "{%- if vars.item.type == \"JSON\" -%}{{vars.item.value}}{%- endif -%}",
                     "dataText": "{%- if vars.item.type == \"Text\" -%}{{vars.item.value}}{%- endif -%}",
@@ -44,7 +48,7 @@
                 "collection": "\/api\/3\/ztpf_metadata_devices",
                 "__recommend": [],
                 "fieldOperation": {
-                    "recordTags": "Overwrite"
+                    "recordTags": "Append"
                 },
                 "step_variables": []
             },
@@ -164,6 +168,7 @@
             "arguments": {
                 "__triggerLimit": true,
                 "step_variables": {
+                    "tags": "{%- if vars.input.params.tags -%}{{vars.input.params.tags.replace(',',' ').split(' ')}}\n{%- endif -%}",
                     "input": {
                         "params": []
                     }
@@ -192,6 +197,9 @@
                     "batch_size": 100
                 },
                 "resource": {
+                    "__link": {
+                        "recordTags": "{{vars.tags}}"
+                    },
                     "dataJSON": "{%- if vars.item.type == \"JSON\" -%}{{vars.item.value}}{%- endif -%}",
                     "dataText": "{%- if vars.item.type == \"Text\" -%}{{vars.item.value}}{%- endif -%}"
                 },

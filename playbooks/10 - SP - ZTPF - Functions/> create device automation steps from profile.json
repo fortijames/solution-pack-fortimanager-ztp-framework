@@ -11,7 +11,8 @@
     "remoteExecutableFlag": false,
     "parameters": [
         "device_id",
-        "profile_id"
+        "profile_id",
+        "tags"
     ],
     "synchronous": false,
     "collection": "\/api\/3\/workflow_collections\/517fb52d-36f5-4bac-a344-7d4599d7dec6",
@@ -29,6 +30,7 @@
                     "condition": ""
                 },
                 "arguments": {
+                    "tags": "{{vars.tags|join(\",\")}}",
                     "stepARGS": "{{vars.item.stepARGS}}",
                     "action_id": "{{vars.item.ztpfAutomationActions.id}}",
                     "device_id": "{{vars.input.params['device_id']}}",
@@ -203,6 +205,7 @@
             "arguments": {
                 "__triggerLimit": true,
                 "step_variables": {
+                    "tags": "{%- if vars.input.params.tags -%}{{vars.input.params.tags.replace(',',' ').split(' ')}}\n{%- endif -%}",
                     "input": {
                         "params": []
                     }

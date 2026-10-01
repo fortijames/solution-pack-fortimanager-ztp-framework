@@ -14,7 +14,8 @@
         "action_id",
         "stepARGS",
         "jinja_vars",
-        "step_name"
+        "step_name",
+        "tags"
     ],
     "synchronous": false,
     "collection": "\/api\/3\/workflow_collections\/517fb52d-36f5-4bac-a344-7d4599d7dec6",
@@ -53,6 +54,9 @@
             "arguments": {
                 "resource": {
                     "name": "{{vars.step_name}}",
+                    "__link": {
+                        "recordTags": "{{vars.tags}}"
+                    },
                     "status": "\/api\/3\/picklists\/757ec310-af08-4602-8205-1f789310cd13",
                     "stepARGS": "{{vars.step_args}}",
                     "stepDone": false,
@@ -61,14 +65,17 @@
                     "stepNumber": "{{vars.step_number}}",
                     "triggerKey": "{{vars.trigger_key}}",
                     "queueStatus": "\/api\/3\/picklists\/757ec310-af08-4602-8205-1f789310cd13",
+                    "stepWaiting": false,
                     "ztpfDevices": "{{vars.device_fqid}}",
+                    "reportingStep": false,
+                    "waitToCheckSeconds": 60,
                     "ztpfAutomationActions": "{{vars.action_fqid}}"
                 },
                 "operation": "Overwrite",
                 "collection": "\/api\/3\/ztpf_device_automation_steps",
                 "__recommend": [],
                 "fieldOperation": {
-                    "recordTags": "Overwrite"
+                    "recordTags": "Append"
                 },
                 "step_variables": []
             },
@@ -278,6 +285,7 @@
             "arguments": {
                 "__triggerLimit": true,
                 "step_variables": {
+                    "tags": "{%- if vars.input.params.tags -%}{{vars.input.params.tags.replace(',',' ').split(' ')}}\n{%- endif -%}",
                     "input": {
                         "params": []
                     }
