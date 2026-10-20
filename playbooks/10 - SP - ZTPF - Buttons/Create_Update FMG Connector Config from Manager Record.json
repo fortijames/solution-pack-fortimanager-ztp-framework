@@ -17,11 +17,9 @@
     "steps": [
         {
             "@type": "WorkflowStep",
-            "name": "create input_timeout",
+            "name": "cancel or timeout",
             "description": null,
-            "arguments": {
-                "input_timeout": "true"
-            },
+            "arguments": [],
             "status": null,
             "top": "500",
             "left": "400",
@@ -38,7 +36,7 @@
                 "input": {
                     "schema": {
                         "title": "Fill in Device Information",
-                        "description": "Complete the information below",
+                        "description": "Complete the information below. \n\n**This form will expire in 3 minutes. *",
                         "inputVariables": [
                             {
                                 "name": "connectionType",
@@ -305,7 +303,7 @@
                 },
                 "record": "{{ vars.input.records[0][\"@id\"] }}",
                 "timeout": {
-                    "minutes": 1,
+                    "minutes": 3,
                     "step_iri": "\/api\/3\/workflow_steps\/1d8a43e5-4cc7-47b4-a032-36de1bf6d0c8",
                     "undefined": 2
                 },
@@ -323,6 +321,10 @@
                         {
                             "option": "Continue",
                             "step_iri": "\/api\/3\/workflow_steps\/91bab8a4-78aa-4635-a9e1-32bb665872c3"
+                        },
+                        {
+                            "option": "Cancel",
+                            "step_iri": "\/api\/3\/workflow_steps\/1d8a43e5-4cc7-47b4-a032-36de1bf6d0c8"
                         }
                     ],
                     "duplicateOption": false,
@@ -533,9 +535,43 @@
             "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
             "group": null,
             "uuid": "8288a09a-ad48-4fd4-a7bf-0d78cd8ce538"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "update manager status",
+            "description": null,
+            "arguments": {
+                "resource": {
+                    "status": "{{vars.input.records[0].status['@id']}}"
+                },
+                "operation": "Append",
+                "collection": "{{vars.input.records[0]['@id']}}",
+                "__recommend": [],
+                "collectionType": "\/api\/3\/ztpf_managers",
+                "fieldOperation": {
+                    "recordTags": "Append"
+                },
+                "step_variables": []
+            },
+            "status": null,
+            "top": "597",
+            "left": "513",
+            "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928722",
+            "group": null,
+            "uuid": "0e52290c-97a8-45ff-a486-bdea87f790bd"
         }
     ],
     "routes": [
+        {
+            "@type": "WorkflowRoute",
+            "name": "cancel or timeout -> update manager status",
+            "targetStep": "\/api\/3\/workflow_steps\/0e52290c-97a8-45ff-a486-bdea87f790bd",
+            "sourceStep": "\/api\/3\/workflow_steps\/1d8a43e5-4cc7-47b4-a032-36de1bf6d0c8",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "825f708b-8e30-4166-abf0-3a261a24fd06"
+        },
         {
             "@type": "WorkflowRoute",
             "name": "create input_timeout -> return",
@@ -551,7 +587,7 @@
             "name": "Provide input -> Input Timeout",
             "targetStep": "\/api\/3\/workflow_steps\/1d8a43e5-4cc7-47b4-a032-36de1bf6d0c8",
             "sourceStep": "\/api\/3\/workflow_steps\/19e2e6e7-3a9f-4056-b60a-5f9a166a54d9",
-            "label": "",
+            "label": "Cancel",
             "isExecuted": false,
             "group": null,
             "uuid": "1aba0f65-ca33-4f27-a525-26d6a5ba88c2"
@@ -639,7 +675,7 @@
             "metadata": [],
             "reusable": false,
             "top": "220",
-            "left": "740",
+            "left": "780",
             "height": "171",
             "width": "487",
             "uuid": "484a5dfb-2fe0-4887-89d0-763612fac707",

@@ -460,7 +460,7 @@
                                                 "visible": true
                                             },
                                             "icon": "icon icon-settings",
-                                            "show": true,
+                                            "show": false,
                                             "visible": true
                                         },
                                         {
@@ -475,6 +475,32 @@
                                                             "columns": [
                                                                 {
                                                                     "widgets": [
+                                                                        {
+                                                                            "type": "playbookButtons-1.1.1",
+                                                                            "config": {
+                                                                                "wid": "fe4c95d3-5456-4093-87ae-eb3f6468ad85",
+                                                                                "widgetName": "Playbook Execution Wizard",
+                                                                                "selectedPlaybooksWithRecord": [
+                                                                                    {
+                                                                                        "name": "Build with Jinja Editor",
+                                                                                        "uuid": "0ce2318b-c1ab-4c66-aac5-8b5be8e39fbe",
+                                                                                        "actionTriggerName": "Build with Jinja Editor",
+                                                                                        "collectionName": "10 - SP - ZTPF - Buttons",
+                                                                                        "icon": "fa fa-building-o"
+                                                                                    }
+                                                                                ],
+                                                                                "showExecutionProgress": true,
+                                                                                "selectedExecutionWizardPlaybooks": [
+                                                                                    {
+                                                                                        "name": "Build with Jinja Editor",
+                                                                                        "uuid": "0ce2318b-c1ab-4c66-aac5-8b5be8e39fbe",
+                                                                                        "actionTriggerName": "Build with Jinja Editor",
+                                                                                        "collectionName": "10 - SP - ZTPF - Buttons",
+                                                                                        "icon": "fa fa-building-o"
+                                                                                    }
+                                                                                ]
+                                                                            }
+                                                                        },
                                                                         {
                                                                             "type": "sectionHeader",
                                                                             "config": {
@@ -603,7 +629,7 @@
                                                 "visible": true
                                             },
                                             "icon": "fa fa-camera-retro",
-                                            "show": false,
+                                            "show": true,
                                             "visible": true
                                         },
                                         {
@@ -634,7 +660,7 @@
                                                                         {
                                                                             "type": "playbookButtons-1.1.1",
                                                                             "config": {
-                                                                                "wid": "30df68c0-0354-4703-87bd-98577cb23416",
+                                                                                "wid": "8eb48ade-6497-4d54-aa43-e83fdd6944ac",
                                                                                 "widgetName": "Playbook Execution Wizard",
                                                                                 "selectedPlaybooksWithRecord": [
                                                                                     {
@@ -674,7 +700,7 @@
                                                                         {
                                                                             "type": "editableFormGroup",
                                                                             "config": {
-                                                                                "wid": "55ac43b9-1761-4d76-9261-ffc5614ef981",
+                                                                                "wid": "ea482bbd-2006-44bb-9ed1-3e160c15c361",
                                                                                 "rows": [
                                                                                     {
                                                                                         "columns": [
@@ -700,6 +726,79 @@
                                                                                                     }
                                                                                                 ],
                                                                                                 "style": "col-lg-6"
+                                                                                            }
+                                                                                        ]
+                                                                                    }
+                                                                                ]
+                                                                            }
+                                                                        }
+                                                                    ],
+                                                                    "style": "col-lg-12"
+                                                                }
+                                                            ],
+                                                            "wid": "6a9cfe4c-9708-44bb-89ad-d9e3674c5865",
+                                                            "_collapsed": false
+                                                        },
+                                                        {
+                                                            "columns": [
+                                                                {
+                                                                    "widgets": [
+                                                                        {
+                                                                            "type": "sectionHeader",
+                                                                            "config": {
+                                                                                "wid": "47090845-75ee-4433-adab-e1925ca38045",
+                                                                                "query": {
+                                                                                    "filters": [],
+                                                                                    "sort": [],
+                                                                                    "limit": 10
+                                                                                },
+                                                                                "editorType": "html",
+                                                                                "sectionText": "<p style=\"text-align: center;\"><span style=\"font-size: 14pt;\"><strong>Test Running Action Payload Script and Output<\/strong><\/span><\/p>\n<p style=\"text-align: center;\"><span style=\"font-size: 12pt;\">Create and run a test step on a device. When saved will update the example jinja_vars, the payload script, and the output source data all copied from the test step.&nbsp;<\/span><\/p>"
+                                                                            }
+                                                                        },
+                                                                        {
+                                                                            "type": "playbookButtons-1.1.1",
+                                                                            "config": {
+                                                                                "wid": "30df68c0-0354-4703-87bd-98577cb23416",
+                                                                                "widgetName": "Playbook Execution Wizard",
+                                                                                "selectedPlaybooksWithRecord": [
+                                                                                    {
+                                                                                        "name": "Run Script Payload - Action",
+                                                                                        "uuid": "4189c810-7e66-46ea-a1a7-b47aa8b37552",
+                                                                                        "actionTriggerName": "Run Example Script Payload",
+                                                                                        "collectionName": "10 - SP - ZTPF - Buttons",
+                                                                                        "icon": "icon icon-running-playbooks"
+                                                                                    }
+                                                                                ],
+                                                                                "showExecutionProgress": true,
+                                                                                "selectedExecutionWizardPlaybooks": [
+                                                                                    {
+                                                                                        "name": "Run Script Payload - Action",
+                                                                                        "uuid": "4189c810-7e66-46ea-a1a7-b47aa8b37552",
+                                                                                        "actionTriggerName": "Run Example Script Payload",
+                                                                                        "collectionName": "10 - SP - ZTPF - Buttons",
+                                                                                        "icon": "icon icon-running-playbooks"
+                                                                                    }
+                                                                                ]
+                                                                            }
+                                                                        },
+                                                                        {
+                                                                            "type": "editableFormGroup",
+                                                                            "config": {
+                                                                                "wid": "55ac43b9-1761-4d76-9261-ffc5614ef981",
+                                                                                "rows": [
+                                                                                    {
+                                                                                        "columns": [
+                                                                                            {
+                                                                                                "fields": [
+                                                                                                    {
+                                                                                                        "name": "exampleRunOutputSourceData",
+                                                                                                        "highlightMode": true,
+                                                                                                        "linky": true,
+                                                                                                        "readOnly": false
+                                                                                                    }
+                                                                                                ],
+                                                                                                "style": "col-lg-12"
                                                                                             }
                                                                                         ]
                                                                                     }

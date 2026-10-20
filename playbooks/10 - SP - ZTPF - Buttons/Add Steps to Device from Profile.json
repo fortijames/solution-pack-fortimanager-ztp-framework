@@ -52,7 +52,7 @@
                     {
                         "option": "Yes",
                         "step_iri": "\/api\/3\/workflow_steps\/6ae190a6-e4e4-4acf-a4ee-62f04dbab6ab",
-                        "condition": "{{ vars.steps.select_profile.input.createRunGroupAndExecuteSteps }}",
+                        "condition": "{{ vars.create_rungroup }}",
                         "step_name": "wait for device ready"
                     }
                 ],
@@ -354,7 +354,9 @@
                     "emailRecipients": ""
                 },
                 "isRecordLinked": false,
-                "step_variables": [],
+                "step_variables": {
+                    "create_rungroup": "{%- if vars.steps.select_profile.input.createRunGroupAndExecuteSteps -%}\nTrue\n{%- else -%}\nFalse\n{%- endif -%}"
+                },
                 "response_mapping": {
                     "options": [
                         {

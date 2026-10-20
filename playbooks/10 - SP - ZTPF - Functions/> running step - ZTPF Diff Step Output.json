@@ -19,55 +19,41 @@
     "steps": [
         {
             "@type": "WorkflowStep",
-            "name": "create text1 and text2",
+            "name": "diff step vars",
             "description": null,
             "arguments": {
-                "text1": "{%- macro filter_lines(text, include_regex=[], exclude_regex=[]) -%}\n    {%- set ns = namespace(lines=[], include=false, exclude=false) -%}\n\n    {%- for line in text.splitlines() -%}\n        {%- set ns.include = not include_regex -%}\n        {%- set ns.exclude = false -%}\n\n        {%- for pattern in include_regex -%}\n            {%- if line | regex_search(pattern) -%}\n                {%- set ns.include = true -%}\n            {%- endif -%}\n        {%- endfor -%}\n\n        {%- for pattern in exclude_regex -%}\n            {%- if line | regex_search(pattern) -%}\n                {%- set ns.exclude = true -%}\n            {%- endif -%}\n        {%- endfor -%}\n\n        {%- if ns.include and not ns.exclude -%}\n            {%- set ns.lines = ns.lines + [line] -%}\n        {%- endif -%}\n    {%- endfor -%}\n\n    {{- ns.lines | join('\\n') -}}\n{%- endmacro %}\n\n{%- set include = vars.diff_script_json.include_regex -%}\n{%- set exclude = vars.diff_script_json.exclude_regex -%}\n{%- if include in ['',None] -%}\n  {%- set include = [] -%}\n{%- endif -%}\n{%- if exclude in ['',None] -%}\n  {%- set exclude = [] -%}\n{%- endif -%}\n\n{{ filter_lines(\n   vars.steps.find_diff_steps[0].outputText,\n    include_regex=include,\n    exclude_regex=exclude\n) }}",
-                "text2": "{%- macro filter_lines(text, include_regex=[], exclude_regex=[]) -%}\n    {%- set ns = namespace(lines=[], include=false, exclude=false) -%}\n\n    {%- for line in text.splitlines() -%}\n        {%- set ns.include = not include_regex -%}\n        {%- set ns.exclude = false -%}\n\n        {%- for pattern in include_regex -%}\n            {%- if line | regex_search(pattern) -%}\n                {%- set ns.include = true -%}\n            {%- endif -%}\n        {%- endfor -%}\n\n        {%- for pattern in exclude_regex -%}\n            {%- if line | regex_search(pattern) -%}\n                {%- set ns.exclude = true -%}\n            {%- endif -%}\n        {%- endfor -%}\n\n        {%- if ns.include and not ns.exclude -%}\n            {%- set ns.lines = ns.lines + [line] -%}\n        {%- endif -%}\n    {%- endfor -%}\n\n    {{- ns.lines | join('\\n') -}}\n{%- endmacro %}\n\n{%- set include = vars.diff_script_json.include_regex -%}\n{%- set exclude = vars.diff_script_json.exclude_regex -%}\n{%- if include in ['',None] -%}\n  {%- set include = [] -%}\n{%- endif -%}\n{%- if exclude in ['',None] -%}\n  {%- set exclude = [] -%}\n{%- endif -%}\n\n{{ filter_lines(\n   vars.steps.find_diff_steps[1].outputText,\n    include_regex=include,\n    exclude_regex=exclude\n) }}"
+                "device_id": "{{vars.steps.find_device[0].id}}",
+                "rungroup_id": "{{vars.steps.find_step[0].ztpfRunGroups.id}}",
+                "step_data_yaml": "{{vars.steps.find_step[0].script}}"
             },
             "status": null,
-            "top": "440",
+            "top": "160",
             "left": "640",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
-            "uuid": "9dbf5928-54d5-41ea-8c97-3ef2a15cce7b"
+            "uuid": "b5b0a88b-e845-4f49-b498-9b7564c91926"
         },
         {
             "@type": "WorkflowStep",
-            "name": "diff script yaml to json",
+            "name": "diff text",
             "description": null,
             "arguments": {
                 "arguments": {
-                    "yaml": "{{vars.steps.find_step[0].script}}",
-                    "manual_test": ""
+                    "text1": "{{vars.text_data.text1}}",
+                    "text2": "{{vars.text_data.text2}}"
                 },
                 "apply_async": false,
                 "step_variables": [],
                 "pass_parent_env": false,
                 "pass_input_record": false,
-                "workflowReference": "\/api\/3\/workflows\/e8a9ca65-8ba2-4da5-993a-e98d1e22283c"
+                "workflowReference": "\/api\/3\/workflows\/ba73dd4a-eec7-4c94-be0c-b1db9401d078"
             },
             "status": null,
-            "top": "140",
-            "left": "640",
+            "top": "260",
+            "left": "340",
             "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
             "group": null,
-            "uuid": "2a1db9ae-0b1c-4380-a20b-9640114e07ba"
-        },
-        {
-            "@type": "WorkflowStep",
-            "name": "diff step vars",
-            "description": null,
-            "arguments": {
-                "diff_script_json": "{{vars.steps.diff_script_yaml_to_json.output}}",
-                "diff_step_numbers": "{%- set inp = vars.steps.diff_script_yaml_to_json.output -%}\n[ {{inp.diffA}},{{inp.diffB}} ]"
-            },
-            "status": null,
-            "top": "240",
-            "left": "640",
-            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
-            "group": null,
-            "uuid": "b5b0a88b-e845-4f49-b498-9b7564c91926"
+            "uuid": "e345fa47-12d2-41ef-a0b9-ae987c1289b0"
         },
         {
             "@type": "WorkflowStep",
@@ -99,70 +85,11 @@
                 "step_variables": []
             },
             "status": null,
-            "top": "40",
+            "top": "80",
             "left": "640",
             "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928770",
             "group": null,
             "uuid": "bf2fe6c2-aa68-4345-9ca2-1023c0f06d53"
-        },
-        {
-            "@type": "WorkflowStep",
-            "name": "find diff steps",
-            "description": null,
-            "arguments": {
-                "query": {
-                    "sort": [],
-                    "limit": 30,
-                    "logic": "AND",
-                    "filters": [
-                        {
-                            "type": "array",
-                            "field": "stepNumber",
-                            "value": "{{vars.diff_step_numbers}}",
-                            "_value": "{{vars.diff_step_numbers}}",
-                            "operator": "in"
-                        },
-                        {
-                            "type": "object",
-                            "field": "ztpfRunGroups",
-                            "value": "{{vars.steps.find_step[0].ztpfRunGroups['@id']}}",
-                            "_value": {
-                                "@id": "{{vars.steps.find_step[0].ztpfRunGroups['@id']}}",
-                                "display": "",
-                                "itemValue": ""
-                            },
-                            "operator": "eq"
-                        },
-                        {
-                            "type": "object",
-                            "field": "ztpfDevices",
-                            "value": "{{vars.steps.find_device[0]['@id']}}",
-                            "_value": {
-                                "@id": "{{vars.steps.find_device[0]['@id']}}",
-                                "display": "",
-                                "itemValue": ""
-                            },
-                            "operator": "eq"
-                        }
-                    ],
-                    "__selectFields": [
-                        "name",
-                        "outputText",
-                        "id",
-                        "outputMarkdown",
-                        "outputSourceData"
-                    ]
-                },
-                "module": "ztpf_device_automation_steps?$limit=2",
-                "checkboxFields": true,
-                "step_variables": []
-            },
-            "status": null,
-            "top": "340",
-            "left": "640",
-            "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928770",
-            "group": null,
-            "uuid": "1fdfa6cd-de8a-434f-b7e2-3314505a8174"
         },
         {
             "@type": "WorkflowStep",
@@ -197,10 +124,33 @@
             },
             "status": null,
             "top": "40",
-            "left": "340",
+            "left": "320",
             "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928770",
             "group": null,
             "uuid": "4cb5b75d-bdca-446a-9afc-0b70527834aa"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "get_step_data",
+            "description": null,
+            "arguments": {
+                "arguments": {
+                    "device_id": "{{vars.device_id}}",
+                    "rungroup_id": "{{vars.rungroup_id}}",
+                    "step_data_yaml": "{{vars.step_data_yaml}}"
+                },
+                "apply_async": false,
+                "step_variables": [],
+                "pass_parent_env": false,
+                "pass_input_record": false,
+                "workflowReference": "\/api\/3\/workflows\/c34b8ec0-99c0-4c5d-acff-20e0d3043ba5"
+            },
+            "status": null,
+            "top": "240",
+            "left": "640",
+            "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
+            "group": null,
+            "uuid": "d718a3b4-177f-4fd6-be7f-677466a4d827"
         },
         {
             "@type": "WorkflowStep",
@@ -220,37 +170,15 @@
         },
         {
             "@type": "WorkflowStep",
-            "name": "run action",
-            "description": null,
-            "arguments": {
-                "arguments": {
-                    "text1": "{{vars.text1}}",
-                    "text2": "{{vars.text2}}"
-                },
-                "apply_async": false,
-                "step_variables": [],
-                "pass_parent_env": false,
-                "pass_input_record": false,
-                "workflowReference": "\/api\/3\/workflows\/ba73dd4a-eec7-4c94-be0c-b1db9401d078"
-            },
-            "status": null,
-            "top": "360",
-            "left": "40",
-            "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
-            "group": null,
-            "uuid": "e345fa47-12d2-41ef-a0b9-ae987c1289b0"
-        },
-        {
-            "@type": "WorkflowStep",
             "name": "script results",
             "description": null,
             "arguments": {
-                "step_status": "{%- set ret = \"Complete\" -%}\n{%- if vars.steps.run_action.output['exec_script'].status.error -%}\n  {%- set ret = \"Failed\" -%}\n{%- endif -%}\n{{ret}}",
-                "script_results": "{%- set base = vars.steps.run_action -%}\n{%- set ret = {\n    \"diff\":base.output,\n} -%}\n{{ret}}"
+                "step_status": "{%- set ret = \"Complete\" -%}\n{%- if vars.steps.diff_text.output['exec_script'].status.error -%}\n  {%- set ret = \"Failed\" -%}\n{%- endif -%}\n{{ret}}",
+                "script_results": "{%- set base = vars.steps.diff_text -%}\n{%- set ret = {\n    \"diff\":base.output,\n} -%}\n{{ret}}"
             },
             "status": null,
-            "top": "280",
-            "left": "40",
+            "top": "340",
+            "left": "340",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
             "uuid": "19f966f2-8403-4959-9f17-3ff5df6403dd"
@@ -278,6 +206,20 @@
         },
         {
             "@type": "WorkflowStep",
+            "name": "step_data_results",
+            "description": null,
+            "arguments": {
+                "text_data": "{%- macro filter_lines(text, include_regex=[], exclude_regex=[]) -%}\n    {%- set ns = namespace(lines=[], include=false, exclude=false) -%}\n\n    {%- for line in text.splitlines() -%}\n        {%- set ns.include = not include_regex -%}\n        {%- set ns.exclude = false -%}\n\n        {%- for pattern in include_regex -%}\n            {%- if line | regex_search(pattern) -%}\n                {%- set ns.include = true -%}\n            {%- endif -%}\n        {%- endfor -%}\n\n        {%- for pattern in exclude_regex -%}\n            {%- if line | regex_search(pattern) -%}\n                {%- set ns.exclude = true -%}\n            {%- endif -%}\n        {%- endfor -%}\n\n        {%- if ns.include and not ns.exclude -%}\n            {%- set ns.lines = ns.lines + [line] -%}\n        {%- endif -%}\n    {%- endfor -%}\n\n    {{- ns.lines | join('\\n') -}}\n{%- endmacro %}\n\n{%- set step_data = vars.steps.get_step_data.output.step_data_results -%}\n{%- set include = vars.steps.get_step_data.output.step_data_json.include_regex -%}\n{%- set exclude = vars.steps.get_step_data.output.step_data_json.exclude_regex -%}\n\n{%- if include in ['',None] -%}\n  {%- set include = [] -%}\n{%- endif -%}\n{%- if exclude in ['',None] -%}\n  {%- set exclude = [] -%}\n{%- endif -%}\n\n{%- set outp = {\n  \"text1\":\"\",\n  \"text2\":\"\"\n} -%}\n\n{%- if \"diffA\" in step_data -%}\n{%- do outp.update({\"text1\":filter_lines(\n    step_data.diffA,\n    include_regex=include,\n    exclude_regex=exclude\n  )}) -%}\n{%- endif -%}\n\n{%- if \"diffB\" in step_data  -%}\n{%- do outp.update({\"text2\":filter_lines(\n    step_data.diffB,\n    include_regex=include,\n    exclude_regex=exclude\n  )}) -%}\n{%- endif -%}\n\n{{outp}}"
+            },
+            "status": null,
+            "top": "320",
+            "left": "640",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "c8efb920-5d5e-4829-9d43-31e65409086a"
+        },
+        {
+            "@type": "WorkflowStep",
             "name": "update step",
             "description": null,
             "arguments": {
@@ -295,7 +237,7 @@
                 "step_variables": []
             },
             "status": null,
-            "top": "200",
+            "top": "220",
             "left": "40",
             "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928722",
             "group": null,
@@ -305,53 +247,23 @@
     "routes": [
         {
             "@type": "WorkflowRoute",
-            "name": "create text1 and text2 -> run action",
-            "targetStep": "\/api\/3\/workflow_steps\/e345fa47-12d2-41ef-a0b9-ae987c1289b0",
-            "sourceStep": "\/api\/3\/workflow_steps\/9dbf5928-54d5-41ea-8c97-3ef2a15cce7b",
-            "label": null,
-            "isExecuted": false,
-            "group": null,
-            "uuid": "8e6fdcb3-0352-47ab-9695-72dfb6d79331"
-        },
-        {
-            "@type": "WorkflowRoute",
-            "name": "diff script yaml to json -> diff step numbers",
-            "targetStep": "\/api\/3\/workflow_steps\/b5b0a88b-e845-4f49-b498-9b7564c91926",
-            "sourceStep": "\/api\/3\/workflow_steps\/2a1db9ae-0b1c-4380-a20b-9640114e07ba",
-            "label": null,
-            "isExecuted": false,
-            "group": null,
-            "uuid": "5caf6ddd-fc60-46e7-8388-a078994a7d11"
-        },
-        {
-            "@type": "WorkflowRoute",
-            "name": "diff step numbers -> find diff steps",
-            "targetStep": "\/api\/3\/workflow_steps\/1fdfa6cd-de8a-434f-b7e2-3314505a8174",
+            "name": "diff step vars -> get_step_data",
+            "targetStep": "\/api\/3\/workflow_steps\/d718a3b4-177f-4fd6-be7f-677466a4d827",
             "sourceStep": "\/api\/3\/workflow_steps\/b5b0a88b-e845-4f49-b498-9b7564c91926",
             "label": null,
             "isExecuted": false,
             "group": null,
-            "uuid": "55ef420e-06b1-49b5-a6fd-40cc2cc95197"
+            "uuid": "2483d9a0-e332-4b2f-85fc-be39e3841a77"
         },
         {
             "@type": "WorkflowRoute",
-            "name": "find device -> diff script yaml to json",
-            "targetStep": "\/api\/3\/workflow_steps\/2a1db9ae-0b1c-4380-a20b-9640114e07ba",
+            "name": "find device -> diff step vars",
+            "targetStep": "\/api\/3\/workflow_steps\/b5b0a88b-e845-4f49-b498-9b7564c91926",
             "sourceStep": "\/api\/3\/workflow_steps\/bf2fe6c2-aa68-4345-9ca2-1023c0f06d53",
             "label": null,
             "isExecuted": false,
             "group": null,
-            "uuid": "a4d3547c-5b25-40cf-a757-aa5f2b3b8d60"
-        },
-        {
-            "@type": "WorkflowRoute",
-            "name": "find diff steps -> create text1 and text2",
-            "targetStep": "\/api\/3\/workflow_steps\/9dbf5928-54d5-41ea-8c97-3ef2a15cce7b",
-            "sourceStep": "\/api\/3\/workflow_steps\/1fdfa6cd-de8a-434f-b7e2-3314505a8174",
-            "label": null,
-            "isExecuted": false,
-            "group": null,
-            "uuid": "fe9d6031-30ad-44e7-b3c5-e0b57528ad27"
+            "uuid": "27e3cab0-9e88-4c6f-872d-655280898335"
         },
         {
             "@type": "WorkflowRoute",
@@ -362,6 +274,16 @@
             "isExecuted": false,
             "group": null,
             "uuid": "eb80a7de-6606-4761-a595-b1cf4621cf22"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "get_step_data -> step_data_results",
+            "targetStep": "\/api\/3\/workflow_steps\/c8efb920-5d5e-4829-9d43-31e65409086a",
+            "sourceStep": "\/api\/3\/workflow_steps\/d718a3b4-177f-4fd6-be7f-677466a4d827",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "b2c71320-7cc7-453c-8ce5-40c5ae9e5149"
         },
         {
             "@type": "WorkflowRoute",
@@ -392,6 +314,16 @@
             "isExecuted": false,
             "group": null,
             "uuid": "9f0d3c2c-597c-4014-9f9f-4158e776ae91"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "step_data_results -> diff text",
+            "targetStep": "\/api\/3\/workflow_steps\/e345fa47-12d2-41ef-a0b9-ae987c1289b0",
+            "sourceStep": "\/api\/3\/workflow_steps\/c8efb920-5d5e-4829-9d43-31e65409086a",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "9f1fd0d2-4ab6-4cdf-a972-24bdea088a41"
         },
         {
             "@type": "WorkflowRoute",

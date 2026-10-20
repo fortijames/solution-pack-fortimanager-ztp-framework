@@ -133,7 +133,7 @@
                 "input": {
                     "schema": {
                         "title": "Choose a Manager and a Device",
-                        "description": "1. Choose a Manager and then a Device from below.\n2. Optionally provide input parameters. ",
+                        "description": "1. Choose a Manager and then a Device from below.\n2. Optionally provide input parameters. \n\n*This form will expire after 15 minutes.*",
                         "inputVariables": [
                             {
                                 "name": "managerAndDevice",
@@ -242,7 +242,7 @@
                 "timeout": {
                     "days": 0,
                     "hours": 0,
-                    "minutes": 1,
+                    "minutes": 15,
                     "step_iri": "\/api\/3\/workflow_steps\/680e02fc-6aa1-4f91-8805-59d1a9d64e8e"
                 },
                 "agent_id": null,
@@ -335,15 +335,15 @@
                 "input": {
                     "schema": {
                         "title": "Template Rendered",
-                        "description": "<hr>\n\n**Use the Jinja Editor**\n\nYou can use the editor to play with this data using Jinja in real-time. \n\n - Open this record `Playbook Logs` and `Edit Playbook`\n - Click `Tools` and `Jinja Editor`, \n - Click `Load env JSON` \n - Add the below script and click `Render`:\n {%- raw %}}\n```\n{%- set record = vars.jinja_vars.record -%}\n{%- set data = vars.jinja_vars.data -%}\nRecord: {{record}}\nData: {{data}}\n```\n{%- endraw %}\n\n<hr>\n\n**Script Template Results**\n\n```\n{{vars.script_rendered}}\n```",
+                        "description": "<hr>\n\n**Use the Jinja Editor**\n\nYou can use the editor to play with this data using Jinja in real-time. \n\n - Open this record `Playbook Logs` and `Edit Playbook`\n - Click `Tools` and `Jinja Editor`, \n - Click `Load env JSON` \n - Add the below script and click `Render`:\n {%- raw %}}\n```\n{%- set record = vars.jinja_vars.record -%}\n{%- set data = vars.jinja_vars.data -%}\nRecord: {{record}}\nData: {{data}}\n```\n{%- endraw %}\n\n<hr>\n\n**Script Template Results**\n\n```\n{{vars.script_rendered}}\n```\n\n*This form will expire after 60 minutes*",
                         "inputVariables": []
                     }
                 },
                 "record": "",
                 "timeout": {
                     "days": 0,
-                    "hours": 0,
-                    "minutes": 3,
+                    "hours": 1,
+                    "minutes": 0,
                     "step_iri": "\/api\/3\/workflow_steps\/680e02fc-6aa1-4f91-8805-59d1a9d64e8e"
                 },
                 "agent_id": null,
@@ -412,7 +412,7 @@
             "description": "Select a device to render the jinja payload script using the variables from the device record, manager record, and\/or any linked metadata source records. Optionally save the results as example data on this record.",
             "arguments": {
                 "route": "db38b96e-6117-42fb-bda9-ebe541d64909",
-                "title": "Get Example Data",
+                "title": "Get Example Script Payload",
                 "resources": [
                     "ztpf_automation_actions"
                 ],

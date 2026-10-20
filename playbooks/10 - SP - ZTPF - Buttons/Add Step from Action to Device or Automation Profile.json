@@ -116,7 +116,37 @@
                     "sort": [],
                     "limit": 30,
                     "logic": "AND",
-                    "filters": [],
+                    "filters": [
+                        {
+                            "type": "primitive",
+                            "field": "name",
+                            "value": "false",
+                            "operator": "isnull",
+                            "_operator": "isnull"
+                        },
+                        {
+                            "type": "object",
+                            "field": "category",
+                            "value": "false",
+                            "_value": {
+                                "@id": "false",
+                                "display": "",
+                                "itemValue": ""
+                            },
+                            "operator": "isnull"
+                        },
+                        {
+                            "type": "object",
+                            "field": "type",
+                            "value": "false",
+                            "_value": {
+                                "@id": "false",
+                                "display": "",
+                                "itemValue": ""
+                            },
+                            "operator": "isnull"
+                        }
+                    ],
                     "__selectFields": [
                         "name",
                         "category",

@@ -1,0 +1,202 @@
+{
+    "@type": "Workflow",
+    "triggerLimit": null,
+    "name": "Build with Jinja Editor",
+    "aliasName": null,
+    "tag": null,
+    "description": "Read the record and load a playbook with data to help build templates.",
+    "isActive": true,
+    "debug": false,
+    "singleRecordExecution": false,
+    "remoteExecutableFlag": false,
+    "parameters": [],
+    "synchronous": false,
+    "collection": "\/api\/3\/workflow_collections\/f0b56dc0-6c1e-4f5b-9199-c807800f028a",
+    "versions": [],
+    "triggerStep": "\/api\/3\/workflow_steps\/92163e9e-d18a-463d-a4aa-d6e3084ec2fd",
+    "steps": [
+        {
+            "@type": "WorkflowStep",
+            "name": "done or cancel or timeout",
+            "description": null,
+            "arguments": [],
+            "status": null,
+            "top": "140",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "a8f47696-bdfe-4f88-a4b9-53a7e23d1d7f"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "prompt user",
+            "description": null,
+            "arguments": {
+                "type": "InputBased",
+                "input": {
+                    "schema": {
+                        "title": "Data for Jinja Editor",
+                        "description": "Open this playbook and add the following lines:\n\n{% raw %}\n```\n{%- set data = vars.jinja_vars.data -%}\n{%- set record = vars.jinja_vars.record -%}\n{%- set output = vars.jinja_vars.output -%}\n```\n{% endraw %}\n\nThen insert your code. Make sure to remove the above from your script with you put it into the template. ",
+                        "inputVariables": []
+                    }
+                },
+                "record": "",
+                "timeout": {
+                    "days": 0,
+                    "hours": 0,
+                    "minutes": 5,
+                    "step_iri": "\/api\/3\/workflow_steps\/a8f47696-bdfe-4f88-a4b9-53a7e23d1d7f"
+                },
+                "agent_id": null,
+                "resources": "ztpf_automation_actions",
+                "is_approval": false,
+                "owner_detail": {
+                    "isAssigned": false,
+                    "emailRecipients": ""
+                },
+                "isRecordLinked": false,
+                "step_variables": [],
+                "response_mapping": {
+                    "options": [
+                        {
+                            "option": "Ok",
+                            "step_iri": "\/api\/3\/workflow_steps\/a8f47696-bdfe-4f88-a4b9-53a7e23d1d7f"
+                        }
+                    ],
+                    "duplicateOption": false,
+                    "customSuccessMessage": "Awaiting Playbook resumed successfully."
+                },
+                "email_notification": {
+                    "enabled": false,
+                    "smtpParameters": []
+                },
+                "customEmailExternal": false,
+                "inline_channel_list": [],
+                "external_channel_list": [],
+                "unauthenticated_input": false,
+                "external_email_subject": null,
+                "internal_email_subject": "A FortiSOAR playbook is requesting your input",
+                "custom_email_body_external": null,
+                "external_email_attachments": null
+            },
+            "status": null,
+            "top": "140",
+            "left": "360",
+            "stepType": "\/api\/3\/workflow_step_types\/fc04082a-d7dc-4299-96fb-6837b1baa0fe",
+            "group": null,
+            "uuid": "61457cc0-6a92-4340-b788-684fb5a18840"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "setup vars",
+            "description": null,
+            "arguments": {
+                "jinja_vars": "{%- set ret = vars.input.records[0].exampleJinjaVars -%}\n{%- do ret.update({\"output\":vars.input.records[0].exampleRunOutputSourceData}) -%}\n{{ret}}"
+            },
+            "status": null,
+            "top": "40",
+            "left": "360",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "d891b124-3a41-4d01-8836-0aebbe21b287"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Start",
+            "description": null,
+            "arguments": {
+                "route": "e4e659a6-27de-4cd0-b6ec-ca94bd4f1476",
+                "title": "Build with Jinja Editor",
+                "resources": [
+                    "ztpf_automation_actions"
+                ],
+                "__triggerLimit": true,
+                "inputVariables": [],
+                "step_variables": {
+                    "input": {
+                        "params": [],
+                        "records": "{{vars.input.records}}"
+                    }
+                },
+                "triggerOnSource": true,
+                "displayConditions": {
+                    "ztpf_automation_actions": {
+                        "sort": [],
+                        "limit": 30,
+                        "logic": "AND",
+                        "filters": [
+                            {
+                                "type": "object",
+                                "field": "exampleJinjaVars",
+                                "value": "false",
+                                "_value": {
+                                    "@id": "false",
+                                    "display": "",
+                                    "itemValue": ""
+                                },
+                                "operator": "isnull"
+                            }
+                        ]
+                    }
+                },
+                "executeButtonText": "Execute",
+                "noRecordExecution": false,
+                "showToasterMessage": {
+                    "visible": false,
+                    "messageVisible": true
+                },
+                "triggerOnReplicate": false,
+                "singleRecordExecution": true
+            },
+            "status": null,
+            "top": "40",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/f414d039-bb0d-4e59-9c39-a8f1e880b18a",
+            "group": null,
+            "uuid": "92163e9e-d18a-463d-a4aa-d6e3084ec2fd"
+        }
+    ],
+    "routes": [
+        {
+            "@type": "WorkflowRoute",
+            "name": "prompt user -> cancel or timeout",
+            "targetStep": "\/api\/3\/workflow_steps\/a8f47696-bdfe-4f88-a4b9-53a7e23d1d7f",
+            "sourceStep": "\/api\/3\/workflow_steps\/61457cc0-6a92-4340-b788-684fb5a18840",
+            "label": "Ok",
+            "isExecuted": false,
+            "group": null,
+            "uuid": "9a597768-64ac-4951-9f51-fcbb946bf4be"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "setup vars -> prompt user",
+            "targetStep": "\/api\/3\/workflow_steps\/61457cc0-6a92-4340-b788-684fb5a18840",
+            "sourceStep": "\/api\/3\/workflow_steps\/d891b124-3a41-4d01-8836-0aebbe21b287",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "df78f7a0-11c2-4692-84b6-9563009a74d8"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Start -> setup vars",
+            "targetStep": "\/api\/3\/workflow_steps\/d891b124-3a41-4d01-8836-0aebbe21b287",
+            "sourceStep": "\/api\/3\/workflow_steps\/92163e9e-d18a-463d-a4aa-d6e3084ec2fd",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "f5674489-8a0c-4423-8699-52a62e1cefc4"
+        }
+    ],
+    "groups": [],
+    "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+    "playbookOrigin": "\/api\/3\/picklists\/b6d710a9-a8ec-41ec-8817-fe9fa062fcdd",
+    "isEditable": false,
+    "uuid": "0ce2318b-c1ab-4c66-aac5-8b5be8e39fbe",
+    "owners": [],
+    "isPrivate": false,
+    "deletedAt": null,
+    "recordTags": [
+        "ztpfAutomationAction"
+    ]
+}

@@ -58,8 +58,8 @@
                 "unauthenticated_input": false
             },
             "status": null,
-            "top": "300",
-            "left": "500",
+            "top": "360",
+            "left": "460",
             "stepType": "\/api\/3\/workflow_step_types\/fc04082a-d7dc-4299-96fb-6837b1baa0fe",
             "group": null,
             "uuid": "c530d3ab-efc0-481c-a5b1-c5c63803c521"
@@ -71,11 +71,13 @@
             "arguments": {
                 "conditions": [
                     {
+                        "option": "No",
                         "default": true,
                         "step_iri": "\/api\/3\/workflow_steps\/0089f060-1f7f-439b-9887-d0b91cd4756d",
                         "step_name": "return"
                     },
                     {
+                        "option": "Yes",
                         "step_iri": "\/api\/3\/workflow_steps\/c530d3ab-efc0-481c-a5b1-c5c63803c521",
                         "condition": "{{ vars.manual_test }}",
                         "step_name": "manual test"
@@ -85,7 +87,7 @@
             },
             "status": null,
             "top": "220",
-            "left": "500",
+            "left": "460",
             "stepType": "\/api\/3\/workflow_step_types\/12254cf5-5db7-4b1a-8cb1-3af081924b28",
             "group": null,
             "uuid": "b6fe721b-487a-4e8a-98a6-0b0629e59f68"
@@ -115,7 +117,7 @@
             },
             "status": null,
             "top": "60",
-            "left": "500",
+            "left": "460",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
             "uuid": "e9cc0eb3-5b08-4d4d-b743-e227da23b5af"
@@ -147,8 +149,8 @@
             "description": null,
             "arguments": [],
             "status": null,
-            "top": "380",
-            "left": "500",
+            "top": "440",
+            "left": "460",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
             "uuid": "240af74e-0972-4c51-a7e1-1315d4fae4d7"
@@ -160,7 +162,7 @@
             "arguments": {
                 "config": "97418e57-1556-40e2-aae4-3840f2cecf52",
                 "params": {
-                    "python_function": "#!\/usr\/bin\/env python3\r\n\r\nimport json\r\nimport yaml\r\nimport re\r\n\r\n\r\ndef yaml_string_to_json(yaml_string):\r\n    data = yaml.safe_load(yaml_string)\r\n    return json.dumps(data, indent=2)\r\n\r\n# Example usage\r\nyaml_input = \"\"\"\r\n{{vars.input.params.yaml}}\r\n\"\"\"\r\n\r\nyaml_string = re.sub(\r\n    r'^([ \\t-]*[^:#\\n]+?):([^\\s])',\r\n    r'\\1: \\2',\r\n    yaml_input,\r\n    flags=re.MULTILINE\r\n)\r\n\r\nprint(yaml_string_to_json(yaml_string))"
+                    "python_function": "\r\n#!\/usr\/bin\/env python3\r\n\r\nimport json\r\nimport yaml\r\nimport re\r\n\r\ndef yaml_string_to_json(yaml_string):\r\n    yaml_string = yaml_string.strip()\r\n\r\n    # Remove outer quotes if the input is wrapped in them\r\n    if yaml_string.startswith('\"') and yaml_string.endswith('\"'):\r\n        yaml_string = yaml_string[1:-1]\r\n\r\n    # Convert escaped newlines into actual newlines\r\n    yaml_string = yaml_string.replace(r'\\n', '\\n')\r\n\r\n    # Unescape escaped double quotes\r\n    yaml_string = yaml_string.replace(r'\\\"', '\"')\r\n\r\n    data = yaml.safe_load(yaml_string)\r\n    return json.dumps(data, indent=2)\r\n\r\nyaml_input = r\"\"\"\r\n{{vars.input.params.yaml}}\r\n\"\"\"\r\n\r\nprint(yaml_string_to_json(yaml_input))\r\n"
                 },
                 "version": "2.2.1",
                 "connector": "code-snippet",
@@ -172,7 +174,7 @@
             },
             "status": null,
             "top": "140",
-            "left": "500",
+            "left": "460",
             "stepType": "\/api\/3\/workflow_step_types\/1fdd14cc-d6b4-4335-a3af-ab49c8ed2fd8",
             "group": null,
             "uuid": "1bdd5598-9f28-4c07-bae8-f5de10e6f32a"
@@ -184,7 +186,7 @@
             "name": "manual test set -> manual test",
             "targetStep": "\/api\/3\/workflow_steps\/c530d3ab-efc0-481c-a5b1-c5c63803c521",
             "sourceStep": "\/api\/3\/workflow_steps\/b6fe721b-487a-4e8a-98a6-0b0629e59f68",
-            "label": null,
+            "label": "Yes",
             "isExecuted": false,
             "group": null,
             "uuid": "4bfe78a1-e327-4901-8bb2-343cfa669f4a"
@@ -194,7 +196,7 @@
             "name": "manual test set -> return",
             "targetStep": "\/api\/3\/workflow_steps\/0089f060-1f7f-439b-9887-d0b91cd4756d",
             "sourceStep": "\/api\/3\/workflow_steps\/b6fe721b-487a-4e8a-98a6-0b0629e59f68",
-            "label": null,
+            "label": "No",
             "isExecuted": false,
             "group": null,
             "uuid": "4310bed5-1174-4310-b1cd-72575d080d3d"

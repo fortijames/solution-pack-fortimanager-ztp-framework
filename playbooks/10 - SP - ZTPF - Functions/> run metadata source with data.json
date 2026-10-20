@@ -13,7 +13,8 @@
         "type",
         "source_data",
         "jinja_vars",
-        "datakey"
+        "datakey",
+        "device_id"
     ],
     "synchronous": false,
     "collection": "\/api\/3\/workflow_collections\/517fb52d-36f5-4bac-a344-7d4599d7dec6",
@@ -22,22 +23,22 @@
     "steps": [
         {
             "@type": "WorkflowStep",
-            "name": "FortiManager API args",
+            "name": "fortiManager api args",
             "description": null,
             "arguments": {
                 "api_method": "{{vars.steps.render_data_jinja.output.method}}",
                 "connector_config": "{{vars.jinja_vars.record.manager.connector_config}}"
             },
             "status": null,
-            "top": "400",
-            "left": "1080",
+            "top": "240",
+            "left": "1180",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
             "uuid": "a9b09485-6198-470a-bda3-91810230fd76"
         },
         {
             "@type": "WorkflowStep",
-            "name": "FortiManager API method",
+            "name": "fortiManager api method",
             "description": null,
             "arguments": {
                 "conditions": [
@@ -55,23 +56,23 @@
                 "step_variables": []
             },
             "status": null,
-            "top": "440",
-            "left": "1380",
+            "top": "280",
+            "left": "1500",
             "stepType": "\/api\/3\/workflow_step_types\/12254cf5-5db7-4b1a-8cb1-3af081924b28",
             "group": null,
             "uuid": "f5d5ffc0-cffb-49a5-90c5-48db720c1f0b"
         },
         {
             "@type": "WorkflowStep",
-            "name": "FortiManager API results",
+            "name": "fortiManager api results",
             "description": null,
             "arguments": {
                 "playbook_status": "{%- set ret = {\n  \"error\":false,\n  \"msg\":\"FMG API looked to have completed ok\"} \n-%}\n\n{%- if \"proxy\" in vars.type|lower -%}\n  {%- if vars.fmg_api_results.output.data.status != 0 -%}\n    {%- do ret.update({\n      \"error\":true,\n      \"msg\": vars.fmg_api_results.output.data.message\n    }) -%}\n  {%- endif -%}\n{%- else -%}\n  {%- if vars.fmg_api_results.output.status != 0 -%}\n    {%- do ret.update({\n      \"error\":true,\n      \"msg\": vars.fmg_api_results.output.get_response.status.message\n    }) -%}\n  {%- endif -%}\n{%- endif -%}\n\n{{ret}}",
                 "metadata_results": "{%- set apir = vars.fmg_api_results -%}\n{%- set ret = {} -%}\n{%- if \"proxy\" in vars.type|lower -%}\n  {%- do  ret.update({\n    \"table\":apir.output.data.execute_response[0].response.results\n    })  -%}\n{%- else -%}\n  {%- do  ret.update({\n    \"table\":apir.output['get_response']\n    })  -%}\n{%- endif -%}\n{{ret.table}}"
             },
             "status": null,
-            "top": "640",
-            "left": "1080",
+            "top": "480",
+            "left": "1180",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
             "uuid": "9b10bf0b-f1b4-43f6-9b6c-5b72182e60b3"
@@ -98,8 +99,8 @@
                 "workflowReference": "\/api\/3\/workflows\/d49ed3d7-7452-48c8-b316-4b6362dfe9d6"
             },
             "status": null,
-            "top": "560",
-            "left": "1080",
+            "top": "400",
+            "left": "1180",
             "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
             "group": null,
             "uuid": "ed50f595-d0eb-41e7-8309-9a3fc0d36d77"
@@ -116,8 +117,8 @@
                 "api_options": "{{vars.steps.render_data_jinja.output.options}}"
             },
             "status": null,
-            "top": "480",
-            "left": "1080",
+            "top": "320",
+            "left": "1180",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
             "uuid": "2613704e-dd1d-4844-b3fe-e74cb72215f7"
@@ -140,10 +141,43 @@
             },
             "status": null,
             "top": "400",
-            "left": "120",
+            "left": "40",
             "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
             "group": null,
             "uuid": "a6faa2b9-1925-4642-b902-e89eab9705d1"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "get step data",
+            "description": null,
+            "arguments": {
+                "for_each": {
+                    "item": "{{vars.step_data}}",
+                    "parallel": false,
+                    "condition": ""
+                },
+                "arguments": {
+                    "data_key": "{{vars.item[\"data_key\"]}}",
+                    "action_id": "{{vars.item[\"action_id\"]}}",
+                    "data_path": "{{vars.item[\"data_path\"]}}",
+                    "device_id": "{{vars.device_id}}",
+                    "step_name": "{{vars.item[\"step_name\"]}}",
+                    "rungroup_id": "{{vars.item[\"rungroup_id\"]}}",
+                    "step_number": "{{vars.item[\"step_number\"]}}",
+                    "revision_back": "{{vars.item[\"revision_back\"]}}"
+                },
+                "apply_async": false,
+                "step_variables": [],
+                "pass_parent_env": false,
+                "pass_input_record": false,
+                "workflowReference": "\/api\/3\/workflows\/d92787a1-1b26-4186-ac16-10030737cb4d"
+            },
+            "status": null,
+            "top": "120",
+            "left": "1640",
+            "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
+            "group": null,
+            "uuid": "a71820ba-4de7-467c-a2f6-d95699ac8ea1"
         },
         {
             "@type": "WorkflowStep",
@@ -191,7 +225,7 @@
                 "step_variables": []
             },
             "status": null,
-            "top": "280",
+            "top": "120",
             "left": "720",
             "stepType": "\/api\/3\/workflow_step_types\/12254cf5-5db7-4b1a-8cb1-3af081924b28",
             "group": null,
@@ -206,8 +240,8 @@
                 "metadata_results": "{{vars.steps.run_playbook.output}}"
             },
             "status": null,
-            "top": "560",
-            "left": "760",
+            "top": "380",
+            "left": "520",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
             "uuid": "b6d3e6bf-e521-46c5-8162-7a1a520c8c88"
@@ -221,8 +255,8 @@
                 "playbook_args": "{{vars.steps.render_data_jinja.output.args}}"
             },
             "status": null,
-            "top": "400",
-            "left": "760",
+            "top": "220",
+            "left": "520",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
             "uuid": "d0cc7b3e-e733-4753-9774-57008e2839f5"
@@ -248,8 +282,8 @@
                 "workflowReference": "\/api\/3\/workflows\/9ebd04bf-207c-4ea4-afa9-191fb6b75ad2"
             },
             "status": null,
-            "top": "600",
-            "left": "1380",
+            "top": "480",
+            "left": "1500",
             "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
             "group": null,
             "uuid": "159de120-cc0b-4c30-b99d-53a494016d49"
@@ -265,8 +299,8 @@
                 "proxy_fmg_resource": "{{vars.steps.render_data_jinja.output.data.resource}}"
             },
             "status": null,
-            "top": "520",
-            "left": "1380",
+            "top": "380",
+            "left": "1500",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
             "uuid": "55d1767d-70c2-46df-b636-c8f4ecad0ef0"
@@ -307,8 +341,8 @@
                 "status": "{{vars.playbook_status}}"
             },
             "status": null,
-            "top": "760",
-            "left": "760",
+            "top": "660",
+            "left": "880",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
             "uuid": "f9c4bdf9-d760-49be-b2fb-eccee4d95802"
@@ -330,8 +364,8 @@
                 "workflowReference": "\/api\/3\/workflows\/620f8ff0-b93e-4fb8-8862-82698d14dde8"
             },
             "status": null,
-            "top": "480",
-            "left": "760",
+            "top": "300",
+            "left": "520",
             "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
             "group": null,
             "uuid": "7358d05d-7ea4-4c27-8325-eb2830b909b9"
@@ -343,6 +377,7 @@
             "arguments": {
                 "type": "{{vars.input.params.type}}",
                 "datakey": "{{vars.input.params['datakey']}}",
+                "device_id": "{{vars.input.params['device_id']}}",
                 "jinja_vars": "{{vars.input.params['jinja_vars']}}",
                 "source_data": "{{vars.input.params['source_data']}}"
             },
@@ -355,7 +390,7 @@
         },
         {
             "@type": "WorkflowStep",
-            "name": "Spreadsheet args",
+            "name": "spreadsheet args",
             "description": null,
             "arguments": {
                 "filter": "{{vars.steps.render_data_jinja.output.filter}}",
@@ -364,7 +399,7 @@
             },
             "status": null,
             "top": "320",
-            "left": "120",
+            "left": "40",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
             "uuid": "f4f21d44-c3e6-40b4-90b3-87a803c84d52"
@@ -379,7 +414,7 @@
             },
             "status": null,
             "top": "480",
-            "left": "120",
+            "left": "40",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
             "uuid": "c3b0363a-35b4-4946-a68f-21ea4f2e5e6e"
@@ -407,30 +442,47 @@
         },
         {
             "@type": "WorkflowStep",
-            "name": "Static Data args",
+            "name": "static data args",
             "description": null,
             "arguments": {
                 "playbook_status": "{%- set ret = {\"error\":false} -%}\n{{ret}}",
                 "metadata_results": "{{vars.steps.render_data_jinja.output}}"
             },
             "status": null,
-            "top": "420",
-            "left": "400",
+            "top": "320",
+            "left": "880",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
             "uuid": "7a88dc21-01dd-4ad6-89c5-cf714d829970"
         },
         {
             "@type": "WorkflowStep",
-            "name": "Step Output args",
+            "name": "step output args",
             "description": null,
-            "arguments": [],
+            "arguments": {
+                "step_data": "{%- set step_data = vars.steps.render_data_jinja.output['step_data'] -%}\n{%- set table = [] -%}\n{%- for d in step_data -%}\n{%- set sd = step_data[d] -%}\n{%- set r = {\n  \"data_path\": sd.path|default(''),\n  \"step_name\": sd.step_name|default(''),\n  \"step_number\": sd.step_number|default(''),\n  \"action_id\": sd.action_id|default(''),\n  \"rungroup_id\": sd.rungroup_id|default(''),\n  \"revision_back\": sd.revision_back|default(''),\n} -%}\n{%- set use_data_key = sd.use_data_key|default(true) -%}\n{%- if use_data_key -%}\n  {%- do r.update({\"data_key\":d}) -%}\n{%- endif -%}\n{%- do table.append(r) -%}\n{%- endfor -%}\n{{table}}"
+            },
             "status": null,
-            "top": "280",
-            "left": "1340",
+            "top": "120",
+            "left": "1300",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
             "uuid": "19e34974-b5b2-41d7-9d41-573269636d11"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "step output results",
+            "description": null,
+            "arguments": {
+                "playbook_status": "{%- set ret = {\n  \"error\":false,\n  \"msg\":\"Step Data looked to have completed ok\"} \n-%}\n\n{%- set step_data = vars.steps.get_step_data|json_query('[].output') -%}\n\n{%- if step_data|length == 0 -%}\n  {%- if vars.fmg_api_results.output.data.status != 0 -%}\n    {%- do ret.update({\n      \"error\":true,\n      \"msg\": \"Missing Step Data\"\n    }) -%}\n  {%- endif -%}\n{%- endif -%}\n{{ret}}",
+                "metadata_results": "{%- set ret = {} -%}\n{%- set step_data = vars.steps.get_step_data|json_query('[].output') -%}\n\n{% if step_data is mapping %}\n  {%- for d in step_data -%}\n    {%- do ret.update(d) -%}\n  {%- endfor -%}\n{% elif step_data is sequence and step_data is not string %}\n  {%- set ret = step_data[0] -%}\n{%- endif -%}\n{{ret}}"
+            },
+            "status": null,
+            "top": "660",
+            "left": "1640",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "8e1da974-28c1-42a8-a169-e0fd30ff2dac"
         },
         {
             "@type": "WorkflowStep",
@@ -438,8 +490,8 @@
             "description": null,
             "arguments": [],
             "status": null,
-            "top": "60",
-            "left": "1380",
+            "top": "40",
+            "left": "1040",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
             "uuid": "e80a351b-3c01-4b00-8a6d-22ff382489e3"
@@ -515,6 +567,16 @@
             "isExecuted": false,
             "group": null,
             "uuid": "59ff1d57-c515-4042-928c-a157030be2ad"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "get step data -> step output results",
+            "targetStep": "\/api\/3\/workflow_steps\/8e1da974-28c1-42a8-a169-e0fd30ff2dac",
+            "sourceStep": "\/api\/3\/workflow_steps\/a71820ba-4de7-467c-a2f6-d95699ac8ea1",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "c8e171cb-f24d-4917-ae5e-3ea7f35a5ae5"
         },
         {
             "@type": "WorkflowRoute",
@@ -685,6 +747,26 @@
             "isExecuted": false,
             "group": null,
             "uuid": "de0a77f3-de20-4052-971f-d4166c53a25b"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "step output args -> get step data",
+            "targetStep": "\/api\/3\/workflow_steps\/a71820ba-4de7-467c-a2f6-d95699ac8ea1",
+            "sourceStep": "\/api\/3\/workflow_steps\/19e34974-b5b2-41d7-9d41-573269636d11",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "ea9c8859-cad8-4a49-9e59-6b0afd8d4169"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "step output results -> return",
+            "targetStep": "\/api\/3\/workflow_steps\/f9c4bdf9-d760-49be-b2fb-eccee4d95802",
+            "sourceStep": "\/api\/3\/workflow_steps\/8e1da974-28c1-42a8-a169-e0fd30ff2dac",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "823e0679-0850-4f9d-81c1-a0e3f8e44749"
         }
     ],
     "groups": [
@@ -698,11 +780,28 @@
             "hideInLogs": false,
             "metadata": [],
             "reusable": false,
-            "top": "140",
-            "left": "80",
+            "top": "120",
+            "left": "40",
             "height": "169",
             "width": "430",
             "uuid": "3c558bdf-a77d-46fe-9feb-3581861f29ab",
+            "recordTags": []
+        },
+        {
+            "@type": "WorkflowGroup",
+            "name": "Step Data",
+            "description": "Options:\n  - use_data_key: set to false if no key is needed. Defaults to true.",
+            "type": "note",
+            "isCollapsed": false,
+            "hasTriggerStep": false,
+            "hideInLogs": false,
+            "metadata": [],
+            "reusable": false,
+            "top": "80",
+            "left": "1900",
+            "height": "121",
+            "width": "498",
+            "uuid": "62b29c35-dfd1-4c99-86b8-1d7911cd26ed",
             "recordTags": []
         }
     ],

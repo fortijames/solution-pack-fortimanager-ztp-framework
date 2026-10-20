@@ -9,41 +9,59 @@
                     {
                         "widgets": [
                             {
-                                "type": "cardList",
+                                "type": "readonlyFormGroup",
                                 "config": {
-                                    "wid": "7bed3586-3762-4c1d-b0fc-9759210cb215",
+                                    "wid": "6dc65a0a-9254-48fd-8220-b9c6f9884cf2",
+                                    "gridColumns": [],
+                                    "displayType": "card-view",
+                                    "widgetAlwaysDisplay": true,
                                     "query": {
                                         "sort": [],
-                                        "limit": 10,
+                                        "limit": 1,
                                         "logic": "AND",
-                                        "filters": [
-                                            {
-                                                "field": "name",
-                                                "operator": "eq",
-                                                "_operator": "eq",
-                                                "value": "ZTPF Quick Links",
-                                                "type": "primitive"
-                                            }
-                                        ]
+                                        "filters": []
                                     },
-                                    "mapping": {
-                                        "templateView": "viewType",
-                                        "assignedToPerson": null,
-                                        "picklistBar": null,
-                                        "title": "name",
-                                        "subTitle": null,
-                                        "subTitle3": null,
-                                        "subTitle4": null
+                                    "recordTitle": {
+                                        "type": "sectionHeader",
+                                        "wid": "94ca922e-f05f-4fe9-87a7-b22c14071f5b",
+                                        "clone": false,
+                                        "remove": false,
+                                        "query": {
+                                            "filters": [],
+                                            "sort": [],
+                                            "limit": 10
+                                        },
+                                        "editorType": "html",
+                                        "sectionText": "<p style=\"text-align: center;\"><span aria-invalid=\"false\" data-mode=\"'view'\" data-ng-model=\"params.resultantText\" data-ng-if=\"!config.editorType || config.editorType === 'html'\" data-cs-html-editor=\"\" style=\"font-size: 12pt;\" class=\"new-truncate-ellipsis white-space-normal ng-pristine ng-untouched ng-valid ng-scope ng-isolate-scope ng-not-empty\"><strong>ZTPF Resources<\/strong><\/span><\/p>"
                                     },
-                                    "assignedToSetting": "all",
-                                    "module": "ztpf_quick_links",
-                                    "title": "Quick Links",
-                                    "widgetAlwaysExpanded": true
+                                    "relatedTemplate": {
+                                        "type": "rows",
+                                        "rows": [],
+                                        "wid": "fe17d3e9-057c-4771-8c90-73884c5bc1ff"
+                                    },
+                                    "resource": "ztpf_managers",
+                                    "rows": [
+                                        {
+                                            "columns": [
+                                                {
+                                                    "fields": [
+                                                        {
+                                                            "name": "id",
+                                                            "highlightMode": true,
+                                                            "linky": true,
+                                                            "readOnly": true
+                                                        }
+                                                    ],
+                                                    "style": "col-lg-12"
+                                                }
+                                            ]
+                                        }
+                                    ]
                                 }
                             }
                         ],
                         "style": "col-lg-3",
-                        "collapsedText": "Quick Links"
+                        "collapsedText": "ZTPF Resources"
                     },
                     {
                         "widgets": [

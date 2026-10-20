@@ -21,7 +21,7 @@
             "description": null,
             "arguments": {
                 "arguments": {
-                    "tags": "{{vars.input.params.tags}}",
+                    "tags": "{{vars.user_tags|join(\",\")}}",
                     "device_ids": "{{vars.input.records|json_query('[].id')}}"
                 },
                 "apply_async": false,
@@ -31,11 +31,175 @@
                 "workflowReference": "\/api\/3\/workflows\/74daec60-01f3-4df9-af50-4a5ff3c8c3e6"
             },
             "status": null,
-            "top": "140",
-            "left": "460",
+            "top": "280",
+            "left": "40",
             "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
             "group": null,
             "uuid": "35405646-59a8-4e74-9a70-be1306a0cb4a"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "find rungroup tags",
+            "description": null,
+            "arguments": {
+                "query": {
+                    "sort": [],
+                    "limit": 30,
+                    "logic": "AND",
+                    "filters": [],
+                    "__selectFields": [
+                        "recordTags"
+                    ]
+                },
+                "module": "ztpf_run_groups?$limit=5000",
+                "checkboxFields": true,
+                "step_variables": {
+                    "rungroup_tags": "{{vars.steps.find_rungroup_tags|json_query('[].recordTags[]')|unique|sort}}"
+                }
+            },
+            "status": null,
+            "top": "40",
+            "left": "360",
+            "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928770",
+            "group": null,
+            "uuid": "514cffcb-c603-4c7b-9900-f885195f5f26"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "profile selected and tags",
+            "description": null,
+            "arguments": {
+                "user_tags": "{%- set tags = [] -%}\n\n{%- set pickFromExistingTags  = vars.steps.select_profile.input.pickFromExistingTags -%}\n{%- set addTags = vars.steps.select_profile.input.tags -%}\n\n\n{%- if pickFromExistingTags -%}\n  {%- for t in pickFromExistingTags -%}\n    {%- do tags.append(t) -%}\n  {%- endfor -%}\n{%- endif -%}\n\n{%- if addTags  -%}\n  {%- for t in addTags.replace(' ',',').split(',') -%}\n    {%- do tags.append(t) -%}\n  {%- endfor -%}\n{%- endif -%}\n\n{{tags|unique|sort}}",
+                "profile_selected": "{{vars.profile.records\n  | json_query('[?_option==`{}`]'\n    .format(vars.steps.select_profile.input.profile)\n)\n}}"
+            },
+            "status": null,
+            "top": "220",
+            "left": "520",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "63d4b272-3dc2-4999-89b1-2575018476b6"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "select profile",
+            "description": null,
+            "arguments": {
+                "type": "InputBased",
+                "input": {
+                    "schema": {
+                        "title": "Select Automation Profile and Run Options",
+                        "description": "Create a run group, with optional tags, and execute steps that are `Ready`.\n\n*This prompt will timeout in 5 minutes*",
+                        "inputVariables": [
+                            {
+                                "name": "tags",
+                                "type": "string",
+                                "label": "Tags",
+                                "tooltip": "Add Tags, as comma or space separated, to the RunGroup and Devices",
+                                "dataType": "text",
+                                "formType": "text",
+                                "required": false,
+                                "_expanded": true,
+                                "defaultValue": null,
+                                "_previousName": "",
+                                "visibilityQuery": {
+                                    "sort": [],
+                                    "limit": 30,
+                                    "logic": "AND",
+                                    "filters": []
+                                },
+                                "requiredCondition": "notrequired",
+                                "jinjaExpressionView": true,
+                                "useRecordFieldDefault": false,
+                                "_addRequiredConditions": false,
+                                "_addVisibilityConditions": true
+                            },
+                            {
+                                "name": "pickFromExistingTags",
+                                "type": "array",
+                                "label": "Pick from Existing Tags",
+                                "title": "Dynamic List",
+                                "usable": true,
+                                "options": "{{vars.rungroup_tags}}",
+                                "tooltip": "Pick from ags that already exist.",
+                                "dataType": "dynamicList",
+                                "formType": "dynamicList",
+                                "required": false,
+                                "_expanded": false,
+                                "mmdUpdate": true,
+                                "collection": false,
+                                "isMultiple": true,
+                                "searchable": false,
+                                "templateUrl": "app\/components\/form\/fields\/dynamicList.html",
+                                "defaultValue": null,
+                                "_previousName": "selectExistingTags",
+                                "playbookField": true,
+                                "visibilityQuery": {
+                                    "sort": [],
+                                    "limit": 30,
+                                    "logic": "AND",
+                                    "filters": []
+                                },
+                                "lengthConstraint": true,
+                                "allowedGridColumn": false,
+                                "requiredCondition": "notrequired",
+                                "jinjaExpressionView": true,
+                                "useRecordFieldDefault": false,
+                                "_addRequiredConditions": false,
+                                "_addVisibilityConditions": true
+                            }
+                        ]
+                    }
+                },
+                "record": "",
+                "timeout": {
+                    "days": 0,
+                    "hours": 0,
+                    "minutes": 5,
+                    "step_iri": "\/api\/3\/workflow_steps\/bc92dff8-ca57-4246-837e-99b0ebf2277d"
+                },
+                "agent_id": null,
+                "resources": "ztpf_devices",
+                "is_approval": false,
+                "owner_detail": {
+                    "isAssigned": false,
+                    "emailRecipients": ""
+                },
+                "isRecordLinked": false,
+                "step_variables": [],
+                "response_mapping": {
+                    "options": [
+                        {
+                            "option": "Ok",
+                            "primary": true,
+                            "step_iri": "\/api\/3\/workflow_steps\/63d4b272-3dc2-4999-89b1-2575018476b6"
+                        },
+                        {
+                            "option": "Cancel",
+                            "step_iri": "\/api\/3\/workflow_steps\/bc92dff8-ca57-4246-837e-99b0ebf2277d"
+                        }
+                    ],
+                    "duplicateOption": false,
+                    "customSuccessMessage": "Awaiting Playbook resumed successfully."
+                },
+                "email_notification": {
+                    "enabled": false,
+                    "smtpParameters": []
+                },
+                "customEmailExternal": false,
+                "inline_channel_list": [],
+                "external_channel_list": [],
+                "unauthenticated_input": false,
+                "external_email_subject": null,
+                "internal_email_subject": "A FortiSOAR playbook is requesting your input",
+                "custom_email_body_external": null,
+                "external_email_attachments": null
+            },
+            "status": null,
+            "top": "120",
+            "left": "520",
+            "stepType": "\/api\/3\/workflow_step_types\/fc04082a-d7dc-4299-96fb-6837b1baa0fe",
+            "group": null,
+            "uuid": "49ad2bdc-de05-409c-8578-f955985640c6"
         },
         {
             "@type": "WorkflowStep",
@@ -48,29 +212,10 @@
                     "ztpf_devices"
                 ],
                 "__triggerLimit": true,
-                "inputVariables": [
-                    {
-                        "name": "tags",
-                        "type": "string",
-                        "label": "Tags",
-                        "tooltip": "Enter Tags, as comma or space separated, to the RunGroup and Devices",
-                        "dataType": "text",
-                        "formType": "text",
-                        "required": false,
-                        "_expanded": true,
-                        "defaultValue": null,
-                        "_previousName": "",
-                        "requiredCondition": "notrequired",
-                        "jinjaExpressionView": true,
-                        "useRecordFieldDefault": false,
-                        "_addRequiredConditions": false
-                    }
-                ],
+                "inputVariables": [],
                 "step_variables": {
                     "input": {
-                        "params": {
-                            "tags": "{{vars.request.data[\"tags\"]}}"
-                        },
+                        "params": [],
                         "records": "{{vars.input.records}}"
                     }
                 },
@@ -88,6 +233,17 @@
                                 "value": true,
                                 "operator": "neq",
                                 "_operator": "neq"
+                            },
+                            {
+                                "type": "object",
+                                "field": "status",
+                                "value": "\/api\/3\/picklists\/ce18fc5e-a91a-4bb5-9ced-887cb01a0517",
+                                "_value": {
+                                    "@id": "\/api\/3\/picklists\/ce18fc5e-a91a-4bb5-9ced-887cb01a0517",
+                                    "display": "Ready",
+                                    "itemValue": "Ready"
+                                },
+                                "operator": "eq"
                             }
                         ]
                     }
@@ -107,18 +263,70 @@
             "stepType": "\/api\/3\/workflow_step_types\/f414d039-bb0d-4e59-9c39-a8f1e880b18a",
             "group": null,
             "uuid": "21b65aa9-082e-4aac-8911-ae521e1685a8"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "timeout or cancel",
+            "description": null,
+            "arguments": [],
+            "status": null,
+            "top": "120",
+            "left": "880",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "bc92dff8-ca57-4246-837e-99b0ebf2277d"
         }
     ],
     "routes": [
         {
             "@type": "WorkflowRoute",
-            "name": "Start -> queue to run pending steps",
+            "name": "find rungroup tags -> select profile",
+            "targetStep": "\/api\/3\/workflow_steps\/49ad2bdc-de05-409c-8578-f955985640c6",
+            "sourceStep": "\/api\/3\/workflow_steps\/514cffcb-c603-4c7b-9900-f885195f5f26",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "278edbfd-6424-46b6-8185-df0b9aff900c"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "profile selected and tags -> create run group",
             "targetStep": "\/api\/3\/workflow_steps\/35405646-59a8-4e74-9a70-be1306a0cb4a",
+            "sourceStep": "\/api\/3\/workflow_steps\/63d4b272-3dc2-4999-89b1-2575018476b6",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "d2024df4-4585-48de-87d2-afc3f9082545"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "select profile -> profile selected and tags",
+            "targetStep": "\/api\/3\/workflow_steps\/63d4b272-3dc2-4999-89b1-2575018476b6",
+            "sourceStep": "\/api\/3\/workflow_steps\/49ad2bdc-de05-409c-8578-f955985640c6",
+            "label": "Ok",
+            "isExecuted": false,
+            "group": null,
+            "uuid": "9df79463-4d33-46ae-b1b7-5a1a1094e002"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "select profile -> timeout or cancel",
+            "targetStep": "\/api\/3\/workflow_steps\/bc92dff8-ca57-4246-837e-99b0ebf2277d",
+            "sourceStep": "\/api\/3\/workflow_steps\/49ad2bdc-de05-409c-8578-f955985640c6",
+            "label": "Cancel",
+            "isExecuted": false,
+            "group": null,
+            "uuid": "8977f9ac-f4e6-4af4-bdde-6e8ae4273801"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Start -> find rungroup tags",
+            "targetStep": "\/api\/3\/workflow_steps\/514cffcb-c603-4c7b-9900-f885195f5f26",
             "sourceStep": "\/api\/3\/workflow_steps\/21b65aa9-082e-4aac-8911-ae521e1685a8",
             "label": null,
             "isExecuted": false,
             "group": null,
-            "uuid": "54062c89-5a69-4e13-b8ba-e7b6ef532e09"
+            "uuid": "e7c829c6-6395-4c3c-a55b-8dea545878db"
         }
     ],
     "groups": [
@@ -133,9 +341,9 @@
             "metadata": [],
             "reusable": false,
             "top": "120",
-            "left": "40",
-            "height": "132",
-            "width": "281",
+            "left": "100",
+            "height": "113",
+            "width": "300",
             "uuid": "31e13f1f-8b65-4264-913b-2ddebc36c871",
             "recordTags": []
         }

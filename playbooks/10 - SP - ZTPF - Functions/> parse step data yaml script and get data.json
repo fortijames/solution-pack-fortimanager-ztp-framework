@@ -1,0 +1,249 @@
+{
+    "@type": "Workflow",
+    "triggerLimit": null,
+    "name": "> parse step data yaml script and get data",
+    "aliasName": null,
+    "tag": null,
+    "description": "Parse yaml payload into a step data loop and get data",
+    "isActive": true,
+    "debug": false,
+    "singleRecordExecution": false,
+    "remoteExecutableFlag": false,
+    "parameters": [
+        "step_data_yaml",
+        "device_id",
+        "rungroup_id"
+    ],
+    "synchronous": false,
+    "collection": "\/api\/3\/workflow_collections\/517fb52d-36f5-4bac-a344-7d4599d7dec6",
+    "versions": [],
+    "triggerStep": "\/api\/3\/workflow_steps\/ff9358ef-e1d0-45ea-9d70-f7faca896095",
+    "steps": [
+        {
+            "@type": "WorkflowStep",
+            "name": "get step data",
+            "description": null,
+            "arguments": {
+                "for_each": {
+                    "item": "{{vars.step_data}}",
+                    "parallel": false,
+                    "condition": ""
+                },
+                "arguments": {
+                    "data_key": "{{vars.item[\"data_key\"]}}",
+                    "action_id": "{{vars.item[\"action_id\"]}}",
+                    "data_path": "{{vars.item[\"data_path\"]}}",
+                    "device_id": "{{vars.device_id}}",
+                    "step_name": "{{vars.item[\"step_name\"]}}",
+                    "rungroup_id": "{{vars.rungroup_id}}",
+                    "step_number": "{{vars.item[\"step_number\"]}}",
+                    "revision_back": "{{vars.item[\"revision_back\"]}}"
+                },
+                "apply_async": false,
+                "step_variables": [],
+                "pass_parent_env": false,
+                "pass_input_record": false,
+                "workflowReference": "\/api\/3\/workflows\/d92787a1-1b26-4186-ac16-10030737cb4d"
+            },
+            "status": null,
+            "top": "280",
+            "left": "440",
+            "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
+            "group": null,
+            "uuid": "cd40a252-96bf-4a95-be79-52cb254f2440"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "return",
+            "description": null,
+            "arguments": {
+                "output": "{%- set ret = {\n  \"step_data_json\": vars.steps.step_data_yaml_to_json.output,\n  \"step_data_results\": vars.step_data_results\n  } \n-%}\n\n{{ret}}",
+                "params": "{{vars.input.params}}"
+            },
+            "status": null,
+            "top": "300",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "54225bc3-3992-445d-a5c7-b3b67db19dcd"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "setup vars",
+            "description": null,
+            "arguments": {
+                "device_id": "{{vars.input.params['device_id']}}",
+                "rungroup_id": "{{vars.input.params['rungroup_id']}}",
+                "step_data_yaml": "{{vars.input.params['step_data_yaml']}}"
+            },
+            "status": null,
+            "top": "40",
+            "left": "440",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "54a17c70-ac24-45fc-b6e3-4bb7b7a933d2"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Start",
+            "description": null,
+            "arguments": {
+                "__triggerLimit": true,
+                "step_variables": {
+                    "input": {
+                        "params": []
+                    }
+                },
+                "triggerOnSource": true,
+                "triggerOnReplicate": false
+            },
+            "status": null,
+            "top": "40",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/b348f017-9a94-471f-87f8-ce88b6a7ad62",
+            "group": null,
+            "uuid": "ff9358ef-e1d0-45ea-9d70-f7faca896095"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "step data",
+            "description": null,
+            "arguments": {
+                "step_data": "{%- set step_data = vars.steps.step_data_yaml_to_json.output['step_data'] -%}\n{%- set table = [] -%}\n{%- for d in step_data -%}\n{%- set sd = step_data[d] -%}\n{%- set r = {\n  \"data_path\": sd.path|default(''),\n  \"step_name\": sd.step_name|default(''),\n  \"step_number\": sd.step_number|default(''),\n  \"action_id\": sd.action_id|default(''),\n  \"rungroup_id\": sd.rungroup_id|default(''),\n  \"revision_back\": sd.revision_back|default(''),\n} -%}\n{%- set use_data_key = sd.use_data_key|default(true) -%}\n{%- if use_data_key -%}\n  {%- do r.update({\"data_key\":d}) -%}\n{%- endif -%}\n{%- do table.append(r) -%}\n{%- endfor -%}\n{{table}}"
+            },
+            "status": null,
+            "top": "200",
+            "left": "440",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "a3c1c317-685f-4474-b0b3-f82fef257b67"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "step_data_results",
+            "description": null,
+            "arguments": {
+                "step_data_results": "{%- set step_data = vars.steps.get_step_data|json_query('[].output') -%}\n{%- set ns = namespace(result={}) -%}\n\n{%- for item in step_data -%}\n    {%- if item -%}\n      {%- set ns.result = ns.result | combine(item) -%}\n    {%- endif -%}\n{%- endfor -%}\n\n{{ ns.result | tojson }}"
+            },
+            "status": null,
+            "top": "360",
+            "left": "440",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "b9858558-ead7-4cfe-8def-efcb5451abc0"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "step_data_yaml to json",
+            "description": null,
+            "arguments": {
+                "arguments": {
+                    "yaml": "{{vars.step_data_yaml}}",
+                    "manual_test": ""
+                },
+                "apply_async": false,
+                "step_variables": [],
+                "pass_parent_env": false,
+                "pass_input_record": false,
+                "workflowReference": "\/api\/3\/workflows\/e8a9ca65-8ba2-4da5-993a-e98d1e22283c"
+            },
+            "status": null,
+            "top": "120",
+            "left": "440",
+            "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
+            "group": null,
+            "uuid": "b8f84a7c-e52d-434f-80cc-8b1833f78814"
+        }
+    ],
+    "routes": [
+        {
+            "@type": "WorkflowRoute",
+            "name": "get step data -> step_data_results",
+            "targetStep": "\/api\/3\/workflow_steps\/b9858558-ead7-4cfe-8def-efcb5451abc0",
+            "sourceStep": "\/api\/3\/workflow_steps\/cd40a252-96bf-4a95-be79-52cb254f2440",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "a612f51c-1e11-4ef9-a381-c0293a76fadd"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "setup vars -> diff script yaml to json",
+            "targetStep": "\/api\/3\/workflow_steps\/b8f84a7c-e52d-434f-80cc-8b1833f78814",
+            "sourceStep": "\/api\/3\/workflow_steps\/54a17c70-ac24-45fc-b6e3-4bb7b7a933d2",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "5905a2da-31a2-45cf-adfa-83297def2a42"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Start -> setup vars",
+            "targetStep": "\/api\/3\/workflow_steps\/54a17c70-ac24-45fc-b6e3-4bb7b7a933d2",
+            "sourceStep": "\/api\/3\/workflow_steps\/ff9358ef-e1d0-45ea-9d70-f7faca896095",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "b5e7e490-64b5-4d3b-9138-9f5783bfa569"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "step data -> get step data",
+            "targetStep": "\/api\/3\/workflow_steps\/cd40a252-96bf-4a95-be79-52cb254f2440",
+            "sourceStep": "\/api\/3\/workflow_steps\/a3c1c317-685f-4474-b0b3-f82fef257b67",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "e82a97b5-f3a5-456f-acfe-902893178030"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "step_data_results -> return",
+            "targetStep": "\/api\/3\/workflow_steps\/54225bc3-3992-445d-a5c7-b3b67db19dcd",
+            "sourceStep": "\/api\/3\/workflow_steps\/b9858558-ead7-4cfe-8def-efcb5451abc0",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "6413952e-c5f0-479b-a6fb-18a87b5dba7b"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "step_data_yaml to json -> step data",
+            "targetStep": "\/api\/3\/workflow_steps\/a3c1c317-685f-4474-b0b3-f82fef257b67",
+            "sourceStep": "\/api\/3\/workflow_steps\/b8f84a7c-e52d-434f-80cc-8b1833f78814",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "e660f9dd-082f-417f-8977-7d2b7c06622d"
+        }
+    ],
+    "groups": [
+        {
+            "@type": "WorkflowGroup",
+            "name": "Details",
+            "description": "Convert the find step data yaml payload to a json list that can be used to run the get step data playbook.\n\nSee the playbook *find step data for device* for details of the input options.",
+            "type": "note",
+            "isCollapsed": false,
+            "hasTriggerStep": false,
+            "hideInLogs": false,
+            "metadata": [],
+            "reusable": false,
+            "top": "120",
+            "left": "40",
+            "height": "150",
+            "width": "386",
+            "uuid": "4492c7cc-3759-43f9-b816-8f0dedfa63c2",
+            "recordTags": []
+        }
+    ],
+    "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+    "playbookOrigin": "\/api\/3\/picklists\/b6d710a9-a8ec-41ec-8817-fe9fa062fcdd",
+    "isEditable": false,
+    "uuid": "c34b8ec0-99c0-4c5d-acff-20e0d3043ba5",
+    "owners": [],
+    "isPrivate": false,
+    "deletedAt": null,
+    "recordTags": [
+        "ztpfDeviceAutomationStep"
+    ]
+}

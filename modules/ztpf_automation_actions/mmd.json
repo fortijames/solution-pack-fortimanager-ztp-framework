@@ -36,7 +36,7 @@
             "inversedField": null,
             "ownsRelationship": false,
             "validation": {
-                "required": false,
+                "required": true,
                 "minlength": 0,
                 "maxlength": 10485761,
                 "_enableRange": false
@@ -887,7 +887,7 @@
             },
             "dataSourceFilters": null,
             "defaultValue": null,
-            "tooltip": "Example jinja vars from a test run.",
+            "tooltip": "Example jinja vars from a test payload.",
             "visibility": true,
             "htmlEscape": false,
             "orphanRemoval": null,
@@ -930,7 +930,7 @@
                 "buttonClass": "btn btn-default btn-sm"
             },
             "dataSourceFilters": null,
-            "defaultValue": "Example of a script being rendered with jinja vars.",
+            "defaultValue": "Example of a script payload being rendered with example jinja vars.",
             "tooltip": null,
             "visibility": true,
             "htmlEscape": false,
@@ -1250,6 +1250,50 @@
         },
         {
             "@type": "AttributeMetadata",
+            "type": "string",
+            "name": "outputToMetadataRecordTemplate",
+            "length": null,
+            "formType": "textarea",
+            "dataSource": null,
+            "searchable": true,
+            "peerReplicable": true,
+            "system": false,
+            "encrypted": false,
+            "gridColumn": false,
+            "collection": false,
+            "inversedField": null,
+            "ownsRelationship": false,
+            "validation": {
+                "required": false,
+                "minlength": 0,
+                "maxlength": 10485761,
+                "_enableRange": false
+            },
+            "bulkAction": {
+                "allow": false,
+                "buttonText": "",
+                "buttonIcon": "",
+                "buttonClass": "btn btn-default btn-sm"
+            },
+            "dataSourceFilters": null,
+            "defaultValue": null,
+            "tooltip": "Jinja Template to produce YAML to create or update device metadata records.",
+            "visibility": true,
+            "htmlEscape": false,
+            "orphanRemoval": null,
+            "readable": true,
+            "writeable": true,
+            "identifier": null,
+            "unique": false,
+            "recommend": false,
+            "skipSerialization": false,
+            "displayName": "{{ outputToMetadataRecordTemplate }}",
+            "descriptions": {
+                "singular": "Output to Metadata Record Template"
+            }
+        },
+        {
+            "@type": "AttributeMetadata",
             "type": "picklists",
             "name": "actionOutputType",
             "length": null,
@@ -1331,50 +1375,6 @@
         {
             "@type": "AttributeMetadata",
             "type": "string",
-            "name": "outputToMetadataRecordTemplate",
-            "length": null,
-            "formType": "textarea",
-            "dataSource": null,
-            "searchable": true,
-            "peerReplicable": true,
-            "system": false,
-            "encrypted": false,
-            "gridColumn": false,
-            "collection": false,
-            "inversedField": null,
-            "ownsRelationship": false,
-            "validation": {
-                "required": false,
-                "minlength": 0,
-                "maxlength": 10485761,
-                "_enableRange": false
-            },
-            "bulkAction": {
-                "allow": false,
-                "buttonText": "",
-                "buttonIcon": "",
-                "buttonClass": "btn btn-default btn-sm"
-            },
-            "dataSourceFilters": null,
-            "defaultValue": null,
-            "tooltip": "Jinja Template to produce YAML to create or update device metadata records.",
-            "visibility": true,
-            "htmlEscape": false,
-            "orphanRemoval": null,
-            "readable": true,
-            "writeable": true,
-            "identifier": null,
-            "unique": false,
-            "recommend": false,
-            "skipSerialization": false,
-            "displayName": "{{ outputToMetadataRecordTemplate }}",
-            "descriptions": {
-                "singular": "Output to Metadata Record Template"
-            }
-        },
-        {
-            "@type": "AttributeMetadata",
-            "type": "string",
             "name": "actionOutputTemplate",
             "length": null,
             "formType": "textarea",
@@ -1414,6 +1414,94 @@
             "displayName": "{{ actionOutputTemplate }}",
             "descriptions": {
                 "singular": "Action Output Template DEPRECATED"
+            }
+        },
+        {
+            "@type": "AttributeMetadata",
+            "type": "object",
+            "name": "exampleRunJinjaVars",
+            "length": null,
+            "formType": "object",
+            "dataSource": null,
+            "searchable": false,
+            "peerReplicable": true,
+            "system": false,
+            "encrypted": false,
+            "gridColumn": false,
+            "collection": false,
+            "inversedField": null,
+            "ownsRelationship": false,
+            "validation": {
+                "required": false,
+                "minlength": 0,
+                "maxlength": 10485761,
+                "_enableRange": false
+            },
+            "bulkAction": {
+                "allow": false,
+                "buttonText": "",
+                "buttonIcon": "",
+                "buttonClass": "btn btn-default btn-sm"
+            },
+            "dataSourceFilters": null,
+            "defaultValue": null,
+            "tooltip": null,
+            "visibility": true,
+            "htmlEscape": false,
+            "orphanRemoval": null,
+            "readable": true,
+            "writeable": true,
+            "identifier": null,
+            "unique": false,
+            "recommend": false,
+            "skipSerialization": false,
+            "displayName": "{{ exampleRunJinjaVars }}",
+            "descriptions": {
+                "singular": "Example Run Jinja Vars DEPRECATED"
+            }
+        },
+        {
+            "@type": "AttributeMetadata",
+            "type": "object",
+            "name": "exampleRunOutputSourceData",
+            "length": null,
+            "formType": "object",
+            "dataSource": null,
+            "searchable": false,
+            "peerReplicable": true,
+            "system": false,
+            "encrypted": false,
+            "gridColumn": false,
+            "collection": false,
+            "inversedField": null,
+            "ownsRelationship": false,
+            "validation": {
+                "required": false,
+                "minlength": 0,
+                "maxlength": 10485761,
+                "_enableRange": false
+            },
+            "bulkAction": {
+                "allow": false,
+                "buttonText": "",
+                "buttonIcon": "",
+                "buttonClass": "btn btn-default btn-sm"
+            },
+            "dataSourceFilters": null,
+            "defaultValue": null,
+            "tooltip": null,
+            "visibility": true,
+            "htmlEscape": false,
+            "orphanRemoval": null,
+            "readable": true,
+            "writeable": true,
+            "identifier": null,
+            "unique": false,
+            "recommend": false,
+            "skipSerialization": false,
+            "displayName": "{{ exampleRunOutputSourceData }}",
+            "descriptions": {
+                "singular": "Example Run Output Source Data"
             }
         }
     ],
