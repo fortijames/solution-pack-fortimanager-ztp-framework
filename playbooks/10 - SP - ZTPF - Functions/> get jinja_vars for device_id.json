@@ -44,11 +44,15 @@
                 "record_dev_tags": "{{vars.steps.find_device[0].recordTags}}",
                 "record_dev_vdom": "{{vars.steps.find_device[0].vdom}}",
                 "record_mgr_name": "{{vars.steps.find_device[0].ztpfManagers.name}}",
+                "record_dev_serial": "{{vars.steps.find_device[0].serial}}",
+                "record_mgr_serial": "{{vars.steps.find_device[0].ztpfManagers.serialNumber}}",
                 "record_dev_mgmt_ip": "{{vars.steps.find_device[0].managementIP}}",
                 "record_dev_firmware": "{{vars.steps.find_device[0].firmware}}",
                 "record_dev_platform": "{{vars.steps.find_device[0].platform}}",
                 "record_mgr_firmware": "{{vars.steps.find_device[0].ztpfManagers.firmware}}",
                 "record_mgr_platform": "{{vars.steps.find_device[0].ztpfManagers.platform}}",
+                "record_dev_modified_on": "{{vars.steps.find_device[0].modifyDate}}",
+                "record_mgr_modified_on": "{{vars.steps.find_device[0].ztpfManagers.modifyDate}}",
                 "record_mgr_connector_config": "{{vars.steps.find_device[0].ztpfManagers.connectorConfig}}"
             },
             "status": null,
@@ -79,15 +83,17 @@
                     "__selectFields": [
                         "ztpfManagers",
                         "name",
+                        "adom",
+                        "vdom",
                         "managementMode",
+                        "managementIP",
                         "platform",
                         "firmware",
                         "policyPackage",
                         "id",
                         "recordTags",
-                        "vdom",
-                        "adom",
-                        "managementIP"
+                        "modifyDate",
+                        "serial"
                     ]
                 },
                 "module": "ztpf_devices?$limit=1",
@@ -124,11 +130,15 @@
                         }
                     ],
                     "__selectFields": [
-                        "id",
                         "name",
                         "dataText",
                         "dataJSON",
-                        "dataSecret"
+                        "dataSecret",
+                        "id",
+                        "modifyDate",
+                        "recordTags",
+                        "type",
+                        "status"
                     ]
                 },
                 "module": "ztpf_metadata_devices?$limit=5000",
@@ -161,7 +171,7 @@
             "name": "jinja_vars for device metadata",
             "description": null,
             "arguments": {
-                "jinja_vars_test": "{%- set ret = vars.jinja_vars -%}\n\n{%- for m in vars.steps.find_metadata -%}\n{%- set v = m.dataText or m.dataJSON -%}\n{%- do ret.record.metadata.update({\n  m.name:v\n}) -%}\n{%- endfor -%}\n{{ret}}"
+                "jinja_vars_test": "{%- set ret = vars.jinja_vars -%}\n{%- do ret.record.metadata.update({\"_info\":{}}) -%}\n\n\n{%- for m in vars.steps.find_metadata -%}\n{%- set v = m.dataText or m.dataJSON -%}\n{%- do ret.record.metadata.update({m.name:v}) -%}\n{%- do ret.record.metadata[\"_info\"].update(\n{ m.name: {\n      \"id\": m.id,\n      \"type\":m.type.itemValue,\n      \"status\":m.status.itemValue,\n      \"modified_on\": m.modifyDate,\n      \"tags\": m.recordTags\n    }\n}) -%}\n{%- endfor -%}\n{{ret}}"
             },
             "status": null,
             "top": "540",

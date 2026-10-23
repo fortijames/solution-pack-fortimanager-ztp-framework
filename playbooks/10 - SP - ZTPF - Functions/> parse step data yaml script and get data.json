@@ -35,6 +35,8 @@
                     "data_path": "{{vars.item[\"data_path\"]}}",
                     "device_id": "{{vars.device_id}}",
                     "step_name": "{{vars.item[\"step_name\"]}}",
+                    "action_name": "{{vars.item[\"action_name\"]}}",
+                    "action_uuid": "{{vars.item[\"action_uuid\"]}}",
                     "rungroup_id": "{{vars.rungroup_id}}",
                     "step_number": "{{vars.item[\"step_number\"]}}",
                     "revision_back": "{{vars.item[\"revision_back\"]}}"
@@ -109,7 +111,7 @@
             "name": "step data",
             "description": null,
             "arguments": {
-                "step_data": "{%- set step_data = vars.steps.step_data_yaml_to_json.output['step_data'] -%}\n{%- set table = [] -%}\n{%- for d in step_data -%}\n{%- set sd = step_data[d] -%}\n{%- set r = {\n  \"data_path\": sd.path|default(''),\n  \"step_name\": sd.step_name|default(''),\n  \"step_number\": sd.step_number|default(''),\n  \"action_id\": sd.action_id|default(''),\n  \"rungroup_id\": sd.rungroup_id|default(''),\n  \"revision_back\": sd.revision_back|default(''),\n} -%}\n{%- set use_data_key = sd.use_data_key|default(true) -%}\n{%- if use_data_key -%}\n  {%- do r.update({\"data_key\":d}) -%}\n{%- endif -%}\n{%- do table.append(r) -%}\n{%- endfor -%}\n{{table}}"
+                "step_data": "{%- set step_data = vars.steps.step_data_yaml_to_json.output['step_data'] -%}\n{%- set table = [] -%}\n{%- for d in step_data -%}\n{%- set sd = step_data[d] -%}\n{%- set r = {\n  \"data_path\": sd.path|default(''),\n  \"step_name\": sd.step_name|default(''),\n  \"step_number\": sd.step_number|default(''),\n  \"action_id\": sd.action_id|default(''),\n  \"action_uuid\": sd.action_uuid|default(''),\n  \"action_name\": sd.action_name|default(''),\n  \"rungroup_id\": sd.rungroup_id|default(''),\n  \"revision_back\": sd.revision_back|default(''),\n} -%}\n{%- set use_data_key = sd.use_data_key|default(false) -%}\n{%- if use_data_key -%}\n  {%- do r.update({\"data_key\":\"_root\"}) -%}\n{%- else -%}\n  {%- do r.update({\"data_key\":d}) -%}\n{%- endif -%}\n{%- do table.append(r) -%}\n{%- endfor -%}\n{{table}}"
             },
             "status": null,
             "top": "200",
@@ -123,7 +125,7 @@
             "name": "step_data_results",
             "description": null,
             "arguments": {
-                "step_data_results": "{%- set step_data = vars.steps.get_step_data|json_query('[].output') -%}\n{%- set ns = namespace(result={}) -%}\n\n{%- for item in step_data -%}\n    {%- if item -%}\n      {%- set ns.result = ns.result | combine(item) -%}\n    {%- endif -%}\n{%- endfor -%}\n\n{{ ns.result | tojson }}"
+                "step_data_results": "{%- set step_data = vars.steps.get_step_data|json_query('[].output') -%}\n\n{%- set ns = namespace(result={}) -%}\n\n{%- for item in step_data -%}\n    {%- if item -%}\n      {%- set ns.result = ns.result | combine(item) -%}\n    {%- endif -%}\n{%- endfor -%}\n\n{{ ns.result | tojson }}"
             },
             "status": null,
             "top": "360",
@@ -233,6 +235,23 @@
             "height": "150",
             "width": "386",
             "uuid": "4492c7cc-3759-43f9-b816-8f0dedfa63c2",
+            "recordTags": []
+        },
+        {
+            "@type": "WorkflowGroup",
+            "name": "Options",
+            "description": "use_data_key: If set to true will drop all the data into the defauly key named _root which will be dropped when it hits the data record.",
+            "type": "note",
+            "isCollapsed": false,
+            "hasTriggerStep": false,
+            "hideInLogs": false,
+            "metadata": [],
+            "reusable": false,
+            "top": "180",
+            "left": "700",
+            "height": "116",
+            "width": "362",
+            "uuid": "a8390e70-cf7e-44ad-bdef-6d8d16668c87",
             "recordTags": []
         }
     ],

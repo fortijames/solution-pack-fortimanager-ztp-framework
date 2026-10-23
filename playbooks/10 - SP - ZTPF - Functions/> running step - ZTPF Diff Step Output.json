@@ -174,7 +174,7 @@
             "description": null,
             "arguments": {
                 "step_status": "{%- set ret = \"Complete\" -%}\n{%- if vars.steps.diff_text.output['exec_script'].status.error -%}\n  {%- set ret = \"Failed\" -%}\n{%- endif -%}\n{{ret}}",
-                "script_results": "{%- set base = vars.steps.diff_text -%}\n{%- set ret = {\n    \"diff\":base.output,\n} -%}\n{{ret}}"
+                "script_results": "{%- set base = vars.steps.diff_text -%}\n{%- set ret = {\n    \"step_data_config\": vars.steps.get_step_data.output['step_data_json']['step_data'],\n    \"step_data\":vars.steps.get_step_data.output['step_data_results'],\n    \"diff\":base.output\n} -%}\n{{ret}}"
             },
             "status": null,
             "top": "340",

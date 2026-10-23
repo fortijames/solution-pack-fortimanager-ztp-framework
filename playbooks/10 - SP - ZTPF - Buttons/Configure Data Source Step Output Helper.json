@@ -1,10 +1,10 @@
 {
     "@type": "Workflow",
     "triggerLimit": null,
-    "name": "Configure Metadata Source Data - Step Output",
+    "name": "Configure Data Source Step Output Helper",
     "aliasName": null,
     "tag": null,
-    "description": "Help user manage the Metadata Source Data field based on the type.",
+    "description": "Help user create Data Source field based on the type.",
     "isActive": true,
     "debug": false,
     "singleRecordExecution": false,
@@ -17,39 +17,29 @@
     "steps": [
         {
             "@type": "WorkflowStep",
+            "name": "action_selected",
+            "description": null,
+            "arguments": {
+                "action_selected": "{{vars.step_idx[vars.steps.Prompt_User.input.pickAnAutomationAction]}}"
+            },
+            "status": null,
+            "top": "200",
+            "left": "380",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "9cea2dbf-eb6f-41aa-accc-d55bf95c83a9"
+        },
+        {
+            "@type": "WorkflowStep",
             "name": "cancel or timeout",
             "description": null,
             "arguments": [],
             "status": null,
-            "top": "180",
-            "left": "1100",
+            "top": "220",
+            "left": "1140",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
             "uuid": "25853c24-ff24-47c6-99fc-8f97db423243"
-        },
-        {
-            "@type": "WorkflowStep",
-            "name": "configure data",
-            "description": null,
-            "arguments": {
-                "arguments": {
-                    "record_id": "{{vars.record_id}}",
-                    "step_name": "{{vars.step_name}}",
-                    "step_uuid": "{{vars.step_uuid}}",
-                    "revisions_back": "{{vars.revisions_back}}"
-                },
-                "apply_async": false,
-                "step_variables": [],
-                "pass_parent_env": false,
-                "pass_input_record": false,
-                "workflowReference": "\/api\/3\/workflows\/d0e1bf35-7bd5-41a0-8f02-576334f8c55c"
-            },
-            "status": null,
-            "top": "240",
-            "left": "40",
-            "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
-            "group": null,
-            "uuid": "ba7f2dc5-3075-425c-91a7-c62b8af28900"
         },
         {
             "@type": "WorkflowStep",
@@ -62,26 +52,10 @@
             },
             "status": null,
             "top": "80",
-            "left": "1100",
+            "left": "1140",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
             "uuid": "26d445e8-c3ea-4a79-9a6a-5c7fa13f752e"
-        },
-        {
-            "@type": "WorkflowStep",
-            "name": "enhance vars",
-            "description": null,
-            "arguments": {
-                "step_name": "{{vars.step_idx[vars.steps.Prompt_User.input.pickAStep].name}}",
-                "step_uuid": "{{vars.step_idx[vars.steps.Prompt_User.input.pickAStep].uuid}}",
-                "revisions_back": "{{vars.steps.Prompt_User.input['revisions_Back']}}"
-            },
-            "status": null,
-            "top": "140",
-            "left": "40",
-            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
-            "group": null,
-            "uuid": "106ea6a7-f957-4a7d-9c89-e1e3d00f5fbd"
         },
         {
             "@type": "WorkflowStep",
@@ -140,9 +114,9 @@
                         "description": "**Summary**\n\nAdding the UUID for the Action Step we need data.",
                         "inputVariables": [
                             {
-                                "name": "pickAStep",
+                                "name": "pickAnAutomationAction",
                                 "type": "array",
-                                "label": "Pick a Step",
+                                "label": "Pick an Automation Action",
                                 "title": "Dynamic List",
                                 "usable": true,
                                 "options": "{{vars.step_idx.keys()|list|sort}}",
@@ -150,36 +124,19 @@
                                 "dataType": "dynamicList",
                                 "formType": "dynamicList",
                                 "required": false,
-                                "_expanded": false,
+                                "_expanded": true,
                                 "mmdUpdate": true,
                                 "collection": false,
                                 "dataSource": [],
                                 "searchable": false,
                                 "templateUrl": "app\/components\/form\/fields\/dynamicList.html",
                                 "defaultValue": null,
-                                "_previousName": "pickAStep",
+                                "_previousName": "pickAnAutomatioAction",
                                 "playbookField": true,
                                 "displayTemplate": "%7B%7B%20itemValue%20%7D%7D",
                                 "lengthConstraint": true,
                                 "allowedEncryption": false,
                                 "allowedGridColumn": false,
-                                "requiredCondition": "notrequired",
-                                "jinjaExpressionView": true,
-                                "useRecordFieldDefault": false,
-                                "_addRequiredConditions": false
-                            },
-                            {
-                                "name": "revisions_Back",
-                                "type": "string",
-                                "label": "Revisions Back",
-                                "tooltip": "Revisions back from the latest where 1 is the last run step for this action on the device.",
-                                "dataType": "text",
-                                "formType": "text",
-                                "required": false,
-                                "_expanded": true,
-                                "_nameTouched": true,
-                                "defaultValue": "{{vars.revisions_back}}",
-                                "_previousName": "playbookArgs",
                                 "requiredCondition": "notrequired",
                                 "jinjaExpressionView": true,
                                 "useRecordFieldDefault": false,
@@ -207,15 +164,11 @@
                 "response_mapping": {
                     "options": [
                         {
-                            "option": "Update",
-                            "step_iri": "\/api\/3\/workflow_steps\/106ea6a7-f957-4a7d-9c89-e1e3d00f5fbd"
+                            "option": "Ok",
+                            "step_iri": "\/api\/3\/workflow_steps\/9cea2dbf-eb6f-41aa-accc-d55bf95c83a9"
                         },
                         {
-                            "option": "Reset Config",
-                            "step_iri": "\/api\/3\/workflow_steps\/62122257-8af5-47c3-94d1-5b26e54e7bb5"
-                        },
-                        {
-                            "option": "Cancel Changes",
+                            "option": "Cancel",
                             "step_iri": "\/api\/3\/workflow_steps\/25853c24-ff24-47c6-99fc-8f97db423243"
                         }
                     ],
@@ -236,27 +189,11 @@
                 "external_email_attachments": null
             },
             "status": null,
-            "top": "120",
+            "top": "160",
             "left": "700",
             "stepType": "\/api\/3\/workflow_step_types\/fc04082a-d7dc-4299-96fb-6837b1baa0fe",
             "group": null,
             "uuid": "0edc6c35-c081-4d5a-a1ce-ab35fa6a0b5a"
-        },
-        {
-            "@type": "WorkflowStep",
-            "name": "reset vars",
-            "description": null,
-            "arguments": {
-                "step_name": "''",
-                "step_uuid": "''",
-                "revisions_back": "''"
-            },
-            "status": null,
-            "top": "240",
-            "left": "340",
-            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
-            "group": null,
-            "uuid": "62122257-8af5-47c3-94d1-5b26e54e7bb5"
         },
         {
             "@type": "WorkflowStep",
@@ -327,16 +264,6 @@
         },
         {
             "@type": "WorkflowRoute",
-            "name": "enhance vars -> configure data",
-            "targetStep": "\/api\/3\/workflow_steps\/ba7f2dc5-3075-425c-91a7-c62b8af28900",
-            "sourceStep": "\/api\/3\/workflow_steps\/106ea6a7-f957-4a7d-9c89-e1e3d00f5fbd",
-            "label": null,
-            "isExecuted": false,
-            "group": null,
-            "uuid": "43cef2d1-e737-46dc-bb7f-82c385353cac"
-        },
-        {
-            "@type": "WorkflowRoute",
             "name": "find actions -> initial vars",
             "targetStep": "\/api\/3\/workflow_steps\/1440fcd2-a91d-4ac6-a74a-d23ff451807d",
             "sourceStep": "\/api\/3\/workflow_steps\/6907c631-d043-48ef-aa8c-e6c7645195a6",
@@ -357,43 +284,23 @@
         },
         {
             "@type": "WorkflowRoute",
-            "name": "Prompt User -> enhance vars",
-            "targetStep": "\/api\/3\/workflow_steps\/106ea6a7-f957-4a7d-9c89-e1e3d00f5fbd",
+            "name": "Prompt User -> action_selected",
+            "targetStep": "\/api\/3\/workflow_steps\/9cea2dbf-eb6f-41aa-accc-d55bf95c83a9",
             "sourceStep": "\/api\/3\/workflow_steps\/0edc6c35-c081-4d5a-a1ce-ab35fa6a0b5a",
-            "label": "Update",
+            "label": "Ok",
             "isExecuted": false,
             "group": null,
-            "uuid": "78c6ca29-d07f-41ec-b4fc-aed12ca4dbef"
-        },
-        {
-            "@type": "WorkflowRoute",
-            "name": "Prompt User -> reset vars",
-            "targetStep": "\/api\/3\/workflow_steps\/62122257-8af5-47c3-94d1-5b26e54e7bb5",
-            "sourceStep": "\/api\/3\/workflow_steps\/0edc6c35-c081-4d5a-a1ce-ab35fa6a0b5a",
-            "label": "Reset Config",
-            "isExecuted": false,
-            "group": null,
-            "uuid": "63ad55d0-22e3-4f6f-b8b9-9d43f22529d9"
+            "uuid": "4c787be2-005e-4ce0-ae61-0cd39c56aaf2"
         },
         {
             "@type": "WorkflowRoute",
             "name": "Prompt User -> timeout",
             "targetStep": "\/api\/3\/workflow_steps\/25853c24-ff24-47c6-99fc-8f97db423243",
             "sourceStep": "\/api\/3\/workflow_steps\/0edc6c35-c081-4d5a-a1ce-ab35fa6a0b5a",
-            "label": "Cancel Changes",
+            "label": "Cancel",
             "isExecuted": false,
             "group": null,
             "uuid": "a08f3468-793e-40d0-97ef-ba3b13641dd9"
-        },
-        {
-            "@type": "WorkflowRoute",
-            "name": "reset vars -> configure data",
-            "targetStep": "\/api\/3\/workflow_steps\/ba7f2dc5-3075-425c-91a7-c62b8af28900",
-            "sourceStep": "\/api\/3\/workflow_steps\/62122257-8af5-47c3-94d1-5b26e54e7bb5",
-            "label": null,
-            "isExecuted": false,
-            "group": null,
-            "uuid": "9f02050c-e12f-4e22-a1a2-ed87b1d5579c"
         },
         {
             "@type": "WorkflowRoute",

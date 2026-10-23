@@ -12,12 +12,14 @@
     "parameters": [
         "device_id",
         "step_name",
-        "action_id",
         "revision_back",
         "rungroup_id",
         "step_number",
         "data_path",
-        "data_key"
+        "data_key",
+        "action_uuid",
+        "action_id",
+        "action_name"
     ],
     "synchronous": false,
     "collection": "\/api\/3\/workflow_collections\/517fb52d-36f5-4bac-a344-7d4599d7dec6",
@@ -26,14 +28,14 @@
     "steps": [
         {
             "@type": "WorkflowStep",
-            "name": "find action",
+            "name": "find action by id",
             "description": null,
             "arguments": {
-                "when": "{{vars.input.params['action_id']}}",
+                "when": "{{not vars.find_action and vars.input.params['action_id']}}",
                 "query": {
                     "sort": [],
                     "limit": 30,
-                    "logic": "AND",
+                    "logic": "OR",
                     "filters": [
                         {
                             "type": "primitive",
@@ -50,11 +52,87 @@
                 },
                 "module": "ztpf_automation_actions?$limit=1",
                 "checkboxFields": true,
-                "step_variables": []
+                "step_variables": {
+                    "find_action": "{{vars.steps.find_action_by_name}}"
+                }
+            },
+            "status": null,
+            "top": "140",
+            "left": "1360",
+            "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928770",
+            "group": null,
+            "uuid": "0e6639b1-e392-4f25-b96b-7b7ca636f9e4"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "find action by name",
+            "description": null,
+            "arguments": {
+                "when": "{{not vars.find_action and vars.input.params['action_name']}}",
+                "query": {
+                    "sort": [],
+                    "limit": 30,
+                    "logic": "OR",
+                    "filters": [
+                        {
+                            "type": "primitive",
+                            "field": "name",
+                            "value": "{{vars.input.params['action_name']}}",
+                            "operator": "eq",
+                            "_operator": "eq"
+                        }
+                    ],
+                    "__selectFields": [
+                        "id",
+                        "name"
+                    ]
+                },
+                "module": "ztpf_automation_actions?$limit=1",
+                "checkboxFields": true,
+                "step_variables": {
+                    "find_action": "{{vars.steps.find_action_by_name}}"
+                }
             },
             "status": null,
             "top": "40",
-            "left": "880",
+            "left": "1360",
+            "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928770",
+            "group": null,
+            "uuid": "02e787ef-b960-4d5d-8181-88ab341873ab"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "find action by uuid",
+            "description": null,
+            "arguments": {
+                "when": "{{vars.input.params['action_uuid']}}",
+                "query": {
+                    "sort": [],
+                    "limit": 30,
+                    "logic": "OR",
+                    "filters": [
+                        {
+                            "type": "primitive",
+                            "field": "uuid",
+                            "value": "{{vars.input.params['action_uuid']}}",
+                            "operator": "eq",
+                            "_operator": "eq"
+                        }
+                    ],
+                    "__selectFields": [
+                        "id",
+                        "name"
+                    ]
+                },
+                "module": "ztpf_automation_actions?$limit=1",
+                "checkboxFields": true,
+                "step_variables": {
+                    "find_action": "{{vars.steps.find_action_by_uuid}}"
+                }
+            },
+            "status": null,
+            "top": "40",
+            "left": "1080",
             "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928770",
             "group": null,
             "uuid": "3e7506a9-d70f-41f2-b597-bce89755540b"
@@ -89,7 +167,7 @@
             },
             "status": null,
             "top": "40",
-            "left": "320",
+            "left": "480",
             "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928770",
             "group": null,
             "uuid": "7d263392-3e10-4b6d-ab64-0a1b6c4d74cb"
@@ -124,7 +202,7 @@
             },
             "status": null,
             "top": "40",
-            "left": "600",
+            "left": "800",
             "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928770",
             "group": null,
             "uuid": "d15e39a0-9b28-492e-829d-fe430c294046"
@@ -261,9 +339,9 @@
                         {
                             "type": "object",
                             "field": "ztpfAutomationActions",
-                            "value": "{{vars.steps.find_action[0]['@id']}}",
+                            "value": "{{vars.steps.find_action_by_uuid[0]['@id']}}",
                             "_value": {
-                                "@id": "{{vars.steps.find_action[0]['@id']}}",
+                                "@id": "{{vars.steps.find_action_by_uuid[0]['@id']}}",
                                 "display": "{{vars.step_name}}",
                                 "itemValue": ""
                             },
@@ -271,8 +349,9 @@
                         }
                     ],
                     "__selectFields": [
+                        "name",
                         "id",
-                        "name"
+                        "stepStopTimestamp"
                     ]
                 },
                 "module": "ztpf_device_automation_steps?$limit=5000",
@@ -319,9 +398,9 @@
                         {
                             "type": "object",
                             "field": "ztpfAutomationActions",
-                            "value": "{{vars.steps.find_action[0]['@id']}}",
+                            "value": "{{vars.steps.find_action_by_uuid[0]['@id']}}",
                             "_value": {
-                                "@id": "{{vars.steps.find_action[0]['@id']}}",
+                                "@id": "{{vars.steps.find_action_by_uuid[0]['@id']}}",
                                 "display": "{{vars.step_name}}",
                                 "itemValue": ""
                             },
@@ -340,8 +419,9 @@
                         }
                     ],
                     "__selectFields": [
+                        "name",
                         "id",
-                        "name"
+                        "stepStopTimestamp"
                     ]
                 },
                 "module": "ztpf_device_automation_steps?$limit=5000",
@@ -394,8 +474,9 @@
                         }
                     ],
                     "__selectFields": [
+                        "name",
                         "id",
-                        "name"
+                        "stepStopTimestamp"
                     ]
                 },
                 "module": "ztpf_device_automation_steps?$limit=5000",
@@ -459,8 +540,9 @@
                         }
                     ],
                     "__selectFields": [
+                        "name",
                         "id",
-                        "name"
+                        "stepStopTimestamp"
                     ]
                 },
                 "module": "ztpf_device_automation_steps?$limit=5000",
@@ -524,8 +606,9 @@
                         }
                     ],
                     "__selectFields": [
+                        "name",
                         "id",
-                        "name"
+                        "stepStopTimestamp"
                     ]
                 },
                 "module": "ztpf_device_automation_steps?$limit=5000",
@@ -563,9 +646,9 @@
             "description": null,
             "arguments": {
                 "device_exists": "{%- if vars.steps.find_device|length > 0 -%}\nTrue\n{%- else -%}\nFalse\n{%- endif -%}",
-                "find_by_action": "{%- set ret = {\"x\":false} -%}\n{%- set empty = ['',None,Null] -%}\n{%- if vars.action_id not in empty \n      and vars.rungroup_id in empty -%}\n    {%- do ret.update({\"x\":true}) -%}\n{%- endif -%}\n{{ret.x}}",
+                "find_by_action": "{%- set ret = {\"x\":false} -%}\n{%- set empty = ['',None,Null] -%}\n{%- if vars.action_fqid not in empty \n      and vars.rungroup_id in empty -%}\n    {%- do ret.update({\"x\":true}) -%}\n{%- endif -%}\n{{ret.x}}",
                 "find_by_step_name": "{%- set ret = {\"x\":false} -%}\n{%- set empty = ['',None,Null] -%}\n{%- if vars.step_name not in empty \n      and vars.rungroup_id in empty -%}\n    {%- do ret.update({\"x\":true}) -%}\n{%- endif -%}\n{{ret.x}}",
-                "find_by_action_and_rungroup": "{%- set ret = {\"x\":false} -%}\n{%- set empty = ['',None,Null] -%}\n{%- if vars.action_id not in empty\n      and vars.rungroup_id not in empty -%}\n    {%- do ret.update({\"x\":true}) -%}\n{%- endif -%}\n{{ret.x}}",
+                "find_by_action_and_rungroup": "{%- set ret = {\"x\":false} -%}\n{%- set empty = ['',None,Null] -%}\n{%- if vars.action_fqid not in empty\n      and vars.rungroup_id not in empty -%}\n    {%- do ret.update({\"x\":true}) -%}\n{%- endif -%}\n{{ret.x}}",
                 "find_by_step_name_and_rungroup": "{%- set ret = {\"x\":false} -%}\n{%- set empty = ['',None,Null] -%}\n{%- if vars.step_name not in empty \n      and vars.rungroup_id not in empty -%}\n    {%- do ret.update({\"x\":true}) -%}\n{%- endif -%}\n{{ret.x}}",
                 "find_by_step_number_and_rungroup": "{%- set ret = {\"x\":false} -%}\n{%- set empty = ['',None,Null] -%}\n{%- if vars.step_number not in empty \n      and vars.rungroup_id not in empty -%}\n    {%- do ret.update({\"x\":true}) -%}\n{%- endif -%}\n{{ret.x}}"
             },
@@ -581,10 +664,9 @@
             "name": "setup vars",
             "description": null,
             "arguments": {
-                "action_id": "{{vars.input.params['action_id']}}",
                 "device_id": "{{vars.input.params['device_id']}}",
                 "step_name": "{{vars.input.params['step_name']}}",
-                "action_fqid": "{{vars.steps.find_action[0]['@id']}}",
+                "action_fqid": "{{vars.find_action[0]['@id']}}",
                 "device_fqid": "{{vars.steps.find_device[0]['@id']}}",
                 "rungroup_id": "{{vars.input.params['rungroup_id']}}",
                 "step_number": "{{vars.input.params['step_number']}}",
@@ -592,7 +674,7 @@
                 "rungroup_fqid": "{{vars.steps.find_rungroup[0]['@id']}}"
             },
             "status": null,
-            "top": "120",
+            "top": "140",
             "left": "880",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
@@ -640,7 +722,7 @@
             "name": "step_data_path",
             "description": null,
             "arguments": {
-                "step_data_path": "{%- set path = vars.data_path -%}\n{%- set datakey = vars.data_key -%}\n{%- set data = vars.step_data -%}\n\n{%- if path -%}\n\n  {%- set ret = {} -%}\n  {%- set dq = data | json_query(path) -%}\n  {%- if datakey -%}\n    {%- set ret = { datakey : dq } -%}\n  {%- endif -%}\n\n{{ret}}\n{%- endif -%}"
+                "step_data_path": "{%- set path = vars.data_path -%}\n{%- set datakey = vars.data_key -%}\n{%- set data = vars.step_data -%}\n\n{%- if path -%}\n\n  {%- set ret = {} -%}\n  {%- set dq = data | json_query(path) -%}\n  {%- if datakey -%}\n    {%- set ret = { datakey : dq } -%}\n  {%- else -%}\n    {%- set ret = dq -%}\n  {%- endif -%}\n\n{{ret}}\n{%- endif -%}"
             },
             "status": null,
             "top": "680",
@@ -679,13 +761,33 @@
     "routes": [
         {
             "@type": "WorkflowRoute",
-            "name": "find action -> setup vars",
+            "name": "find action by id -> setup vars",
             "targetStep": "\/api\/3\/workflow_steps\/c6508e10-6511-43f7-937c-388a9dc9aac0",
+            "sourceStep": "\/api\/3\/workflow_steps\/0e6639b1-e392-4f25-b96b-7b7ca636f9e4",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "0e0c5e8f-1af7-4b73-82b2-90f96ca78b15"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "find action by name -> find action by id",
+            "targetStep": "\/api\/3\/workflow_steps\/0e6639b1-e392-4f25-b96b-7b7ca636f9e4",
+            "sourceStep": "\/api\/3\/workflow_steps\/02e787ef-b960-4d5d-8181-88ab341873ab",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "17bc4e2b-df95-49be-90a5-319fe0270ef2"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "find action by uuid -> find action by name",
+            "targetStep": "\/api\/3\/workflow_steps\/02e787ef-b960-4d5d-8181-88ab341873ab",
             "sourceStep": "\/api\/3\/workflow_steps\/3e7506a9-d70f-41f2-b597-bce89755540b",
             "label": null,
             "isExecuted": false,
             "group": null,
-            "uuid": "1e336ba9-a6e5-4201-bd83-5cc6f03da05e"
+            "uuid": "8192a9e0-ee11-4efc-8cb6-b3da79f5e3b5"
         },
         {
             "@type": "WorkflowRoute",
@@ -946,16 +1048,16 @@
         {
             "@type": "WorkflowGroup",
             "name": "Input options",
-            "description": "device_id: The Device with the step that has data. \nstep_name: The Name of the step record on the device. \nrungroup_id: The rungroup the step will be found. \nstep_number: The step number within a rungroup which is also required.\naction_id: The action used in the step on the device. \nrevision_back: If we find multiple steps they are sorted by the modified time and we can return the revision desired where 1 is the latest. \ndata_path: IF you want to limit the return use a json_query path. \ndata_key: IF you want the path results inside a custom key.",
+            "description": "device_id: The Device with the step that has data. \nstep_name: The Name of the step record on the device. \naction_uuid: The action used in the step on the device. \nrungroup_id: The rungroup the step will be found. \nstep_number: The step number within a rungroup which is also required.\naction_id: The action ID. \naction_name: The action by name. \naction_uuid: The action by uuid. \nrevision_back: If we find multiple steps they are sorted by the modified time and we can return the revision desired where 1 is the latest. \ndata_path: IF you want to limit the return use a json_query path. \ndata_key: IF you want the path results inside a custom key.",
             "type": "note",
             "isCollapsed": false,
             "hasTriggerStep": false,
             "hideInLogs": false,
             "metadata": [],
             "reusable": false,
-            "top": "60",
+            "top": "260",
             "left": "1160",
-            "height": "257",
+            "height": "298",
             "width": "498",
             "uuid": "2300224b-13ed-4634-a9c7-96b60a1f3609",
             "recordTags": []

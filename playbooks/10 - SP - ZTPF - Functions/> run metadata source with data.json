@@ -148,36 +148,26 @@
         },
         {
             "@type": "WorkflowStep",
-            "name": "get step data",
+            "name": "get_step_data",
             "description": null,
             "arguments": {
-                "for_each": {
-                    "item": "{{vars.step_data}}",
-                    "parallel": false,
-                    "condition": ""
-                },
                 "arguments": {
-                    "data_key": "{{vars.item[\"data_key\"]}}",
-                    "action_id": "{{vars.item[\"action_id\"]}}",
-                    "data_path": "{{vars.item[\"data_path\"]}}",
                     "device_id": "{{vars.device_id}}",
-                    "step_name": "{{vars.item[\"step_name\"]}}",
-                    "rungroup_id": "{{vars.item[\"rungroup_id\"]}}",
-                    "step_number": "{{vars.item[\"step_number\"]}}",
-                    "revision_back": "{{vars.item[\"revision_back\"]}}"
+                    "rungroup_id": "",
+                    "step_data_yaml": "{{vars.step_data_yaml}}"
                 },
                 "apply_async": false,
                 "step_variables": [],
                 "pass_parent_env": false,
                 "pass_input_record": false,
-                "workflowReference": "\/api\/3\/workflows\/d92787a1-1b26-4186-ac16-10030737cb4d"
+                "workflowReference": "\/api\/3\/workflows\/c34b8ec0-99c0-4c5d-acff-20e0d3043ba5"
             },
             "status": null,
             "top": "120",
             "left": "1640",
             "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
             "group": null,
-            "uuid": "a71820ba-4de7-467c-a2f6-d95699ac8ea1"
+            "uuid": "d24eb675-7b4a-4a09-bde0-0ffcb182f8af"
         },
         {
             "@type": "WorkflowStep",
@@ -312,7 +302,7 @@
             "arguments": {
                 "arguments": {
                     "script_vars": "{{vars.jinja_vars}}",
-                    "yaml2json_flag": "true",
+                    "yaml2json_flag": "{{vars.yaml2json_flag}}",
                     "script_template": "{{vars.source_data}}"
                 },
                 "apply_async": false,
@@ -379,7 +369,8 @@
                 "datakey": "{{vars.input.params['datakey']}}",
                 "device_id": "{{vars.input.params['device_id']}}",
                 "jinja_vars": "{{vars.input.params['jinja_vars']}}",
-                "source_data": "{{vars.input.params['source_data']}}"
+                "source_data": "{{vars.input.params['source_data']}}",
+                "yaml2json_flag": "{%- if \"step output\" in vars.input.params.type|lower -%}\nfalse\n{%- else -%}\ntrue\n{%- endif -%}"
             },
             "status": null,
             "top": "40",
@@ -460,11 +451,11 @@
             "name": "step output args",
             "description": null,
             "arguments": {
-                "step_data": "{%- set step_data = vars.steps.render_data_jinja.output['step_data'] -%}\n{%- set table = [] -%}\n{%- for d in step_data -%}\n{%- set sd = step_data[d] -%}\n{%- set r = {\n  \"data_path\": sd.path|default(''),\n  \"step_name\": sd.step_name|default(''),\n  \"step_number\": sd.step_number|default(''),\n  \"action_id\": sd.action_id|default(''),\n  \"rungroup_id\": sd.rungroup_id|default(''),\n  \"revision_back\": sd.revision_back|default(''),\n} -%}\n{%- set use_data_key = sd.use_data_key|default(true) -%}\n{%- if use_data_key -%}\n  {%- do r.update({\"data_key\":d}) -%}\n{%- endif -%}\n{%- do table.append(r) -%}\n{%- endfor -%}\n{{table}}"
+                "step_data_yaml": "{{vars.steps.render_data_jinja.output}}"
             },
             "status": null,
             "top": "120",
-            "left": "1300",
+            "left": "1160",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
             "uuid": "19e34974-b5b2-41d7-9d41-573269636d11"
@@ -474,8 +465,8 @@
             "name": "step output results",
             "description": null,
             "arguments": {
-                "playbook_status": "{%- set ret = {\n  \"error\":false,\n  \"msg\":\"Step Data looked to have completed ok\"} \n-%}\n\n{%- set step_data = vars.steps.get_step_data|json_query('[].output') -%}\n\n{%- if step_data|length == 0 -%}\n  {%- if vars.fmg_api_results.output.data.status != 0 -%}\n    {%- do ret.update({\n      \"error\":true,\n      \"msg\": \"Missing Step Data\"\n    }) -%}\n  {%- endif -%}\n{%- endif -%}\n{{ret}}",
-                "metadata_results": "{%- set ret = {} -%}\n{%- set step_data = vars.steps.get_step_data|json_query('[].output') -%}\n\n{% if step_data is mapping %}\n  {%- for d in step_data -%}\n    {%- do ret.update(d) -%}\n  {%- endfor -%}\n{% elif step_data is sequence and step_data is not string %}\n  {%- set ret = step_data[0] -%}\n{%- endif -%}\n{{ret}}"
+                "playbook_status": "{%- set ret = {\n  \"error\":false,\n  \"msg\":\"Step Data looked to have completed ok\"} \n-%}\n\n{%- set step_data = vars.steps.get_step_data -%}\n\n{%- if \"step_data_results\" not in step_data.output\n      or step_data.output.step_data_results|length == 0 -%}\n    {%- do ret.update({\n      \"error\":true,\n      \"msg\": \"Missing Step Data\"\n    }) -%}\n{%- endif -%}\n{{ret}}",
+                "metadata_results": "{%- set step_data_results = vars.steps.get_step_data.output['step_data_results'] -%}\n\n{%- if \"_root\" in step_data_results -%}\n{{step_data_results[\"_root\"]}}\n{%- else -%}\n{{step_data_results}}\n{%- endif -%}"
             },
             "status": null,
             "top": "660",
@@ -570,13 +561,13 @@
         },
         {
             "@type": "WorkflowRoute",
-            "name": "get step data -> step output results",
+            "name": "get_step_data -> step output results",
             "targetStep": "\/api\/3\/workflow_steps\/8e1da974-28c1-42a8-a169-e0fd30ff2dac",
-            "sourceStep": "\/api\/3\/workflow_steps\/a71820ba-4de7-467c-a2f6-d95699ac8ea1",
+            "sourceStep": "\/api\/3\/workflow_steps\/d24eb675-7b4a-4a09-bde0-0ffcb182f8af",
             "label": null,
             "isExecuted": false,
             "group": null,
-            "uuid": "c8e171cb-f24d-4917-ae5e-3ea7f35a5ae5"
+            "uuid": "635b76ae-5f7f-4095-9eee-389ab21da69b"
         },
         {
             "@type": "WorkflowRoute",
@@ -750,13 +741,13 @@
         },
         {
             "@type": "WorkflowRoute",
-            "name": "step output args -> get step data",
-            "targetStep": "\/api\/3\/workflow_steps\/a71820ba-4de7-467c-a2f6-d95699ac8ea1",
+            "name": "step output args -> get_step_data",
+            "targetStep": "\/api\/3\/workflow_steps\/d24eb675-7b4a-4a09-bde0-0ffcb182f8af",
             "sourceStep": "\/api\/3\/workflow_steps\/19e34974-b5b2-41d7-9d41-573269636d11",
             "label": null,
             "isExecuted": false,
             "group": null,
-            "uuid": "ea9c8859-cad8-4a49-9e59-6b0afd8d4169"
+            "uuid": "9a0cb768-f35e-41c9-bcdd-05a0bed4325e"
         },
         {
             "@type": "WorkflowRoute",

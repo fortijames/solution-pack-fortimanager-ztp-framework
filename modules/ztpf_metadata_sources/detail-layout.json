@@ -215,7 +215,7 @@
                                                 "visible": true
                                             },
                                             "icon": "icon icon-details",
-                                            "show": true,
+                                            "show": false,
                                             "visible": true
                                         },
                                         {
@@ -447,12 +447,12 @@
                                             "visible": true
                                         },
                                         {
-                                            "title": "Templates using this Source",
+                                            "title": "Actions using this Source",
                                             "active": 0,
                                             "widget": {
                                                 "type": "rows",
                                                 "config": {
-                                                    "wid": "e91d4cec-3283-4b61-abd1-6680b88a3888",
+                                                    "wid": "6a72eb77-ef3a-40ab-89d1-b3886e820274",
                                                     "rows": [
                                                         {
                                                             "columns": [
@@ -468,13 +468,92 @@
                                                                                     "limit": 10
                                                                                 },
                                                                                 "editorType": "html",
-                                                                                "sectionText": "<p style=\"text-align: center;\"><strong>Linked Templates<\/strong><\/p>"
+                                                                                "sectionText": "<p style=\"text-align: center;\"><strong>Linked Automation Actions<\/strong><\/p>"
                                                                             }
                                                                         },
                                                                         {
                                                                             "type": "relationship.subtab",
                                                                             "config": {
                                                                                 "wid": "433c0dea-a554-4fce-bb43-590377e46ce3",
+                                                                                "excludes": [],
+                                                                                "selectionType": "include",
+                                                                                "actionButtons": {
+                                                                                    "ztpf_templates": [],
+                                                                                    "ztpf_automation_actions": []
+                                                                                },
+                                                                                "includes": [
+                                                                                    "ztpfAutomationActions"
+                                                                                ],
+                                                                                "expandableCol": {
+                                                                                    "ztpfAutomationActions": {
+                                                                                        "columns": [],
+                                                                                        "checkBox": false
+                                                                                    }
+                                                                                },
+                                                                                "queryFilters": {
+                                                                                    "ztpf_templates": {
+                                                                                        "sort": [
+                                                                                            {
+                                                                                                "direction": "DESC",
+                                                                                                "field": "modifyDate",
+                                                                                                "sort": {
+                                                                                                    "direction": "DESC"
+                                                                                                }
+                                                                                            }
+                                                                                        ],
+                                                                                        "limit": 30,
+                                                                                        "logic": "AND",
+                                                                                        "filters": []
+                                                                                    },
+                                                                                    "ztpf_automation_actions": {
+                                                                                        "sort": [],
+                                                                                        "limit": 30,
+                                                                                        "logic": "AND",
+                                                                                        "filters": []
+                                                                                    }
+                                                                                },
+                                                                                "enableHorizontalScroll": []
+                                                                            }
+                                                                        }
+                                                                    ]
+                                                                }
+                                                            ],
+                                                            "wid": "65e545ce-d85f-47c8-b18b-08e7e2964f13"
+                                                        }
+                                                    ]
+                                                }
+                                            },
+                                            "icon": "icon icon-codeblock"
+                                        },
+                                        {
+                                            "title": "Templates using this Source",
+                                            "active": 0,
+                                            "widget": {
+                                                "type": "rows",
+                                                "config": {
+                                                    "wid": "e91d4cec-3283-4b61-abd1-6680b88a3888",
+                                                    "rows": [
+                                                        {
+                                                            "columns": [
+                                                                {
+                                                                    "widgets": [
+                                                                        {
+                                                                            "type": "sectionHeader",
+                                                                            "config": {
+                                                                                "wid": "5f03a774-a3ab-4506-a896-60e3ab433ec9",
+                                                                                "query": {
+                                                                                    "filters": [],
+                                                                                    "sort": [],
+                                                                                    "limit": 10
+                                                                                },
+                                                                                "editorType": "html",
+                                                                                "sectionText": "<p style=\"text-align: center;\"><strong>Linked Templates<\/strong><\/p>"
+                                                                            }
+                                                                        },
+                                                                        {
+                                                                            "type": "relationship.subtab",
+                                                                            "config": {
+                                                                                "wid": "005e1485-6deb-47e1-9dfe-745bef3a8b44",
                                                                                 "excludes": [],
                                                                                 "selectionType": "include",
                                                                                 "actionButtons": {
@@ -524,7 +603,7 @@
                                                 "visible": true
                                             },
                                             "icon": "icon icon-edit-template",
-                                            "show": false,
+                                            "show": true,
                                             "visible": true
                                         }
                                     ]
