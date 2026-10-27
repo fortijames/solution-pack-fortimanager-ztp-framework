@@ -1,0 +1,188 @@
+{
+    "@type": "Workflow",
+    "triggerLimit": null,
+    "name": "> get fmg system top",
+    "aliasName": null,
+    "tag": null,
+    "description": "Get FMG processes.",
+    "isActive": true,
+    "debug": false,
+    "singleRecordExecution": false,
+    "remoteExecutableFlag": false,
+    "parameters": [
+        "connector_config"
+    ],
+    "synchronous": false,
+    "collection": "\/api\/3\/workflow_collections\/c15a8515-33ae-46d2-9166-fa6fa47ac762",
+    "versions": [],
+    "triggerStep": "\/api\/3\/workflow_steps\/4206f834-b540-4bb5-9e16-8a606b6a3595",
+    "steps": [
+        {
+            "@type": "WorkflowStep",
+            "name": "api variables",
+            "description": null,
+            "arguments": {
+                "api_data": "[\n  {\n    \"url\" : \"{{vars.api_url}}\",\n    \"data\" : {\n      \"top-n\" : {{vars.top_n}},\n      \"order-by\" : \"{{vars.order_by}}\"\n    }\n  }\n]"
+            },
+            "status": null,
+            "top": "140",
+            "left": "700",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "7e4d408d-d06e-4637-b8d2-c469a881f6cc"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "get top",
+            "description": null,
+            "arguments": {
+                "name": "Fortinet FortiManager JSON-RPC",
+                "config": "{{vars.input.params['connector_config']}}",
+                "params": {
+                    "data": "{{vars.api_data}}",
+                    "method": "exec"
+                },
+                "version": "1.1.0",
+                "connector": "fortinet-fortimanager-json-rpc",
+                "operation": "json_rpc_freeform",
+                "operationTitle": "JSON RPC Freeform",
+                "pickFromTenant": false,
+                "step_variables": []
+            },
+            "status": null,
+            "top": "260",
+            "left": "360",
+            "stepType": "\/api\/3\/workflow_step_types\/0bfed618-0316-11e7-93ae-92361f002671",
+            "group": null,
+            "uuid": "a3f6fead-53dc-49a7-b004-744aedb2647b"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "return",
+            "description": null,
+            "arguments": {
+                "output": "{{vars.steps.get_top.data['free_form_response'][0].data}}",
+                "params": "{{vars.input.params}}",
+                "status": "{%- set ret = vars.return_status -%}\n{%- set step_data = vars.steps.get_top -%}\n\n{%- if step_data.status != \"Success\" -%}\n  {%- do ret.update({\n    \"error\": True,\n    \"message\": \"Status Fail (\" + step_data.status + \")\"\n  }) -%}\n{%- else -%}\n  {%- do ret.update({\n    \"message\": \"FMG API Successful\"\n  }) -%}\n{%- endif -%}\n{{ret}}"
+            },
+            "status": null,
+            "top": "260",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "846adba0-f32e-4a47-901a-dfe4c4fde037"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "setup vars",
+            "description": null,
+            "arguments": {
+                "top_n": "500",
+                "api_url": "\/cli\/global\/exec\/top",
+                "order_by": "cpu-usage",
+                "return_status": "{{globalVars.ztpf_return_status_default}}",
+                "connector_config": "{{vars.input.params['connector_config']}}"
+            },
+            "status": null,
+            "top": "40",
+            "left": "360",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "979fd588-409e-4013-891e-b456834e38e1"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Start",
+            "description": null,
+            "arguments": {
+                "__triggerLimit": true,
+                "step_variables": {
+                    "input": {
+                        "params": []
+                    }
+                },
+                "triggerOnSource": true,
+                "triggerOnReplicate": false
+            },
+            "status": null,
+            "top": "40",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/b348f017-9a94-471f-87f8-ce88b6a7ad62",
+            "group": null,
+            "uuid": "4206f834-b540-4bb5-9e16-8a606b6a3595"
+        }
+    ],
+    "routes": [
+        {
+            "@type": "WorkflowRoute",
+            "name": "api variables -> get firmware",
+            "targetStep": "\/api\/3\/workflow_steps\/a3f6fead-53dc-49a7-b004-744aedb2647b",
+            "sourceStep": "\/api\/3\/workflow_steps\/7e4d408d-d06e-4637-b8d2-c469a881f6cc",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "aee909ff-0dcc-4faf-88ed-fb77b3e70dd3"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "get top -> return",
+            "targetStep": "\/api\/3\/workflow_steps\/846adba0-f32e-4a47-901a-dfe4c4fde037",
+            "sourceStep": "\/api\/3\/workflow_steps\/a3f6fead-53dc-49a7-b004-744aedb2647b",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "4062b442-0872-42d1-aa6f-b6eb699ede1d"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "setup vars -> api variables",
+            "targetStep": "\/api\/3\/workflow_steps\/7e4d408d-d06e-4637-b8d2-c469a881f6cc",
+            "sourceStep": "\/api\/3\/workflow_steps\/979fd588-409e-4013-891e-b456834e38e1",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "6d5e6be6-f3be-4037-8b0e-7e8aa49c12c9"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Start -> setup vars",
+            "targetStep": "\/api\/3\/workflow_steps\/979fd588-409e-4013-891e-b456834e38e1",
+            "sourceStep": "\/api\/3\/workflow_steps\/4206f834-b540-4bb5-9e16-8a606b6a3595",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "72f2635b-31fc-4770-9f87-88dc09227485"
+        }
+    ],
+    "groups": [
+        {
+            "@type": "WorkflowGroup",
+            "name": "Details",
+            "description": "Exec the API \/cli\/global\/exec\/top to FMG to get 500 pids running from FMG sorted by cpu-usage.",
+            "type": "note",
+            "isCollapsed": false,
+            "hasTriggerStep": false,
+            "hideInLogs": false,
+            "metadata": [],
+            "reusable": false,
+            "top": "120",
+            "left": "80",
+            "height": "105",
+            "width": "498",
+            "uuid": "d363dd0c-4e78-4314-97bc-94361869e8c9",
+            "recordTags": []
+        }
+    ],
+    "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+    "playbookOrigin": "\/api\/3\/picklists\/b6d710a9-a8ec-41ec-8817-fe9fa062fcdd",
+    "isEditable": false,
+    "uuid": "16716ad6-6608-4fd8-94a9-3327158e93b5",
+    "owners": [],
+    "isPrivate": false,
+    "deletedAt": null,
+    "recordTags": [
+        "exec",
+        "fmg_api",
+        "system"
+    ]
+}

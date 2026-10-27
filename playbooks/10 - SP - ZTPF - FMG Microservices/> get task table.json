@@ -1,0 +1,213 @@
+{
+    "@type": "Workflow",
+    "triggerLimit": null,
+    "name": "> get task table",
+    "aliasName": null,
+    "tag": null,
+    "description": "Get FMG tasks with an optional filter.",
+    "isActive": true,
+    "debug": false,
+    "singleRecordExecution": false,
+    "remoteExecutableFlag": false,
+    "parameters": [
+        "connector_config",
+        "filter",
+        "fields"
+    ],
+    "synchronous": false,
+    "collection": "\/api\/3\/workflow_collections\/c15a8515-33ae-46d2-9166-fa6fa47ac762",
+    "versions": [],
+    "triggerStep": "\/api\/3\/workflow_steps\/fe6a0f45-cbf3-45af-91d7-03eba1305612",
+    "steps": [
+        {
+            "@type": "WorkflowStep",
+            "name": "api variables",
+            "description": null,
+            "arguments": {
+                "api_data": "{%- set ret = [\n  {\n    \"url\" : vars.api_url,\n    \"filter\": vars.api_filter,\n    \"fields\": vars.api_fields\n  }\n]\n-%}\n{{ret}}"
+            },
+            "status": null,
+            "top": "180",
+            "left": "700",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "0c1c9f9e-9a35-4089-9979-88f5295cb57e"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "create filter_db",
+            "description": "Setup a reference of redefined functions.",
+            "arguments": {
+                "filter_db": "{\n\"default\": [],\n\"active\" : [[\"state\",\"==\",\"running\"],\"||\",[\"state\",\"==\",\"pending\"]],\n\"complete\":[\"state\",\"==\",\"done\"],\n\"problem\":[[\"state\",\"==\",\"error\"],\"||\",[\"state\",\"==\",\"cancelled\"],\"||\",[\"state\",\"==\",\"aborted\"],\"||\",[\"state\",\"==\",\"aborting\"],\"||\",[\"state\",\"==\",\"warning\"]]\n}"
+            },
+            "status": null,
+            "top": "40",
+            "left": "340",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "746d5796-c474-48e3-ab0f-72897caea33a"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "get tasks",
+            "description": null,
+            "arguments": {
+                "name": "Fortinet FortiManager JSON-RPC",
+                "config": "{{vars.input.params['connector_config']}}",
+                "params": {
+                    "data": "{{vars.api_data}}",
+                    "method": "get"
+                },
+                "version": "1.1.0",
+                "connector": "fortinet-fortimanager-json-rpc",
+                "operation": "json_rpc_freeform",
+                "operationTitle": "JSON RPC Freeform",
+                "pickFromTenant": false,
+                "step_variables": []
+            },
+            "status": null,
+            "top": "400",
+            "left": "360",
+            "stepType": "\/api\/3\/workflow_step_types\/0bfed618-0316-11e7-93ae-92361f002671",
+            "group": null,
+            "uuid": "99a64e98-3e17-4331-ac18-2da9b8b882d7"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "return",
+            "description": null,
+            "arguments": {
+                "output": "{{vars.steps.get_tasks.data['free_form_response'][0].data}}",
+                "params": "{{vars.input.params}}",
+                "status": "{%- set ret = vars.return_status -%}\n{%- set step_data = vars.steps.get_tasks -%}\n\n{%- if step_data.status != \"Success\" -%}\n  {%- do ret.update({\n    \"error\": True,\n    \"message\": \"Status Fail (\" + step_data.status + \")\"\n  }) -%}\n{%- else -%}\n  {%- do ret.update({\n    \"message\": \"FMG API Successful\"\n  }) -%}\n{%- endif -%}\n{{ret}}"
+            },
+            "status": null,
+            "top": "400",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "658c3cd9-f430-4954-a8c7-eb4f7b29585f"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "setup vars",
+            "description": null,
+            "arguments": {
+                "api_url": "\/task\/task",
+                "api_fields": "{%- set in_field = vars.input.params['fields'] -%}\n{%- set ret = '' -%}\n\n{%- if in_field not in ['',None] -%}\n  {%- if in_field is sequence and in_field is not string -%}\n    {% set ret = in_field %}\n  {%- else -%}\n    {%- set cmt = in_field | regex_replace('[,\\n]+', ',') -%}\n    {%- set ret = cmt.split(',') | list -%}\n  {%- endif -%}\n{%- endif -%}\n\n{{ret}}",
+                "api_filter": "{%- set inf = vars.input.params['filter'] -%}\n{%- set kws = vars.filter_db.keys() | list -%}\n\n{%- if inf|lower in ['',None,\"all\"] -%}\n  {%- set inf = vars.filter_db[\"default\"] -%}\n{%- elif inf|lower in kws -%}\n  {%- set inf = vars.filter_db[inf|lower] -%}\n{%- endif -%}\n\n{{inf}}",
+                "return_status": "{{globalVars.ztpf_return_status_default}}",
+                "connector_config": "{{vars.input.params['connector_config']}}"
+            },
+            "status": null,
+            "top": "40",
+            "left": "640",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "1361adf7-855f-4fd6-90e2-5a44b72cd8b1"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Start",
+            "description": null,
+            "arguments": {
+                "__triggerLimit": true,
+                "step_variables": {
+                    "input": {
+                        "params": []
+                    }
+                },
+                "triggerOnSource": true,
+                "triggerOnReplicate": false
+            },
+            "status": null,
+            "top": "40",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/b348f017-9a94-471f-87f8-ce88b6a7ad62",
+            "group": null,
+            "uuid": "fe6a0f45-cbf3-45af-91d7-03eba1305612"
+        }
+    ],
+    "routes": [
+        {
+            "@type": "WorkflowRoute",
+            "name": "api variables -> get tasks",
+            "targetStep": "\/api\/3\/workflow_steps\/99a64e98-3e17-4331-ac18-2da9b8b882d7",
+            "sourceStep": "\/api\/3\/workflow_steps\/0c1c9f9e-9a35-4089-9979-88f5295cb57e",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "c7008925-b449-4f1c-ba28-4e4a61021c18"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "create filter_db -> setup vars",
+            "targetStep": "\/api\/3\/workflow_steps\/1361adf7-855f-4fd6-90e2-5a44b72cd8b1",
+            "sourceStep": "\/api\/3\/workflow_steps\/746d5796-c474-48e3-ab0f-72897caea33a",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "903c5c2f-29f7-4a69-9d9d-d6e2c7bb4deb"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "get top -> return",
+            "targetStep": "\/api\/3\/workflow_steps\/658c3cd9-f430-4954-a8c7-eb4f7b29585f",
+            "sourceStep": "\/api\/3\/workflow_steps\/99a64e98-3e17-4331-ac18-2da9b8b882d7",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "32565b0d-998a-4526-aaf0-2547ef372f50"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "setup vars -> api variables",
+            "targetStep": "\/api\/3\/workflow_steps\/0c1c9f9e-9a35-4089-9979-88f5295cb57e",
+            "sourceStep": "\/api\/3\/workflow_steps\/1361adf7-855f-4fd6-90e2-5a44b72cd8b1",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "45a6d3d0-c854-4f9a-9c8f-fcdd7d55d099"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Start -> create filter_db",
+            "targetStep": "\/api\/3\/workflow_steps\/746d5796-c474-48e3-ab0f-72897caea33a",
+            "sourceStep": "\/api\/3\/workflow_steps\/fe6a0f45-cbf3-45af-91d7-03eba1305612",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "8dda5c44-480a-46e7-bb20-f36be0fe4a29"
+        }
+    ],
+    "groups": [
+        {
+            "@type": "WorkflowGroup",
+            "name": "Details",
+            "description": "Get tasks in FMG from \/task\/task. \n\nOptional filters of state:\n - active: pending or running\n - complete: done\n - problem: error, cancelled, aborted, aborting, warning\n\nOptional Fields:\nid,pid,src,adom,line,user,flags,state,title,end_tm,num_err,percent,num_done,num_warn,start_tm,num_lines,tot_percent",
+            "type": "note",
+            "isCollapsed": false,
+            "hasTriggerStep": false,
+            "hideInLogs": false,
+            "metadata": [],
+            "reusable": false,
+            "top": "120",
+            "left": "80",
+            "height": "261",
+            "width": "498",
+            "uuid": "fac09886-730c-4c1a-8400-601ac03564fa",
+            "recordTags": []
+        }
+    ],
+    "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+    "playbookOrigin": "\/api\/3\/picklists\/b6d710a9-a8ec-41ec-8817-fe9fa062fcdd",
+    "isEditable": false,
+    "uuid": "487d0521-7f33-4c27-84be-3aa05532ee38",
+    "owners": [],
+    "isPrivate": false,
+    "deletedAt": null,
+    "recordTags": [
+        "fmg_api",
+        "get"
+    ]
+}
