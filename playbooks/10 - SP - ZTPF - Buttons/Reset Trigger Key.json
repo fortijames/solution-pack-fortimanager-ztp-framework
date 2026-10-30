@@ -1,0 +1,158 @@
+{
+    "@type": "Workflow",
+    "triggerLimit": null,
+    "name": "Reset Trigger Key",
+    "aliasName": null,
+    "tag": null,
+    "description": "Reset the trigger key to the current linked automation action.",
+    "isActive": true,
+    "debug": false,
+    "singleRecordExecution": false,
+    "remoteExecutableFlag": false,
+    "parameters": [],
+    "synchronous": false,
+    "collection": "\/api\/3\/workflow_collections\/f0b56dc0-6c1e-4f5b-9199-c807800f028a",
+    "versions": [],
+    "triggerStep": "\/api\/3\/workflow_steps\/bd133e68-df33-4362-94cd-0456927213e2",
+    "steps": [
+        {
+            "@type": "WorkflowStep",
+            "name": "reset trigger key",
+            "description": null,
+            "arguments": {
+                "arguments": {
+                    "record_ids": "{{vars.record_ids}}",
+                    "record_type": "{{vars.record_type}}"
+                },
+                "apply_async": false,
+                "step_variables": [],
+                "pass_parent_env": false,
+                "pass_input_record": false,
+                "workflowReference": "\/api\/3\/workflows\/b4988c38-1c3a-4b41-a9fa-e5e893d88326"
+            },
+            "status": null,
+            "top": "260",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
+            "group": null,
+            "uuid": "2d36f204-a9bf-4974-9d23-9946662802de"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "setup env",
+            "description": null,
+            "arguments": {
+                "record_ids": "{{vars.input.records | json_query('[].id')}}",
+                "record_type": "{{vars.input.records[0]['@type']}}"
+            },
+            "status": null,
+            "top": "140",
+            "left": "440",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "40eb5c82-f026-43a6-b255-ae051554a1e5"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Start",
+            "description": null,
+            "arguments": {
+                "route": "fc358034-bbcd-4b98-8c3e-395fcca0e8a6",
+                "title": "Reset Trigger Key",
+                "resources": [
+                    "ztpf_automation_profile_steps",
+                    "ztpf_device_automation_steps"
+                ],
+                "__triggerLimit": true,
+                "inputVariables": [],
+                "step_variables": {
+                    "input": {
+                        "params": [],
+                        "records": "{{vars.input.records}}"
+                    }
+                },
+                "triggerOnSource": true,
+                "displayConditions": {
+                    "ztpf_device_automation_steps": {
+                        "sort": [],
+                        "limit": 30,
+                        "logic": "AND",
+                        "filters": []
+                    },
+                    "ztpf_automation_profile_steps": {
+                        "sort": [],
+                        "limit": 30,
+                        "logic": "AND",
+                        "filters": []
+                    }
+                },
+                "executeButtonText": "Execute",
+                "noRecordExecution": false,
+                "showToasterMessage": {
+                    "visible": false,
+                    "messageVisible": true
+                },
+                "triggerOnReplicate": false,
+                "singleRecordExecution": false
+            },
+            "status": null,
+            "top": "40",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/f414d039-bb0d-4e59-9c39-a8f1e880b18a",
+            "group": null,
+            "uuid": "bd133e68-df33-4362-94cd-0456927213e2"
+        }
+    ],
+    "routes": [
+        {
+            "@type": "WorkflowRoute",
+            "name": "setup env -> reset trigger key",
+            "targetStep": "\/api\/3\/workflow_steps\/2d36f204-a9bf-4974-9d23-9946662802de",
+            "sourceStep": "\/api\/3\/workflow_steps\/40eb5c82-f026-43a6-b255-ae051554a1e5",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "60fe8f5b-0913-4b7c-9356-a0507b794270"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Start -> setup env",
+            "targetStep": "\/api\/3\/workflow_steps\/40eb5c82-f026-43a6-b255-ae051554a1e5",
+            "sourceStep": "\/api\/3\/workflow_steps\/bd133e68-df33-4362-94cd-0456927213e2",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "85b9a3d8-41e1-4150-9638-0a345ba33644"
+        }
+    ],
+    "groups": [
+        {
+            "@type": "WorkflowGroup",
+            "name": "Details",
+            "description": "Reset the trigger key to the currently assigned automation action.",
+            "type": "note",
+            "isCollapsed": false,
+            "hasTriggerStep": false,
+            "hideInLogs": false,
+            "metadata": [],
+            "reusable": false,
+            "top": "120",
+            "left": "40",
+            "height": "113",
+            "width": "278",
+            "uuid": "3ae3318e-bf77-42fd-aa81-90cad9213aef",
+            "recordTags": []
+        }
+    ],
+    "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+    "playbookOrigin": "\/api\/3\/picklists\/b6d710a9-a8ec-41ec-8817-fe9fa062fcdd",
+    "isEditable": false,
+    "uuid": "69c093bc-a1d7-471a-aaae-cc72d74b71f0",
+    "owners": [],
+    "isPrivate": false,
+    "deletedAt": null,
+    "recordTags": [
+        "TODO",
+        "ztpfAutomationProfileStep"
+    ]
+}

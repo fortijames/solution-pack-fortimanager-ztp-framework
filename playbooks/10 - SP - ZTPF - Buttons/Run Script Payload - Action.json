@@ -478,14 +478,14 @@
                 "input": {
                     "schema": {
                         "title": "Action Running Results",
-                        "description": "Step **{{vars.steps.find_step_done[0].name}}** ( `{{vars.steps.find_step_done[0].id}}` ) completed in `{{vars.steps.find_step_done[0].stepTime}}`.\n<hr>\n\n**Use the Jinja Editor**\n\nYou can use the editor to play with this data using Jinja in real-time. \n\n - Open this record `Playbook Logs` and `Edit Playbook`\n - Click `Tools` and `Jinja Editor`, \n - Click `Load env JSON` \n - Add the below script and click `Render`:\n {%- raw %}}\n```\n{%- set record = vars.jinja_vars.record -%}\n{%- set data = vars.jinja_vars.data -%}\n{%- set output = vars.output_source_data -%}\nRecord: {{record}}\nData: {{data}}\n```\n{%- endraw %}\n\n<hr>\n\n**Script Template Results**\n\n```\n{{vars.output_source_data | tojson }}\n```\n\n*This form will expire in 60 minutes.*",
+                        "description": "Step **{{vars.steps.find_step_done[0].name}}** ( `{{vars.steps.find_step_done[0].id}}` ) completed in `{{vars.steps.find_step_done[0].stepTime}}`.\n<hr>\n\n**Use the Jinja Editor**\n\nYou can use the editor to play with this data using Jinja in real-time. \n\n - Open this record `Playbook Logs` and `Edit Playbook`\n - Click `Tools` and `Jinja Editor`, \n - Click `Load env JSON` \n - Add the below script and click `Render`:\n {%- raw %}}\n```\n{%- set record = vars.jinja_vars.record -%}\n{%- set data = vars.jinja_vars.data -%}\n{%- set output = vars.output_source_data -%}\nRecord: {{record}}\nData: {{data}}\n```\n{%- endraw %}\n\n<hr>\n\n**Script Template Results**\n\n```\n{{vars.output_source_data | tojson }}\n```\n\n*This form will expire in 3 hours.*",
                         "inputVariables": []
                     }
                 },
                 "record": "",
                 "timeout": {
                     "days": 0,
-                    "hours": 1,
+                    "hours": 3,
                     "minutes": 0,
                     "step_iri": "\/api\/3\/workflow_steps\/119e8169-fb6f-4901-95f3-038d6046858b"
                 },

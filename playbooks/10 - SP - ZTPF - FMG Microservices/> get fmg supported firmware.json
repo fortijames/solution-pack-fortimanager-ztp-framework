@@ -99,7 +99,8 @@
             "description": null,
             "arguments": {
                 "output": "{%- set ret = {} -%}\n{%- do ret.update({\n  \"base\":vars.steps.create_firmware_base_index.data['code_output']\n}) -%}\n{{ret}}",
-                "params": "{{vars.input.params}}"
+                "params": "{{vars.input.params}}",
+                "status": "{%- set ret = vars.return_status -%}\n{%- set step_data = vars.steps.get_firmware -%}\n\n{%- if step_data.status != \"Success\" -%}\n  {%- do ret.update({\n    \"error\": True,\n    \"message\": \"Status Fail (\" + step_data.status + \")\"\n  }) -%}\n{%- else -%}\n  {%- do ret.update({\n    \"message\": \"FMG API Successful\"\n  }) -%}\n{%- endif -%}\n{{ret}}"
             },
             "status": null,
             "top": "120",
@@ -112,7 +113,9 @@
             "@type": "WorkflowStep",
             "name": "setup env",
             "description": null,
-            "arguments": [],
+            "arguments": {
+                "return_status": "{{globalVars.ztpf_return_status_default}}"
+            },
             "status": null,
             "top": "60",
             "left": "380",
@@ -230,5 +233,9 @@
     "owners": [],
     "isPrivate": false,
     "deletedAt": null,
-    "recordTags": []
+    "recordTags": [
+        "exec",
+        "fmg_api",
+        "system"
+    ]
 }
