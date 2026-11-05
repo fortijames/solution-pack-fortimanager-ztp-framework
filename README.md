@@ -3,7 +3,7 @@
 - **Version**: 2.0.50
 - **Certified**: No
 - **Publisher**: Fortinet CSE
-- **Contributor**: James Hilving
+- **Contributor(s)**: James Hilving, Dylan Spille
 - **Compatible Version**: 
   * FortiSOAR v7.4.0 and later
   * FortiManager v7.2.0 and later for full features. Limited features for earlier FortiManager versions. 
