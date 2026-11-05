@@ -1,5 +1,6 @@
-| [Home](../../README.md) / [Modules](../modules.md) |
-|-----------------------------------------------------|
+| [Home](../../README.md) / [Usage](../usage.md) / [Modules](../modules.md) |
+|-----------------------------------------------------------------------------|
+
 
 # Managers
 
@@ -80,5 +81,3 @@ The `Get New Device` settings control how new devices are discovered when the De
  * [Devices](./devices.md) — synchronized from this Manager's Device DB.
  * [Manager Automation Profile Rules](./manager_automation_profile_rules.md) — auto-assign Automation Profiles to this Manager's devices.
 
-| [Modules](../modules.md) | [Devices](./devices.md) |
-|--------------------------|--------------------------|

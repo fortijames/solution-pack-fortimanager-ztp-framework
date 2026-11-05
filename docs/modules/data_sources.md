@@ -1,5 +1,6 @@
-| [Home](../../README.md) / [Modules](../modules.md) |
-|-----------------------------------------------------|
+| [Home](../../README.md) / [Usage](../usage.md) / [Modules](../modules.md) |
+|-----------------------------------------------------------------------------|
+
 
 # Data Sources
 
@@ -71,5 +72,3 @@ Each type is documented on its own page under `data_sources/`, with the script t
  * [Automation Actions](./automation_actions.md) — pull `data.<datakey>` values from this source.
  * [Device Metadata](./device_metadata.md) — a different module: persistent per-device values that a source can read as `record.metadata.<name>`.
 
-| [Modules](../modules.md) | [Managers](./managers.md) |
-|--------------------------|----------------------------|

@@ -1,5 +1,6 @@
-| [Home](../../../README.md) / [Modules](../../modules.md) / [Data Sources](../data_sources.md) |
-|-----------------------------------------------------------------------------------------------|
+| [Home](../../../README.md) / [Usage](../../usage.md) / [Modules](../../modules.md) / [Data Sources](../data_sources.md) |
+|---------------------------------------------------------------------------------------------------------------------------|
+
 
 # Static Data
 
@@ -51,5 +52,3 @@ site_b:
 
 The values are available in Jinja as `data.networks.site_a.network` and so on.
 
-| [Data Sources](../data_sources.md) | [FortiManager API](./fortimanager_api.md) |
-|------------------------------------|--------------------------------------------|

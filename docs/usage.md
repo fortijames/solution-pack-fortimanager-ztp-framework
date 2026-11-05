@@ -3,32 +3,68 @@
 
 # Usage
 
-The `FortiManager ZTP Flow` Solution Pack has a variety of uses. First, refer to the [installation and setup guide](setup.md) guide to get started. Read the content below to help guide you through some solutions. 
+The FortiManager ZTP Flow framework turns automation objectives into building blocks: Data Sources feed data, Templates build payloads, Automation Actions do the work, and Automation Profiles order the work into steps that run on devices. Work through the checklist below in order — each section is one step of the process. Before starting, complete the [installation](./setup.md) and [configuration](./configuration.md).
 
-You may also want to install the [FortiManager ZTP Flow - Feature Examples](https://fortisoar.contenthub.fortinet.com//list.html?contentType=all&searchContent=FortiManager%20ZTP%20Flow%20-%20Feature%20Examples) to get functional profiles and templates for various objectives. 
+## Checklist
 
+- [ ] 1. [Connect a Manager and find devices](#1-connect-a-manager-and-find-devices)
+- [ ] 2. [Plan your automation objectives into steps](#2-plan-your-automation-objectives-into-steps)
+- [ ] 3. [Create Data Sources for the data your steps need](#3-create-data-sources-for-the-data-your-steps-need)
+- [ ] 4. [Create Templates for shared payloads](#4-create-templates-for-shared-payloads)
+- [ ] 5. [Create Automation Actions](#5-create-automation-actions)
+- [ ] 6. [Build the Automation Profile and add steps](#6-build-the-automation-profile-and-add-steps)
+- [ ] 7. [Run the automation and monitor the Device Automation Steps](#7-run-the-automation-and-monitor-the-device-automation-steps)
 
-# Module Summary
+## 1. Connect a Manager and Find Devices
 
-## [Managers](./usage/managers.md)>
-Manager records define the FortiManagers, and the current firmware and status, used in your solution. Creating a Manager record will automatically create the FortiManager JSON-RPC connector configuration for API access. 
+- Add a Manager record and make sure it works as described in the [installation](./setup.md#add-a-manager) area: the status moves to `Ok` and the Source Data tab is populated from the FortiManager API.
+- Run `Synch Devices (New)` from the Manager record to pull the FortiManager Device DB into FortiSOAR, and confirm the devices appear in the [Devices](./modules/devices.md) module.
+- If your FortiManager does not have any devices, you can use Device Models instead of real FortiGate devices: add model devices in the FortiManager Device DB and synchronize those — model devices stand in for real FortiGates while you build and test the framework.
 
-## [Devices](./usage/devices.md)>
-Devices are synchronized from the FortiManager and stored in FortiSOAR. Automation can then occur on one or more devices based on device properties and workflow needs. Once created, they are not removed from FortiSOAR to preserve the last known status of the Device record even if the device has been removed, or moved, from your FortiManager. 
+## 2. Plan Your Automation Objectives into Steps
 
-## [Metafield Templates](./usage/metafield_templates.md)>
-Managing metadata is crucial to the success of any network deployment and provisioning. Metafield Templates can be used to prompt required users to respond to unknown, but required, fields before deployment. Templates can be used to integrate external systems and retrieve key data requirements before deployment to create dynamic metadata based on a wide range of advanced and complex requirements through [Metafield Sources](./usage/jinja_rendering_with_metafield_sources.md). Metadata inside FortiSOAR can be exports to FortiManger to be used by already existing solutions with minimal effort.
+Before building anything, decide what you need for your automation objectives and put them into an ordered list of steps. For each step ask:
 
-## [Script Templates](./usage/script_templates.md)>
-Scripts in FortiSOAR can be used for creating customized FortiManager CLI, Device DB, Policy DB, and/or TCL Scripts per device. Scripts in FortiSOAR can also maintain and create Provisioning CLI Templates in FortiManager such as when new ADOMs are created and need to be setup with Templates. Device reporting scripts can also be used to create a custom dashboard with user defined content. Scripts can also be enhanced by gathering external data using [Metafield Sources](./usage/jinja_rendering_with_metafield_sources.md).
+- What should this step do — collect or gather data, execute something on the network, install, or validate?
+- What data does the step need to do it?
+- What should happen when the step finishes?
 
-## [ZTP Profiles](./usage/ztp_profiles.md)>
-The ZTP Profiles module describes how to handle the provisioning of each device maintained by the respective FortiManager. As a device shows up in the FortiManager Device DB, unauthorized or modeled, when ZTP Profiles are assigned to those devices the defined device templates and provisioning steps are applied and reported per device. ZTP Profiles can be assigned on demand or automatically assigned when devices are created in FortiManger regardless of how the devices were created. Automatic assignment of ZTP Profiles can leverage [Metafield Sources](./usage/jinja_rendering_with_metafield_sources.md) to create complex auto assignment rules.
+The answers decide which building blocks you need in the sections below.
 
-# Examples and Detailed Topics
+## 3. Create Data Sources for the Data Your Steps Need
 
- * [Multiple ZTP Profile Example](./usage/example1.md): Provision of 4x Unauthorized FortiGates VMs in FortiManager starting by simply assigning a ZTP Profile.
- * [Jinja Rendering with Metafield Sources](./usage/jinja_rendering_with_metafield_sources.md): Dynamic Metafield Source options for enhancing the provisioning experience. 
+If your steps need data, start by creating [Data Sources](./modules/data_sources.md) records. The Type of a Data Source decides where the data comes from: Static Data, FortiManager API, FortiManager Proxy API, Playbook, Step Output, or Spreadsheet Attachments.
 
-| [Installation](./setup.md#installation) | [Configuration](./setup.md#configuration) | [Contents](./contents.md) | [Modules](./modules.md) |
-|-----------------------------------------|-------------------------------------------|---------------------------|--------------------------|
+Use the test wizard on the Data Source record — `Get Metadata Source Data on Device` — to confirm that the Data Source record gets the data you expect for a selected device. It prompts for a device, renders the source script in that device's context, and shows the data that would be collected.
+
+## 4. Create Templates for Shared Payloads
+
+If an action needs to leverage a common script, or payload, that can be used by multiple actions, create a [Template](./modules/templates.md) instead of copying the payload into each action. Templates are reusable Jinja scripts that can also link to data records, and they build standard script payloads for actions to use by referencing `{{template}}` in the payload.
+
+## 5. Create Automation Actions
+
+[Automation Actions](./modules/automation_actions.md) are what your steps run. Actions can focus on collecting and gathering data, or on executing something on the network.
+
+For each action, decide what data is needed to perform the action and link it to the action:
+
+- Link the [Data Sources](./modules/data_sources.md) that supply the action's data — the data is available in the action script as `data.<datakey>`.
+- If the action leverages a common script or payload, link a [Template](./modules/templates.md) and reference it as `{{template}}` in the payload.
+- Output templates control what the output of the action will be in various formats — Text, Markdown, HTML, and JSON.
+- The Output Status Template is used to indicate if the action on the step worked as expected. If issues are found from the output, the status template raises an exception and decides what happens next: continue with an exception flag and then continue, or cancel or abort the rest of the steps being run on the device in the run group.
+
+## 6. Build the Automation Profile and Add Steps
+
+Once you have built the required building blocks — Data Sources if needed, Templates if needed, and Automation Actions — create an [Automation Profile](./modules/automation_profiles.md) and add [steps](./modules/automation_profile_steps.md) to it in the order the automation should run.
+
+Steps hold arguments which can have input options and configurations to be used for the referenced action. The steps under the Automation Profile are used to build the Device Automation Steps when the profile runs.
+
+## 7. Run the Automation and Monitor the Device Automation Steps
+
+When an Automation Profile runs on a device, the framework creates a [Run Group](./modules/run_groups.md) containing the [Device Automation Steps](./modules/device_automation_steps.md) built from the profile steps.
+
+Device Automation Steps are the records responsible for actually running the automation. They contain the final payload script that is used in the automation as well as the output produced by running the automation. Monitor progress per device and per step from the Run Group.
+
+## Next Steps
+
+| [<](./configuration.md) | [Contents](./contents.md) |
+|-------------------------|----------------------------|

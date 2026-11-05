@@ -1,5 +1,6 @@
-| [Home](../../README.md) / [Modules](../modules.md) |
-|-----------------------------------------------------|
+| [Home](../../README.md) / [Usage](../usage.md) / [Modules](../modules.md) |
+|-----------------------------------------------------------------------------|
+
 
 # Automation Profile Steps
 
@@ -75,5 +76,3 @@ The `Configure stepARGs Help` button on a step lists these options and updates t
  * [Device Automation Steps](./device_automation_steps.md) — the runtime copies of these steps on a device.
  * [Run Groups](./run_groups.md) — created when the copied steps are queued for execution.
 
-| [Modules](../modules.md) | [Automation Actions](./automation_actions.md) |
-|--------------------------|------------------------------------------------|

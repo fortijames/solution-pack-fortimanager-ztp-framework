@@ -1,5 +1,6 @@
-| [Home](../../../README.md) / [Modules](../../modules.md) / [Data Sources](../data_sources.md) |
-|-----------------------------------------------------------------------------------------------|
+| [Home](../../../README.md) / [Usage](../../usage.md) / [Modules](../../modules.md) / [Data Sources](../data_sources.md) |
+|---------------------------------------------------------------------------------------------------------------------------|
+
 
 # FortiManager Proxy API
 
@@ -56,5 +57,3 @@ data:
 
 The proxied REST response is available in Jinja as `data.routing_table`.
 
-| [Data Sources](../data_sources.md) | [Playbook](./playbook.md) |
-|------------------------------------|----------------------------|

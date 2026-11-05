@@ -1,5 +1,6 @@
-| [Home](../../../../README.md) / [Modules](../../../modules.md) / [Automation Actions](../../automation_actions.md) |
-|-----------------------------------------------------------------------------------------------------------|
+| [Home](../../../../README.md) / [Usage](../../../usage.md) / [Modules](../../../modules.md) / [Automation Actions](../../automation_actions.md) |
+|---------------------------------------------------------------------------------------------------------------------------------------------------|
+
 
 # Diff Step Output
 
@@ -65,5 +66,3 @@ Only one selector per entry needs a value; the rest can be left empty or removed
 
 <pending example>
 
-| [Automation Actions](../../automation_actions.md) | [Validate Data](./validate_data.md) |
-|------------------------------------------------|--------------------------------------|

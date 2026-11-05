@@ -1,5 +1,6 @@
-| [Home](../../README.md) / [Modules](../modules.md) |
-|-----------------------------------------------------|
+| [Home](../../README.md) / [Usage](../usage.md) / [Modules](../modules.md) |
+|-----------------------------------------------------------------------------|
+
 
 # Automation Actions
 
@@ -107,5 +108,3 @@ Actions are dispatched by the generic `> device step (Running)` trigger: it look
  * [Data Sources](./data_sources.md) — supply `data.<datakey>` values for rendering.
  * [Device Metadata](./device_metadata.md) — can be created or updated from step output.
 
-| [Modules](../modules.md) | [Templates](./templates.md) |
-|--------------------------|------------------------------|

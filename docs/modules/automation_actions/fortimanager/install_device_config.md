@@ -1,5 +1,6 @@
-| [Home](../../../../README.md) / [Modules](../../../modules.md) / [Automation Actions](../../automation_actions.md) |
-|-----------------------------------------------------------------------------------------------------------|
+| [Home](../../../../README.md) / [Usage](../../../usage.md) / [Modules](../../../modules.md) / [Automation Actions](../../automation_actions.md) |
+|---------------------------------------------------------------------------------------------------------------------------------------------------|
+
 
 # Install Device Config
 
@@ -27,5 +28,3 @@ Not used. The playbook installs the device configuration from the Manager withou
 
 <pending example>
 
-| [Automation Actions](../../automation_actions.md) | [Install Policy Package](./install_policy_package.md) |
-|------------------------------------------------|--------------------------------------------------------|

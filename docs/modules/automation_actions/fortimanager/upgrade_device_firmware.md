@@ -1,5 +1,6 @@
-| [Home](../../../../README.md) / [Modules](../../../modules.md) / [Automation Actions](../../automation_actions.md) |
-|-----------------------------------------------------------------------------------------------------------|
+| [Home](../../../../README.md) / [Usage](../../../usage.md) / [Modules](../../../modules.md) / [Automation Actions](../../automation_actions.md) |
+|---------------------------------------------------------------------------------------------------------------------------------------------------|
+
 
 # Upgrade Device Firmware
 
@@ -33,5 +34,3 @@ firmware: 7.6.6
 
 <pending example>
 
-| [Automation Actions](../../automation_actions.md) | [Collect Artifacts](../ztpf/collect_artifacts.md) |
-|------------------------------------------------|----------------------------------------------------|

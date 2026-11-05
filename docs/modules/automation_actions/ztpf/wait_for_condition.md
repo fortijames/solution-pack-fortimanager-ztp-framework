@@ -1,5 +1,6 @@
-| [Home](../../../../README.md) / [Modules](../../../modules.md) / [Automation Actions](../../automation_actions.md) |
-|-----------------------------------------------------------------------------------------------------------|
+| [Home](../../../../README.md) / [Usage](../../../usage.md) / [Modules](../../../modules.md) / [Automation Actions](../../automation_actions.md) |
+|---------------------------------------------------------------------------------------------------------------------------------------------------|
+
 
 # Wait for Condition
 
@@ -31,5 +32,3 @@ A wait-check playbook for `ZTPF Wait for Condition` still needs to be built.
 
 <pending example>
 
-| [Automation Actions](../../automation_actions.md) | [Playbook](../fortisoar/playbook.md) |
-|------------------------------------------------|---------------------------------------|

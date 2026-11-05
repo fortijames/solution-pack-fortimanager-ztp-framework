@@ -1,5 +1,6 @@
-| [Home](../../../../README.md) / [Modules](../../../modules.md) / [Automation Actions](../../automation_actions.md) |
-|-----------------------------------------------------------------------------------------------------------|
+| [Home](../../../../README.md) / [Usage](../../../usage.md) / [Modules](../../../modules.md) / [Automation Actions](../../automation_actions.md) |
+|---------------------------------------------------------------------------------------------------------------------------------------------------|
+
 
 # Remote TCL Script
 
@@ -28,5 +29,3 @@ Jinja-rendered TCL commands. The script is rendered per device at run time and e
 
 <pending example>
 
-| [Automation Actions](../../automation_actions.md) | [Provisioning CLI Teamplate](./provisioning_cli_teamplate.md) |
-|------------------------------------------------|----------------------------------------------------------------|

@@ -2,6 +2,26 @@
 |--------------------------------------------|
 
 # Change Log
+ - 20260320-20261030 (2.0.50)
+   - Complete rebuild of the solution pack on the new ZTPF 2.0 module set: Managers, Devices, Device Metadata, Automation Profiles, Automation Profile Steps, Automation Actions, Templates, Data Sources, Device Automation Steps, Run Groups, Manager Automation Profile Rules, and Quick Links. 
+   - Rename roles to `ztpfAdmin` and `ztpfPlaybookAppliance`. 
+   - Buttons and triggers now set the status immediately; functions update the status when the work completes. 
+   - Add new device fields, a parse source data playbook, and device to profile linking. 
+   - Add manage tags for templates and extend it to run groups and devices. 
+   - Update FMG get devices to handle multiple options. 
+   - Add Code Snippet connector configuration handling and an export records by tag playbook. 
+   - Add device status synch with run group and steps, and tagging on create run group. 
+   - Add wait states for automation steps, cancel queued/pending steps on fail, a waiting timeout, and consolidated status logic in the post step. 
+   - Rename the device step status `Cancelled` to `Cancel`. 
+   - Add the ZTPF Validate Data, Diff Step Output, and Collect Artifacts actions; add running playbooks for scripts, install device, diff, and artifacts. 
+   - Add a CSV handler. 
+   - Add a step reporting flag and include step done in find next step number. 
+   - Change the default config for script render on preparation and add a delete step from profile button. 
+   - Add a new dashboard (ZTPF Dashboard - Automation Run Group Reporting), add serial to device, move the run group timer to all stages, add the run group timer widget, and include incomplete in output step status. 
+   - Add global variables for mapping playbooks (`ztpf_running_triggerkey_idx`) and a default return status (`ztpf_return_status_default`). 
+   - Add playbooks for FMG process list and FMG process kill. 
+   - Add the ZTPF2 documentation set. 
+
  - 20260311-20260313 (1.2.0)
    - Update manager record priority fields. Add playbook buttons. Remove unused tabs.
    - Change random create playbook to prompt for ADOM. 
@@ -155,3 +175,6 @@
   - Multitenant support. 
   - Device Records with comments.
   - Playbooks include synch, auth, and delete.
+
+| [Home](../README.md) |
+|--------------------------------------------|

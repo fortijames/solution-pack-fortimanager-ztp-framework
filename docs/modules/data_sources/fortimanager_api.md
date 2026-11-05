@@ -1,5 +1,6 @@
-| [Home](../../../README.md) / [Modules](../../modules.md) / [Data Sources](../data_sources.md) |
-|-----------------------------------------------------------------------------------------------|
+| [Home](../../../README.md) / [Usage](../../usage.md) / [Modules](../../modules.md) / [Data Sources](../data_sources.md) |
+|---------------------------------------------------------------------------------------------------------------------------|
+
 
 # FortiManager API
 
@@ -88,5 +89,3 @@ loadsub: 0
 
 The table returned by the query is available in Jinja as `data.ints_loopback` — for example `data.ints_loopback[0].name`.
 
-| [Data Sources](../data_sources.md) | [FortiManager Proxy API](./fortimanager_proxy_api.md) |
-|------------------------------------|--------------------------------------------------------|

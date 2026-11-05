@@ -1,5 +1,6 @@
-| [Home](../../README.md) / [Modules](../modules.md) |
-|-----------------------------------------------------|
+| [Home](../../README.md) / [Usage](../usage.md) / [Modules](../modules.md) |
+|-----------------------------------------------------------------------------|
+
 
 # Automation Profiles
 
@@ -55,5 +56,3 @@ When a profile is applied, its steps are not run directly. The runtime copy of e
  * [Manager Automation Profile Rules](./manager_automation_profile_rules.md) — automatic assignment of this profile to devices.
  * [Run Groups](./run_groups.md) — created when profile steps are queued for execution.
 
-| [Modules](../modules.md) | [Automation Profile Steps](./automation_profile_steps.md) |
-|--------------------------|------------------------------------------------------------|

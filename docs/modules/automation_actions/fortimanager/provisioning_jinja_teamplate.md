@@ -1,5 +1,6 @@
-| [Home](../../../../README.md) / [Modules](../../../modules.md) / [Automation Actions](../../automation_actions.md) |
-|-----------------------------------------------------------------------------------------------------------|
+| [Home](../../../../README.md) / [Usage](../../../usage.md) / [Modules](../../../modules.md) / [Automation Actions](../../automation_actions.md) |
+|---------------------------------------------------------------------------------------------------------------------------------------------------|
+
 
 # Provisioning Jinja Teamplate
 
@@ -27,5 +28,3 @@ This type does not have an entry in the `ztpf_running_triggerkey_idx` trigger ke
 
 <pending example>
 
-| [Automation Actions](../../automation_actions.md) | [Authorize Device](./authorize_device.md) |
-|------------------------------------------------|--------------------------------------------|

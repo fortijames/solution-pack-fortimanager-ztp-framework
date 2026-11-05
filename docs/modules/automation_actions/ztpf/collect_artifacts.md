@@ -1,5 +1,6 @@
-| [Home](../../../../README.md) / [Modules](../../../modules.md) / [Automation Actions](../../automation_actions.md) |
-|-----------------------------------------------------------------------------------------------------------|
+| [Home](../../../../README.md) / [Usage](../../../usage.md) / [Modules](../../../modules.md) / [Automation Actions](../../automation_actions.md) |
+|---------------------------------------------------------------------------------------------------------------------------------------------------|
+
 
 # Collect Artifacts
 
@@ -47,5 +48,3 @@ Device Data for `FG3` using the following data:
 - config_router_static
 ```
 
-| [Automation Actions](../../automation_actions.md) | [Diff Step Output](./diff_step_output.md) |
-|------------------------------------------------|--------------------------------------------|

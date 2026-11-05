@@ -1,5 +1,6 @@
-| [Home](../../../README.md) / [Modules](../../modules.md) / [Data Sources](../data_sources.md) |
-|-----------------------------------------------------------------------------------------------|
+| [Home](../../../README.md) / [Usage](../../usage.md) / [Modules](../../modules.md) / [Data Sources](../data_sources.md) |
+|---------------------------------------------------------------------------------------------------------------------------|
+
 
 # Step Output
 
@@ -40,5 +41,3 @@ step_data:
 
 <pending example>
 
-| [Data Sources](../data_sources.md) | [Spreadsheet Attachments](./spreadsheet_attachments.md) |
-|------------------------------------|----------------------------------------------------------|

@@ -1,5 +1,6 @@
-| [Home](../../../README.md) / [Modules](../../modules.md) / [Data Sources](../data_sources.md) |
-|-----------------------------------------------------------------------------------------------|
+| [Home](../../../README.md) / [Usage](../../usage.md) / [Modules](../../modules.md) / [Data Sources](../data_sources.md) |
+|---------------------------------------------------------------------------------------------------------------------------|
+
 
 # Playbook
 
@@ -33,5 +34,3 @@ args:                  # arguments passed to the playbook
 
 <pending example>
 
-| [Data Sources](../data_sources.md) | [Step Output](./step_output.md) |
-|------------------------------------|----------------------------------|

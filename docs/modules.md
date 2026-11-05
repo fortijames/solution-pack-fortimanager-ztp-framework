@@ -1,5 +1,6 @@
-| [Home](../README.md) |
-|--------------------------------------------|
+| [Home](../README.md) / [Usage](usage.md) / Modules |
+|------------------------------------------------------|
+
 
 # Modules
 
@@ -78,5 +79,3 @@ Run Groups batch the pending [Device Automation Steps](./modules/device_automati
 
 Device Automation Steps are the runtime queue of automation: one record per step per device, materialized from Automation Profile Steps when a run starts. Steps move through a status lifecycle of New, Preparing, Ready, Queued, Running, and Complete or Fail, render their scripts with device data, and execute the [Automation Action](./modules/automation_actions.md) assigned to them. Each step stores its raw output along with rendered text, markdown, HTML, and JSON results, and an evaluated output status.
 
-| [Installation](./setup.md#installation) | [Usage](./usage.md) | [Contents](./contents.md) |
-|-----------------------------------------|---------------------|----------------------------|

@@ -1,5 +1,6 @@
-| [Home](../../README.md) / [Modules](../modules.md) |
-|-----------------------------------------------------|
+| [Home](../../README.md) / [Usage](../usage.md) / [Modules](../modules.md) |
+|-----------------------------------------------------------------------------|
+
 
 # Device Automation Steps
 
@@ -99,5 +100,3 @@ The status field drives the whole framework. Each transition can fire a trigger:
  * [Automation Actions](./automation_actions.md) — define the work each step performs.
  * [Automation Profile Steps](./automation_profile_steps.md) — the design-time steps copied into these records.
 
-| [Modules](../modules.md) |
-|--------------------------|

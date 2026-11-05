@@ -1,5 +1,6 @@
-| [Home](../../../README.md) / [Modules](../../modules.md) / [Data Sources](../data_sources.md) |
-|-----------------------------------------------------------------------------------------------|
+| [Home](../../../README.md) / [Usage](../../usage.md) / [Modules](../../modules.md) / [Data Sources](../data_sources.md) |
+|---------------------------------------------------------------------------------------------------------------------------|
+
 
 # Spreadsheet Attachments
 
@@ -33,5 +34,3 @@ filetags: <tags to find the file>  # accepted but currently not forwarded by the
 
 <pending example>
 
-| [Data Sources](../data_sources.md) |
-|-------------------------------------|

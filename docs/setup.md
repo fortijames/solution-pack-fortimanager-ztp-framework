@@ -3,35 +3,15 @@
 
 # Installation
 
-Install the Solution Pack. This is an example screenshot and what you see in the content hub may defer in version and details. 
+Install the FortiManager ZTP Flow solution pack from the FortiSOAR Content Hub.
 
-![](./res/setup/setup-001.png)
+![](./res/setup/solution-pack-installed.png)
 
-# Configuration
- 
-- Modify the System `Settings > Appliances > Playbook` user to have the `FortiManager-Playbook-Appliance` Role.
-- Modify the System `Settings > Users`, that will be using this solution, to have the `FortiManager-Admin` Role.
-- Navigate to `Automation > Connectors` and look for `Code Snippet`. Make sure this is installed and has a configuration marked as `Mark as default configuration`.
-- Enable **Verbose JSON** under *Fortinet FortiManager JSON RPC* connector's configuration.
-
-![Verbose JSON setting enabled](./res/verbose-json-enabled.png)
-
-## Setup FortiManager ZTP Flow (ZTPF) Frameworkres/setup/setup
-
-Setting up the FortiSOAR/FortiManager ZTP Flow (ZTPF) integration depends a lot on how you want to use the solution pack. The general order of setup consists of the following tasks and will vary based on what objectives you are trying to accomplish:
-  - Create an [API User](#fortimanager-api-user) on your FortiManager. 
-  - [Add a Manager Record](#add-manager-to-fortisoar) for your FortiManager.
-  - Synchronize your FortiManager Device Database in FortiSOAR.
-  - Create Metafield Templates in FortiSOAR.
-  - Create Scripts in FortiSOAR. 
-  - Create a ZTP Profile and link the required Metafield Templates and Scripts.
-  - Assign a ZTP Profile to a ForiManager Device using a manual assignment or an auto-assignment.
-
-## FortiManager API User
+# FortiManager Setup
 
 Add a FortiSOAR API user to your FMG that has RPC read-write permissions. Below is an example user that includes a FortiSOAR avatar. Edit the avatar, username, password, and/or profile to meet your needs. The most important setting is `set rpc-permit read-write` for API access.
 
-![](./res/setup/setup-002.png)
+![](./res/setup/fmg-fortisoar-admin-user.png)
 
 ```
 config system admin user
@@ -44,21 +24,61 @@ config system admin user
 end
 ```
 
-## Add Manager to FortiSOAR
+# Add a Manager
 
-Navigate to the Manager Module under the **FortiManager** solution records.
+Navigate to the Manager module under the FortiManager solution records and add a new Manager record. Only the `Manager IP/Domain`, `Admin RPC User`, and `Admin RPC Password` are required; the `Manager Port` defaults to 443.
 
-![](./res/setup/setup-007.png)
+![](./res/setup/add-manager.png)
 
-**Add** a new **Manager** (FortiManager) record into FortiSOAR and input the required fields. 
+## Create the Connector Configuration
 
-![](./res/setup/setup-008.png) ![](./res/setup/setup-010.png)
+On the saved Manager record, run the `Create/Update Connector Configuration` action. This builds the FortiManager JSON-RPC connector configuration from the Manager record, with Verbose JSON enabled for script logging.
 
-If your Manager record worked you should see the FortiManager details auto-populate fields, such as `Platform`, `SN`, `Firmware`, `Time `Zone`, etc. The `Source Data` tab shows you all the available data from the System Info API call to FortiManager. 
+![](./res/setup/add-manager-create-update-connector-button.png)
 
-![](./res/setup/setup-011.png)
+Review and complete the connector configuration form, then save it:
 
-You are now ready to start synchronizing the FortiManager Device DB and perform actions on those devices.
+![](./res/setup/manager-add-fill-out-connector-form.png)
 
-| [Usage](./usage.md) | [Contents](./contents.md) | [Modules](./modules.md) |
-|---------------------|---------------------------|--------------------------|
+## Make Sure It Works
+
+When the Manager record connects, its Status shows `Updating` while the system information is collected from the FortiManager:
+
+![](./res/setup/manager-add-status-updating.png)
+
+and moves to `Ok` when the connection succeeds:
+
+![](./res/setup/manager-add-status-ok.png)
+
+The `Source Data` tab shows the manager details collected from the FortiManager API:
+
+![](./res/setup/manager-add-source-data-details.png)
+
+along with the raw API response:
+
+![](./res/setup/manager-add-source-data-raw.png)
+
+# Synchronize Devices
+
+Run `Synch Devices (New)` from the Manager record to pull the FortiManager Device DB into FortiSOAR:
+
+![](./res/setup/manager-synch-devices.png)
+
+Choose the synchronization options when prompted:
+
+![](./res/setup/manager-synch-devics-options.png)
+
+The device records are created and refreshed as the synchronization runs:
+
+![](./res/setup/manager-synch-devices-refresh.png)
+
+When complete, the devices are available in the Devices module, ready for automation.
+
+![](./res/setup/manager-synch-devices-found.png)
+
+You are now ready to start the [automation](./modules.md) on those devices.
+
+## Next Steps
+
+| [<](../README.md) | [Configuration](./configuration.md) | [Usage](./usage.md) | [Contents](./contents.md) |
+|-------------------|-------------------------------------|---------------------|---------------------------|

@@ -1,5 +1,6 @@
-| [Home](../../README.md) / [Modules](../modules.md) |
-|-----------------------------------------------------|
+| [Home](../../README.md) / [Usage](../usage.md) / [Modules](../modules.md) |
+|-----------------------------------------------------------------------------|
+
 
 # Templates
 
@@ -58,5 +59,3 @@ Templates declare their own Input Parameters, so a step can supply values the sa
  * [Device Automation Steps](./device_automation_steps.md) — trigger the run-time rendering per device.
  * [Automation Profile Steps](./automation_profile_steps.md) — provide the `input.*` values through Step ARGS.
 
-| [Modules](../modules.md) | [Data Sources](./data_sources.md) |
-|--------------------------|------------------------------------|

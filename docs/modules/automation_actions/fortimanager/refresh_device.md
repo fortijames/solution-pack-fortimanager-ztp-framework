@@ -1,5 +1,6 @@
-| [Home](../../../../README.md) / [Modules](../../../modules.md) / [Automation Actions](../../automation_actions.md) |
-|-----------------------------------------------------------------------------------------------------------|
+| [Home](../../../../README.md) / [Usage](../../../usage.md) / [Modules](../../../modules.md) / [Automation Actions](../../automation_actions.md) |
+|---------------------------------------------------------------------------------------------------------------------------------------------------|
+
 
 # Refresh Device
 
@@ -25,5 +26,3 @@ This type does not have an entry in the `ztpf_running_triggerkey_idx` trigger ke
 
 <pending example>
 
-| [Automation Actions](../../automation_actions.md) | [Upgrade Device Firmware](./upgrade_device_firmware.md) |
-|------------------------------------------------|----------------------------------------------------------|

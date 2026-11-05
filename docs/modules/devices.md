@@ -1,5 +1,6 @@
-| [Home](../../README.md) / [Modules](../modules.md) |
-|-----------------------------------------------------|
+| [Home](../../README.md) / [Usage](../usage.md) / [Modules](../modules.md) |
+|-----------------------------------------------------------------------------|
+
 
 # Devices
 
@@ -87,5 +88,3 @@ Devices expose different actions depending on the dashboard or view, such as the
  * [Device Automation Steps](./device_automation_steps.md) — the runtime steps that execute on this device.
  * [Run Groups](./run_groups.md) — batches this device's steps into a single execution.
 
-| [Modules](../modules.md) | [Device Metadata](./device_metadata.md) |
-|--------------------------|------------------------------------------|
