@@ -6,13 +6,7 @@
 
 Record module: `ztpf_run_groups`
 
-```mermaid
-flowchart LR
-    DE["Devices"] -->|"queued into"| RG["Run Groups"]
-    RG -->|"owns"| DAS["Device Automation Steps"]
-    classDef focus fill:#fbbf24,stroke:#b45309,color:#000,stroke-width:2px;
-    class RG focus
-```
+![run_groups module diagram](../res/diagrams/run_groups.png)
 
 *The highlighted box marks the module documented on this page.*
 

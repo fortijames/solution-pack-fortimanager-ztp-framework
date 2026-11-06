@@ -6,13 +6,7 @@
 
 Record module: `ztpf_metadata_devices`
 
-```mermaid
-flowchart LR
-    DE["Devices"] -->|"owns"| MD["Device Metadata"]
-    AA["Automation Actions"] -.->|"create or update"| MD
-    classDef focus fill:#fbbf24,stroke:#b45309,color:#000,stroke-width:2px;
-    class MD focus
-```
+![device_metadata module diagram](../res/diagrams/device_metadata.png)
 
 *The highlighted box marks the module documented on this page.*
 

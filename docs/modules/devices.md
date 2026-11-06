@@ -6,15 +6,7 @@
 
 Record module: `ztpf_devices`
 
-```mermaid
-flowchart LR
-    MA["Managers"] -->|"synchronizes"| DE["Devices"]
-    DE -->|"owns"| MD["Device Metadata"]
-    DE -->|"owns"| DAS["Device Automation Steps"]
-    DE -->|"queued in"| RG["Run Groups"]
-    classDef focus fill:#fbbf24,stroke:#b45309,color:#000,stroke-width:2px;
-    class DE focus
-```
+![devices module diagram](../res/diagrams/devices.png)
 
 *The highlighted box marks the module documented on this page.*
 

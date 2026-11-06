@@ -6,14 +6,7 @@
 
 Record module: `ztpf_metadata_sources` (shown as **Data Sources** in the UI)
 
-```mermaid
-flowchart LR
-    TP["Templates"] -.->|"pull data"| DS["Data Sources"]
-    AA["Automation Actions"] -.->|"pull data"| DS
-    MD["Device Metadata"] -.->|"record.metadata context"| DS
-    classDef focus fill:#fbbf24,stroke:#b45309,color:#000,stroke-width:2px;
-    class DS focus
-```
+![data_sources module diagram](../res/diagrams/data_sources.png)
 
 *The highlighted box marks the module documented on this page.*
 

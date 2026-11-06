@@ -6,17 +6,7 @@
 
 Record module: `ztpf_automation_profiles`
 
-```mermaid
-flowchart TD
-    MR["Manager Automation Profile Rules"] -->|"auto-assign on match"| AP["Automation Profiles"]
-    DEV["Devices"] -.->|"manual assignment button"| AP
-    AP -->|"ordered steps"| PS["Automation Profile Steps"]
-    PS -->|"binds"| AA["Automation Actions"]
-    PS -.->|"copied to device at run time"| DAS["Device Automation Steps"]
-    DAS -.->|"runs"| AA["Automation Actions"]
-    classDef focus fill:#fbbf24,stroke:#b45309,color:#000,stroke-width:2px;
-    class AP focus
-```
+![automation_profiles module diagram](../res/diagrams/automation_profiles.png)
 
 *The highlighted box marks the module documented on this page.*
 

@@ -6,15 +6,7 @@
 
 Record module: `ztpf_device_automation_steps`
 
-```mermaid
-flowchart LR
-    PS["Automation Profile Steps"] -.->|"copied from"| DAS["Device Automation Steps"]
-    DE["Devices"] -->|"owns"| DAS
-    RG["Run Groups"] -->|"queues"| DAS
-    DAS -->|"runs"| AA["Automation Actions"]
-    classDef focus fill:#fbbf24,stroke:#b45309,color:#000,stroke-width:2px;
-    class DAS focus
-```
+![device_automation_steps module diagram](../res/diagrams/device_automation_steps.png)
 
 *The highlighted box marks the module documented on this page.*
 

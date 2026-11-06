@@ -6,14 +6,7 @@
 
 Record module: `ztpf_templates`
 
-```mermaid
-flowchart LR
-    AA["Automation Actions"] -->|"{{template}}"| TP["Templates"]
-    TP -.->|"pull data"| DS["Data Sources"]
-    DAS["Device Automation Steps"] -.->|"renders at run time"| AA
-    classDef focus fill:#fbbf24,stroke:#b45309,color:#000,stroke-width:2px;
-    class TP focus
-```
+![templates module diagram](../res/diagrams/templates.png)
 
 *The highlighted box marks the module documented on this page.*
 

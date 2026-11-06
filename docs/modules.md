@@ -6,26 +6,7 @@
 
 The ZTPF Framework is built from a set of modules that work together to provision and operate FortiGate devices through one or more FortiManagers. The modules are grouped into three areas: the design-time records that define your automation, the asset records that represent your deployment, and the runtime records that execute that automation. Each module below links to a detail page with the full list of fields and how they are used.
 
-```mermaid
-flowchart TD
-    subgraph T["ZTPF Automation Templates"]
-        AP["Automation Profiles"] --> PS["Automation Profile Steps"]
-        PS --> AA["Automation Actions"]
-        AA -->|"{{template}}"| TP["Templates"]
-        TP -.->|"pull data"| DS["Data Sources"]
-        AA -.->|"pull data"| DS
-    end
-    subgraph B["ZTPF Assets"]
-        MA["Managers"] --> DE["Devices"]
-        DE --> MD["Device Metadata"]
-    end
-    subgraph Z["ZTP Automations"]
-        RG["Run Groups"] --> DAS["Device Automation Steps"]
-    end
-    AA -.->|"runtime"| DAS
-    DAS -.->|"execute on"| DE
-    RG -.-> DE
-```
+![modules-overview module diagram](./res/diagrams/modules-overview.png)
 
 ## ZTPF Automation Templates
 

@@ -6,17 +6,7 @@
 
 Record module: `ztpf_automation_actions`
 
-```mermaid
-flowchart TD
-    PS["Automation Profile Steps"] -->|"select"| AA["Automation Actions"]
-    DAS["Device Automation Steps"] -.->|"runs"| AA
-    AA -->|"{{template}}"| TP["Templates"]
-    TP -.->|"pull data"| DS["Data Sources"]
-    AA -.->|"pull data"| DS
-    AA -.->|"create or update"| MD["Device Metadata"]
-    classDef focus fill:#fbbf24,stroke:#b45309,color:#000,stroke-width:2px;
-    class AA focus
-```
+![automation_actions module diagram](../res/diagrams/automation_actions.png)
 
 *The highlighted box marks the module documented on this page.*
 

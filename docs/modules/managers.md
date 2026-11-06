@@ -6,14 +6,7 @@
 
 Record module: `ztpf_managers`
 
-```mermaid
-flowchart LR
-    MA["Managers"] -->|"synchronizes"| DE["Devices"]
-    DE -->|"belongs to"| MA
-    MA -->|"automation profile rules"| MR["Manager Automation Profile Rules"]
-    classDef focus fill:#fbbf24,stroke:#b45309,color:#000,stroke-width:2px;
-    class MA focus
-```
+![managers module diagram](../res/diagrams/managers.png)
 
 *The highlighted box marks the module documented on this page.*
 

@@ -6,15 +6,7 @@
 
 Record module: `ztpf_automation_profile_steps`
 
-```mermaid
-flowchart TD
-    AP["Automation Profiles"] -->|"contains"| PS["Automation Profile Steps"]
-    PS -->|"binds"| AA["Automation Actions"]
-    PS -.->|"copied to device at run time"| DAS["Device Automation Steps"]
-    DAS -.->|"runs"| AA["Automation Actions"]
-    classDef focus fill:#fbbf24,stroke:#b45309,color:#000,stroke-width:2px;
-    class PS focus
-```
+![automation_profile_steps module diagram](../res/diagrams/automation_profile_steps.png)
 
 *The highlighted box marks the module documented on this page.*
 

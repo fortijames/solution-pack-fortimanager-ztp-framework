@@ -64,6 +64,17 @@ When an Automation Profile runs on a device, the framework creates a [Run Group]
 
 Device Automation Steps are the records responsible for actually running the automation. They contain the final payload script that is used in the automation as well as the output produced by running the automation. Monitor progress per device and per step from the Run Group.
 
+## Examples
+
+The examples below walk through the framework end to end. Each is a worked scenario built from real records.
+
+| Example | Description |
+| ------- | ----------- |
+| [Create Single Loopback — building an Automation Profile](./examples/create_single_loopback.md) | The full walkthrough: Data Sources, a Template, three Automation Actions, profile steps with arguments and config options, and the resulting run. |
+| Device Onboarding with Manager Automation Profile Rules | Planned — assign profiles automatically as devices appear on a Manager. |
+| Firmware Upgrade Run Group | Planned — staged firmware upgrades across devices with wait states and reporting. |
+| Metadata Collection from a Spreadsheet Attachment | Planned — drive device metadata from an uploaded spreadsheet. |
+
 ## Next Steps
 
 | [<](./configuration.md) | [Contents](./contents.md) |
