@@ -7,6 +7,8 @@ The solution pack ships the contents listed below. The framework building blocks
 
 ## Modules
 
+Each module also has its own page below. The [Modules](./modules.md) reference is the framework overview: how the modules relate, with a diagram for each.
+
 | Module | Description |
 | ------ | ----------- |
 | [Automation Profiles](./modules/automation_profiles.md) | An ordered set of steps that defines what runs on a device; assigning a profile to a device starts the automation. |

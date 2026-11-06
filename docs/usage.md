@@ -3,7 +3,7 @@
 
 # Usage
 
-The FortiManager ZTP Flow framework turns automation objectives into building blocks: Data Sources feed data, Templates build payloads, Automation Actions do the work, and Automation Profiles order the work into steps that run on devices. Work through the checklist below in order — each section is one step of the process. Before starting, complete the [installation](./setup.md) and [configuration](./configuration.md).
+The FortiManager ZTP Flow framework turns automation objectives into building blocks: Data Sources feed data, Templates build payloads, Automation Actions do the work, and Automation Profiles order the work into steps that run on devices. These building blocks are the framework modules, described in the [Modules](./modules.md) reference. Work through the checklist below in order — each section is one step of the process. Before starting, complete the [installation](./setup.md) and [configuration](./configuration.md).
 
 ## Checklist
 
