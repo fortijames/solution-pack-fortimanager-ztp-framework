@@ -251,7 +251,7 @@
             "arguments": {
                 "tags": "{{vars.steps.find_step[0].recordTags}}",
                 "step_fqid": "{{vars.steps.find_step[0]['@id']}}",
-                "jinja_vars": "{%- set ret = vars.steps.find_step[0].jinjaVars -%}\n{%- do ret.update({\"output\":vars.steps.find_step[0].outputSourceData}) -%}\n{{ret}}",
+                "jinja_vars": "{%- set ret = {} -%}\n{%- if vars.steps.find_step[0].jinjaVars not in ['',None] -%}\n{%- set ret = vars.steps.find_step[0].jinjaVars -%}\n{%- endif -%}\n{%- do ret.update({\"output\":vars.steps.find_step[0].outputSourceData}) -%}\n{{ret}}",
                 "step_status": "{{vars.steps.find_step[0].status.itemValue}}"
             },
             "status": null,

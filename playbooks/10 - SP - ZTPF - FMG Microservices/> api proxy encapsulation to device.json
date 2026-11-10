@@ -30,7 +30,7 @@
             },
             "status": null,
             "top": "360",
-            "left": "340",
+            "left": "380",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
             "uuid": "d834856f-cf23-4f7a-9eb2-3c7980e32beb"
@@ -44,7 +44,7 @@
             },
             "status": null,
             "top": "200",
-            "left": "720",
+            "left": "780",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
             "uuid": "cebe9c19-3932-49e9-9471-1b3873c3f0b1"
@@ -80,17 +80,17 @@
             "name": "initial vars",
             "description": null,
             "arguments": {
-                "status": "{# Set a default status #}\n{%- set ret = {} -%}\n{%- do ret.update({\n  \"error\":false,\n  \"message\":\"\"\n}) -%}\n{{ret}}",
                 "in_action": "{{vars.input.params.action}}",
                 "in_target": "{%- set in_field = vars.input.params.target -%}\n{%- set ret = '' -%}\n\n{%- if in_field not in ['',None] -%}\n  {%- if in_field is sequence and in_field is not string -%}\n    {% set ret = in_field %}\n  {%- else -%}\n    {%- set cmt = in_field | regex_replace('[,\\n]+', ',') -%}\n    {%- set ret = cmt.split(',') | list -%}\n  {%- endif -%}\n{%- endif -%}\n\n{{ret}}",
                 "in_payload": "{{vars.input.params.payload}}",
                 "in_resource": "{{vars.input.params.resource}}",
+                "return_status": "{{globalVars.ztpf_return_status_default}}",
                 "api_json_proxy": "\/sys\/proxy\/json",
                 "connector_config": "{{vars.input.params['connector_config']}}"
             },
             "status": null,
             "top": "40",
-            "left": "340",
+            "left": "400",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
             "uuid": "89144c45-ec61-412f-b9e7-db44d8fa2a1b"
@@ -102,7 +102,7 @@
             "arguments": {
                 "output": "{{vars.steps.fmg_api}}",
                 "params": "{{vars.input.params}}",
-                "status": "{%- set s = vars.status -%}\n{%- set fmgret = vars.steps.fmg_api.data -%}\n\n{%- if fmgret.execute_response.status is defined\n      and fmgret.execute_response.status.code != 0\n-%}\n  {%- do s.update({\n    \"error\":true,\n    \"message\":fmgret.execute_response.status.message\n  }) -%}\n{%- endif -%}\n\n{{s}}"
+                "status": "{%- set s = vars.return_status -%}\n{%- do s.update({\"message\": \"API Looks ok\"}) -%}\n{%- set fmgret = vars.steps.fmg_api.data -%}\n\n{%- if fmgret.status is defined and fmgret.status.code is defined and fmgret.status.code != 0 -%}\n  {%- do s.update({\n    \"error\": true,\n    \"message\": \"proxy call failed: \" + (fmgret.status.message | default('unknown error', true))\n  }) -%}\n{%- endif -%}\n\n{%- if fmgret.execute_response is defined and fmgret.execute_response[0] is defined\n      and fmgret.execute_response[0].status is defined\n      and fmgret.execute_response[0].status.code != 0\n-%}\n  {%- do s.update({\n    \"error\": true,\n    \"message\": \"device call failed: \" + (fmgret.execute_response[0].status.message | default('unknown error', true))\n  }) -%}\n{%- endif -%}\n\n{{s}}"
             },
             "status": null,
             "top": "120",
@@ -197,7 +197,7 @@
             "metadata": [],
             "reusable": false,
             "top": "120",
-            "left": "340",
+            "left": "380",
             "height": "212",
             "width": "292",
             "uuid": "eac911ce-ff96-40b6-ba88-6ee1da0d42a8",

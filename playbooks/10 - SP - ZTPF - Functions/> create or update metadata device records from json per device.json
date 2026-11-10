@@ -224,7 +224,7 @@
             "name": "update_metadata",
             "description": null,
             "arguments": {
-                "update_metadata": "{%- set ret = [] -%}\n\n{%- set md = vars.input.params.metadata_input -%}\n{%- set existing_mds  = vars.steps.find_metadata -%}\n{%- set existing_md_names = existing_mds|json_query('[].name') -%}\n\n{%- for m in md -%}\n  {%- if m in existing_md_names -%}\n      {%- set md_record = existing_mds\n                  | json_query('[?name==`{}`]'.format(m)) \n      -%}\n      {%- do ret.append({\n        \"name\":m,\n        \"value\":md[m],\n        \"record\":md_record[0][\"@id\"],\n        \"type\":md_record[0].type.itemValue\n      }) -%}\n  {%- endif -%}\n{%- endfor -%}\n\n{{ret}}"
+                "update_metadata": "{%- set ret = [] -%}\n\n{%- set md = vars.input.params.metadata_input -%}\n{%- set md_idx = {} -%}\n{%- for r in vars.steps.find_metadata -%}\n  {%- if r.name not in md_idx -%}{%- do md_idx.update({r.name: r}) -%}{%- endif -%}\n{%- endfor -%}\n\n{%- for m in md -%}\n  {%- if m in md_idx -%}\n      {%- set md_record = md_idx[m] -%}\n      {%- do ret.append({\n        \"name\":m,\n        \"value\":md[m],\n        \"record\":md_record[\"@id\"],\n        \"type\":md_record.type.itemValue\n      }) -%}\n  {%- endif -%}\n{%- endfor -%}\n\n{{ret}}"
             },
             "status": null,
             "top": "280",

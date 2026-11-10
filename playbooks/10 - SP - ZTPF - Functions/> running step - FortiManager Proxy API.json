@@ -98,7 +98,7 @@
             "arguments": {
                 "output": "{{vars.script_results}}",
                 "params": "{{vars.input.params}}",
-                "status": "{{vars.return_status}}"
+                "status": "{%- set ret = vars.return_status -%}\n\n{%- if vars.step_status != \"Complete\" -%}\n  {%- do ret.update({\n    \"error\": true,\n    \"message\": \"Step Status \" ~ vars.step_status\n  }) -%}\n{%- endif -%}\n\n{{ret}}"
             },
             "status": null,
             "top": "120",
@@ -112,12 +112,12 @@
             "name": "script results",
             "description": null,
             "arguments": {
-                "step_status": "{%- set ret = \"Complete\" -%}\n{%- set base = vars.steps.step_action.output -%}\n{%- if base.data.status != 0 -%}\n  {%- set ret = \"Failed\" -%}\n{%- endif -%}\n{{ret}}",
-                "script_results": "{%- set base = vars.steps.step_action.output -%}\n{%- set ret = {\n    \"step_data_config\":vars.script_payload,\n    \"step_data\":base.data.execute_response[0]\n} -%}\n{{ret}}"
+                "step_status": "{%- set ret = \"Complete\" -%}\n{%- set base = vars.steps.step_action -%}\n{%- if \"output\" not in base or base.status.error -%}\n  {%- set ret = \"Fail\" -%}\n{%- endif -%}\n{{ret}}",
+                "script_results": "{%- set base = vars.steps.step_action.output -%}\n{%- set ret = {\n    \"step_data_config\":vars.script_payload,\n    \"step_data\":base.data.execute_response[0]|default('No Output')\n} -%}\n{{ret}}"
             },
             "status": null,
             "top": "280",
-            "left": "500",
+            "left": "920",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
             "uuid": "537a737e-63c6-48b4-9cc8-a39f3c795bb8"
@@ -162,6 +162,7 @@
             "name": "step_action",
             "description": null,
             "arguments": {
+                "when": "{{vars.connector_config and vars.action}}",
                 "arguments": {
                     "action": "{{vars.action}}",
                     "target": "{{vars.target}}",
@@ -181,20 +182,6 @@
             "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
             "group": null,
             "uuid": "a7f6bf4f-1e9a-4b3d-930f-bc20ff3c2cd4"
-        },
-        {
-            "@type": "WorkflowStep",
-            "name": "step_data_results",
-            "description": null,
-            "arguments": {
-                "text_data": "{%- macro filter_lines(text, include_regex=[], exclude_regex=[]) -%}\n    {%- set ns = namespace(lines=[], include=false, exclude=false) -%}\n\n    {%- for line in text.splitlines() -%}\n        {%- set ns.include = not include_regex -%}\n        {%- set ns.exclude = false -%}\n\n        {%- for pattern in include_regex -%}\n            {%- if line | regex_search(pattern) -%}\n                {%- set ns.include = true -%}\n            {%- endif -%}\n        {%- endfor -%}\n\n        {%- for pattern in exclude_regex -%}\n            {%- if line | regex_search(pattern) -%}\n                {%- set ns.exclude = true -%}\n            {%- endif -%}\n        {%- endfor -%}\n\n        {%- if ns.include and not ns.exclude -%}\n            {%- set ns.lines = ns.lines + [line] -%}\n        {%- endif -%}\n    {%- endfor -%}\n\n    {{- ns.lines | join('\\n') -}}\n{%- endmacro %}\n\n{%- set step_data = vars.steps.step_action.output.step_data_results -%}\n{%- set include = vars.steps.step_action.output.step_data_json.include_regex -%}\n{%- set exclude = vars.steps.step_action.output.step_data_json.exclude_regex -%}\n\n{%- if include in ['',None] -%}\n  {%- set include = [] -%}\n{%- endif -%}\n{%- if exclude in ['',None] -%}\n  {%- set exclude = [] -%}\n{%- endif -%}\n\n{%- set outp = {\n  \"text1\":\"\",\n  \"text2\":\"\"\n} -%}\n\n{%- if \"diffA\" in step_data -%}\n{%- do outp.update({\"text1\":filter_lines(\n    step_data.diffA,\n    include_regex=include,\n    exclude_regex=exclude\n  )}) -%}\n{%- endif -%}\n\n{%- if \"diffB\" in step_data  -%}\n{%- do outp.update({\"text2\":filter_lines(\n    step_data.diffB,\n    include_regex=include,\n    exclude_regex=exclude\n  )}) -%}\n{%- endif -%}\n\n{{outp}}"
-            },
-            "status": null,
-            "top": "280",
-            "left": "920",
-            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
-            "group": null,
-            "uuid": "0b9b4271-a7a6-437a-8dfd-77894b349ec3"
         },
         {
             "@type": "WorkflowStep",
@@ -224,7 +211,7 @@
             "description": null,
             "arguments": {
                 "resource": {
-                    "queueStatus": "{{\"ztpfDeviceStepStatus\" | picklist(vars.step_status, \"@id\")}}",
+                    "status": "{{\"ztpfDeviceStepStatus\" | picklist(vars.step_status, \"@id\")}}",
                     "outputSourceData": "{{vars.script_results}}"
                 },
                 "operation": "Append",
@@ -277,16 +264,6 @@
         },
         {
             "@type": "WorkflowRoute",
-            "name": "get_step_data -> step_data_results",
-            "targetStep": "\/api\/3\/workflow_steps\/0b9b4271-a7a6-437a-8dfd-77894b349ec3",
-            "sourceStep": "\/api\/3\/workflow_steps\/a7f6bf4f-1e9a-4b3d-930f-bc20ff3c2cd4",
-            "label": null,
-            "isExecuted": false,
-            "group": null,
-            "uuid": "ac767aec-1bcb-45ea-94e7-80d187f62439"
-        },
-        {
-            "@type": "WorkflowRoute",
             "name": "script results -> update step",
             "targetStep": "\/api\/3\/workflow_steps\/ee847a12-5718-4d04-ad7c-eb69843f9551",
             "sourceStep": "\/api\/3\/workflow_steps\/537a737e-63c6-48b4-9cc8-a39f3c795bb8",
@@ -317,13 +294,13 @@
         },
         {
             "@type": "WorkflowRoute",
-            "name": "step_data_results -> script results",
+            "name": "step_action -> script results",
             "targetStep": "\/api\/3\/workflow_steps\/537a737e-63c6-48b4-9cc8-a39f3c795bb8",
-            "sourceStep": "\/api\/3\/workflow_steps\/0b9b4271-a7a6-437a-8dfd-77894b349ec3",
+            "sourceStep": "\/api\/3\/workflow_steps\/a7f6bf4f-1e9a-4b3d-930f-bc20ff3c2cd4",
             "label": null,
             "isExecuted": false,
             "group": null,
-            "uuid": "6044fb00-1ca7-4096-a6d5-3fc59a15efa0"
+            "uuid": "bfd8fd02-958b-4749-bc03-b1676c60c463"
         },
         {
             "@type": "WorkflowRoute",
@@ -340,7 +317,7 @@
         {
             "@type": "WorkflowGroup",
             "name": "Details",
-            "description": "Run FMG Proxy API on a device.",
+            "description": "Run FMG Proxy API on a device. If the results of the API call do not look right change the status of the step to Fail.",
             "type": "note",
             "isCollapsed": false,
             "hasTriggerStep": false,
@@ -349,8 +326,8 @@
             "reusable": false,
             "top": "120",
             "left": "380",
-            "height": "79",
-            "width": "486",
+            "height": "101",
+            "width": "484",
             "uuid": "161d2062-b47f-4b0f-b91f-df23c08b38b0",
             "recordTags": []
         }

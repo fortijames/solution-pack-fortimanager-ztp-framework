@@ -24,9 +24,9 @@
             "description": null,
             "arguments": {
                 "resource": {
-                    "script": "{{vars.steps.get_jinja_vars_and_script.output['script_rendered']}}",
-                    "jinjaVars": "{{vars.steps.get_jinja_vars_and_script.output['jinja_vars']}}",
-                    "outputType": "{{vars.steps.find_action[0].actionOutputType['@id']}}"
+                    "script": "{%- set s = vars.step_script -%}\n{%- if s is mapping or (s is sequence and s is not string) -%}\n{{ s | toJSON }}\n{%- else -%}\n{{ s }}\n{%- endif -%}",
+                    "jinjaVars": "{{vars.jinja_vars}}",
+                    "outputType": "{{vars.output_type}}"
                 },
                 "operation": "Append",
                 "collection": "{{vars.step_fqid}}",
@@ -38,7 +38,7 @@
                 "step_variables": []
             },
             "status": null,
-            "top": "580",
+            "top": "640",
             "left": "540",
             "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928722",
             "group": null,
@@ -96,7 +96,7 @@
                 "workflowReference": "\/api\/3\/workflows\/6ed8988b-5216-4fb3-94e5-0be09ec2ac0a"
             },
             "status": null,
-            "top": "500",
+            "top": "480",
             "left": "540",
             "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
             "group": null,
@@ -224,6 +224,22 @@
         },
         {
             "@type": "WorkflowStep",
+            "name": "step vars",
+            "description": null,
+            "arguments": {
+                "jinja_vars": "{{vars.steps.get_jinja_vars_and_script.output['jinja_vars']}}",
+                "output_type": "{{vars.steps.find_action[0].actionOutputType['@id']}}",
+                "step_script": "{%- set s = vars.steps.get_jinja_vars_and_script.output['script_rendered'] -%}\n{%- if s not in ['',None] -%}\n{%- if s is mapping and (s is sequence and s is not string) -%}\n{{ s | toJSON }}\n{%- else -%}\n{{ s }}\n{%- endif -%}\n{%- else -%}\n# no action payload\n{%- endif -%}"
+            },
+            "status": null,
+            "top": "560",
+            "left": "540",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "632ed909-4832-47ee-9e3c-50b2cdc0b0fb"
+        },
+        {
+            "@type": "WorkflowStep",
             "name": "sync source data device",
             "description": null,
             "arguments": {
@@ -293,13 +309,13 @@
         },
         {
             "@type": "WorkflowRoute",
-            "name": "get jinja_vars and script -> add vars and script to step",
-            "targetStep": "\/api\/3\/workflow_steps\/4e01df57-9373-4ec2-91d5-ba415f2290b3",
+            "name": "get jinja_vars and script -> step vars",
+            "targetStep": "\/api\/3\/workflow_steps\/632ed909-4832-47ee-9e3c-50b2cdc0b0fb",
             "sourceStep": "\/api\/3\/workflow_steps\/e0c9e8dd-7e2b-497d-9153-36a9f96410ec",
             "label": null,
             "isExecuted": false,
             "group": null,
-            "uuid": "31900a0b-8c89-46b1-919c-d36f2e5538f6"
+            "uuid": "09d44684-7830-4dd9-9463-ac50e626b99b"
         },
         {
             "@type": "WorkflowRoute",
@@ -360,6 +376,16 @@
             "isExecuted": false,
             "group": null,
             "uuid": "ba87b451-90e5-406c-9cfa-1f78d5c4e940"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "step vars -> add vars and script to step",
+            "targetStep": "\/api\/3\/workflow_steps\/4e01df57-9373-4ec2-91d5-ba415f2290b3",
+            "sourceStep": "\/api\/3\/workflow_steps\/632ed909-4832-47ee-9e3c-50b2cdc0b0fb",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "8c3b0503-404a-4a30-b7e9-c06995efba5a"
         },
         {
             "@type": "WorkflowRoute",

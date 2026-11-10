@@ -92,3 +92,8 @@ The status field drives the whole framework. Each transition can fire a trigger:
  * [Automation Actions](./automation_actions.md) — define the work each step performs.
  * [Automation Profile Steps](./automation_profile_steps.md) — the design-time steps copied into these records.
 
+
+## More in ZTP Automations
+
+ * [Run Groups](./run_groups.md)
+ * **Device Automation Steps**

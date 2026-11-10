@@ -51,3 +51,8 @@ When the queue drains, the group moves to `Reviewing`, which evaluates the steps
  * [Device Automation Steps](./device_automation_steps.md) — the steps executed by the group.
  * [Automation Profile Steps](./automation_profile_steps.md) — the design-time steps copied into the run.
 
+
+## More in ZTP Automations
+
+ * **Run Groups**
+ * [Device Automation Steps](./device_automation_steps.md)

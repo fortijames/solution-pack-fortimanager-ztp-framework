@@ -76,8 +76,9 @@
                         "name",
                         "ztpfAutomationActions",
                         "script",
+                        "triggerKey",
                         "id",
-                        "triggerKey"
+                        "status"
                     ]
                 },
                 "module": "ztpf_device_automation_steps?$limit=1",
@@ -140,7 +141,7 @@
             "name": "script results",
             "description": null,
             "arguments": {
-                "step_status": "{%- set ret = \"Complete\" -%}\n{%- if vars.steps.run_action.output['exec_script'].status.error -%}\n  {%- set ret = \"Failed\" -%}\n{%- endif -%}\n{{ret}}",
+                "step_status": "{%- set ret = vars.steps.find_step[0].status.itemValue -%}\n{%- if vars.steps.run_action.output['exec_script'].status.error -%}\n  {%- set ret = \"Fail\" -%}\n{%- endif -%}\n{{ret}}",
                 "script_results": "{%- set base = vars.steps.run_action.output -%}\n{%- set ret = {\n    \"task\":base.exec_script.output,\n    \"log\":base.script_log[0].output.data.get_response\n} -%}\n{{ret}}"
             },
             "status": null,
@@ -198,7 +199,7 @@
             "description": null,
             "arguments": {
                 "resource": {
-                    "queueStatus": "{{\"ztpfDeviceStepStatus\" | picklist(vars.step_status, \"@id\")}}",
+                    "status": "{{\"ztpfDeviceStepStatus\" | picklist(vars.step_status, \"@id\")}}",
                     "outputSourceData": "{{vars.script_results}}"
                 },
                 "operation": "Append",

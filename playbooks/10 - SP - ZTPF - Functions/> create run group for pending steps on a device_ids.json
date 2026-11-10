@@ -4,7 +4,7 @@
     "name": "> create run group for pending steps on a device_ids",
     "aliasName": null,
     "tag": null,
-    "description": "Find pending steps and crate a queue group and start the steps in order",
+    "description": "Find pending steps and create a queue group and start the steps in order",
     "isActive": true,
     "debug": false,
     "singleRecordExecution": false,
@@ -122,7 +122,7 @@
             "name": "create step_records",
             "description": null,
             "arguments": {
-                "step_records": "{%- set artf = {\n  \"artifacts\" : {\n    \"ztfGroup\":vars.ztpfGroup,\n    \"ztfGroup_id\":vars.steps.create_run_group['id'],\n    \"ztfGroup_fqid\":vars.steps.create_run_group['@id']\n  },\n  \"steps\":[]\n} -%}\n\n{%- set steps = vars.steps.find_steps -%}\n{%- for s in steps -%}\n  {%- set rec = {} -%}\n  {%- set act_id = s.ztpfAutomationActions.id -%}\n  {%- set act = vars.steps.find_actions\n      |json_query('[?id==`{}`]'.format(act_id)) \n  -%}\n  {%- set dev = vars.steps.find_device\n      |json_query('[?id==`{}`]'.format(s.ztpfDevices.id)) \n  -%}\n  {%- do rec.update({\n    \"fqid\": s['@id'],\n    \"id\": s.id,\n    \"name\":s.name,\n    \"stepNumber\": s.stepNumber,\n    \"action_category\": act[0].category.itemValue,\n    \"action_type\": act[0].type.itemValue,\n    \"device_fqid\":dev[0]['@id'],\n    \"device_id\":dev[0].id,\n    \"device_name\":dev[0].name\n  }) -%}\n  {%- do artf.steps.append(rec) -%}\n{%- endfor -%}\n{{artf}}",
+                "step_records": "{%- set act_idx = {} -%}\n{%- for a in vars.steps.find_actions -%}\n  {%- if a.id not in act_idx -%}{%- do act_idx.update({a.id: a}) -%}{%- endif -%}\n{%- endfor -%}\n{%- set dev_idx = {} -%}\n{%- for d in vars.steps.find_device -%}\n  {%- if d.id not in dev_idx -%}{%- do dev_idx.update({d.id: d}) -%}{%- endif -%}\n{%- endfor -%}\n{%- set artf = {\n  \"artifacts\" : {\n    \"ztfGroup\":vars.ztpfGroup,\n    \"ztfGroup_id\":vars.steps.create_run_group['id'],\n    \"ztfGroup_fqid\":vars.steps.create_run_group['@id']\n  },\n  \"steps\":[]\n} -%}\n\n{%- set steps = vars.steps.find_steps -%}\n{%- for s in steps -%}\n  {%- set rec = {} -%}\n  {%- set act = act_idx[s.ztpfAutomationActions.id] -%}\n  {%- set dev = dev_idx[s.ztpfDevices.id] -%}\n  {%- do rec.update({\n    \"fqid\": s['@id'],\n    \"id\": s.id,\n    \"name\":s.name,\n    \"stepNumber\": s.stepNumber,\n    \"action_category\": act.category.itemValue,\n    \"action_type\": act.type.itemValue,\n    \"device_fqid\":dev['@id'],\n    \"device_id\":dev.id,\n    \"device_name\":dev.name\n  }) -%}\n  {%- do artf.steps.append(rec) -%}\n{%- endfor -%}\n{{artf}}",
                 "device_records_fqids": "{{vars.steps.find_steps|json_query('[].ztpfDevices.\"@id\"')|unique}}"
             },
             "status": null,

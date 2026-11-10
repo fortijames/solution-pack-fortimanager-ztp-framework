@@ -1,0 +1,164 @@
+{
+    "@type": "Workflow",
+    "triggerLimit": null,
+    "name": "> get fmg adoms",
+    "aliasName": null,
+    "tag": null,
+    "description": "Use json_rpc to get FMG fos adoms returned in {{output}}.",
+    "isActive": true,
+    "debug": false,
+    "singleRecordExecution": false,
+    "remoteExecutableFlag": false,
+    "parameters": [
+        "fortimanager_config"
+    ],
+    "synchronous": false,
+    "collection": "\/api\/3\/workflow_collections\/c15a8515-33ae-46d2-9166-fa6fa47ac762",
+    "versions": [],
+    "triggerStep": "\/api\/3\/workflow_steps\/a78c3668-9adb-4534-9d8e-8b4e12f67fed",
+    "steps": [
+        {
+            "@type": "WorkflowStep",
+            "name": "api_payload",
+            "description": null,
+            "arguments": {
+                "api_data": "{\n  \"filter\": {{vars.filter}}\n}"
+            },
+            "status": null,
+            "top": "140",
+            "left": "700",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "280653f6-038f-4c66-8e2d-8b897c0cbfa4"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "get fmg adoms",
+            "description": null,
+            "arguments": {
+                "name": "Fortinet FortiManager JSON-RPC",
+                "config": "{{vars.input.params['fortimanager_config']}}",
+                "params": {
+                    "url": "{{vars.api_url}}",
+                    "data": "{{vars.api_data}}"
+                },
+                "version": "1.1.0",
+                "connector": "fortinet-fortimanager-json-rpc",
+                "operation": "json_rpc_get",
+                "operationTitle": "JSON RPC Get",
+                "pickFromTenant": false,
+                "step_variables": []
+            },
+            "status": null,
+            "top": "200",
+            "left": "360",
+            "stepType": "\/api\/3\/workflow_step_types\/0bfed618-0316-11e7-93ae-92361f002671",
+            "group": null,
+            "uuid": "378b5b59-f538-4034-982a-a36378aabff4"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "return",
+            "description": null,
+            "arguments": {
+                "output": "{{vars.steps.get_fmg_adoms.data.get_response}}",
+                "params": "{{vars.input.params}}",
+                "status": "{%- set ret = vars.return_status -%}\n{%- do ret.update({\"message\":\"FMG API Looks Successful\"}) -%}\n\n{%- set apiret = vars.steps.get_fmg_adoms -%}\n\n{%- if apiret.data.status != 0 -%}\n  {%- do ret.update({\n    \"error\":True,\n    \"message\":\"API Status \" ~ apiret.data.status\n   }) -%}\n{%- endif -%}\n{{ret}}"
+            },
+            "status": null,
+            "top": "200",
+            "left": "60",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "9b641c8a-b322-4ce4-8069-1acb446a368f"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "setup vars",
+            "description": null,
+            "arguments": {
+                "filter": "[\n  [\n    [\n      \"restricted_prds\",\n      \"==\",\n      \"fos\"\n    ],\n    \"||\",\n    [\n      \"restricted_prds\",\n      \"==\",\n      \"fabric\"\n    ]\n  ],\n  \"&&\",\n  [\n    \"name\",\n    \"!=\",\n    \"rootp\"\n  ],\n  \"&&\",\n  [\n    \"name\",\n    \"!=\",\n    \"Unmanaged_Devices\"\n  ]\n]",
+                "api_url": "\/dvmdb\/adom",
+                "return_status": "{{globalVars.ztpf_return_status_default}}"
+            },
+            "status": null,
+            "top": "80",
+            "left": "360",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "cfd6bd12-2a4b-4c74-8fbb-5cda09ff08fb"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Start",
+            "description": null,
+            "arguments": {
+                "step_variables": {
+                    "input": {
+                        "params": []
+                    }
+                }
+            },
+            "status": null,
+            "top": "80",
+            "left": "60",
+            "stepType": "\/api\/3\/workflow_step_types\/b348f017-9a94-471f-87f8-ce88b6a7ad62",
+            "group": null,
+            "uuid": "a78c3668-9adb-4534-9d8e-8b4e12f67fed"
+        }
+    ],
+    "routes": [
+        {
+            "@type": "WorkflowRoute",
+            "name": "api_payload -> get fmg adoms",
+            "targetStep": "\/api\/3\/workflow_steps\/378b5b59-f538-4034-982a-a36378aabff4",
+            "sourceStep": "\/api\/3\/workflow_steps\/280653f6-038f-4c66-8e2d-8b897c0cbfa4",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "7c7d49d0-ffd8-4dca-b494-8bb9587de96f"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "get fmg adoms -> return",
+            "targetStep": "\/api\/3\/workflow_steps\/9b641c8a-b322-4ce4-8069-1acb446a368f",
+            "sourceStep": "\/api\/3\/workflow_steps\/378b5b59-f538-4034-982a-a36378aabff4",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "7456a412-0083-4962-905a-0e1a1b091939"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "setup vars -> api_payload",
+            "targetStep": "\/api\/3\/workflow_steps\/280653f6-038f-4c66-8e2d-8b897c0cbfa4",
+            "sourceStep": "\/api\/3\/workflow_steps\/cfd6bd12-2a4b-4c74-8fbb-5cda09ff08fb",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "3646663e-32b7-4330-a326-edd66c712f3a"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Start -> setup vars",
+            "targetStep": "\/api\/3\/workflow_steps\/cfd6bd12-2a4b-4c74-8fbb-5cda09ff08fb",
+            "sourceStep": "\/api\/3\/workflow_steps\/a78c3668-9adb-4534-9d8e-8b4e12f67fed",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "85a84ff5-1d35-4cc9-be85-cd126148b799"
+        }
+    ],
+    "groups": [],
+    "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+    "playbookOrigin": "\/api\/3\/picklists\/b6d710a9-a8ec-41ec-8817-fe9fa062fcdd",
+    "isEditable": true,
+    "uuid": "823d453a-af89-49d6-bf11-595058adb542",
+    "owners": [],
+    "isPrivate": false,
+    "deletedAt": null,
+    "recordTags": [
+        "json_rpc",
+        "Subroutine"
+    ]
+}

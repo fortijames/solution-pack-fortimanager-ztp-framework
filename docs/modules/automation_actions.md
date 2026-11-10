@@ -98,3 +98,11 @@ Actions are dispatched by the generic `> device step (Running)` trigger: it look
  * [Data Sources](./data_sources.md) — supply `data.<datakey>` values for rendering.
  * [Device Metadata](./device_metadata.md) — can be created or updated from step output.
 
+
+## More in ZTPF Automation Templates
+
+ * [Automation Profiles](./automation_profiles.md)
+ * [Automation Profile Steps](./automation_profile_steps.md)
+ * **Automation Actions**
+ * [Templates](./templates.md)
+ * [Data Sources](./data_sources.md)

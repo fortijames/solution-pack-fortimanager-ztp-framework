@@ -38,7 +38,7 @@
             "name": "create source_types",
             "description": null,
             "arguments": {
-                "source_types": "{{ vars.steps.find_mdsources|json_query('[].type.itemValue') }}"
+                "source_types": "{{ vars.steps.find_mdsources|default([], true)|selectattr('type', 'defined')|selectattr('type.itemValue')|map(attribute='type.itemValue')|list }}"
             },
             "status": null,
             "top": "200",

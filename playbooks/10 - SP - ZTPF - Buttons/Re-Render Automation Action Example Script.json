@@ -22,7 +22,7 @@
             "arguments": {
                 "arguments": {
                     "script_vars": "{{vars.input.records[0].exampleJinjaVars}}",
-                    "yaml2json_flag": "",
+                    "yaml2json_flag": "true",
                     "script_template": "{{vars.input.records[0].script}}"
                 },
                 "apply_async": false,
@@ -87,7 +87,7 @@
             "description": null,
             "arguments": {
                 "resource": {
-                    "exampleScriptRendered": "{{vars.steps.render_jinja.output}}"
+                    "exampleScriptRendered": "{%- set d = vars.steps.render_jinja.output -%}\n{%- if d is mapping or (d is sequence and d is not string) -%}\n{{ d | toJSON }}\n{%- else -%}\n{{ d }}\n{%- endif -%}"
                 },
                 "operation": "Append",
                 "collection": "{{vars.input.records[0]['@id']}}",
@@ -100,7 +100,7 @@
             },
             "status": null,
             "top": "40",
-            "left": "680",
+            "left": "740",
             "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928722",
             "group": null,
             "uuid": "3aeb2d6f-e2c8-4673-a027-931e03a1333b"

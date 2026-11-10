@@ -2,6 +2,20 @@
 |--------------------------------------------|
 
 # Change Log
+ - 20261030-20261110 (2.0.57)
+   - Refactor record lookups in playbooks from per-record dynamic `json_query` filters to dictionary indexes or `selectattr`, and fix a jmespath cache-eviction failure (`Population must be a sequence`) when synchronizing source data for many devices on Python 3.11. 
+   - Rework step status handling: rename the failure status `Failed` to `Fail`, keep a step's existing status when it re-runs, write the status through the `status` field (was `queueStatus`), and initialize return statuses from the `ztpf_return_status_default` global variable. 
+   - Report FortiManager Proxy API steps as `Fail` when the results look wrong, and separate proxy-call errors from device-call errors in the step message. 
+   - Normalize rendered action payloads: objects are serialized to JSON before they are stored on a step, and empty payloads render as `# no action payload`. 
+   - Enable YAML to JSON conversion in the FortiManager Device Script running step. 
+   - Run the Add Steps to Device from Profile button asynchronously, extend its ready timeout from 15 to 60 minutes, gather run group tags in a dedicated step, and match records by uuid. 
+   - Add playbooks: Randomly Create Model Devices by Manager Record (button), api freeform exec DEV, create model device by psk, get fmg adoms, and get fmg supported platforms; deprecate the freeform api proxy encapsulation to device. 
+   - Add playbook tags (Subroutine, adom, connector_config, include and exclude patterns, json_rpc, os_type, output). 
+   - Adjust module layouts: hide a column on Device Automation Steps details, remove the status column display from the Manager form, and make the Device Metadata list visible to all users. 
+   - Re-draw all module diagrams as concise PNG summary visuals with family panels and data-flow arrows (`{{template}}`, `{{data.<data key>}}`), and simplify the Data Sources diagram. 
+   - Add `More in <section>` navigation to every module page and link the Modules reference from Contents and Usage. 
+   - Replace the 1.x usage pages with the usage checklist and a worked example (Create Single Loopback). 
+
  - 20260320-20261030 (2.0.50)
    - Complete rebuild of the solution pack on the new ZTPF 2.0 module set: Managers, Devices, Device Metadata, Automation Profiles, Automation Profile Steps, Automation Actions, Templates, Data Sources, Device Automation Steps, Run Groups, Manager Automation Profile Rules, and Quick Links. 
    - Rename roles to `ztpfAdmin` and `ztpfPlaybookAppliance`. 

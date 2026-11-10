@@ -68,3 +68,11 @@ The `Configure stepARGs Help` button on a step lists these options and updates t
  * [Device Automation Steps](./device_automation_steps.md) — the runtime copies of these steps on a device.
  * [Run Groups](./run_groups.md) — created when the copied steps are queued for execution.
 
+
+## More in ZTPF Automation Templates
+
+ * [Automation Profiles](./automation_profiles.md)
+ * **Automation Profile Steps**
+ * [Automation Actions](./automation_actions.md)
+ * [Templates](./templates.md)
+ * [Data Sources](./data_sources.md)

@@ -22,7 +22,7 @@
             "arguments": {
                 "resource": {
                     "exampleJinjaVars": "{{vars.jinja_vars}}",
-                    "exampleScriptRendered": "{{vars.script_rendered}}"
+                    "exampleScriptRendered": "{%- set d = vars.script_rendered -%}\n{%- if d is mapping or (d is sequence and d is not string) -%}\n{{ d | toJSON }}\n{%- else -%}\n{{ d }}\n{%- endif -%}"
                 },
                 "operation": "Append",
                 "collection": "{{vars.input.records[0]['@id']}}",

@@ -1,0 +1,148 @@
+{
+    "@type": "Workflow",
+    "triggerLimit": null,
+    "name": "> create model device - by psk",
+    "aliasName": null,
+    "tag": null,
+    "description": "Exec create model device",
+    "isActive": true,
+    "debug": false,
+    "singleRecordExecution": false,
+    "remoteExecutableFlag": false,
+    "parameters": [
+        "fgt_os_version",
+        "fgt_name",
+        "fgt_platform_str",
+        "fmg_adom",
+        "connector_config",
+        "fgt_mr",
+        "fgt_patch",
+        "fmg_psk"
+    ],
+    "synchronous": false,
+    "collection": "\/api\/3\/workflow_collections\/c15a8515-33ae-46d2-9166-fa6fa47ac762",
+    "versions": [],
+    "triggerStep": "\/api\/3\/workflow_steps\/bd866688-4b53-4ab7-8796-d1c195f294f0",
+    "steps": [
+        {
+            "@type": "WorkflowStep",
+            "name": "create model device",
+            "description": null,
+            "arguments": {
+                "name": "Fortinet FortiManager JSON-RPC",
+                "config": "{{vars.input.params['connector_config']}}",
+                "params": {
+                    "url": "\/dvm\/cmd\/add\/device",
+                    "data": "{{vars.payload}}",
+                    "track_task": true,
+                    "task_timeout": "",
+                    "task_stale_timeout": "",
+                    "zero_percent_timeout": "",
+                    "delete_task_on_timeout": ""
+                },
+                "version": "1.1.0",
+                "connector": "fortinet-fortimanager-json-rpc",
+                "operation": "json_rpc_execute",
+                "operationTitle": "JSON RPC Exec",
+                "pickFromTenant": false,
+                "step_variables": []
+            },
+            "status": null,
+            "top": "140",
+            "left": "360",
+            "stepType": "\/api\/3\/workflow_step_types\/0bfed618-0316-11e7-93ae-92361f002671",
+            "group": null,
+            "uuid": "3c8003b4-2887-4566-945f-e8d03657b937"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "return",
+            "description": null,
+            "arguments": {
+                "output": "{{vars.steps.create_model_device}}",
+                "params": "{{vars.input.params}}",
+                "status": "{%- set ret = vars.return_status -%}\n{%- set step_data = vars.steps.create_model_device -%}\n\n{%- if step_data.status != \"Success\" -%}\n  {%- do ret.update({\n    \"error\": True,\n    \"message\": \"Status Fail (\" + step_data.status + \")\"\n  }) -%}\n{%- else -%}\n  {%- do ret.update({\n    \"message\": \"FMG API Successful\"\n  }) -%}\n{%- endif -%}\n{{ret}}"
+            },
+            "status": null,
+            "top": "140",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "d86df7ee-3b05-441c-b724-1c1b1551559f"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "setup vars",
+            "description": null,
+            "arguments": {
+                "payload": "{\n  \"device\": {\n    \"device action\": \"add_model\",\n    \"os_type\": \"fos\",\n    \"platform_str\": \"{{vars.input.params['fgt_platform_str']}}\",\n    \"os_ver\": {{vars.input.params['fgt_os_version']}},\n    \"mr\": {{vars.input.params['fgt_mr']}},\n    \"patch\": {{vars.input.params['fgt_patch']}},\n    \"mgmt_mode\": \"fmg\",\n    \"meta fields\": {\n      \"Contact Email\": \"admin@test.com\"\n    },\n    \"name\": \"{{vars.input.params['fgt_name']}}\",\n    \"psk\": \"{{vars.input.params['fmg_psk']}}\"\n  },\n  \"flags\": [\n    \"create_task\",\n    \"nonblocking\"\n  ],\n  \"adom\": \"{{vars.input.params['fmg_adom']}}\"\n}",
+                "return_status": "{{globalVars.ztpf_return_status_default}}"
+            },
+            "status": null,
+            "top": "40",
+            "left": "360",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "3cdedc1c-b281-4b5f-9d18-39e50ac3265e"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Start",
+            "description": null,
+            "arguments": {
+                "step_variables": {
+                    "input": {
+                        "params": []
+                    }
+                }
+            },
+            "status": null,
+            "top": "40",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/b348f017-9a94-471f-87f8-ce88b6a7ad62",
+            "group": null,
+            "uuid": "bd866688-4b53-4ab7-8796-d1c195f294f0"
+        }
+    ],
+    "routes": [
+        {
+            "@type": "WorkflowRoute",
+            "name": "Create Model Device from Serial -> extract_fmg_data",
+            "targetStep": "\/api\/3\/workflow_steps\/d86df7ee-3b05-441c-b724-1c1b1551559f",
+            "sourceStep": "\/api\/3\/workflow_steps\/3c8003b4-2887-4566-945f-e8d03657b937",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "c8ad8489-e073-4b3a-8091-f3d7d70a016f"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Set script payload -> Create Model Device from Serial",
+            "targetStep": "\/api\/3\/workflow_steps\/3c8003b4-2887-4566-945f-e8d03657b937",
+            "sourceStep": "\/api\/3\/workflow_steps\/3cdedc1c-b281-4b5f-9d18-39e50ac3265e",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "751ba115-ed5e-4604-a10b-a93b6439084d"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Start -> Set script payload",
+            "targetStep": "\/api\/3\/workflow_steps\/3cdedc1c-b281-4b5f-9d18-39e50ac3265e",
+            "sourceStep": "\/api\/3\/workflow_steps\/bd866688-4b53-4ab7-8796-d1c195f294f0",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "35f9877e-d2f8-4d7c-b69b-5857507abe6d"
+        }
+    ],
+    "groups": [],
+    "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+    "playbookOrigin": "\/api\/3\/picklists\/b6d710a9-a8ec-41ec-8817-fe9fa062fcdd",
+    "isEditable": true,
+    "uuid": "7463c045-4f34-4348-8210-cbb8f5c13849",
+    "owners": [],
+    "isPrivate": false,
+    "deletedAt": null,
+    "recordTags": []
+}

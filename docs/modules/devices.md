@@ -80,3 +80,9 @@ Devices expose different actions depending on the dashboard or view, such as the
  * [Device Automation Steps](./device_automation_steps.md) — the runtime steps that execute on this device.
  * [Run Groups](./run_groups.md) — batches this device's steps into a single execution.
 
+
+## More in ZTPF Assets
+
+ * [Managers](./managers.md)
+ * **Devices**
+ * [Device Metadata](./device_metadata.md)

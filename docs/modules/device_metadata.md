@@ -39,3 +39,9 @@ Values can be flagged as `Input Needed`, which prompts users to supply required 
  * [Automation Actions](./automation_actions.md) — can create or update these records from step output.
  * [Data Sources](./data_sources.md) — a different module: runtime collectors that can read these values as `record.metadata.<name>`.
 
+
+## More in ZTPF Assets
+
+ * [Managers](./managers.md)
+ * [Devices](./devices.md)
+ * **Device Metadata**

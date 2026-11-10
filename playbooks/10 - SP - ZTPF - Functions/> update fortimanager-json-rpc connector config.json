@@ -26,7 +26,7 @@
             "name": "check_connector_configs",
             "description": null,
             "arguments": {
-                "existing_config": "{%- set config  = vars.connector_configs | json_query('[?name==`{}`]'.format(vars.connector_config)) -%}\n{%- if config|length > 0 -%}\n{{config[0]}}\n{%- else -%}\n0\n{%- endif -%}",
+                "existing_config": "{%- set config  = vars.connector_configs | selectattr('name', 'equalto', vars.connector_config) | list -%}\n{%- if config|length > 0 -%}\n{{config[0]}}\n{%- else -%}\n0\n{%- endif -%}",
                 "connector_ip_list": "{{vars.connector_configs|json_query('[].config.address')}}",
                 "connector_name_list": "{{vars.connector_configs|json_query('[].name')}}",
                 "connector_nameip_list": "{{vars.connector_configs|json_query('[][name,config.address,id]')}}"

@@ -3,6 +3,16 @@
 
 # What's New
 
+Release 2.0.57
+
+This release hardens the framework's playbooks and rounds out the documentation set. 
+
+- Playbook reliability: record lookups no longer build a new JMESPath query per record (this fixes a jmespath cache-eviction failure when synchronizing source data for many devices on Python 3.11), rendered payloads are serialized to JSON before they are stored on a step, and a step keeps its existing status when it re-runs. 
+- Clearer statuses: the failure status is now `Fail`, step updates write the `status` field (was `queueStatus`), return statuses start from the `ztpf_return_status_default` global variable, and FortiManager Proxy API steps separate proxy-call errors from device-call errors in the step message. 
+- New playbooks: a bulk model-device generator button (`Randomly Create Model Devices - by Manager Record`), freeform device API execution (`api freeform exec DEV`), model device creation by PSK, and FortiManager ADOM and supported-platform lookups. The freeform proxy encapsulation microservice is deprecated. 
+- The `Add Steps to Device from Profile` button now runs asynchronously with a 60-minute ready timeout (was 15). 
+- Documentation: all module diagrams re-drawn as concise PNG summary visuals with family panels and data-flow arrows, `More in <section>` navigation added to every module page, the Modules reference linked from Contents and Usage, and the 1.x usage pages replaced by the usage checklist and a worked example. 
+
 Release 2.0.50
 
 This release is a complete rebuild of the FortiManager ZTP Flow framework on a new set of ZTPF modules. Version 1.x kept the framework configuration in a small number of collections (ZTP Profiles, Metafield Templates, and Script Templates). ZTPF 2.0 replaces that model with twelve purpose-built modules that separate the building blocks of the framework: 

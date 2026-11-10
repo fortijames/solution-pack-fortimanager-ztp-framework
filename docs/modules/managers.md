@@ -74,3 +74,9 @@ The `Get New Device` settings control how new devices are discovered when the De
  * [Devices](./devices.md) — synchronized from this Manager's Device DB.
  * [Manager Automation Profile Rules](./manager_automation_profile_rules.md) — auto-assign Automation Profiles to this Manager's devices.
 
+
+## More in ZTPF Assets
+
+ * **Managers**
+ * [Devices](./devices.md)
+ * [Device Metadata](./device_metadata.md)

@@ -1,0 +1,218 @@
+{
+    "@type": "Workflow",
+    "triggerLimit": null,
+    "name": "> api proxy encapsulation to device - freeform DEPRECATED",
+    "aliasName": null,
+    "tag": null,
+    "description": "Use the FMG sys\/proxy\/json endpoint to encapsulate device API calls via the management tunnel.",
+    "isActive": true,
+    "debug": false,
+    "singleRecordExecution": false,
+    "remoteExecutableFlag": false,
+    "parameters": [
+        "connector_config",
+        "action",
+        "resource",
+        "target",
+        "payload"
+    ],
+    "synchronous": false,
+    "collection": "\/api\/3\/workflow_collections\/c15a8515-33ae-46d2-9166-fa6fa47ac762",
+    "versions": [],
+    "triggerStep": "\/api\/3\/workflow_steps\/67c2c4c5-5242-4baf-a623-20bcca83dc3a",
+    "steps": [
+        {
+            "@type": "WorkflowStep",
+            "name": "create payload",
+            "description": null,
+            "arguments": {
+                "api_payload": "[\n    {\n      \"data\": {\n        \"action\": \"put\",\n        \"payload\": {\n          \"name\": \"testme1\"\n        },\n        \"resource\": \"\/api\/v2\/cmdb\/system.snmp\/community\/1\",\n        \"target\": [\n          \"device\/FG1\"\n        ]\n      },\n      \"url\": \"\/sys\/proxy\/json\"\n    },\n    {\n      \"data\": {\n        \"action\": \"put\",\n        \"payload\": {\n          \"name\": \"testme2\"\n        },\n        \"resource\": \"\/api\/v2\/cmdb\/system.snmp\/community\/2\",\n        \"target\": [\n          \"device\/FG2\"\n        ]\n      },\n      \"url\": \"\/sys\/proxy\/json\"\n    }\n]"
+            },
+            "status": null,
+            "top": "360",
+            "left": "340",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "a98cb662-0863-4023-9165-5b2fe0a4cbb2"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "create targets",
+            "description": null,
+            "arguments": {
+                "api_targets": "{%- set tgt = [] -%}\n\n{%- for t in vars.in_target -%}\n  {%- if \"\/\" in t -%}\n    {%- do tgt.append(t) -%}\n  {%- else -%}\n    {%- do tgt.append(\"device\/\" + t) -%}\n  {%- endif -%}\n{%- endfor -%}\n\n{{tgt}}"
+            },
+            "status": null,
+            "top": "200",
+            "left": "720",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "1c95221d-f173-48fb-b6ae-0951379bb257"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "fmg_api",
+            "description": null,
+            "arguments": {
+                "name": "Fortinet FortiManager JSON RPC",
+                "config": "{{vars.connector_config}}",
+                "params": {
+                    "data": "{{vars.api_payload}}",
+                    "method": "exec"
+                },
+                "version": "1.1.0",
+                "connector": "fortinet-fortimanager-json-rpc",
+                "operation": "json_rpc_freeform",
+                "operationTitle": "JSON RPC Freeform",
+                "pickFromTenant": false,
+                "step_variables": []
+            },
+            "status": null,
+            "top": "200",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/0bfed618-0316-11e7-93ae-92361f002671",
+            "group": null,
+            "uuid": "0d89fd99-6e60-4a70-8fac-8d6dd8f6dfb2"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "initial vars",
+            "description": null,
+            "arguments": {
+                "in_action": "{{vars.input.params.action}}",
+                "in_target": "{%- set in_field = vars.input.params.target -%}\n{%- set ret = '' -%}\n\n{%- if in_field not in ['',None] -%}\n  {%- if in_field is sequence and in_field is not string -%}\n    {% set ret = in_field %}\n  {%- else -%}\n    {%- set cmt = in_field | regex_replace('[,\\n]+', ',') -%}\n    {%- set ret = cmt.split(',') | list -%}\n  {%- endif -%}\n{%- endif -%}\n\n{{ret}}",
+                "in_payload": "{{vars.input.params.payload}}",
+                "in_resource": "{{vars.input.params.resource}}",
+                "return_status": "{{globalVars.ztpf_return_status_default}}",
+                "api_json_proxy": "\/sys\/proxy\/json",
+                "connector_config": "{{vars.input.params['connector_config']}}"
+            },
+            "status": null,
+            "top": "40",
+            "left": "340",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "7534bf5c-0df6-433e-880d-2c257b4168de"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "return",
+            "description": null,
+            "arguments": {
+                "output": "{{vars.steps.fmg_api}}",
+                "params": "{{vars.input.params}}",
+                "status": "{%- set s = vars.return_status -%}\n{%- do s.update({\"message\": \"API Looks ok\"}) -%}\n{%- set fmgret = vars.steps.fmg_api.data -%}\n\n{%- if fmgret.status is defined and fmgret.status.code is defined and fmgret.status.code != 0 -%}\n  {%- do s.update({\n    \"error\": true,\n    \"message\": \"proxy call failed: \" + (fmgret.status.message | default('unknown error', true))\n  }) -%}\n{%- endif -%}\n\n{%- if fmgret.execute_response is defined and fmgret.execute_response[0] is defined\n      and fmgret.execute_response[0].status is defined\n      and fmgret.execute_response[0].status.code != 0\n-%}\n  {%- do s.update({\n    \"error\": true,\n    \"message\": \"device call failed: \" + (fmgret.execute_response[0].status.message | default('unknown error', true))\n  }) -%}\n{%- endif -%}\n\n{{s}}"
+            },
+            "status": null,
+            "top": "120",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "8656533e-38fa-471a-a509-371ce1c53b26"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Start",
+            "description": null,
+            "arguments": {
+                "__triggerLimit": true,
+                "step_variables": {
+                    "input": {
+                        "params": []
+                    }
+                },
+                "triggerOnSource": true,
+                "triggerOnReplicate": false
+            },
+            "status": null,
+            "top": "40",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/b348f017-9a94-471f-87f8-ce88b6a7ad62",
+            "group": null,
+            "uuid": "67c2c4c5-5242-4baf-a623-20bcca83dc3a"
+        }
+    ],
+    "routes": [
+        {
+            "@type": "WorkflowRoute",
+            "name": "create targets -> creat payload",
+            "targetStep": "\/api\/3\/workflow_steps\/a98cb662-0863-4023-9165-5b2fe0a4cbb2",
+            "sourceStep": "\/api\/3\/workflow_steps\/1c95221d-f173-48fb-b6ae-0951379bb257",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "27d5ead4-84c9-4ebc-803b-ddda8cc6cbe4"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "creat payload -> fmg_api",
+            "targetStep": "\/api\/3\/workflow_steps\/0d89fd99-6e60-4a70-8fac-8d6dd8f6dfb2",
+            "sourceStep": "\/api\/3\/workflow_steps\/a98cb662-0863-4023-9165-5b2fe0a4cbb2",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "79ca5acc-bbf8-4f8d-a19b-0a8538fcbc9b"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "fmg_api -> return",
+            "targetStep": "\/api\/3\/workflow_steps\/8656533e-38fa-471a-a509-371ce1c53b26",
+            "sourceStep": "\/api\/3\/workflow_steps\/0d89fd99-6e60-4a70-8fac-8d6dd8f6dfb2",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "f08ba925-42d5-44b3-99db-1877bfbe4a2f"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "initial vars -> create targets",
+            "targetStep": "\/api\/3\/workflow_steps\/1c95221d-f173-48fb-b6ae-0951379bb257",
+            "sourceStep": "\/api\/3\/workflow_steps\/7534bf5c-0df6-433e-880d-2c257b4168de",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "8516d586-e507-40f6-b5cc-25af14d14b26"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Start -> initial vars",
+            "targetStep": "\/api\/3\/workflow_steps\/7534bf5c-0df6-433e-880d-2c257b4168de",
+            "sourceStep": "\/api\/3\/workflow_steps\/67c2c4c5-5242-4baf-a623-20bcca83dc3a",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "9ab1cf6e-8a81-45bf-b0ed-a381a448d4f5"
+        }
+    ],
+    "groups": [
+        {
+            "@type": "WorkflowGroup",
+            "name": "Target Options",
+            "description": "Target from list of devices:\ndevice_001,device_002,device_003\n\nTarget Objects with ADOM:\n\/adom\/foo\/group\/All_FortiGate\n\/adom\/foo\/group\/group1\n\/adom\/bar\/device\/fgt_dut1\n\/adom\/bar\/device\/fgt_dut2",
+            "type": "note",
+            "isCollapsed": false,
+            "hasTriggerStep": false,
+            "hideInLogs": false,
+            "metadata": [],
+            "reusable": false,
+            "top": "120",
+            "left": "340",
+            "height": "212",
+            "width": "292",
+            "uuid": "558e65b3-9992-4e9e-bd28-4b14550431d4",
+            "recordTags": []
+        }
+    ],
+    "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+    "playbookOrigin": "\/api\/3\/picklists\/b6d710a9-a8ec-41ec-8817-fe9fa062fcdd",
+    "isEditable": true,
+    "uuid": "7b04ba01-06dd-4629-b951-0063c779bcb9",
+    "owners": [],
+    "isPrivate": false,
+    "deletedAt": null,
+    "recordTags": [
+        "exec",
+        "fmg_api",
+        "TODO"
+    ]
+}

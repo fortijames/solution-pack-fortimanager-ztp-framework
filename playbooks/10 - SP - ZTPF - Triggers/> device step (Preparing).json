@@ -208,6 +208,7 @@
             "name": "setup vars",
             "description": null,
             "arguments": {
+                "empty": "''",
                 "step_args": "{{vars.input.records[0].stepARGS}}",
                 "step_name": "{{vars.input.records[0].name}}",
                 "jinja_vars": "{%- set ret = vars.input.records[0].jinjaVars -%}\n{%- if vars.steps.get_device_jinja_vars.output -%}\n  {%- set ret = ret | combine(vars.steps.get_device_jinja_vars.output) -%}\n{%- endif -%}\n{{ret}}",
@@ -308,7 +309,7 @@
             "arguments": {
                 "resource": {
                     "name": "{{vars.step_name}}",
-                    "script": "{%- set script = vars.steps.get_jinja_vars_and_script.output['script_rendered'] -%}\n{%- if script not in ['',None] -%}\n{{script}}\n{%- else -%}\n# no action payload\n{%- endif -%}",
+                    "script": "{%- set s = vars.steps.get_jinja_vars_and_script.output['script_rendered'] -%}\n{%- if s is defined and s not in ['',None] -%}\n{%- if s is mapping or (s is sequence and s is not string) -%}\n{{ s | toJSON }}\n{%- else -%}\n{{ s }}\n{%- endif -%}\n{%- else -%}\n{{vars.empty}}\n{%- endif -%}",
                     "status": "{{\"ztpfDeviceStepStatus\" | picklist(vars.step_status, \"@id\")}}",
                     "stepARGS": "{{vars.steps.refactor_step_arg.output|default('')}}",
                     "jinjaVars": "{{vars.steps.get_jinja_vars_and_script.output['jinja_vars']}}",

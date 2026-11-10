@@ -1,0 +1,193 @@
+{
+    "@type": "Workflow",
+    "triggerLimit": null,
+    "name": "> get fmg supported platforms",
+    "aliasName": null,
+    "tag": null,
+    "description": "Get supported platforms by ADOM and OS Type. Defaults to root ADOM and OS Type FortiGate.",
+    "isActive": true,
+    "debug": false,
+    "singleRecordExecution": false,
+    "remoteExecutableFlag": false,
+    "parameters": [
+        "connector_config",
+        "adom",
+        "os_type"
+    ],
+    "synchronous": false,
+    "collection": "\/api\/3\/workflow_collections\/c15a8515-33ae-46d2-9166-fa6fa47ac762",
+    "versions": [],
+    "triggerStep": "\/api\/3\/workflow_steps\/661afe35-e7a6-475d-9a26-185ba805bc72",
+    "steps": [
+        {
+            "@type": "WorkflowStep",
+            "name": "api variables",
+            "description": null,
+            "arguments": {
+                "api_url": "\/pm\/config\/adom\/{{vars.adom}}\/_data\/dvm\/device\/model",
+                "api_data": "[\n  { \n    \"ostype\":\"{{vars.os_type}}\",\n    \"url\":\"\/pm\/config\/adom\/{{vars.adom}}\/_data\/dvm\/device\/model\"\n  }\n]"
+            },
+            "status": null,
+            "top": "160",
+            "left": "740",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "baa2be8e-cda4-43e3-b896-60b4ede3e546"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "extract_fmg_data",
+            "description": null,
+            "arguments": {
+                "output": "{{vars.steps.get_models.data['free_form_response']}}",
+                "params": "{{vars.input.params}}",
+                "status": "{%- set ret = vars.return_status -%}\n{%- do ret.update({\"message\":\"FMG API Looks Successful\"}) -%}\n\n{%- set apiret = vars.steps.get_models -%}\n\n{%- if apiret.data.status != 200 -%}\n  {%- do ret.update({\n    \"error\":True,\n    \"message\":\"API Status \" ~ apiret.data.status\n   }) -%}\n{%- endif -%}\n{{ret}}"
+            },
+            "status": null,
+            "top": "260",
+            "left": "60",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "1b9aa514-3901-46c4-b22b-579e8b5e96f7"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "get_models",
+            "description": null,
+            "arguments": {
+                "name": "Fortinet FortiManager JSON-RPC",
+                "config": "{{vars.input.params['connector_config']}}",
+                "params": {
+                    "data": "{{vars.api_data}}",
+                    "method": "get"
+                },
+                "version": "1.0.6",
+                "connector": "fortinet-fortimanager-json-rpc",
+                "operation": "json_rpc_freeform",
+                "operationTitle": "JSON RPC Freeform",
+                "pickFromTenant": false,
+                "step_variables": []
+            },
+            "status": null,
+            "top": "260",
+            "left": "380",
+            "stepType": "\/api\/3\/workflow_step_types\/0bfed618-0316-11e7-93ae-92361f002671",
+            "group": null,
+            "uuid": "80978e8b-4ba4-484a-bc14-677e2d32f30e"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "setup env",
+            "description": null,
+            "arguments": {
+                "adom": "{%- if vars.input.params.adom not in vars.empty -%}\n{{vars.input.params.adom}}\n{%- else -%}\nroot\n{%- endif -%}",
+                "os_type": "{%- if vars.input.params.os_type not in vars.empty -%}\n{{vars.input.params.os_type}}\n{%- else -%}\nFortiGate\n{%- endif -%}",
+                "return_status": "{{globalVars.ztpf_return_status_default}}"
+            },
+            "status": null,
+            "top": "60",
+            "left": "380",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "49f0aa55-10a2-443b-95a3-d742aa71a102"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Start",
+            "description": null,
+            "arguments": {
+                "__triggerLimit": true,
+                "step_variables": {
+                    "empty": "['',None,Null]",
+                    "input": {
+                        "params": []
+                    }
+                },
+                "triggerOnSource": true,
+                "triggerOnReplicate": false
+            },
+            "status": null,
+            "top": "60",
+            "left": "60",
+            "stepType": "\/api\/3\/workflow_step_types\/b348f017-9a94-471f-87f8-ce88b6a7ad62",
+            "group": null,
+            "uuid": "661afe35-e7a6-475d-9a26-185ba805bc72"
+        }
+    ],
+    "routes": [
+        {
+            "@type": "WorkflowRoute",
+            "name": "api payload -> get_models",
+            "targetStep": "\/api\/3\/workflow_steps\/80978e8b-4ba4-484a-bc14-677e2d32f30e",
+            "sourceStep": "\/api\/3\/workflow_steps\/baa2be8e-cda4-43e3-b896-60b4ede3e546",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "8bb68cc7-8bde-4cad-a4a3-fa2302d52c2b"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Get Devices in FMG -> extract data",
+            "targetStep": "\/api\/3\/workflow_steps\/1b9aa514-3901-46c4-b22b-579e8b5e96f7",
+            "sourceStep": "\/api\/3\/workflow_steps\/80978e8b-4ba4-484a-bc14-677e2d32f30e",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "4ec24ff5-9043-4f49-a748-1b6ea938485b"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "setup env -> api payload",
+            "targetStep": "\/api\/3\/workflow_steps\/baa2be8e-cda4-43e3-b896-60b4ede3e546",
+            "sourceStep": "\/api\/3\/workflow_steps\/49f0aa55-10a2-443b-95a3-d742aa71a102",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "4184a440-b315-400d-b47d-d4f060a82608"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Start -> setup env",
+            "targetStep": "\/api\/3\/workflow_steps\/49f0aa55-10a2-443b-95a3-d742aa71a102",
+            "sourceStep": "\/api\/3\/workflow_steps\/661afe35-e7a6-475d-9a26-185ba805bc72",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "50cf926d-cb1f-4d17-b55c-e4525265d41a"
+        }
+    ],
+    "groups": [
+        {
+            "@type": "WorkflowGroup",
+            "name": "OS Types",
+            "description": "FortiGate or fos, FortiSwitch or fsw, FortiManager or fmg, etc...",
+            "type": "note",
+            "isCollapsed": false,
+            "hasTriggerStep": false,
+            "hideInLogs": false,
+            "metadata": [],
+            "reusable": false,
+            "top": "140",
+            "left": "360",
+            "height": "93",
+            "width": "297",
+            "uuid": "6a685eaf-3198-4836-8526-38e0bfd08a8c",
+            "recordTags": []
+        }
+    ],
+    "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+    "playbookOrigin": "\/api\/3\/picklists\/b6d710a9-a8ec-41ec-8817-fe9fa062fcdd",
+    "isEditable": true,
+    "uuid": "77b920e2-818e-4593-8bf4-13edfb90ccf5",
+    "owners": [],
+    "isPrivate": false,
+    "deletedAt": null,
+    "recordTags": [
+        "adom",
+        "connector_config",
+        "json_rpc",
+        "os_type",
+        "output",
+        "Subroutine"
+    ]
+}

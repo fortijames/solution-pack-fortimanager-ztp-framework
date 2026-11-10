@@ -46,3 +46,11 @@ When a profile is applied, its steps are not run directly. The runtime copy of e
  * [Manager Automation Profile Rules](./manager_automation_profile_rules.md) — automatic assignment of this profile to devices.
  * [Run Groups](./run_groups.md) — created when profile steps are queued for execution.
 
+
+## More in ZTPF Automation Templates
+
+ * **Automation Profiles**
+ * [Automation Profile Steps](./automation_profile_steps.md)
+ * [Automation Actions](./automation_actions.md)
+ * [Templates](./templates.md)
+ * [Data Sources](./data_sources.md)

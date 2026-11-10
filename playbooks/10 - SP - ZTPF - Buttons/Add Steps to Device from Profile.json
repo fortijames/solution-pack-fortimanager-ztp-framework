@@ -32,7 +32,7 @@
             },
             "status": null,
             "top": "620",
-            "left": "460",
+            "left": "440",
             "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
             "group": null,
             "uuid": "40c1fce2-9858-4c59-a6c2-ec95a52ef8ae"
@@ -59,7 +59,7 @@
                 "step_variables": []
             },
             "status": null,
-            "top": "400",
+            "top": "460",
             "left": "40",
             "stepType": "\/api\/3\/workflow_step_types\/12254cf5-5db7-4b1a-8cb1-3af081924b28",
             "group": null,
@@ -81,14 +81,14 @@
                     "device_id": "{{vars.item.id}}",
                     "profile_id": "{{vars.profile_selected[0].id}}"
                 },
-                "apply_async": false,
+                "apply_async": true,
                 "step_variables": [],
                 "pass_parent_env": false,
                 "pass_input_record": false,
                 "workflowReference": "\/api\/3\/workflows\/6d3e2df8-cb50-44a8-a3c4-f988f7546689"
             },
             "status": null,
-            "top": "300",
+            "top": "320",
             "left": "40",
             "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
             "group": null,
@@ -100,7 +100,7 @@
             "description": null,
             "arguments": [],
             "status": null,
-            "top": "500",
+            "top": "560",
             "left": "40",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
@@ -108,7 +108,7 @@
         },
         {
             "@type": "WorkflowStep",
-            "name": "Find Profiles",
+            "name": "find profiles",
             "description": null,
             "arguments": {
                 "query": {
@@ -148,9 +148,7 @@
                 },
                 "module": "ztpf_run_groups?$limit=5000",
                 "checkboxFields": true,
-                "step_variables": {
-                    "rungroup_tags": "{{vars.steps.find_rungroup_tags|json_query('[].recordTags[]')|unique|sort}}"
-                }
+                "step_variables": []
             },
             "status": null,
             "top": "120",
@@ -164,7 +162,7 @@
             "name": "profile_options",
             "description": null,
             "arguments": {
-                "profile": "{%- set recs = vars.steps.Find_Profiles -%}\n{%- set opts = [] -%}\n{%- for r in recs -%}\n{%- set o = r -%}\n{%- set on = r.name -%}\n{%- do o.update({\n  \"_option\": on\n}) -%}\n{%- do opts.append(o) -%}\n{%- endfor -%}\n{\n  \"records\": {{opts}},\n  \"options\": {{opts|json_query('[]._option')|sort}}\n}"
+                "profile": "{%- set recs = vars.steps.find_profiles -%}\n{%- set opts = [] -%}\n{%- for r in recs -%}\n{%- set o = r -%}\n{%- set on = r.name -%}\n{%- do o.update({\n  \"_option\": on\n}) -%}\n{%- do opts.append(o) -%}\n{%- endfor -%}\n{\n  \"records\": {{opts}},\n  \"options\": {{opts|json_query('[]._option')|sort}}\n}"
             },
             "status": null,
             "top": "40",
@@ -179,10 +177,10 @@
             "description": null,
             "arguments": {
                 "user_tags": "{%- set tags = [] -%}\n\n{%- set pickFromExistingTags  = vars.steps.select_profile.input.pickFromExistingTags -%}\n{%- set addTags = vars.steps.select_profile.input.tags -%}\n\n\n{%- if pickFromExistingTags -%}\n  {%- for t in pickFromExistingTags -%}\n    {%- do tags.append(t) -%}\n  {%- endfor -%}\n{%- endif -%}\n\n{%- if addTags  -%}\n  {%- for t in addTags.replace(' ',',').split(',') -%}\n    {%- do tags.append(t) -%}\n  {%- endfor -%}\n{%- endif -%}\n\n{{tags|unique|sort}}",
-                "profile_selected": "{{vars.profile.records\n  | json_query('[?_option==`{}`]'\n    .format(vars.steps.select_profile.input.profile)\n)\n}}"
+                "profile_selected": "{{vars.profile.records\n  | selectattr('_option', 'equalto', vars.steps.select_profile.input.profile)\n  | list\n}}"
             },
             "status": null,
-            "top": "300",
+            "top": "360",
             "left": "600",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
@@ -190,7 +188,7 @@
         },
         {
             "@type": "WorkflowStep",
-            "name": "ready timeout 15m",
+            "name": "ready timeout 60m",
             "description": null,
             "arguments": [],
             "status": null,
@@ -199,6 +197,20 @@
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
             "uuid": "5b519c9a-3f60-4da8-a3f4-ca7b183cf4b2"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "rungroup_tags",
+            "description": null,
+            "arguments": {
+                "rungroup_tags": "{{vars.steps.find_rungroup_tags|json_query('[].recordTags[]')|unique|sort}}"
+            },
+            "status": null,
+            "top": "200",
+            "left": "600",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "2a02da2c-77b4-40e7-9229-02633e720743"
         },
         {
             "@type": "WorkflowStep",
@@ -386,7 +398,7 @@
                 "external_email_attachments": null
             },
             "status": null,
-            "top": "200",
+            "top": "280",
             "left": "600",
             "stepType": "\/api\/3\/workflow_step_types\/fc04082a-d7dc-4299-96fb-6837b1baa0fe",
             "group": null,
@@ -451,8 +463,8 @@
             "description": null,
             "arguments": [],
             "status": null,
-            "top": "160",
-            "left": "1040",
+            "top": "280",
+            "left": "920",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
             "uuid": "53f84930-f827-4062-8610-6f1f98f3bd7d"
@@ -493,8 +505,8 @@
                             },
                             {
                                 "type": "primitive",
-                                "field": "id",
-                                "value": "{{vars.item.id}}",
+                                "field": "uuid",
+                                "value": "{{vars.item.uuid}}",
                                 "operator": "eq",
                                 "_operator": "eq"
                             }
@@ -511,7 +523,7 @@
                 "timeout": {
                     "days": 0,
                     "hours": 0,
-                    "minutes": 15,
+                    "minutes": 60,
                     "step_iri": "\/api\/3\/workflow_steps\/5b519c9a-3f60-4da8-a3f4-ca7b183cf4b2"
                 },
                 "for_each": {
@@ -521,8 +533,8 @@
                 "step_variables": []
             },
             "status": null,
-            "top": "520",
-            "left": "620",
+            "top": "500",
+            "left": "600",
             "stepType": "\/api\/3\/workflow_step_types\/6832e556-b9c7-497a-babe-feda3bd27dbf",
             "group": null,
             "uuid": "6ae190a6-e4e4-4acf-a4ee-62f04dbab6ab"
@@ -591,13 +603,13 @@
         },
         {
             "@type": "WorkflowRoute",
-            "name": "find rungroup tags -> select profile",
-            "targetStep": "\/api\/3\/workflow_steps\/d525de41-62d8-4409-adf9-c4b051a1abd8",
+            "name": "find rungroup tags -> rungroup_tags",
+            "targetStep": "\/api\/3\/workflow_steps\/2a02da2c-77b4-40e7-9229-02633e720743",
             "sourceStep": "\/api\/3\/workflow_steps\/5741f78c-d4d2-475a-9538-5de2f7bd55dc",
             "label": null,
             "isExecuted": false,
             "group": null,
-            "uuid": "efd07d3c-0440-4133-bcae-ff1e97c539e7"
+            "uuid": "40c6152c-b97d-4e7d-9a2d-422fe3f28198"
         },
         {
             "@type": "WorkflowRoute",
@@ -618,6 +630,16 @@
             "isExecuted": false,
             "group": null,
             "uuid": "0d2c1d0f-f43c-486d-91b9-a461eb2abc3b"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "rungroup_tags -> select profile",
+            "targetStep": "\/api\/3\/workflow_steps\/d525de41-62d8-4409-adf9-c4b051a1abd8",
+            "sourceStep": "\/api\/3\/workflow_steps\/2a02da2c-77b4-40e7-9229-02633e720743",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "5890e95d-ae47-4729-bd64-5adadb465786"
         },
         {
             "@type": "WorkflowRoute",
@@ -679,7 +701,7 @@
             "recordTags": []
         }
     ],
-    "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+    "priority": "\/api\/3\/picklists\/9e8d41e4-8ada-4a2c-bd02-07f62c6d0a00",
     "playbookOrigin": "\/api\/3\/picklists\/b6d710a9-a8ec-41ec-8817-fe9fa062fcdd",
     "isEditable": true,
     "uuid": "8fb90083-a8b7-4e03-aa5b-87b87e1bee92",

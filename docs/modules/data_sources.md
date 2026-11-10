@@ -65,3 +65,11 @@ Each type is documented on its own page under `data_sources/`, with the script t
  * [Automation Actions](./automation_actions.md) — pull `data.<datakey>` values from this source.
  * [Device Metadata](./device_metadata.md) — a different module: persistent per-device values that a source can read as `record.metadata.<name>`.
 
+
+## More in ZTPF Automation Templates
+
+ * [Automation Profiles](./automation_profiles.md)
+ * [Automation Profile Steps](./automation_profile_steps.md)
+ * [Automation Actions](./automation_actions.md)
+ * [Templates](./templates.md)
+ * **Data Sources**

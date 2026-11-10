@@ -708,7 +708,7 @@
             "arguments": {
                 "data_key": "{{vars.input.params['data_key']}}",
                 "data_path": "{{vars.input.params['data_path']}}",
-                "step_data": "{%- set data = vars.steps.find_step_data[0] -%}\n{%- set ret = data.jinjaVars -%}\n{%- do ret.record.update({\"step\":vars.step_record_found}) -%}\n{%- do ret.update({\"script_payload\":data.script}) -%}\n{%- do ret.update({\"output_source_data\":data.outputSourceData}) -%}\n{%- do ret.update({\n  \"output\": {\n    \"json\":data.outputJSON,\n    \"text\": data.outputText,\n    \"markdown\": data.outputMarkdown,\n    \"html\": data.outputHTML\n  }\n}) -%}\n\n{{ret}}"
+                "step_data": "{%- set data = vars.steps.find_step_data[0] if vars.steps.find_step_data else {} -%}\n{%- set ret = data.jinjaVars | default({}, true) -%}\n{%- if 'record' not in ret -%}\n{%- do ret.update({'record': {}}) -%}\n{%- endif -%}\n{%- do ret.record.update({'step': vars.step_record_found | default({}, true)}) -%}\n{%- do ret.update({'script_payload': data.script | default(none)}) -%}\n{%- do ret.update({'output_source_data': data.outputSourceData | default(none)}) -%}\n{%- do ret.update({\n  'output': {\n    'json': data.outputJSON | default(none),\n    'text': data.outputText | default(none),\n    'markdown': data.outputMarkdown | default(none),\n    'html': data.outputHTML | default(none)\n  }\n}) -%}\n\n{{ret}}"
             },
             "status": null,
             "top": "580",
