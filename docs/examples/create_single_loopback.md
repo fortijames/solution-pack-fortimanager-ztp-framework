@@ -19,6 +19,10 @@ Prerequisite: work through checklist steps 1 and 2 of the [Usage](../usage.md) g
 | [Automation Actions](../modules/automation_actions.md) | Install Device Config | Installs the DeviceDB changes to the device |
 | [Automation Profiles](../modules/automation_profiles.md) | Create Single Loopback Template Test | Orders the four steps and runs them per device |
 
+![create single loopback build overview](../res/diagrams/create_single_loopback_build.png)
+
+*The build at a glance: the profile orders the four steps; the two Data Sources and the Template feed Step 2's action, and the run renders, installs, and confirms the next test loopback.*
+
 ## Step 1 — Create the Data Sources
 
 The profile needs two pieces of data at run time: the list of services allowed on the new loopback, and the loopback interfaces that already exist on the device (to auto-increment the ID).

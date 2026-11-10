@@ -73,16 +73,23 @@ Devices expose different actions depending on the dashboard or view, such as the
 
 ![](../res/modules/devices-summary-actions.png)
 
-## Related Modules
+## Modules
 
- * [Managers](./managers.md) — the Manager this device was synchronized from.
- * [Device Metadata](./device_metadata.md) — per-device values exposed to Jinja as `record.metadata.<name>`.
- * [Device Automation Steps](./device_automation_steps.md) — the runtime steps that execute on this device.
- * [Run Groups](./run_groups.md) — batches this device's steps into a single execution.
+**ZTPF Automation Templates**
 
+ * [Automation Profiles](./automation_profiles.md)
+ * [Automation Profile Steps](./automation_profile_steps.md)
+ * [Automation Actions](./automation_actions.md)
+ * [Templates](./templates.md)
+ * [Data Sources](./data_sources.md)
 
-## More in ZTPF Assets
+**ZTPF Assets**
 
  * [Managers](./managers.md)
  * **Devices**
  * [Device Metadata](./device_metadata.md)
+
+**ZTP Automations**
+
+ * [Run Groups](./run_groups.md)
+ * [Device Automation Steps](./device_automation_steps.md)

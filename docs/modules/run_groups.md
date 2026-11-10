@@ -45,14 +45,23 @@ When the queue drains, the group moves to `Reviewing`, which evaluates the steps
 | Total Running Time | Text | No | Human-readable version of the total running time. |
 | id, createDate, createUser, modifyDate, modifyUser | System | — | System-managed record details shown on the record's Details tab. |
 
-## Related Modules
+## Modules
 
- * [Devices](./devices.md) — queued into the run group.
- * [Device Automation Steps](./device_automation_steps.md) — the steps executed by the group.
- * [Automation Profile Steps](./automation_profile_steps.md) — the design-time steps copied into the run.
+**ZTPF Automation Templates**
 
+ * [Automation Profiles](./automation_profiles.md)
+ * [Automation Profile Steps](./automation_profile_steps.md)
+ * [Automation Actions](./automation_actions.md)
+ * [Templates](./templates.md)
+ * [Data Sources](./data_sources.md)
 
-## More in ZTP Automations
+**ZTPF Assets**
+
+ * [Managers](./managers.md)
+ * [Devices](./devices.md)
+ * [Device Metadata](./device_metadata.md)
+
+**ZTP Automations**
 
  * **Run Groups**
  * [Device Automation Steps](./device_automation_steps.md)

@@ -45,18 +45,23 @@ Templates declare their own Input Parameters, so a step can supply values the sa
  * `Render Jinja Script` — renders the template so the output can be reviewed.
  * `Delete Example Data` — clears the example data fields on the record.
 
-## Related Modules
+## Modules
 
- * [Automation Actions](./automation_actions.md) — link this template and render it as `{{template}}`.
- * [Data Sources](./data_sources.md) — supply `data.<datakey>` values for the render.
- * [Device Automation Steps](./device_automation_steps.md) — trigger the run-time rendering per device.
- * [Automation Profile Steps](./automation_profile_steps.md) — provide the `input.*` values through Step ARGS.
-
-
-## More in ZTPF Automation Templates
+**ZTPF Automation Templates**
 
  * [Automation Profiles](./automation_profiles.md)
  * [Automation Profile Steps](./automation_profile_steps.md)
  * [Automation Actions](./automation_actions.md)
  * **Templates**
  * [Data Sources](./data_sources.md)
+
+**ZTPF Assets**
+
+ * [Managers](./managers.md)
+ * [Devices](./devices.md)
+ * [Device Metadata](./device_metadata.md)
+
+**ZTP Automations**
+
+ * [Run Groups](./run_groups.md)
+ * [Device Automation Steps](./device_automation_steps.md)

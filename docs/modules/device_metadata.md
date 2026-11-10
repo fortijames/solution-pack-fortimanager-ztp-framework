@@ -33,15 +33,23 @@ Values can be flagged as `Input Needed`, which prompts users to supply required 
 | Status | Picklist | No | New, Ok, Input Needed, or Disable. `Input Needed` flags values a user must supply. |
 | id, createDate, createUser, modifyDate, modifyUser | System | — | System-managed record details shown on the record's Details tab. |
 
-## Related Modules
+## Modules
 
- * [Devices](./devices.md) — owns these records and aggregates them into its Metadata field.
- * [Automation Actions](./automation_actions.md) — can create or update these records from step output.
- * [Data Sources](./data_sources.md) — a different module: runtime collectors that can read these values as `record.metadata.<name>`.
+**ZTPF Automation Templates**
 
+ * [Automation Profiles](./automation_profiles.md)
+ * [Automation Profile Steps](./automation_profile_steps.md)
+ * [Automation Actions](./automation_actions.md)
+ * [Templates](./templates.md)
+ * [Data Sources](./data_sources.md)
 
-## More in ZTPF Assets
+**ZTPF Assets**
 
  * [Managers](./managers.md)
  * [Devices](./devices.md)
  * **Device Metadata**
+
+**ZTP Automations**
+
+ * [Run Groups](./run_groups.md)
+ * [Device Automation Steps](./device_automation_steps.md)

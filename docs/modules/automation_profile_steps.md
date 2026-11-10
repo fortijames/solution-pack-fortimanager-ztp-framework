@@ -61,18 +61,23 @@ The `Configure stepARGs Help` button on a step lists these options and updates t
  * `Move Step Number on Automation Profile` — moves a step to a new position and re-sequences the remaining step numbers.
  * `Delete Automation Profile Step Record` — deletes one or more profile step records.
 
-## Related Modules
+## Modules
 
- * [Automation Profiles](./automation_profiles.md) — the profile this step belongs to.
- * [Automation Actions](./automation_actions.md) — the action this step performs.
- * [Device Automation Steps](./device_automation_steps.md) — the runtime copies of these steps on a device.
- * [Run Groups](./run_groups.md) — created when the copied steps are queued for execution.
-
-
-## More in ZTPF Automation Templates
+**ZTPF Automation Templates**
 
  * [Automation Profiles](./automation_profiles.md)
  * **Automation Profile Steps**
  * [Automation Actions](./automation_actions.md)
  * [Templates](./templates.md)
  * [Data Sources](./data_sources.md)
+
+**ZTPF Assets**
+
+ * [Managers](./managers.md)
+ * [Devices](./devices.md)
+ * [Device Metadata](./device_metadata.md)
+
+**ZTP Automations**
+
+ * [Run Groups](./run_groups.md)
+ * [Device Automation Steps](./device_automation_steps.md)

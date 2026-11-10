@@ -69,14 +69,23 @@ The `Get New Device` settings control how new devices are discovered when the De
  * `Synch Devices (New)` — synchronizes the Device DB and creates new device records per the Get New Device settings.
  * `Purge Device Records` — removes device records belonging to this Manager.
 
-## Related Modules
+## Modules
 
- * [Devices](./devices.md) — synchronized from this Manager's Device DB.
- * [Manager Automation Profile Rules](./manager_automation_profile_rules.md) — auto-assign Automation Profiles to this Manager's devices.
+**ZTPF Automation Templates**
 
+ * [Automation Profiles](./automation_profiles.md)
+ * [Automation Profile Steps](./automation_profile_steps.md)
+ * [Automation Actions](./automation_actions.md)
+ * [Templates](./templates.md)
+ * [Data Sources](./data_sources.md)
 
-## More in ZTPF Assets
+**ZTPF Assets**
 
  * **Managers**
  * [Devices](./devices.md)
  * [Device Metadata](./device_metadata.md)
+
+**ZTP Automations**
+
+ * [Run Groups](./run_groups.md)
+ * [Device Automation Steps](./device_automation_steps.md)

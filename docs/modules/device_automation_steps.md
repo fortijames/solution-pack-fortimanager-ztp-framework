@@ -18,6 +18,10 @@ There is no master playbook that runs the queue top to bottom. Instead, each ste
 
 At preparation the step's Step ARGS are rendered with the device's data: the input values become `input.*` in the action's Jinja script, the rendered script is stored on the step, and the Jinja vars used are kept in `jinjaVars` for review and re-rendering. After the action runs, the raw output is stored in Output Source Data and rendered by the action's output templates into the Output Text, Markdown, HTML, and JSON fields; the Output Status Template evaluates the result to set Output Status and, on completion, the step records its duration and chains to the next step.
 
+![device automation steps field flow](../res/diagrams/device_automation_steps_fields.png)
+
+*Step ARGS and Jinja Vars render into the Script payload; the Automation Action runs the payload, and its output templates fill the Output fields and set the Output Status.*
+
 ## Status
 
 The status field drives the whole framework. Each transition can fire a trigger:
@@ -85,15 +89,23 @@ The status field drives the whole framework. Each transition can fire a trigger:
  * `Re-Render Output on Completed Step` — regenerates the output fields of a completed step.
  * `Delete Step Payload` — clears the rendered payload from the step.
 
-## Related Modules
+## Modules
 
- * [Devices](./devices.md) — own these steps and provide the data they render with.
- * [Run Groups](./run_groups.md) — queue and chain these steps.
- * [Automation Actions](./automation_actions.md) — define the work each step performs.
- * [Automation Profile Steps](./automation_profile_steps.md) — the design-time steps copied into these records.
+**ZTPF Automation Templates**
 
+ * [Automation Profiles](./automation_profiles.md)
+ * [Automation Profile Steps](./automation_profile_steps.md)
+ * [Automation Actions](./automation_actions.md)
+ * [Templates](./templates.md)
+ * [Data Sources](./data_sources.md)
 
-## More in ZTP Automations
+**ZTPF Assets**
+
+ * [Managers](./managers.md)
+ * [Devices](./devices.md)
+ * [Device Metadata](./device_metadata.md)
+
+**ZTP Automations**
 
  * [Run Groups](./run_groups.md)
  * **Device Automation Steps**

@@ -13,7 +13,7 @@
    - Add playbook tags (Subroutine, adom, connector_config, include and exclude patterns, json_rpc, os_type, output). 
    - Adjust module layouts: hide a column on Device Automation Steps details, remove the status column display from the Manager form, and make the Device Metadata list visible to all users. 
    - Re-draw all module diagrams as concise PNG summary visuals with family panels and data-flow arrows (`{{template}}`, `{{data.<data key>}}`), and simplify the Data Sources diagram. 
-   - Add `More in <section>` navigation to every module page and link the Modules reference from Contents and Usage. 
+   - Add an all-modules navigation list, in modules reference order, to the bottom of every module page, and link the Modules reference from Contents and Usage. 
    - Replace the 1.x usage pages with the usage checklist and a worked example (Create Single Loopback). 
 
  - 20260320-20261030 (2.0.50)

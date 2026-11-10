@@ -11,7 +11,7 @@ This release hardens the framework's playbooks and rounds out the documentation 
 - Clearer statuses: the failure status is now `Fail`, step updates write the `status` field (was `queueStatus`), return statuses start from the `ztpf_return_status_default` global variable, and FortiManager Proxy API steps separate proxy-call errors from device-call errors in the step message. 
 - New playbooks: a bulk model-device generator button (`Randomly Create Model Devices - by Manager Record`), freeform device API execution (`api freeform exec DEV`), model device creation by PSK, and FortiManager ADOM and supported-platform lookups. The freeform proxy encapsulation microservice is deprecated. 
 - The `Add Steps to Device from Profile` button now runs asynchronously with a 60-minute ready timeout (was 15). 
-- Documentation: all module diagrams re-drawn as concise PNG summary visuals with family panels and data-flow arrows, `More in <section>` navigation added to every module page, the Modules reference linked from Contents and Usage, and the 1.x usage pages replaced by the usage checklist and a worked example. 
+- Documentation: all module diagrams re-drawn as concise PNG summary visuals with family panels and data-flow arrows, an all-modules navigation list added to every module page, the Modules reference linked from Contents and Usage, and the 1.x usage pages replaced by the usage checklist and a worked example. 
 
 Release 2.0.50
 

@@ -38,19 +38,23 @@ When a profile is applied, its steps are not run directly. The runtime copy of e
  * `Delete Profile and Steps` — removes the profile and all of its steps.
  * `Manage Tags on Records` / `Export Records by Tag` — tag profiles to group, find, or export them as reusable solutions.
 
-## Related Modules
+## Modules
 
- * [Automation Profile Steps](./automation_profile_steps.md) — the ordered steps in this profile.
- * [Automation Actions](./automation_actions.md) — what each step executes.
- * [Device Automation Steps](./device_automation_steps.md) — the runtime copies of profile steps on a device.
- * [Manager Automation Profile Rules](./manager_automation_profile_rules.md) — automatic assignment of this profile to devices.
- * [Run Groups](./run_groups.md) — created when profile steps are queued for execution.
-
-
-## More in ZTPF Automation Templates
+**ZTPF Automation Templates**
 
  * **Automation Profiles**
  * [Automation Profile Steps](./automation_profile_steps.md)
  * [Automation Actions](./automation_actions.md)
  * [Templates](./templates.md)
  * [Data Sources](./data_sources.md)
+
+**ZTPF Assets**
+
+ * [Managers](./managers.md)
+ * [Devices](./devices.md)
+ * [Device Metadata](./device_metadata.md)
+
+**ZTP Automations**
+
+ * [Run Groups](./run_groups.md)
+ * [Device Automation Steps](./device_automation_steps.md)

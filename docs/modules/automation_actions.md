@@ -90,19 +90,23 @@ Actions are dispatched by the generic `> device step (Running)` trigger: it look
  * `Re-Render Example Script` — regenerates the example render.
  * `Delete Example Data` — clears the example data fields on the record.
 
-## Related Modules
+## Modules
 
- * [Automation Profile Steps](./automation_profile_steps.md) — select this action at design time.
- * [Device Automation Steps](./device_automation_steps.md) — run this action at run time.
- * [Templates](./templates.md) — payload building block rendered as `{{template}}`.
- * [Data Sources](./data_sources.md) — supply `data.<datakey>` values for rendering.
- * [Device Metadata](./device_metadata.md) — can be created or updated from step output.
-
-
-## More in ZTPF Automation Templates
+**ZTPF Automation Templates**
 
  * [Automation Profiles](./automation_profiles.md)
  * [Automation Profile Steps](./automation_profile_steps.md)
  * **Automation Actions**
  * [Templates](./templates.md)
  * [Data Sources](./data_sources.md)
+
+**ZTPF Assets**
+
+ * [Managers](./managers.md)
+ * [Devices](./devices.md)
+ * [Device Metadata](./device_metadata.md)
+
+**ZTP Automations**
+
+ * [Run Groups](./run_groups.md)
+ * [Device Automation Steps](./device_automation_steps.md)
