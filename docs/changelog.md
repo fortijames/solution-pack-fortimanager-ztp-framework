@@ -4,6 +4,7 @@
 # Change Log
  - 20261111-20261111 (2.0.60)
    - Add the System Settings module (`ztpf_system_settings`): records hold a name, a type tag, a description, and a data payload in JSON, Text, Markdown, or HTML (`ztpfOutputType`); ship a QuickLinks seed record holding the framework's navigation links. 
+   - Remove the `ztpf Quick Links` module and its seed record: the QuickLinks System Settings record carries the framework navigation links. 
    - Add a Delete Device Record button that finds the records related to a device with the recursive find playbooks, confirms with per-type counts, and deletes them with the recursive delete function. 
    - Add the `> delete orphan ztpf records` function: deletes devices without a manager, device automation steps without a device, device metadata without a device, and profile steps without a profile. 
    - Add the `> delete recursive records` function that deletes the records found by the find recursive playbooks across the ZTPF modules. 

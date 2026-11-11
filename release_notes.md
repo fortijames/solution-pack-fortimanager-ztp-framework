@@ -8,6 +8,7 @@ Release 2.0.60
 This release adds the System Settings module, record cleanup playbooks, and slimmer role definitions. 
 
 - New module: System Settings (`ztpf_system_settings`) — framework-level settings records with a data payload in JSON, Text, Markdown, or HTML, seeding a QuickLinks record that holds the framework's navigation links. 
+- The ztpf Quick Links module is removed; its content now lives on the QuickLinks System Settings record. 
 - New playbooks: a Delete Device Record button that finds the records related to a device, confirms with per-type counts, and deletes them; a delete orphan records function; a delete recursive records function; and a ztpf schedule trigger. 
 - The Synch FMG Devices playbook resolves the `ztpfStatus` picklist by name instead of a hard-coded picklist id. 
 - The role definitions now carry explicit permissions for the ZTPF modules only instead of an entry for every FortiSOAR module. 
