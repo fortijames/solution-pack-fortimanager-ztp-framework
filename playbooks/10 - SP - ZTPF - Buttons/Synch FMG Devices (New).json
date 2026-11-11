@@ -220,7 +220,7 @@
                     "batch_size": 100
                 },
                 "resource": {
-                    "status": "\/api\/3\/picklists\/2a2f34dc-4f3b-4434-aa58-ba995b2bf7c6"
+                    "status": "{{\"ztpfStatus\" | picklist(vars.item.status.itemValue, \"@id\")}}"
                 },
                 "operation": "Append",
                 "collection": "{{vars.item['@id']}}",
@@ -312,8 +312,7 @@
                                 "type": "array",
                                 "field": "status",
                                 "value": [
-                                    "\/api\/3\/picklists\/2a2f34dc-4f3b-4434-aa58-ba995b2bf7c6",
-                                    "\/api\/3\/picklists\/ccb22d23-bdab-425c-960a-66b9bf59a0b2"
+                                    "\/api\/3\/picklists\/2a2f34dc-4f3b-4434-aa58-ba995b2bf7c6"
                                 ],
                                 "module": "status",
                                 "display": "",

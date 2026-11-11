@@ -23,6 +23,7 @@ Each module also has its own page below. The [Modules](./modules.md) reference i
 | [Device Automation Steps](./modules/device_automation_steps.md) | The per-device, per-step records that actually run the automation: the final payload and the output produced. |
 | [Manager Automation Profile Rules](./modules/manager_automation_profile_rules.md) | Rules that automatically assign Automation Profiles to devices as they appear on a Manager. |
 | [Quick Links](./modules/quick_links.md) | Dashboard quick links for the framework. |
+| [System Settings](./modules/system_settings.md) | Framework-level settings records: a name, a type tag, and a data payload in JSON, Text, Markdown, or HTML. |
 
 ## Playbook Collections
 
@@ -104,6 +105,7 @@ Each module also has its own page below. The [Modules](./modules.md) reference i
 | Record Set | Description |
 | ---------- | ----------- |
 | Quick Links | One seed record for the Quick Links module. |
+| System Settings | One seed record (QuickLinks) holding the framework's navigation links. |
 
 | [<](./usage.md) |
 |------------------|

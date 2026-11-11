@@ -1,0 +1,89 @@
+{
+    "@context": "\/api\/3\/contexts\/SystemViewTemplate",
+    "@type": "SystemViewTemplate",
+    "type": "rows",
+    "config": {
+        "rows": [
+            {
+                "columns": [
+                    {
+                        "widgets": [
+                            {
+                                "type": "sectionHeader",
+                                "config": {
+                                    "wid": "6f24b911-8fa9-4429-8df1-6b4e06d73e7e",
+                                    "query": {
+                                        "filters": [],
+                                        "sort": [],
+                                        "limit": 10
+                                    },
+                                    "editorType": "html",
+                                    "sectionText": "<p style=\"text-align: center;\"><strong>ZTPF System Settings<\/strong><\/p>\n<p style=\"text-align: center;\"><span style=\"background-color: rgb(224, 62, 45);\"><em><strong>Do not edit records without knowing what you are doing.<\/strong><\/em><\/span><\/p>"
+                                }
+                            }
+                        ],
+                        "style": "col-lg-12"
+                    }
+                ],
+                "wid": "f853ad8e-44d0-443d-ad4b-93aca62e2594",
+                "_collapsed": false
+            },
+            {
+                "columns": [
+                    {
+                        "widgets": [
+                            {
+                                "type": "grid",
+                                "config": {
+                                    "wid": "544aec3a-2e45-4bfa-9791-f68992157725",
+                                    "module": "ztpf_system_settings",
+                                    "columns": [
+                                        "id",
+                                        "name",
+                                        "type",
+                                        "dataType",
+                                        "modifyDate",
+                                        "modifyUser"
+                                    ],
+                                    "expandableCol": [
+                                        {
+                                            "openTab": false,
+                                            "name": "description"
+                                        }
+                                    ],
+                                    "relationshipField": [],
+                                    "checkboxStatus": true,
+                                    "editableFields": false,
+                                    "actionButtons": [],
+                                    "query": {
+                                        "sort": [],
+                                        "limit": 30,
+                                        "logic": "AND",
+                                        "filters": []
+                                    }
+                                }
+                            }
+                        ],
+                        "style": "col-lg-12"
+                    }
+                ],
+                "wid": "ad16f14c-c91b-416e-850e-dc0a0d00759e",
+                "_collapsed": false
+            }
+        ],
+        "wid": "19c85717-95e7-4871-8478-0367978b54ba",
+        "metadata": {
+            "customTemplateTitle": "ztpf System Settings",
+            "originalTemplateTitle": "ztpf System Settings"
+        }
+    },
+    "module": "ztpf_system_settings",
+    "filters": [],
+    "isDefault": true,
+    "visible": true,
+    "viewOptions": "list",
+    "name": "Default Layout",
+    "system": false,
+    "uuid": "modules-ztpf_system_settings-list",
+    "newUuid": "05c30da2-8f18-4523-9e6c-8df77040ed9c"
+}

@@ -1,0 +1,281 @@
+{
+    "@type": "Workflow",
+    "triggerLimit": null,
+    "name": "Delete Device Record",
+    "aliasName": null,
+    "tag": null,
+    "description": "Delete Device Record and Related Records",
+    "isActive": true,
+    "debug": false,
+    "singleRecordExecution": false,
+    "remoteExecutableFlag": false,
+    "parameters": [],
+    "synchronous": false,
+    "collection": "\/api\/3\/workflow_collections\/f0b56dc0-6c1e-4f5b-9199-c807800f028a",
+    "versions": [],
+    "triggerStep": "\/api\/3\/workflow_steps\/e613b8d0-bd56-4365-8c98-dc63075c5e5d",
+    "steps": [
+        {
+            "@type": "WorkflowStep",
+            "name": "cancel or timeout",
+            "description": null,
+            "arguments": [],
+            "status": null,
+            "top": "320",
+            "left": "480",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "1561ceb9-85ac-49fb-a671-80aa22ea33e1"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "confirm delete",
+            "description": null,
+            "arguments": {
+                "type": "InputBased",
+                "input": {
+                    "schema": {
+                        "title": "Confirm to Delete Records",
+                        "description": "Are you sure you want to delete this record count? \n\n{%- set recs = vars.steps.find_records.output -%}\n{%- for d in recs %}\n - **{{d}}**: `{{recs[d]|length}}`\n{%- endfor %}",
+                        "inputVariables": []
+                    }
+                },
+                "record": "",
+                "timeout": {
+                    "days": 0,
+                    "hours": 0,
+                    "minutes": 5,
+                    "step_iri": "\/api\/3\/workflow_steps\/1561ceb9-85ac-49fb-a671-80aa22ea33e1"
+                },
+                "agent_id": null,
+                "resources": "ztpf_devices",
+                "is_approval": false,
+                "owner_detail": {
+                    "isAssigned": false,
+                    "emailRecipients": ""
+                },
+                "isRecordLinked": false,
+                "step_variables": [],
+                "response_mapping": {
+                    "options": [
+                        {
+                            "option": "Yes",
+                            "step_iri": "\/api\/3\/workflow_steps\/7a5e7682-4353-42e3-80fe-26acb2d28866"
+                        },
+                        {
+                            "option": "No",
+                            "step_iri": "\/api\/3\/workflow_steps\/1561ceb9-85ac-49fb-a671-80aa22ea33e1"
+                        }
+                    ],
+                    "duplicateOption": false,
+                    "customSuccessMessage": "Awaiting Playbook resumed successfully."
+                },
+                "email_notification": {
+                    "enabled": false,
+                    "smtpParameters": []
+                },
+                "customEmailExternal": false,
+                "inline_channel_list": [],
+                "external_channel_list": [],
+                "unauthenticated_input": false,
+                "external_email_subject": null,
+                "internal_email_subject": "A FortiSOAR playbook is requesting your input",
+                "custom_email_body_external": null,
+                "external_email_attachments": null
+            },
+            "status": null,
+            "top": "160",
+            "left": "480",
+            "stepType": "\/api\/3\/workflow_step_types\/fc04082a-d7dc-4299-96fb-6837b1baa0fe",
+            "group": null,
+            "uuid": "043d13a0-0001-485e-9fd6-e63cbf1c3c60"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "delete records",
+            "description": null,
+            "arguments": {
+                "arguments": {
+                    "recursive_payload": "{{vars.steps.find_records.output}}"
+                },
+                "apply_async": false,
+                "step_variables": [],
+                "pass_parent_env": false,
+                "pass_input_record": false,
+                "workflowReference": "\/api\/3\/workflows\/f0b22073-b0ad-4781-b5a0-b3f2ce6985fb"
+            },
+            "status": null,
+            "top": "120",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
+            "group": null,
+            "uuid": "be652398-e572-4c33-925d-f678a94ef9d9"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "find records",
+            "description": null,
+            "arguments": {
+                "arguments": {
+                    "record_ids": "{{vars.device_ids}}"
+                },
+                "apply_async": false,
+                "step_variables": [],
+                "pass_parent_env": false,
+                "pass_input_record": false,
+                "workflowReference": "\/api\/3\/workflows\/7776196e-1630-4977-87c3-d0bd2cd0f542"
+            },
+            "status": null,
+            "top": "60",
+            "left": "660",
+            "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
+            "group": null,
+            "uuid": "0a9317a4-73d6-46a0-948e-e1766df97111"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "setup vars",
+            "description": null,
+            "arguments": {
+                "device_ids": "{{vars.input.records | json_query('[].id')}}"
+            },
+            "status": null,
+            "top": "40",
+            "left": "340",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "4a646977-cbf8-488a-bbde-08f16859e845"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Start",
+            "description": null,
+            "arguments": {
+                "route": "7f828691-fbbe-4531-a1cf-6b5fb6c268b3",
+                "title": "Delete Device Records",
+                "resources": [
+                    "ztpf_devices"
+                ],
+                "__triggerLimit": true,
+                "inputVariables": [],
+                "step_variables": {
+                    "input": {
+                        "params": [],
+                        "records": "{{vars.input.records}}"
+                    }
+                },
+                "triggerOnSource": true,
+                "displayConditions": {
+                    "ztpf_devices": {
+                        "sort": [],
+                        "limit": 30,
+                        "logic": "AND",
+                        "filters": []
+                    }
+                },
+                "executeButtonText": "Execute",
+                "noRecordExecution": false,
+                "showToasterMessage": {
+                    "visible": false,
+                    "messageVisible": true
+                },
+                "triggerOnReplicate": false,
+                "singleRecordExecution": false
+            },
+            "status": null,
+            "top": "40",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/f414d039-bb0d-4e59-9c39-a8f1e880b18a",
+            "group": null,
+            "uuid": "e613b8d0-bd56-4365-8c98-dc63075c5e5d"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "yes",
+            "description": null,
+            "arguments": [],
+            "status": null,
+            "top": "320",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "7a5e7682-4353-42e3-80fe-26acb2d28866"
+        }
+    ],
+    "routes": [
+        {
+            "@type": "WorkflowRoute",
+            "name": "confirm delete -> cancel or timeout",
+            "targetStep": "\/api\/3\/workflow_steps\/1561ceb9-85ac-49fb-a671-80aa22ea33e1",
+            "sourceStep": "\/api\/3\/workflow_steps\/043d13a0-0001-485e-9fd6-e63cbf1c3c60",
+            "label": "No",
+            "isExecuted": false,
+            "group": null,
+            "uuid": "f6a4ebea-a71b-4d49-a0d2-24d4d7d1f6c0"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "confirm delete -> yes",
+            "targetStep": "\/api\/3\/workflow_steps\/7a5e7682-4353-42e3-80fe-26acb2d28866",
+            "sourceStep": "\/api\/3\/workflow_steps\/043d13a0-0001-485e-9fd6-e63cbf1c3c60",
+            "label": "Yes",
+            "isExecuted": false,
+            "group": null,
+            "uuid": "afe1b474-aed3-4dc4-8f62-fef7db65994a"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "find records -> confirm delete",
+            "targetStep": "\/api\/3\/workflow_steps\/043d13a0-0001-485e-9fd6-e63cbf1c3c60",
+            "sourceStep": "\/api\/3\/workflow_steps\/0a9317a4-73d6-46a0-948e-e1766df97111",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "47338ecf-0539-4e84-96d2-dc1919754b1c"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "setup vars -> find records",
+            "targetStep": "\/api\/3\/workflow_steps\/0a9317a4-73d6-46a0-948e-e1766df97111",
+            "sourceStep": "\/api\/3\/workflow_steps\/4a646977-cbf8-488a-bbde-08f16859e845",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "5bec6564-a25d-4ba5-85e5-ea6f17be5396"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Start -> setup vars",
+            "targetStep": "\/api\/3\/workflow_steps\/4a646977-cbf8-488a-bbde-08f16859e845",
+            "sourceStep": "\/api\/3\/workflow_steps\/e613b8d0-bd56-4365-8c98-dc63075c5e5d",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "6c429db5-6e1e-4a91-8656-c3c504e890ac"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "yes -> delete records",
+            "targetStep": "\/api\/3\/workflow_steps\/be652398-e572-4c33-925d-f678a94ef9d9",
+            "sourceStep": "\/api\/3\/workflow_steps\/7a5e7682-4353-42e3-80fe-26acb2d28866",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "03165f25-0a27-4404-be5b-e9cfa793ea42"
+        }
+    ],
+    "groups": [],
+    "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+    "playbookOrigin": "\/api\/3\/picklists\/b6d710a9-a8ec-41ec-8817-fe9fa062fcdd",
+    "isEditable": false,
+    "uuid": "89a0259c-54ff-4e62-9277-e77a0b878722",
+    "owners": [],
+    "isPrivate": false,
+    "deletedAt": null,
+    "recordTags": [
+        "TODO",
+        "ztpfDevice",
+        "ztpfDeviceAutomationStep",
+        "ztpfMetadataDevice"
+    ]
+}

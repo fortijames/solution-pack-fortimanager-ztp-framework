@@ -2,6 +2,16 @@
 |--------------------------------------------|
 
 # Change Log
+ - 20261111-20261111 (2.0.60)
+   - Add the System Settings module (`ztpf_system_settings`): records hold a name, a type tag, a description, and a data payload in JSON, Text, Markdown, or HTML (`ztpfOutputType`); ship a QuickLinks seed record holding the framework's navigation links. 
+   - Add a Delete Device Record button that finds the records related to a device with the recursive find playbooks, confirms with per-type counts, and deletes them with the recursive delete function. 
+   - Add the `> delete orphan ztpf records` function: deletes devices without a manager, device automation steps without a device, device metadata without a device, and profile steps without a profile. 
+   - Add the `> delete recursive records` function that deletes the records found by the find recursive playbooks across the ZTPF modules. 
+   - Add a `> ztpf schedule` trigger that sets the `purge_orphans` variable, ready for scheduled maintenance tasks. 
+   - Resolve the `ztpfStatus` picklist by name in the Synch FMG Devices (New) playbook instead of hard-coded picklist ids. 
+   - Slim the role definitions: grant explicit permissions for the ZTPF modules (and deny the internal `ztpf_configs` module) instead of listing every FortiSOAR module. 
+   - Adjust the Managers form layout: place the admin status and status fields in their own column. 
+
  - 20261110-20261111 (2.0.59)
    - Add a ZTPF Templates group to the navigation bar with the Automation Profiles, Profile Steps, Automation Actions, Templates, and Data Sources lists, and register the group in the navigation replace options. 
    - Remove a leftover test widget tab from the Managers detail layout. 

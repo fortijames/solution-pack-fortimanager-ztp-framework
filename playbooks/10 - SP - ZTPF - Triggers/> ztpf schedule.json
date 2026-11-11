@@ -1,0 +1,75 @@
+{
+    "@type": "Workflow",
+    "triggerLimit": null,
+    "name": "> ztpf schedule",
+    "aliasName": null,
+    "tag": null,
+    "description": null,
+    "isActive": true,
+    "debug": false,
+    "singleRecordExecution": false,
+    "remoteExecutableFlag": false,
+    "parameters": [],
+    "synchronous": false,
+    "collection": "\/api\/3\/workflow_collections\/9cca11ea-b95a-4504-8385-ad42db358c36",
+    "versions": [],
+    "triggerStep": "\/api\/3\/workflow_steps\/c58d3bdb-77bf-4929-8d36-ab3c0d73c3ce",
+    "steps": [
+        {
+            "@type": "WorkflowStep",
+            "name": "setup vars",
+            "description": null,
+            "arguments": {
+                "purge_orphans": ""
+            },
+            "status": null,
+            "top": "40",
+            "left": "440",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "2ad4c5ce-9a8c-4260-a6d6-0ebb45b481a6"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Start",
+            "description": null,
+            "arguments": {
+                "__triggerLimit": true,
+                "step_variables": {
+                    "input": {
+                        "params": []
+                    }
+                },
+                "triggerOnSource": true,
+                "triggerOnReplicate": false
+            },
+            "status": null,
+            "top": "40",
+            "left": "40",
+            "stepType": "\/api\/3\/workflow_step_types\/b348f017-9a94-471f-87f8-ce88b6a7ad62",
+            "group": null,
+            "uuid": "c58d3bdb-77bf-4929-8d36-ab3c0d73c3ce"
+        }
+    ],
+    "routes": [
+        {
+            "@type": "WorkflowRoute",
+            "name": "Start -> setup vars",
+            "targetStep": "\/api\/3\/workflow_steps\/2ad4c5ce-9a8c-4260-a6d6-0ebb45b481a6",
+            "sourceStep": "\/api\/3\/workflow_steps\/c58d3bdb-77bf-4929-8d36-ab3c0d73c3ce",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "a272ce9e-3b1b-4fbd-9a20-ef4f53c816f4"
+        }
+    ],
+    "groups": [],
+    "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+    "playbookOrigin": "\/api\/3\/picklists\/b6d710a9-a8ec-41ec-8817-fe9fa062fcdd",
+    "isEditable": false,
+    "uuid": "93e13bcf-6d21-4d3d-a248-0b1e6897ce39",
+    "owners": [],
+    "isPrivate": false,
+    "deletedAt": null,
+    "recordTags": []
+}
