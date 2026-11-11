@@ -2,6 +2,10 @@
 |--------------------------------------------|
 
 # Change Log
+ - 20261110-20261111 (2.0.59)
+   - Add a ZTPF Templates group to the navigation bar with the Automation Profiles, Profile Steps, Automation Actions, Templates, and Data Sources lists, and register the group in the navigation replace options. 
+   - Remove a leftover test widget tab from the Managers detail layout. 
+
  - 20261030-20261110 (2.0.57)
    - Refactor record lookups in playbooks from per-record dynamic `json_query` filters to dictionary indexes or `selectattr`, and fix a jmespath cache-eviction failure (`Population must be a sequence`) when synchronizing source data for many devices on Python 3.11. 
    - Rework step status handling: rename the failure status `Failed` to `Fail`, keep a step's existing status when it re-runs, write the status through the `status` field (was `queueStatus`), and initialize return statuses from the `ztpf_return_status_default` global variable. 

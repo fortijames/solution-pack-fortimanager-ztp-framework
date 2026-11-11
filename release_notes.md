@@ -3,6 +3,14 @@
 
 # What's New
 
+Release 2.0.59
+
+This release adds a ZTPF Templates navigation group and rounds out the documentation visuals. 
+
+- Navigation: a new ZTPF Templates group in the navigation bar lists the automation-template modules: Automation Profiles, Profile Steps, Automation Actions, Templates, and Data Sources. 
+- Cleanup: removed a leftover test widget tab from the Managers detail layout. 
+- Documentation: every module framework diagram now carries its module title, the Device Automation Steps page adds a Device Automation Step Record field diagram, and the Create Single Loopback example adds a build-overview diagram showing each step's trigger key, args, and payload with the template's rendered CLI. 
+
 Release 2.0.57
 
 This release hardens the framework's playbooks and rounds out the documentation set. 
