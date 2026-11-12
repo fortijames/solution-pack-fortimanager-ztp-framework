@@ -2,7 +2,7 @@
 |--------------------------------------------|
 
 # Change Log
- - 20261111-20261111 (2.0.60)
+ - 20261111-20261112 (2.0.60)
    - Add the System Settings module (`ztpf_system_settings`): records hold a name, a type tag, a description, and a data payload in JSON, Text, Markdown, or HTML (`ztpfOutputType`); ship a QuickLinks seed record holding the framework's navigation links. 
    - Remove the `ztpf Quick Links` module and its seed record: the QuickLinks System Settings record carries the framework navigation links. 
    - Add a Delete Device Record button that finds the records related to a device with the recursive find playbooks, confirms with per-type counts, and deletes them with the recursive delete function. 
@@ -12,6 +12,11 @@
    - Resolve the `ztpfStatus` picklist by name in the Synch FMG Devices (New) playbook instead of hard-coded picklist ids. 
    - Slim the role definitions: grant explicit permissions for the ZTPF modules (and deny the internal `ztpf_configs` module) instead of listing every FortiSOAR module. 
    - Adjust the Managers form layout: place the admin status and status fields in their own column. 
+   - Rename the System Settings module to `ztpfSystemSettings` and keep the human readable "ZTPF System Settings" title on the list view. 
+   - Mark the System Settings list, form, and detail layouts as system layouts. 
+   - Refresh the System Settings seed records: clearer descriptions on the QuickLinks and `ztpf_running_triggerkey_idx` records. 
+   - Update the role definitions: module permissions are stored as a list and the denied internal `ztpf_configs` permission is dropped, which is no longer needed. 
+   - Reorder the bundled widgets to lead with the ZTP Automation Step Graph widget. 
 
  - 20261110-20261111 (2.0.59)
    - Add a ZTPF Templates group to the navigation bar with the Automation Profiles, Profile Steps, Automation Actions, Templates, and Data Sources lists, and register the group in the navigation replace options. 
