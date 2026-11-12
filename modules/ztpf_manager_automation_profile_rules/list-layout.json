@@ -63,6 +63,193 @@
                         ],
                         "style": "col-lg-3",
                         "collapsedText": "Quick Links"
+                    },
+                    {
+                        "widgets": [
+                            {
+                                "type": "rows",
+                                "config": {
+                                    "wid": "877edf81-2916-46df-ac98-f998ac7d54b4",
+                                    "rows": [
+                                        {
+                                            "columns": [
+                                                {
+                                                    "widgets": [
+                                                        {
+                                                            "type": "chart",
+                                                            "config": {
+                                                                "wid": "6093659b-3259-4175-97d1-752c3254b93e",
+                                                                "widgetAlwaysDisplay": true,
+                                                                "showTabularData": false,
+                                                                "query": {
+                                                                    "sort": [
+                                                                        {
+                                                                            "field": "type.orderIndex",
+                                                                            "direction": "ASC"
+                                                                        }
+                                                                    ],
+                                                                    "limit": 2147483647,
+                                                                    "logic": "AND",
+                                                                    "filters": [],
+                                                                    "aggregates": [
+                                                                        {
+                                                                            "operator": "countdistinct",
+                                                                            "field": "*",
+                                                                            "alias": "total"
+                                                                        },
+                                                                        {
+                                                                            "operator": "groupby",
+                                                                            "alias": "type",
+                                                                            "field": "type.itemValue"
+                                                                        },
+                                                                        {
+                                                                            "operator": "groupby",
+                                                                            "alias": "color",
+                                                                            "field": "type.color"
+                                                                        },
+                                                                        {
+                                                                            "operator": "groupby",
+                                                                            "alias": "orderIndex",
+                                                                            "field": "type.orderIndex"
+                                                                        }
+                                                                    ]
+                                                                },
+                                                                "mapping": {
+                                                                    "fieldName": "type",
+                                                                    "displayValues": [
+                                                                        "name"
+                                                                    ]
+                                                                },
+                                                                "assignedToSetting": "all",
+                                                                "aggregate": true,
+                                                                "viewType": "chart",
+                                                                "title": "Rule Type",
+                                                                "resource": "ztpf_manager_automation_profile_rules",
+                                                                "chart": "pie",
+                                                                "widgetAlwaysExpanded": true,
+                                                                "showCount": true
+                                                            }
+                                                        }
+                                                    ],
+                                                    "style": "col-lg-6"
+                                                },
+                                                {
+                                                    "widgets": [
+                                                        {
+                                                            "type": "chart",
+                                                            "config": {
+                                                                "wid": "b712ca36-f1d2-49a7-9bad-81d5c5db7055",
+                                                                "widgetAlwaysDisplay": true,
+                                                                "showTabularData": false,
+                                                                "query": {
+                                                                    "sort": [
+                                                                        {
+                                                                            "field": "assignmentSearchType.orderIndex",
+                                                                            "direction": "ASC"
+                                                                        }
+                                                                    ],
+                                                                    "limit": 2147483647,
+                                                                    "logic": "AND",
+                                                                    "filters": [],
+                                                                    "aggregates": [
+                                                                        {
+                                                                            "operator": "countdistinct",
+                                                                            "field": "*",
+                                                                            "alias": "total"
+                                                                        },
+                                                                        {
+                                                                            "operator": "groupby",
+                                                                            "alias": "assignmentSearchType",
+                                                                            "field": "assignmentSearchType.itemValue"
+                                                                        },
+                                                                        {
+                                                                            "operator": "groupby",
+                                                                            "alias": "color",
+                                                                            "field": "assignmentSearchType.color"
+                                                                        },
+                                                                        {
+                                                                            "operator": "groupby",
+                                                                            "alias": "orderIndex",
+                                                                            "field": "assignmentSearchType.orderIndex"
+                                                                        }
+                                                                    ]
+                                                                },
+                                                                "mapping": {
+                                                                    "fieldName": "assignmentSearchType"
+                                                                },
+                                                                "assignedToSetting": "all",
+                                                                "aggregate": true,
+                                                                "viewType": "chart",
+                                                                "title": "Search Type",
+                                                                "resource": "ztpf_manager_automation_profile_rules",
+                                                                "chart": "pie",
+                                                                "widgetAlwaysExpanded": true,
+                                                                "showCount": true
+                                                            }
+                                                        }
+                                                    ],
+                                                    "style": "col-lg-6"
+                                                }
+                                            ],
+                                            "wid": "d34fc8c3-863b-4fb8-a18f-76880f01399d",
+                                            "collapsible": false,
+                                            "collapsibleIndex": 0
+                                        },
+                                        {
+                                            "columns": [
+                                                {
+                                                    "widgets": [
+                                                        {
+                                                            "type": "grid",
+                                                            "config": {
+                                                                "wid": "0698adaa-ab42-4b39-ae25-2482483281dc",
+                                                                "module": "ztpf_manager_automation_profile_rules",
+                                                                "columns": [
+                                                                    "id",
+                                                                    "ztpfManagers",
+                                                                    "orderPriority",
+                                                                    "type",
+                                                                    "assignmentSearchType",
+                                                                    "ztpfAutomationProfiles",
+                                                                    "recordTags",
+                                                                    "modifyDate"
+                                                                ],
+                                                                "expandableCol": [],
+                                                                "relationshipField": [],
+                                                                "checkboxStatus": false,
+                                                                "editableFields": false,
+                                                                "actionButtons": [],
+                                                                "query": {
+                                                                    "sort": [
+                                                                        {
+                                                                            "direction": "ASC",
+                                                                            "field": "orderPriority",
+                                                                            "_fieldTitle": "Order Priority",
+                                                                            "_fieldName": "orderPriority"
+                                                                        },
+                                                                        {
+                                                                            "direction": "ASC",
+                                                                            "field": "ztpfManagers.name",
+                                                                            "_fieldTitle": "Manager",
+                                                                            "_fieldName": "ztpfManagers"
+                                                                        }
+                                                                    ],
+                                                                    "limit": 30,
+                                                                    "logic": "AND",
+                                                                    "filters": []
+                                                                }
+                                                            }
+                                                        }
+                                                    ]
+                                                }
+                                            ],
+                                            "wid": "dc1aa1e7-1432-4fc1-b4f4-b36b8364f4c8"
+                                        }
+                                    ]
+                                }
+                            }
+                        ],
+                        "style": "col-lg-9"
                     }
                 ],
                 "wid": "04078e52-52a7-41fe-968e-de714764633d",
@@ -73,174 +260,7 @@
             {
                 "columns": [
                     {
-                        "widgets": [
-                            {
-                                "type": "chart",
-                                "config": {
-                                    "wid": "6093659b-3259-4175-97d1-752c3254b93e",
-                                    "widgetAlwaysDisplay": true,
-                                    "showTabularData": false,
-                                    "query": {
-                                        "sort": [
-                                            {
-                                                "field": "type.orderIndex",
-                                                "direction": "ASC"
-                                            }
-                                        ],
-                                        "limit": 2147483647,
-                                        "logic": "AND",
-                                        "filters": [],
-                                        "aggregates": [
-                                            {
-                                                "operator": "countdistinct",
-                                                "field": "*",
-                                                "alias": "total"
-                                            },
-                                            {
-                                                "operator": "groupby",
-                                                "alias": "type",
-                                                "field": "type.itemValue"
-                                            },
-                                            {
-                                                "operator": "groupby",
-                                                "alias": "color",
-                                                "field": "type.color"
-                                            },
-                                            {
-                                                "operator": "groupby",
-                                                "alias": "orderIndex",
-                                                "field": "type.orderIndex"
-                                            }
-                                        ]
-                                    },
-                                    "mapping": {
-                                        "fieldName": "type",
-                                        "displayValues": [
-                                            "name"
-                                        ]
-                                    },
-                                    "assignedToSetting": "all",
-                                    "aggregate": true,
-                                    "viewType": "chart",
-                                    "title": "Rule Type",
-                                    "resource": "ztpf_manager_automation_profile_rules",
-                                    "chart": "pie",
-                                    "widgetAlwaysExpanded": true,
-                                    "showCount": true
-                                }
-                            }
-                        ],
-                        "style": "col-lg-6"
-                    },
-                    {
-                        "widgets": [
-                            {
-                                "type": "chart",
-                                "config": {
-                                    "wid": "b712ca36-f1d2-49a7-9bad-81d5c5db7055",
-                                    "widgetAlwaysDisplay": true,
-                                    "showTabularData": false,
-                                    "query": {
-                                        "sort": [
-                                            {
-                                                "field": "assignmentSearchType.orderIndex",
-                                                "direction": "ASC"
-                                            }
-                                        ],
-                                        "limit": 2147483647,
-                                        "logic": "AND",
-                                        "filters": [],
-                                        "aggregates": [
-                                            {
-                                                "operator": "countdistinct",
-                                                "field": "*",
-                                                "alias": "total"
-                                            },
-                                            {
-                                                "operator": "groupby",
-                                                "alias": "assignmentSearchType",
-                                                "field": "assignmentSearchType.itemValue"
-                                            },
-                                            {
-                                                "operator": "groupby",
-                                                "alias": "color",
-                                                "field": "assignmentSearchType.color"
-                                            },
-                                            {
-                                                "operator": "groupby",
-                                                "alias": "orderIndex",
-                                                "field": "assignmentSearchType.orderIndex"
-                                            }
-                                        ]
-                                    },
-                                    "mapping": {
-                                        "fieldName": "assignmentSearchType"
-                                    },
-                                    "assignedToSetting": "all",
-                                    "aggregate": true,
-                                    "viewType": "chart",
-                                    "title": "Search Type",
-                                    "resource": "ztpf_manager_automation_profile_rules",
-                                    "chart": "pie",
-                                    "widgetAlwaysExpanded": true,
-                                    "showCount": true
-                                }
-                            }
-                        ],
-                        "style": "col-lg-6"
-                    }
-                ],
-                "wid": "34547aed-3779-4e8f-91cb-a3c67374e2dc",
-                "_collapsed": false,
-                "collapsible": false,
-                "collapsibleIndex": 0
-            },
-            {
-                "columns": [
-                    {
-                        "widgets": [
-                            {
-                                "type": "grid",
-                                "config": {
-                                    "wid": "0698adaa-ab42-4b39-ae25-2482483281dc",
-                                    "module": "ztpf_manager_automation_profile_rules",
-                                    "columns": [
-                                        "id",
-                                        "ztpfManagers",
-                                        "orderPriority",
-                                        "type",
-                                        "assignmentSearchType",
-                                        "ztpfAutomationProfiles",
-                                        "recordTags",
-                                        "modifyDate"
-                                    ],
-                                    "expandableCol": [],
-                                    "relationshipField": [],
-                                    "checkboxStatus": false,
-                                    "editableFields": false,
-                                    "actionButtons": [],
-                                    "query": {
-                                        "sort": [
-                                            {
-                                                "direction": "ASC",
-                                                "field": "orderPriority",
-                                                "_fieldTitle": "Order Priority",
-                                                "_fieldName": "orderPriority"
-                                            },
-                                            {
-                                                "direction": "ASC",
-                                                "field": "ztpfManagers.name",
-                                                "_fieldTitle": "Manager",
-                                                "_fieldName": "ztpfManagers"
-                                            }
-                                        ],
-                                        "limit": 30,
-                                        "logic": "AND",
-                                        "filters": []
-                                    }
-                                }
-                            }
-                        ],
+                        "widgets": [],
                         "style": "col-lg-12"
                     }
                 ],

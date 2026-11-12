@@ -63,226 +63,236 @@
                         ],
                         "style": "col-lg-3",
                         "collapsedText": "Quick Links"
+                    },
+                    {
+                        "widgets": [
+                            {
+                                "type": "rows",
+                                "config": {
+                                    "wid": "e4508859-e8b8-47e6-960b-07007a3089a4",
+                                    "rows": [
+                                        {
+                                            "columns": [
+                                                {
+                                                    "widgets": [
+                                                        {
+                                                            "type": "chart",
+                                                            "config": {
+                                                                "wid": "5118f6ce-8cca-49b2-b5f8-5abc56387a4e",
+                                                                "widgetAlwaysDisplay": true,
+                                                                "showTabularData": false,
+                                                                "query": {
+                                                                    "sort": [],
+                                                                    "limit": 2147483647,
+                                                                    "logic": "AND",
+                                                                    "filters": [],
+                                                                    "aggregates": [
+                                                                        {
+                                                                            "operator": "countdistinct",
+                                                                            "field": "*",
+                                                                            "alias": "total"
+                                                                        },
+                                                                        {
+                                                                            "operator": "groupby",
+                                                                            "alias": "uuid",
+                                                                            "field": "ztpfDevices.uuid"
+                                                                        },
+                                                                        {
+                                                                            "operator": "groupby",
+                                                                            "alias": "name",
+                                                                            "field": "ztpfDevices.name"
+                                                                        }
+                                                                    ]
+                                                                },
+                                                                "mapping": {
+                                                                    "fieldName": "ztpfDevices",
+                                                                    "displayValues": [
+                                                                        "name"
+                                                                    ]
+                                                                },
+                                                                "assignedToSetting": "all",
+                                                                "aggregate": true,
+                                                                "viewType": "chart",
+                                                                "title": "Devices",
+                                                                "widgetAlwaysExpanded": true,
+                                                                "resource": "ztpf_metadata_devices",
+                                                                "chart": "pie"
+                                                            }
+                                                        }
+                                                    ],
+                                                    "style": "col-lg-4"
+                                                },
+                                                {
+                                                    "widgets": [
+                                                        {
+                                                            "type": "chart",
+                                                            "config": {
+                                                                "wid": "827ba02e-86da-4061-b799-2b77261503cb",
+                                                                "widgetAlwaysDisplay": true,
+                                                                "showTabularData": false,
+                                                                "query": {
+                                                                    "sort": [
+                                                                        {
+                                                                            "field": "type.orderIndex",
+                                                                            "direction": "ASC"
+                                                                        }
+                                                                    ],
+                                                                    "limit": 2147483647,
+                                                                    "logic": "AND",
+                                                                    "filters": [],
+                                                                    "aggregates": [
+                                                                        {
+                                                                            "operator": "countdistinct",
+                                                                            "field": "*",
+                                                                            "alias": "total"
+                                                                        },
+                                                                        {
+                                                                            "operator": "groupby",
+                                                                            "alias": "type",
+                                                                            "field": "type.itemValue"
+                                                                        },
+                                                                        {
+                                                                            "operator": "groupby",
+                                                                            "alias": "color",
+                                                                            "field": "type.color"
+                                                                        },
+                                                                        {
+                                                                            "operator": "groupby",
+                                                                            "alias": "orderIndex",
+                                                                            "field": "type.orderIndex"
+                                                                        }
+                                                                    ]
+                                                                },
+                                                                "mapping": {
+                                                                    "fieldName": "type"
+                                                                },
+                                                                "assignedToSetting": "onlyMe",
+                                                                "aggregate": true,
+                                                                "viewType": "chart",
+                                                                "title": "Metadata Types",
+                                                                "widgetAlwaysExpanded": true,
+                                                                "resource": "ztpf_metadata_devices",
+                                                                "chart": "pie"
+                                                            }
+                                                        }
+                                                    ],
+                                                    "style": "col-lg-4"
+                                                },
+                                                {
+                                                    "widgets": [
+                                                        {
+                                                            "type": "chart",
+                                                            "config": {
+                                                                "wid": "0a47c540-830e-4f99-8a40-0be2a40a9f86",
+                                                                "widgetAlwaysDisplay": true,
+                                                                "showTabularData": false,
+                                                                "query": {
+                                                                    "sort": [],
+                                                                    "limit": 2147483647,
+                                                                    "logic": "AND",
+                                                                    "filters": [],
+                                                                    "aggregates": [
+                                                                        {
+                                                                            "operator": "countdistinct",
+                                                                            "field": "*",
+                                                                            "alias": "total"
+                                                                        },
+                                                                        {
+                                                                            "operator": "groupby",
+                                                                            "alias": "name",
+                                                                            "field": "name"
+                                                                        }
+                                                                    ]
+                                                                },
+                                                                "mapping": {
+                                                                    "fieldName": "name"
+                                                                },
+                                                                "assignedToSetting": "onlyMe",
+                                                                "aggregate": true,
+                                                                "viewType": "chart",
+                                                                "title": "Metadata Names",
+                                                                "widgetAlwaysExpanded": true,
+                                                                "resource": "ztpf_metadata_devices",
+                                                                "chart": "pie"
+                                                            }
+                                                        }
+                                                    ],
+                                                    "style": "col-lg-4"
+                                                }
+                                            ],
+                                            "wid": "8de1034b-d83f-42e3-bf53-2b5d7d87964d",
+                                            "collapsible": false,
+                                            "collapsibleIndex": 0
+                                        },
+                                        {
+                                            "columns": [
+                                                {
+                                                    "widgets": [
+                                                        {
+                                                            "type": "grid",
+                                                            "config": {
+                                                                "wid": "ade75c76-7202-4d98-9d47-8e4d535d3fde",
+                                                                "module": "ztpf_metadata_devices",
+                                                                "columns": [
+                                                                    "ztpfDevices",
+                                                                    "name",
+                                                                    "type",
+                                                                    "dataText",
+                                                                    "dataJSON",
+                                                                    "dataSecret",
+                                                                    "id",
+                                                                    "recordTags",
+                                                                    "modifyDate"
+                                                                ],
+                                                                "expandableCol": [
+                                                                    {
+                                                                        "openTab": false,
+                                                                        "name": "dataText"
+                                                                    },
+                                                                    {
+                                                                        "openTab": false,
+                                                                        "name": "dataSecret"
+                                                                    },
+                                                                    {
+                                                                        "openTab": false,
+                                                                        "name": "dataJSON"
+                                                                    }
+                                                                ],
+                                                                "relationshipField": [],
+                                                                "checkboxStatus": true,
+                                                                "editableFields": false,
+                                                                "actionButtons": [],
+                                                                "query": {
+                                                                    "sort": [
+                                                                        {
+                                                                            "direction": "DESC",
+                                                                            "field": "modifyDate",
+                                                                            "_fieldTitle": "Modified On",
+                                                                            "_fieldName": "modifyDate"
+                                                                        }
+                                                                    ],
+                                                                    "limit": 250,
+                                                                    "logic": "AND",
+                                                                    "filters": []
+                                                                }
+                                                            }
+                                                        }
+                                                    ]
+                                                }
+                                            ],
+                                            "wid": "0ba838ee-344e-4edc-9e99-05e65bb4eeab"
+                                        }
+                                    ]
+                                }
+                            }
+                        ],
+                        "style": "col-lg-9"
                     }
                 ],
                 "wid": "228fa149-146a-406e-a73c-9a7106eaafff",
-                "_collapsed": true,
+                "_collapsed": false,
                 "collapsible": true,
                 "collapsibleIndex": 0
-            },
-            {
-                "columns": [
-                    {
-                        "widgets": [
-                            {
-                                "type": "chart",
-                                "config": {
-                                    "wid": "5118f6ce-8cca-49b2-b5f8-5abc56387a4e",
-                                    "widgetAlwaysDisplay": true,
-                                    "showTabularData": false,
-                                    "query": {
-                                        "sort": [],
-                                        "limit": 2147483647,
-                                        "logic": "AND",
-                                        "filters": [],
-                                        "aggregates": [
-                                            {
-                                                "operator": "countdistinct",
-                                                "field": "*",
-                                                "alias": "total"
-                                            },
-                                            {
-                                                "operator": "groupby",
-                                                "alias": "uuid",
-                                                "field": "ztpfDevices.uuid"
-                                            },
-                                            {
-                                                "operator": "groupby",
-                                                "alias": "name",
-                                                "field": "ztpfDevices.name"
-                                            }
-                                        ]
-                                    },
-                                    "mapping": {
-                                        "fieldName": "ztpfDevices",
-                                        "displayValues": [
-                                            "name"
-                                        ]
-                                    },
-                                    "assignedToSetting": "all",
-                                    "aggregate": true,
-                                    "viewType": "chart",
-                                    "title": "Devices",
-                                    "widgetAlwaysExpanded": true,
-                                    "resource": "ztpf_metadata_devices",
-                                    "chart": "pie"
-                                }
-                            }
-                        ],
-                        "style": "col-lg-4"
-                    },
-                    {
-                        "widgets": [
-                            {
-                                "type": "chart",
-                                "config": {
-                                    "wid": "827ba02e-86da-4061-b799-2b77261503cb",
-                                    "widgetAlwaysDisplay": true,
-                                    "showTabularData": false,
-                                    "query": {
-                                        "sort": [
-                                            {
-                                                "field": "type.orderIndex",
-                                                "direction": "ASC"
-                                            }
-                                        ],
-                                        "limit": 2147483647,
-                                        "logic": "AND",
-                                        "filters": [],
-                                        "aggregates": [
-                                            {
-                                                "operator": "countdistinct",
-                                                "field": "*",
-                                                "alias": "total"
-                                            },
-                                            {
-                                                "operator": "groupby",
-                                                "alias": "type",
-                                                "field": "type.itemValue"
-                                            },
-                                            {
-                                                "operator": "groupby",
-                                                "alias": "color",
-                                                "field": "type.color"
-                                            },
-                                            {
-                                                "operator": "groupby",
-                                                "alias": "orderIndex",
-                                                "field": "type.orderIndex"
-                                            }
-                                        ]
-                                    },
-                                    "mapping": {
-                                        "fieldName": "type"
-                                    },
-                                    "assignedToSetting": "onlyMe",
-                                    "aggregate": true,
-                                    "viewType": "chart",
-                                    "title": "Metadata Types",
-                                    "widgetAlwaysExpanded": true,
-                                    "resource": "ztpf_metadata_devices",
-                                    "chart": "pie"
-                                }
-                            }
-                        ],
-                        "style": "col-lg-4"
-                    },
-                    {
-                        "widgets": [
-                            {
-                                "type": "chart",
-                                "config": {
-                                    "wid": "0a47c540-830e-4f99-8a40-0be2a40a9f86",
-                                    "widgetAlwaysDisplay": true,
-                                    "showTabularData": false,
-                                    "query": {
-                                        "sort": [],
-                                        "limit": 2147483647,
-                                        "logic": "AND",
-                                        "filters": [],
-                                        "aggregates": [
-                                            {
-                                                "operator": "countdistinct",
-                                                "field": "*",
-                                                "alias": "total"
-                                            },
-                                            {
-                                                "operator": "groupby",
-                                                "alias": "name",
-                                                "field": "name"
-                                            }
-                                        ]
-                                    },
-                                    "mapping": {
-                                        "fieldName": "name"
-                                    },
-                                    "assignedToSetting": "onlyMe",
-                                    "aggregate": true,
-                                    "viewType": "chart",
-                                    "title": "Metadata Names",
-                                    "widgetAlwaysExpanded": true,
-                                    "resource": "ztpf_metadata_devices",
-                                    "chart": "pie"
-                                }
-                            }
-                        ],
-                        "style": "col-lg-4"
-                    }
-                ],
-                "wid": "f3fc006c-06ca-453c-8c65-c44d42c41005",
-                "_collapsed": false,
-                "collapsible": false,
-                "collapsibleIndex": 0
-            },
-            {
-                "columns": [
-                    {
-                        "widgets": [
-                            {
-                                "type": "grid",
-                                "config": {
-                                    "wid": "ade75c76-7202-4d98-9d47-8e4d535d3fde",
-                                    "module": "ztpf_metadata_devices",
-                                    "columns": [
-                                        "ztpfDevices",
-                                        "name",
-                                        "type",
-                                        "dataText",
-                                        "dataJSON",
-                                        "dataSecret",
-                                        "id",
-                                        "recordTags",
-                                        "modifyDate"
-                                    ],
-                                    "expandableCol": [
-                                        {
-                                            "openTab": false,
-                                            "name": "dataText"
-                                        },
-                                        {
-                                            "openTab": false,
-                                            "name": "dataSecret"
-                                        },
-                                        {
-                                            "openTab": false,
-                                            "name": "dataJSON"
-                                        }
-                                    ],
-                                    "relationshipField": [],
-                                    "checkboxStatus": true,
-                                    "editableFields": false,
-                                    "actionButtons": [],
-                                    "query": {
-                                        "sort": [
-                                            {
-                                                "direction": "DESC",
-                                                "field": "modifyDate",
-                                                "_fieldTitle": "Modified On",
-                                                "_fieldName": "modifyDate"
-                                            }
-                                        ],
-                                        "limit": 250,
-                                        "logic": "AND",
-                                        "filters": []
-                                    }
-                                }
-                            }
-                        ],
-                        "style": "col-lg-12"
-                    }
-                ],
-                "wid": "0818a28a-51c1-4a41-995b-1dafa51cff46",
-                "_collapsed": false
             }
         ],
         "wid": "8ab8792d-38a4-4d3e-aef4-2138a3b6d8d9",

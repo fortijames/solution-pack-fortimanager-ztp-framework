@@ -63,170 +63,180 @@
                         ],
                         "style": "col-lg-3",
                         "collapsedText": "Quick Links"
-                    }
-                ],
-                "wid": "29890a4e-9da5-4502-97fc-e105b746a851",
-                "_collapsed": true,
-                "collapsible": true,
-                "collapsibleIndex": 0
-            },
-            {
-                "columns": [
-                    {
-                        "widgets": [
-                            {
-                                "type": "chart",
-                                "config": {
-                                    "wid": "c8cec408-2734-4d3f-a562-a4d5c37104ab",
-                                    "widgetAlwaysDisplay": true,
-                                    "showTabularData": false,
-                                    "query": {
-                                        "sort": [],
-                                        "limit": 2147483647,
-                                        "logic": "AND",
-                                        "filters": [
-                                            {
-                                                "field": "recordTags",
-                                                "operator": "isnull",
-                                                "value": "false",
-                                                "_value": "false",
-                                                "type": "array"
-                                            }
-                                        ],
-                                        "aggregates": [
-                                            {
-                                                "operator": "countdistinct",
-                                                "field": "*",
-                                                "alias": "total"
-                                            },
-                                            {
-                                                "operator": "groupby",
-                                                "alias": "recordTags",
-                                                "field": "recordTags.uuid"
-                                            }
-                                        ]
-                                    },
-                                    "mapping": {
-                                        "fieldName": "recordTags"
-                                    },
-                                    "assignedToSetting": "all",
-                                    "aggregate": true,
-                                    "viewType": "chart",
-                                    "title": "Tags",
-                                    "resource": "ztpf_automation_profiles",
-                                    "chart": "donut",
-                                    "showCount": true,
-                                    "widgetAlwaysExpanded": true
-                                }
-                            }
-                        ],
-                        "style": "col-lg-6"
                     },
                     {
                         "widgets": [
                             {
-                                "type": "chart",
+                                "type": "rows",
                                 "config": {
-                                    "wid": "4a575f54-ce8d-4c6d-aea3-fc54664fc1cf",
-                                    "widgetAlwaysDisplay": true,
-                                    "showTabularData": false,
-                                    "query": {
-                                        "sort": [],
-                                        "limit": 2147483647,
-                                        "logic": "AND",
-                                        "filters": [],
-                                        "aggregates": [
-                                            {
-                                                "operator": "countdistinct",
-                                                "field": "*",
-                                                "alias": "total"
-                                            },
-                                            {
-                                                "operator": "groupby",
-                                                "alias": "uuid",
-                                                "field": "ztpfAutomationProfiles.uuid"
-                                            },
-                                            {
-                                                "operator": "groupby",
-                                                "alias": "name",
-                                                "field": "ztpfAutomationProfiles.name"
-                                            }
-                                        ]
-                                    },
-                                    "mapping": {
-                                        "fieldName": "ztpfAutomationProfiles",
-                                        "displayValues": [
-                                            "name"
-                                        ]
-                                    },
-                                    "assignedToSetting": "onlyMe",
-                                    "aggregate": true,
-                                    "viewType": "chart",
-                                    "title": "Step Count by Profile",
-                                    "widgetAlwaysExpanded": true,
-                                    "resource": "ztpf_automation_profile_steps",
-                                    "chart": "pie"
-                                }
-                            }
-                        ],
-                        "style": "col-lg-6"
-                    }
-                ],
-                "wid": "596649ab-ae56-49d1-9576-bbd935705d5e",
-                "_collapsed": false,
-                "collapsible": false,
-                "collapsibleIndex": 0
-            },
-            {
-                "columns": [
-                    {
-                        "widgets": [
-                            {
-                                "type": "grid",
-                                "config": {
-                                    "wid": "12f3c928-2e51-4f7c-acc9-0fbb420f3718",
-                                    "module": "ztpf_automation_profiles",
-                                    "columns": [
-                                        "id",
-                                        "name",
-                                        "recordTags",
-                                        "modifyDate"
-                                    ],
-                                    "expandableCol": [
+                                    "wid": "01678b7e-dcca-4d6e-af2f-63707c6c4370",
+                                    "rows": [
                                         {
-                                            "openTab": false,
-                                            "name": "description"
-                                        }
-                                    ],
-                                    "relationshipField": [],
-                                    "checkboxStatus": true,
-                                    "editableFields": false,
-                                    "actionButtons": [
-                                        {
-                                            "id": "\/api\/3\/workflows\/46c1ec8a-6541-43ec-b73d-b9553a56565d",
-                                            "name": "Manage Tags",
-                                            "icon": "fa fa-tags"
+                                            "columns": [
+                                                {
+                                                    "widgets": [
+                                                        {
+                                                            "type": "chart",
+                                                            "config": {
+                                                                "wid": "c8cec408-2734-4d3f-a562-a4d5c37104ab",
+                                                                "widgetAlwaysDisplay": true,
+                                                                "showTabularData": false,
+                                                                "query": {
+                                                                    "sort": [],
+                                                                    "limit": 2147483647,
+                                                                    "logic": "AND",
+                                                                    "filters": [
+                                                                        {
+                                                                            "field": "recordTags",
+                                                                            "operator": "isnull",
+                                                                            "value": "false",
+                                                                            "_value": "false",
+                                                                            "type": "array"
+                                                                        }
+                                                                    ],
+                                                                    "aggregates": [
+                                                                        {
+                                                                            "operator": "countdistinct",
+                                                                            "field": "*",
+                                                                            "alias": "total"
+                                                                        },
+                                                                        {
+                                                                            "operator": "groupby",
+                                                                            "alias": "recordTags",
+                                                                            "field": "recordTags.uuid"
+                                                                        }
+                                                                    ]
+                                                                },
+                                                                "mapping": {
+                                                                    "fieldName": "recordTags"
+                                                                },
+                                                                "assignedToSetting": "all",
+                                                                "aggregate": true,
+                                                                "viewType": "chart",
+                                                                "title": "Tags",
+                                                                "resource": "ztpf_automation_profiles",
+                                                                "chart": "donut",
+                                                                "showCount": true,
+                                                                "widgetAlwaysExpanded": true
+                                                            }
+                                                        }
+                                                    ],
+                                                    "style": "col-lg-6"
+                                                },
+                                                {
+                                                    "widgets": [
+                                                        {
+                                                            "type": "chart",
+                                                            "config": {
+                                                                "wid": "4a575f54-ce8d-4c6d-aea3-fc54664fc1cf",
+                                                                "widgetAlwaysDisplay": true,
+                                                                "showTabularData": false,
+                                                                "query": {
+                                                                    "sort": [],
+                                                                    "limit": 2147483647,
+                                                                    "logic": "AND",
+                                                                    "filters": [],
+                                                                    "aggregates": [
+                                                                        {
+                                                                            "operator": "countdistinct",
+                                                                            "field": "*",
+                                                                            "alias": "total"
+                                                                        },
+                                                                        {
+                                                                            "operator": "groupby",
+                                                                            "alias": "uuid",
+                                                                            "field": "ztpfAutomationProfiles.uuid"
+                                                                        },
+                                                                        {
+                                                                            "operator": "groupby",
+                                                                            "alias": "name",
+                                                                            "field": "ztpfAutomationProfiles.name"
+                                                                        }
+                                                                    ]
+                                                                },
+                                                                "mapping": {
+                                                                    "fieldName": "ztpfAutomationProfiles",
+                                                                    "displayValues": [
+                                                                        "name"
+                                                                    ]
+                                                                },
+                                                                "assignedToSetting": "onlyMe",
+                                                                "aggregate": true,
+                                                                "viewType": "chart",
+                                                                "title": "Step Count by Profile",
+                                                                "widgetAlwaysExpanded": true,
+                                                                "resource": "ztpf_automation_profile_steps",
+                                                                "chart": "pie"
+                                                            }
+                                                        }
+                                                    ],
+                                                    "style": "col-lg-6"
+                                                }
+                                            ],
+                                            "wid": "b57a9907-739b-4b4c-b0f7-4eac147a8627",
+                                            "collapsible": false,
+                                            "collapsibleIndex": 0
                                         },
                                         {
-                                            "id": "\/api\/3\/workflows\/12903bc4-bff0-4fa1-b543-d8d176987093",
-                                            "name": "Export Records by Tag",
-                                            "icon": "fa fa-download"
+                                            "columns": [
+                                                {
+                                                    "widgets": [
+                                                        {
+                                                            "type": "grid",
+                                                            "config": {
+                                                                "wid": "12f3c928-2e51-4f7c-acc9-0fbb420f3718",
+                                                                "module": "ztpf_automation_profiles",
+                                                                "columns": [
+                                                                    "id",
+                                                                    "name",
+                                                                    "recordTags",
+                                                                    "modifyDate"
+                                                                ],
+                                                                "expandableCol": [
+                                                                    {
+                                                                        "openTab": false,
+                                                                        "name": "description"
+                                                                    }
+                                                                ],
+                                                                "relationshipField": [],
+                                                                "checkboxStatus": true,
+                                                                "editableFields": false,
+                                                                "actionButtons": [
+                                                                    {
+                                                                        "id": "\/api\/3\/workflows\/46c1ec8a-6541-43ec-b73d-b9553a56565d",
+                                                                        "name": "Manage Tags",
+                                                                        "icon": "fa fa-tags"
+                                                                    },
+                                                                    {
+                                                                        "id": "\/api\/3\/workflows\/12903bc4-bff0-4fa1-b543-d8d176987093",
+                                                                        "name": "Export Records by Tag",
+                                                                        "icon": "fa fa-download"
+                                                                    }
+                                                                ],
+                                                                "query": {
+                                                                    "sort": [],
+                                                                    "limit": 30,
+                                                                    "logic": "AND",
+                                                                    "filters": []
+                                                                }
+                                                            }
+                                                        }
+                                                    ]
+                                                }
+                                            ],
+                                            "wid": "2c49a514-b04e-4cb8-b8bc-0c1d80323ecf"
                                         }
-                                    ],
-                                    "query": {
-                                        "sort": [],
-                                        "limit": 30,
-                                        "logic": "AND",
-                                        "filters": []
-                                    }
+                                    ]
                                 }
                             }
                         ],
-                        "style": "col-lg-12"
+                        "style": "col-lg-9"
                     }
                 ],
-                "wid": "db714add-dcf8-41af-88f2-f3c560168aad",
-                "_collapsed": false
+                "wid": "29890a4e-9da5-4502-97fc-e105b746a851",
+                "_collapsed": false,
+                "collapsible": true,
+                "collapsibleIndex": 0
             }
         ],
         "wid": "87f868be-1e2b-47a9-9922-7c2a893954f1",

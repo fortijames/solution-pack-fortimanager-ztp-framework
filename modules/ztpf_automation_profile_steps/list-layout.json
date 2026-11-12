@@ -63,103 +63,112 @@
                         ],
                         "style": "col-lg-3",
                         "collapsedText": "Quick Links"
+                    },
+                    {
+                        "widgets": [
+                            {
+                                "type": "rows",
+                                "config": {
+                                    "wid": "5926235f-f093-4935-9ab4-c0880a68d94b",
+                                    "rows": [
+                                        {
+                                            "columns": [
+                                                {
+                                                    "widgets": [
+                                                        {
+                                                            "type": "chart",
+                                                            "config": {
+                                                                "wid": "9ba7832e-0860-48b1-a68a-658661200604",
+                                                                "widgetAlwaysDisplay": true,
+                                                                "showTabularData": false,
+                                                                "query": {
+                                                                    "sort": [],
+                                                                    "limit": 2147483647,
+                                                                    "logic": "AND",
+                                                                    "filters": [],
+                                                                    "aggregates": [
+                                                                        {
+                                                                            "operator": "countdistinct",
+                                                                            "field": "*",
+                                                                            "alias": "total"
+                                                                        },
+                                                                        {
+                                                                            "operator": "groupby",
+                                                                            "alias": "recordTags",
+                                                                            "field": "recordTags.uuid"
+                                                                        }
+                                                                    ]
+                                                                },
+                                                                "mapping": {
+                                                                    "fieldName": "recordTags"
+                                                                },
+                                                                "assignedToSetting": "all",
+                                                                "aggregate": true,
+                                                                "viewType": "chart",
+                                                                "title": "Tags",
+                                                                "resource": "ztpf_automation_profile_steps",
+                                                                "chart": "donut",
+                                                                "widgetAlwaysExpanded": true,
+                                                                "showCount": true
+                                                            }
+                                                        }
+                                                    ]
+                                                }
+                                            ],
+                                            "wid": "dfe796be-1cee-4c6f-baa6-d29d8e39ff5d"
+                                        },
+                                        {
+                                            "columns": [
+                                                {
+                                                    "widgets": [
+                                                        {
+                                                            "type": "grid",
+                                                            "config": {
+                                                                "wid": "b3ea4cf9-8abb-45c0-a859-0469f6e55475",
+                                                                "module": "ztpf_automation_profile_steps",
+                                                                "columns": [
+                                                                    "id",
+                                                                    "ztpfAutomationProfiles",
+                                                                    "stepSequence",
+                                                                    "ztpfAutomationActions",
+                                                                    "triggerKey",
+                                                                    "recordTags",
+                                                                    "modifyDate"
+                                                                ],
+                                                                "expandableCol": [
+                                                                    {
+                                                                        "openTab": false,
+                                                                        "name": "stepARGS"
+                                                                    }
+                                                                ],
+                                                                "relationshipField": [],
+                                                                "checkboxStatus": true,
+                                                                "editableFields": false,
+                                                                "actionButtons": [],
+                                                                "query": {
+                                                                    "sort": [],
+                                                                    "limit": 30,
+                                                                    "logic": "AND",
+                                                                    "filters": []
+                                                                }
+                                                            }
+                                                        }
+                                                    ]
+                                                }
+                                            ],
+                                            "wid": "31d48dfe-e22c-48d6-8d6e-65f0ee2026a6"
+                                        }
+                                    ]
+                                }
+                            }
+                        ],
+                        "style": "col-lg-9"
                     }
                 ],
                 "wid": "7d8f6195-8e6c-4286-b61a-324848151ee3",
                 "_collapsed": true,
                 "collapsible": true,
                 "collapsibleIndex": 0
-            },
-            {
-                "columns": [
-                    {
-                        "widgets": [
-                            {
-                                "type": "chart",
-                                "config": {
-                                    "wid": "9ba7832e-0860-48b1-a68a-658661200604",
-                                    "widgetAlwaysDisplay": true,
-                                    "showTabularData": false,
-                                    "query": {
-                                        "sort": [],
-                                        "limit": 2147483647,
-                                        "logic": "AND",
-                                        "filters": [],
-                                        "aggregates": [
-                                            {
-                                                "operator": "countdistinct",
-                                                "field": "*",
-                                                "alias": "total"
-                                            },
-                                            {
-                                                "operator": "groupby",
-                                                "alias": "recordTags",
-                                                "field": "recordTags.uuid"
-                                            }
-                                        ]
-                                    },
-                                    "mapping": {
-                                        "fieldName": "recordTags"
-                                    },
-                                    "assignedToSetting": "all",
-                                    "aggregate": true,
-                                    "viewType": "chart",
-                                    "title": "Tags",
-                                    "resource": "ztpf_automation_profile_steps",
-                                    "chart": "donut",
-                                    "widgetAlwaysExpanded": true,
-                                    "showCount": true
-                                }
-                            }
-                        ],
-                        "style": "col-lg-12"
-                    }
-                ],
-                "wid": "915fb6b3-5066-428a-86ed-a27cd23c4e79",
-                "_collapsed": false
-            },
-            {
-                "columns": [
-                    {
-                        "widgets": [
-                            {
-                                "type": "grid",
-                                "config": {
-                                    "wid": "b3ea4cf9-8abb-45c0-a859-0469f6e55475",
-                                    "module": "ztpf_automation_profile_steps",
-                                    "columns": [
-                                        "id",
-                                        "ztpfAutomationProfiles",
-                                        "stepSequence",
-                                        "ztpfAutomationActions",
-                                        "triggerKey",
-                                        "recordTags",
-                                        "modifyDate"
-                                    ],
-                                    "expandableCol": [
-                                        {
-                                            "openTab": false,
-                                            "name": "stepARGS"
-                                        }
-                                    ],
-                                    "relationshipField": [],
-                                    "checkboxStatus": true,
-                                    "editableFields": false,
-                                    "actionButtons": [],
-                                    "query": {
-                                        "sort": [],
-                                        "limit": 30,
-                                        "logic": "AND",
-                                        "filters": []
-                                    }
-                                }
-                            }
-                        ],
-                        "style": "col-lg-12"
-                    }
-                ],
-                "wid": "384e45d1-7efb-4919-a2e4-942bf678d851",
-                "_collapsed": false
             }
         ],
         "wid": "81b34e85-f32d-4e24-9a91-5e90ceda0b6f",
