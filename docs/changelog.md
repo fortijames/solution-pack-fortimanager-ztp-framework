@@ -2,6 +2,14 @@
 |--------------------------------------------|
 
 # Change Log
+ - 20261112-20261112 (2.0.61)
+   - Add FMG API admin support: the Create/Update FMG Connector Config from Manager Record button gains an `FMG API Admin` checkbox, and the `> update fortimanager-json-rpc connector config` function writes the connector with `API Key` authentication when the manager uses an API admin. 
+   - Move the collapsible Quick Links section on every module list layout into a left column beside the module grid and its charts. 
+   - Refresh the module field definitions with attribute ids, uuids, and order indexes from a fresh export. 
+   - Reorder the QuickLinks seed record links to lead with Automation Profiles and Profile Steps. 
+   - Remove the bundled playbook global variables seed file: `ztpf_return_status_default` and `ztpf_running_triggerkey_idx` are no longer seeded with the pack. 
+   - Remove the environment-specific Code Snippet connector configuration from the bundled connector data. 
+
  - 20261111-20261112 (2.0.60)
    - Add the System Settings module (`ztpf_system_settings`): records hold a name, a type tag, a description, and a data payload in JSON, Text, Markdown, or HTML (`ztpfOutputType`); ship a QuickLinks seed record holding the framework's navigation links. 
    - Remove the `ztpf Quick Links` module and its seed record: the QuickLinks System Settings record carries the framework navigation links. 

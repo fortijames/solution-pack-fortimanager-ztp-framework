@@ -3,6 +3,14 @@
 
 # What's New
 
+Release 2.0.61
+
+This release adds FMG API admin support for connector configurations and tidies the module list layouts. 
+
+- FMG API admin support: the Create/Update FMG Connector Config from Manager Record button gains an FMG API Admin checkbox, and the connector config update function stores API Key authentication when the manager uses an API admin. 
+- Every module list layout now shows the collapsible Quick Links section in a column beside the module grid and its charts. 
+- Housekeeping: module field definitions refreshed from a clean export, the QuickLinks seed record leads with Automation Profiles and Profile Steps, the bundled global variables seed file is no longer shipped, and environment-specific connector data is removed. 
+
 Release 2.0.60
 
 This release adds the System Settings module, record cleanup playbooks, and slimmer role definitions. 
