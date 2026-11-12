@@ -11,42 +11,43 @@
                             {
                                 "type": "readonlyFormGroup",
                                 "config": {
-                                    "wid": "6dc65a0a-9254-48fd-8220-b9c6f9884cf2",
+                                    "wid": "24cfecd8-995e-439d-abe0-2a708eb28120",
                                     "gridColumns": [],
                                     "displayType": "card-view",
                                     "widgetAlwaysDisplay": true,
                                     "query": {
                                         "sort": [],
-                                        "limit": 1,
+                                        "limit": 10,
                                         "logic": "AND",
-                                        "filters": []
+                                        "filters": [
+                                            {
+                                                "field": "name",
+                                                "operator": "eq",
+                                                "_operator": "eq",
+                                                "value": "QuickLinks",
+                                                "type": "primitive"
+                                            }
+                                        ]
                                     },
                                     "recordTitle": {
                                         "type": "sectionHeader",
-                                        "wid": "94ca922e-f05f-4fe9-87a7-b22c14071f5b",
+                                        "wid": "a09439f8-de96-4b9e-81a5-cb157edb23dd",
                                         "clone": false,
-                                        "remove": false,
-                                        "query": {
-                                            "filters": [],
-                                            "sort": [],
-                                            "limit": 10
-                                        },
-                                        "editorType": "html",
-                                        "sectionText": "<p style=\"text-align: center;\"><span aria-invalid=\"false\" data-mode=\"'view'\" data-ng-model=\"params.resultantText\" data-ng-if=\"!config.editorType || config.editorType === 'html'\" data-cs-html-editor=\"\" style=\"font-size: 12pt;\" class=\"new-truncate-ellipsis white-space-normal ng-pristine ng-untouched ng-valid ng-scope ng-isolate-scope ng-not-empty\"><strong>ZTPF Resources<\/strong><\/span><\/p>"
+                                        "remove": false
                                     },
                                     "relatedTemplate": {
                                         "type": "rows",
                                         "rows": [],
-                                        "wid": "fe17d3e9-057c-4771-8c90-73884c5bc1ff"
+                                        "wid": "50af23d8-fa4a-4e00-8721-df7fc5029a04"
                                     },
-                                    "resource": "ztpf_managers",
+                                    "resource": "ztpf_system_settings",
                                     "rows": [
                                         {
                                             "columns": [
                                                 {
                                                     "fields": [
                                                         {
-                                                            "name": "id",
+                                                            "name": "dataHTML",
                                                             "highlightMode": true,
                                                             "linky": true,
                                                             "readOnly": true
@@ -61,7 +62,7 @@
                             }
                         ],
                         "style": "col-lg-3",
-                        "collapsedText": "ZTPF Resources"
+                        "collapsedText": "Quick Links"
                     },
                     {
                         "widgets": [

@@ -9,6 +9,64 @@
                     {
                         "widgets": [
                             {
+                                "type": "readonlyFormGroup",
+                                "config": {
+                                    "wid": "24cfecd8-995e-439d-abe0-2a708eb28120",
+                                    "gridColumns": [],
+                                    "displayType": "card-view",
+                                    "widgetAlwaysDisplay": true,
+                                    "query": {
+                                        "sort": [],
+                                        "limit": 10,
+                                        "logic": "AND",
+                                        "filters": [
+                                            {
+                                                "field": "name",
+                                                "operator": "eq",
+                                                "_operator": "eq",
+                                                "value": "QuickLinks",
+                                                "type": "primitive"
+                                            }
+                                        ]
+                                    },
+                                    "recordTitle": {
+                                        "type": "sectionHeader",
+                                        "wid": "a09439f8-de96-4b9e-81a5-cb157edb23dd",
+                                        "clone": false,
+                                        "remove": false
+                                    },
+                                    "relatedTemplate": {
+                                        "type": "rows",
+                                        "rows": [],
+                                        "wid": "50af23d8-fa4a-4e00-8721-df7fc5029a04"
+                                    },
+                                    "resource": "ztpf_system_settings",
+                                    "rows": [
+                                        {
+                                            "columns": [
+                                                {
+                                                    "fields": [
+                                                        {
+                                                            "name": "dataHTML",
+                                                            "highlightMode": true,
+                                                            "linky": true,
+                                                            "readOnly": true
+                                                        }
+                                                    ],
+                                                    "style": "col-lg-12"
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            }
+                        ],
+                        "style": "col-lg-3",
+                        "collapsedText": "Quick Links"
+                    },
+                    {
+                        "widgets": [
+                            {
                                 "type": "sectionHeader",
                                 "config": {
                                     "wid": "6f24b911-8fa9-4429-8df1-6b4e06d73e7e",
@@ -20,18 +78,7 @@
                                     "editorType": "html",
                                     "sectionText": "<p style=\"text-align: center;\"><strong>ZTPF System Settings<\/strong><\/p>\n<p style=\"text-align: center;\"><span style=\"background-color: rgb(224, 62, 45);\"><em><strong>Do not edit records without knowing what you are doing.<\/strong><\/em><\/span><\/p>"
                                 }
-                            }
-                        ],
-                        "style": "col-lg-12"
-                    }
-                ],
-                "wid": "f853ad8e-44d0-443d-ad4b-93aca62e2594",
-                "_collapsed": false
-            },
-            {
-                "columns": [
-                    {
-                        "widgets": [
+                            },
                             {
                                 "type": "grid",
                                 "config": {
@@ -64,11 +111,13 @@
                                 }
                             }
                         ],
-                        "style": "col-lg-12"
+                        "style": "col-lg-9"
                     }
                 ],
-                "wid": "ad16f14c-c91b-416e-850e-dc0a0d00759e",
-                "_collapsed": false
+                "wid": "f853ad8e-44d0-443d-ad4b-93aca62e2594",
+                "_collapsed": true,
+                "collapsible": true,
+                "collapsibleIndex": 0
             }
         ],
         "wid": "19c85717-95e7-4871-8478-0367978b54ba",

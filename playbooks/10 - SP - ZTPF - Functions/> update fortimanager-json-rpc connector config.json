@@ -14,7 +14,8 @@
         "fmg_user",
         "fmg_pass",
         "fmg_port",
-        "record_id"
+        "record_id",
+        "fmg_is_apiadmin"
     ],
     "synchronous": false,
     "collection": "\/api\/3\/workflow_collections\/517fb52d-36f5-4bac-a344-7d4599d7dec6",
@@ -57,7 +58,7 @@
             "name": "connector config",
             "description": null,
             "arguments": {
-                "new_connector_config": "{\n\"connector\": \"{{vars.connector_id}}\",\n\"name\": \"{{vars.connector_config}}\",\n\"default\": false,\n\"config\": {\n  \"address\": \"{{vars.fmg_ip}}\",\n  \"port\":\"{{vars.fmg_port}}\",\n  \"auth_method\": \"Username\/Password\",\n  \"username\":\"{{vars.fmg_user}}\",\n  \"password\":\"{{vars.fmg_pass}}\",\n  \"verify_ssl\" : false,\n  \"verbose_json\": true\n  }\n}"
+                "new_connector_config": "{%- if vars.fmg_is_apiadmin -%}\n{\n\"connector\": \"{{vars.connector_id}}\",\n\"name\": \"{{vars.connector_config}}\",\n\"default\": false,\n\"config\": {\n  \"address\": \"{{vars.fmg_ip}}\",\n  \"port\":\"{{vars.fmg_port}}\",\n  \"auth_method\": \"API Key\",\n  \"username\":\"{{vars.fmg_user}}\",\n  \"api_key\":\"{{vars.fmg_pass}}\",\n  \"verify_ssl\" : false,\n  \"verbose_json\": true\n  }\n}\n{%- else -%}\n{\n\"connector\": \"{{vars.connector_id}}\",\n\"name\": \"{{vars.connector_config}}\",\n\"default\": false,\n\"config\": {\n  \"address\": \"{{vars.fmg_ip}}\",\n  \"port\":\"{{vars.fmg_port}}\",\n  \"auth_method\": \"Username\/Password\",\n  \"username\":\"{{vars.fmg_user}}\",\n  \"password\":\"{{vars.fmg_pass}}\",\n  \"verify_ssl\" : false,\n  \"verbose_json\": true\n  }\n}\n{%- endif -%}"
             },
             "status": null,
             "top": "360",

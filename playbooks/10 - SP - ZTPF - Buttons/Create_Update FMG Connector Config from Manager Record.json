@@ -248,7 +248,7 @@
                                 "label": "FMG Admin User",
                                 "title": "Text Field",
                                 "usable": true,
-                                "tooltip": "User with JSON API Access",
+                                "tooltip": "Admin with JSON-RPC API Access",
                                 "dataType": "text",
                                 "formType": "text",
                                 "required": true,
@@ -258,7 +258,7 @@
                                 "searchable": true,
                                 "templateUrl": "app\/components\/form\/fields\/input.html",
                                 "defaultValue": "{{vars.input.records[0].adminRPCUser}}",
-                                "_previousName": "fMGAdminUser",
+                                "_previousName": "fMGAdmin",
                                 "playbookField": true,
                                 "requiredQuery": [],
                                 "lengthConstraint": true,
@@ -276,7 +276,7 @@
                                 "label": "FMG Password",
                                 "title": "Password",
                                 "usable": false,
-                                "tooltip": "Password of JSON REST User",
+                                "tooltip": "Password or Key of Admin",
                                 "dataType": "text",
                                 "formType": "password",
                                 "required": true,
@@ -297,6 +297,32 @@
                                 "jinjaExpressionView": true,
                                 "useRecordFieldDefault": false,
                                 "_addRequiredConditions": true
+                            },
+                            {
+                                "name": "fMGAPIAdmin",
+                                "type": "boolean",
+                                "label": "FMG API Admin",
+                                "title": "Checkbox",
+                                "usable": true,
+                                "tooltip": "Check if you're using an API Admin (Recommended) with Key",
+                                "dataType": "checkbox",
+                                "formType": "checkbox",
+                                "required": false,
+                                "_expanded": true,
+                                "mmdUpdate": true,
+                                "collection": false,
+                                "searchable": true,
+                                "templateUrl": "app\/components\/form\/fields\/checkbox.html",
+                                "defaultValue": true,
+                                "_previousName": "fMGAPIAdminKey",
+                                "playbookField": true,
+                                "lengthConstraint": false,
+                                "allowedEncryption": false,
+                                "allowedGridColumn": true,
+                                "requiredCondition": "notrequired",
+                                "jinjaExpressionView": true,
+                                "useRecordFieldDefault": false,
+                                "_addRequiredConditions": false
                             }
                         ]
                     }
@@ -420,6 +446,7 @@
                 "fmg_port": "{{vars.steps.Provide_input.input.fMGPort}}",
                 "fmg_user": "{{vars.steps.Provide_input.input.fMGAdminUser}}",
                 "fmg_password": "{%- if vars.steps.Provide_input.input.fMGPassword -%}\n{{vars.steps.Provide_input.input.fMGPassword}}\n{%- else -%}\n{{vars.input.records[0].adminRPCPassword}}\n{%- endif -%}",
+                "fmg_is_apiadmin": "{{vars.steps.Provide_input.input.fMGAPIAdmin}}",
                 "connector_config": "{%- if vars.input.records[0].connectorConfig -%}\n{{vars.input.records[0].connectorConfig}}\n{%- else -%}\nmanagerID_{{vars.input.records[0].id}}\n{%- endif -%}"
             },
             "status": null,
@@ -521,7 +548,8 @@
                     "fmg_pass": "{{vars.fmg_password}}",
                     "fmg_port": "{{vars.fmg_port}}",
                     "fmg_user": "{{vars.fmg_user}}",
-                    "record_id": "{{vars.input.records[0].id}}"
+                    "record_id": "{{vars.input.records[0].id}}",
+                    "fmg_is_apiadmin": "{{vars.fmg_is_apiadmin}}"
                 },
                 "apply_async": false,
                 "step_variables": [],
