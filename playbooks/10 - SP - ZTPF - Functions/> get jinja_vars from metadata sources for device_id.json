@@ -73,12 +73,13 @@
                         }
                     ],
                     "__selectFields": [
-                        "orderPriority",
                         "name",
+                        "orderPriority",
                         "type",
                         "datakey",
+                        "script",
                         "id",
-                        "script"
+                        "refactorOutputScript"
                     ]
                 },
                 "module": "ztpf_metadata_sources?$limit=5000",
@@ -166,7 +167,8 @@
                     "datakey": "{{vars.item.datakey}}",
                     "device_id": "{{vars.device_id}}",
                     "jinja_vars": "{{vars.jinja_vars}}",
-                    "source_data": "{{vars.item.script}}"
+                    "source_data": "{{vars.item.script}}",
+                    "refactor_output": "{{vars.item.refactorOutputScript}}"
                 },
                 "apply_async": false,
                 "step_variables": [],
@@ -223,7 +225,7 @@
             "name": "update jinja_vars data",
             "description": null,
             "arguments": {
-                "jinja_vars": "{%- set jv = vars.jinja_vars -%}\n{%- do jv.update({\"data\":{}}) -%}\n\n{%- for d in vars.steps.run_metadata_source -%}\n  {%- set dk = d.params.datakey -%}\n  {%- if dk in jv.data -%}\n    {% if jv.data[dk] is mapping and d.output[dk] is mapping  %}\n      {%- set data = jv.data[dk] | combine(d.output[dk]) -%}\n    {%- else -%}\n      {%- set data = d.output[dk] -%}\n    {%- endif -%}\n  {%- else -%}\n    {%- set data = d.output[dk] -%}\n  {%- endif -%}\n  {%- do jv.data.update({dk:data}) -%}\n{% endfor -%}\n\n{{jv}}"
+                "jinja_vars": "{%- set jv = vars.jinja_vars -%}\n{%- do jv.update({\"data\":{}}) -%}\n\n{%- for d in vars.steps.run_metadata_source -%}\n  {%- set dk = d.params.datakey -%}\n  {%- set rk = \"_refactor_\" ~ dk -%}\n  {%- set src = d.output[dk] if dk in d.output else {} -%}\n  {%- set rsrc = d.output[rk] if rk in d.output else none -%}\n  {%- if dk in jv.data -%}\n    {%- if jv.data[dk] is mapping and src is mapping -%}\n      {%- set data = jv.data[dk] | combine(src) -%}\n    {%- else -%}\n      {%- set data = src -%}\n    {%- endif -%}\n  {%- else -%}\n    {%- set data = src -%}\n  {%- endif -%}\n  {%- do jv.data.update({dk:data}) -%}\n  {%- if rsrc is not none -%}\n    {%- do jv.data.update({rk:rsrc}) -%}\n  {%- endif -%}\n{% endfor -%}\n\n{{jv}}"
             },
             "status": null,
             "top": "440",

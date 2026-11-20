@@ -2,6 +2,14 @@
 |--------------------------------------------|
 
 # Change Log
+ - 20261113-20261120 (2.0.62)
+   - Add scheduled automation runs: Run Groups gain a `Scheduled` status and a `Scheduled Time` field, the Add Steps to Device from Profile wizard accepts a scheduled time, and the create-run-group function holds the run in `Scheduled` until that time before running the queued steps. 
+   - Add a `Refactor Output Script` field to Data Sources: the run-metadata-source function applies it to the collected data and returns the result under the source's data key. 
+   - Expose the device `configStatus`, `configDBStatus`, and `connectionStatus` fields to step Jinja as `record_dev_*` variables, and rebuild the merged `data` context when collecting jinja_vars for a template. 
+   - Save the data collected by the Get Metadata Source Data on Device button as the source's Example Output. 
+   - Add a `> update global variable` function that resolves the framework global variables (`ztpf_running_triggerkey_idx`, `ztpf_return_status_default`) as groundwork for moving them into System Settings records. 
+   - Tag the framework playbooks with `ztpfSystemSettings`. 
+
  - 20261112-20261112 (2.0.61)
    - Add FMG API admin support: the Create/Update FMG Connector Config from Manager Record button gains an `FMG API Admin` checkbox, and the `> update fortimanager-json-rpc connector config` function writes the connector with `API Key` authentication when the manager uses an API admin. 
    - Move the collapsible Quick Links section on every module list layout into a left column beside the module grid and its charts. 

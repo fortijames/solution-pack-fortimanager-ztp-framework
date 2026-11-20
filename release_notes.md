@@ -3,6 +3,16 @@
 
 # What's New
 
+Release 2.0.62
+
+This release adds scheduled automation runs and data-source refactor scripts. 
+
+- Scheduled runs: Run Groups gain a `Scheduled` status and a `Scheduled Time` field; the Add Steps to Device from Profile wizard accepts a scheduled time, and the run holds in `Scheduled` until then. 
+- Data Sources gain a `Refactor Output Script` that reshapes the collected data before it reaches the step's Jinja context. 
+- Step Jinja context now includes the device's config, config DB, and connection statuses. 
+- The Get Metadata Source Data on Device button saves the data it collects as the source's Example Output. 
+- Added a `> update global variable` function as groundwork for moving the framework global variables into System Settings records. 
+
 Release 2.0.61
 
 This release adds FMG API admin support for connector configurations and tidies the module list layouts. 

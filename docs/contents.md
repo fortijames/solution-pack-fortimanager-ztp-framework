@@ -72,7 +72,7 @@ Each module also has its own page below. The [Modules](./modules.md) reference i
 | -------- | ----------- |
 | `ztpfStatus` | Overall record status (Ok, Updating, Pending, Failed, Running, Ready, Reviewing, Disabled, Deleted). |
 | `ztpfAdminStatus` | Enabled or Disabled state for framework records. |
-| `ztpfRunGroupsStatus` | Run Group statuses (New, Running, Complete, Fail Detected, Reviewing, Abort Detected). |
+| `ztpfRunGroupsStatus` | Run Group statuses (New, Scheduled, Running, Complete, Fail Detected, Reviewing, Abort Detected). |
 | `ztpfDeviceStepStatus` | Device Automation Step statuses (Queued, Running, Preparing, Waiting, Complete, Fail, Cancel, Abort, and more). |
 | `ztpfDeviceStepOutputStatus` | Step output statuses (OK, Exceptions Found, Incomplete). |
 | `ztpfMetadataDeviceStatus` | Device Metadata statuses (Disable, New, Ok, Input Needed). |
@@ -103,7 +103,7 @@ Each module also has its own page below. The [Modules](./modules.md) reference i
 
 | Record Set | Description |
 | ---------- | ----------- |
-| System Settings | One seed record (QuickLinks) holding the framework's navigation links. |
+| System Settings | Two seed records: QuickLinks (navigation links) and the `ztpf_running_triggerkey_idx` trigger key index. |
 
 | [<](./usage.md) |
 |------------------|

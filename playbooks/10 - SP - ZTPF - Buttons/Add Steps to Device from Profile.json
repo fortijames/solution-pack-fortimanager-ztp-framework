@@ -22,7 +22,8 @@
             "arguments": {
                 "arguments": {
                     "tags": "{{vars.user_tags|join(\",\")}}",
-                    "device_ids": "{{ vars.input.records | json_query('[].id') }}"
+                    "device_ids": "{{ vars.input.records | json_query('[].id') }}",
+                    "scheduled_timestamp": "{{arrow.get(vars.scheduled_time).int_timestamp}}"
                 },
                 "apply_async": false,
                 "step_variables": [],
@@ -177,6 +178,7 @@
             "description": null,
             "arguments": {
                 "user_tags": "{%- set tags = [] -%}\n\n{%- set pickFromExistingTags  = vars.steps.select_profile.input.pickFromExistingTags -%}\n{%- set addTags = vars.steps.select_profile.input.tags -%}\n\n\n{%- if pickFromExistingTags -%}\n  {%- for t in pickFromExistingTags -%}\n    {%- do tags.append(t) -%}\n  {%- endfor -%}\n{%- endif -%}\n\n{%- if addTags  -%}\n  {%- for t in addTags.replace(' ',',').split(',') -%}\n    {%- do tags.append(t) -%}\n  {%- endfor -%}\n{%- endif -%}\n\n{{tags|unique|sort}}",
+                "scheduled_time": "{{vars.steps.select_profile.input.scheduledTime}}",
                 "profile_selected": "{{vars.profile.records\n  | selectattr('_option', 'equalto', vars.steps.select_profile.input.profile)\n  | list\n}}"
             },
             "status": null,
@@ -259,7 +261,7 @@
                                 "dataType": "checkbox",
                                 "formType": "checkbox",
                                 "required": false,
-                                "_expanded": false,
+                                "_expanded": true,
                                 "mmdUpdate": true,
                                 "collection": false,
                                 "searchable": true,
@@ -283,7 +285,7 @@
                                 "dataType": "text",
                                 "formType": "text",
                                 "required": false,
-                                "_expanded": true,
+                                "_expanded": false,
                                 "defaultValue": null,
                                 "_previousName": "",
                                 "visibilityQuery": {
@@ -342,6 +344,47 @@
                                 },
                                 "lengthConstraint": true,
                                 "allowedGridColumn": false,
+                                "requiredCondition": "notrequired",
+                                "jinjaExpressionView": true,
+                                "useRecordFieldDefault": false,
+                                "_addRequiredConditions": false,
+                                "_addVisibilityConditions": true
+                            },
+                            {
+                                "name": "scheduledTime",
+                                "type": "integer",
+                                "label": "ScheduledTime",
+                                "title": "Date\/Time Field",
+                                "usable": true,
+                                "tooltip": "",
+                                "dataType": "datetime",
+                                "formType": "datetime",
+                                "required": false,
+                                "_expanded": true,
+                                "mmdUpdate": true,
+                                "collection": false,
+                                "searchable": true,
+                                "templateUrl": "app\/components\/form\/fields\/datetime.html",
+                                "defaultValue": null,
+                                "_previousName": "scheduled",
+                                "playbookField": true,
+                                "visibilityQuery": {
+                                    "sort": [],
+                                    "limit": 30,
+                                    "logic": "AND",
+                                    "filters": [
+                                        {
+                                            "type": "primitive",
+                                            "field": "createRunGroupAndExecuteSteps",
+                                            "value": true,
+                                            "operator": "eq",
+                                            "_operator": "eq"
+                                        }
+                                    ]
+                                },
+                                "lengthConstraint": false,
+                                "allowedEncryption": false,
+                                "allowedGridColumn": true,
                                 "requiredCondition": "notrequired",
                                 "jinjaExpressionView": true,
                                 "useRecordFieldDefault": false,

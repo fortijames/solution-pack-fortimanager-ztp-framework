@@ -18,11 +18,14 @@ The group tracks the size and progress of the run: total steps, total devices, s
 
 When the queue drains, the group moves to `Reviewing`, which evaluates the steps: if none are pending, the group completes and the running flags clear on the devices; otherwise the run continues.
 
+A run can also be scheduled: the group is created in the `Scheduled` state with a Scheduled Time, and its queued steps start when that time arrives.
+
 ## Status
 
 | Status | Meaning |
 | ------ | ------- |
 | New | The group was created. |
+| Scheduled | The run is waiting for its scheduled time to start. |
 | Running | Steps are executing. |
 | Reviewing | The queue drained; steps are being evaluated. |
 | Complete | All steps in the group finished. |
@@ -36,6 +39,7 @@ When the queue drains, the group moves to `Reviewing`, which evaluates the steps
 | Name | Text | No | Name of the run group, auto-generated at run time. |
 | Status | Picklist | No | The group status. See [Status](#status) above. |
 | ztpfRunning | Checkbox | No | True while steps are still running in this group. |
+| Scheduled Time | DateTime | No | When a scheduled run starts; the group holds in `Scheduled` until this time. |
 | Devices | Many-to-many (`ztpf_devices`) | No | The devices included in this run. |
 | Device Automation Steps | One-to-many (`ztpf_device_automation_steps`) | No | The steps queued by this group. |
 | Total Steps | Integer | No | Count of steps in this group. |

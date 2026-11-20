@@ -14,13 +14,28 @@
         "source_data",
         "jinja_vars",
         "datakey",
-        "device_id"
+        "device_id",
+        "refactor_output"
     ],
     "synchronous": false,
     "collection": "\/api\/3\/workflow_collections\/517fb52d-36f5-4bac-a344-7d4599d7dec6",
     "versions": [],
     "triggerStep": "\/api\/3\/workflow_steps\/c4e64ded-7bec-4dab-8dc2-8bd728cd5398",
     "steps": [
+        {
+            "@type": "WorkflowStep",
+            "name": "datasource_output",
+            "description": null,
+            "arguments": {
+                "datasource_output": "{%- set ret = {vars.datakey:vars.metadata_results} -%}\n{{ret}}"
+            },
+            "status": null,
+            "top": "520",
+            "left": "700",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "f9c4bdf9-d760-49be-b2fb-eccee4d95802"
+        },
         {
             "@type": "WorkflowStep",
             "name": "fortiManager api args",
@@ -297,6 +312,32 @@
         },
         {
             "@type": "WorkflowStep",
+            "name": "refactor output",
+            "description": null,
+            "arguments": {
+                "when": "{{vars.refactor_output}}",
+                "arguments": {
+                    "script_vars": "{%- set ret = vars.jinja_vars -%}\n{%- do ret.update({\"output\":vars.metadata_results}) -%}\n{{ret}}",
+                    "yaml2json_flag": "",
+                    "script_template": "{{vars.refactor_output}}"
+                },
+                "apply_async": false,
+                "step_variables": {
+                    "datasource_output_refactor": "{%- set ret = {vars.datakey ~ \"_refactor\" :vars.steps.refactor_output.output} -%}\n{{ret}}"
+                },
+                "pass_parent_env": false,
+                "pass_input_record": false,
+                "workflowReference": "\/api\/3\/workflows\/b9e9fe1a-4964-4631-ba81-97987676884d"
+            },
+            "status": null,
+            "top": "620",
+            "left": "700",
+            "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
+            "group": null,
+            "uuid": "f638c21a-7e35-4366-bb46-b6bfaecb8817"
+        },
+        {
+            "@type": "WorkflowStep",
             "name": "render data jinja",
             "description": null,
             "arguments": {
@@ -326,16 +367,16 @@
             "name": "return",
             "description": null,
             "arguments": {
-                "output": "{%- set ret = {vars.datakey:vars.metadata_results} -%}\n{{ret}}",
+                "output": "{%- set ret = vars.datasource_output -%}\n{%- if vars.steps.refactor_output.output -%}\n{%- do ret.update({\n  \"_refactor_\" ~ vars.datakey:\n    vars.steps.refactor_output.output\n}) -%}\n{%- endif -%}\n{{ret}}",
                 "params": "{{vars.input.params}}",
                 "status": "{{vars.playbook_status}}"
             },
             "status": null,
-            "top": "660",
-            "left": "880",
+            "top": "720",
+            "left": "700",
             "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
             "group": null,
-            "uuid": "f9c4bdf9-d760-49be-b2fb-eccee4d95802"
+            "uuid": "be27802d-f76f-4469-88d8-d11fe55aebbf"
         },
         {
             "@type": "WorkflowStep",
@@ -370,7 +411,8 @@
                 "device_id": "{{vars.input.params['device_id']}}",
                 "jinja_vars": "{{vars.input.params['jinja_vars']}}",
                 "source_data": "{{vars.input.params['source_data']}}",
-                "yaml2json_flag": "{%- if \"step output\" in vars.input.params.type|lower -%}\nfalse\n{%- else -%}\ntrue\n{%- endif -%}"
+                "yaml2json_flag": "{%- if \"step output\" in vars.input.params.type|lower -%}\nfalse\n{%- else -%}\ntrue\n{%- endif -%}",
+                "refactor_output": "{{vars.input.params['refactor_output']}}"
             },
             "status": null,
             "top": "40",
@@ -498,6 +540,16 @@
             "isExecuted": false,
             "group": null,
             "uuid": "fc91a0e8-047b-4157-afdc-0e6ffaab2d99"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "datasource_output -> refactor output",
+            "targetStep": "\/api\/3\/workflow_steps\/f638c21a-7e35-4366-bb46-b6bfaecb8817",
+            "sourceStep": "\/api\/3\/workflow_steps\/f9c4bdf9-d760-49be-b2fb-eccee4d95802",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "11048996-cd97-4004-9e96-9375404f7f94"
         },
         {
             "@type": "WorkflowRoute",
@@ -668,6 +720,16 @@
             "isExecuted": false,
             "group": null,
             "uuid": "575e271a-bf2d-49a4-957c-e6de13e36d1a"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "refactor output -> return",
+            "targetStep": "\/api\/3\/workflow_steps\/be27802d-f76f-4469-88d8-d11fe55aebbf",
+            "sourceStep": "\/api\/3\/workflow_steps\/f638c21a-7e35-4366-bb46-b6bfaecb8817",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "cb6ff9e1-c5ba-4645-8347-66497fd51266"
         },
         {
             "@type": "WorkflowRoute",

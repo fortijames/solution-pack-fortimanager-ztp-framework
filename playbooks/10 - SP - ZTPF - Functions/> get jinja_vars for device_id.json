@@ -53,7 +53,10 @@
                 "record_mgr_platform": "{{vars.steps.find_device[0].ztpfManagers.platform}}",
                 "record_dev_modified_on": "{{vars.steps.find_device[0].modifyDate}}",
                 "record_mgr_modified_on": "{{vars.steps.find_device[0].ztpfManagers.modifyDate}}",
-                "record_mgr_connector_config": "{{vars.steps.find_device[0].ztpfManagers.connectorConfig}}"
+                "record_dev_config_status": "{{vars.steps.find_device[0].configStatus}}",
+                "record_dev_configdb_status": "{{vars.steps.find_device[0].configDBStatus}}",
+                "record_mgr_connector_config": "{{vars.steps.find_device[0].ztpfManagers.connectorConfig}}",
+                "record_dev_connection_status": "{{vars.steps.find_device[0].connectionStatus}}"
             },
             "status": null,
             "top": "120",
@@ -83,17 +86,20 @@
                     "__selectFields": [
                         "ztpfManagers",
                         "name",
+                        "serial",
                         "adom",
                         "vdom",
                         "managementMode",
                         "managementIP",
+                        "connectionStatus",
                         "platform",
                         "firmware",
                         "policyPackage",
                         "id",
                         "recordTags",
                         "modifyDate",
-                        "serial"
+                        "configStatus",
+                        "configDBStatus"
                     ]
                 },
                 "module": "ztpf_devices?$limit=1",

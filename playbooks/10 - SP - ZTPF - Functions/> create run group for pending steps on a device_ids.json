@@ -11,7 +11,8 @@
     "remoteExecutableFlag": false,
     "parameters": [
         "device_ids",
-        "tags"
+        "tags",
+        "scheduled_timestamp"
     ],
     "synchronous": false,
     "collection": "\/api\/3\/workflow_collections\/517fb52d-36f5-4bac-a344-7d4599d7dec6",
@@ -98,9 +99,10 @@
                     "__link": {
                         "recordTags": "{{vars.tags}}"
                     },
-                    "status": "\/api\/3\/picklists\/1f7e18dc-5763-4bd7-955c-0dd728a2cb6e",
+                    "status": "\/api\/3\/picklists\/9eb7753d-005a-4337-b05c-5fd1d7d6319f",
                     "__replace": "",
-                    "ztpfRunning": true
+                    "ztpfRunning": true,
+                    "scheduledTime": "{%- if vars.scheduled_timestamp -%}{{vars.scheduled_timestamp}}{%- endif -%}"
                 },
                 "operation": "Overwrite",
                 "collection": "\/api\/3\/ztpf_run_groups",
@@ -283,6 +285,54 @@
         },
         {
             "@type": "WorkflowStep",
+            "name": "run group running",
+            "description": null,
+            "arguments": {
+                "resource": {
+                    "status": "\/api\/3\/picklists\/ef2d5d46-3c7b-4eee-8661-d2a7a20b0556"
+                },
+                "operation": "Append",
+                "collection": "{{vars.steps.create_run_group['@id']}}",
+                "__recommend": [],
+                "collectionType": "\/api\/3\/ztpf_run_groups",
+                "fieldOperation": {
+                    "recordTags": "Append"
+                },
+                "step_variables": []
+            },
+            "status": null,
+            "top": "660",
+            "left": "420",
+            "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928722",
+            "group": null,
+            "uuid": "1389077a-3a2e-41fa-8983-550be54ec20e"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "run group scheduled",
+            "description": null,
+            "arguments": {
+                "resource": {
+                    "status": "\/api\/3\/picklists\/ef2d5d46-3c7b-4eee-8661-d2a7a20b0556"
+                },
+                "operation": "Append",
+                "collection": "{{vars.steps.create_run_group['@id']}}",
+                "__recommend": [],
+                "collectionType": "\/api\/3\/ztpf_run_groups",
+                "fieldOperation": {
+                    "recordTags": "Append"
+                },
+                "step_variables": []
+            },
+            "status": null,
+            "top": "460",
+            "left": "900",
+            "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928722",
+            "group": null,
+            "uuid": "4df114c2-aae8-4326-a8bd-81ade9fe4270"
+        },
+        {
+            "@type": "WorkflowStep",
             "name": "run queued steps",
             "description": null,
             "arguments": {
@@ -296,11 +346,53 @@
                 "workflowReference": "\/api\/3\/workflows\/cbdaa8de-e983-4006-92cd-fd332703d2c4"
             },
             "status": null,
-            "top": "580",
+            "top": "660",
             "left": "60",
             "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
             "group": null,
             "uuid": "63c6f73b-3aa3-46b6-85c7-e0b76e585de2"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "schedule time",
+            "description": null,
+            "arguments": {
+                "conditions": [
+                    {
+                        "option": "Run Now",
+                        "default": true,
+                        "step_iri": "\/api\/3\/workflow_steps\/1389077a-3a2e-41fa-8983-550be54ec20e",
+                        "step_name": "run group running"
+                    },
+                    {
+                        "option": "Scheduled",
+                        "step_iri": "\/api\/3\/workflow_steps\/4df114c2-aae8-4326-a8bd-81ade9fe4270",
+                        "condition": "{{ vars.steps.create_run_group.scheduledTime not in [None,''] }}",
+                        "step_name": "run group scheduled"
+                    }
+                ],
+                "step_variables": []
+            },
+            "status": null,
+            "top": "520",
+            "left": "420",
+            "stepType": "\/api\/3\/workflow_step_types\/12254cf5-5db7-4b1a-8cb1-3af081924b28",
+            "group": null,
+            "uuid": "eda5288a-b1f3-401b-ac14-ec8832b3c988"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "schedule_time_seconds",
+            "description": null,
+            "arguments": {
+                "schedule_time_seconds": "{%- set wait = 0 -%}\n{%- set now = arrow.utcnow().int_timestamp -%}\n{%- set sched = vars.steps.create_run_group.scheduledTime -%}\n{%- if now < sched -%}\n  {%- set wait = sched - now -%}\n{%- endif -%}\n{{wait}}"
+            },
+            "status": null,
+            "top": "580",
+            "left": "900",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "34086dce-1987-401c-942f-8d73b27abe60"
         },
         {
             "@type": "WorkflowStep",
@@ -327,7 +419,8 @@
                     "tags": "{%- if vars.input.params.tags -%}{{vars.input.params.tags.replace(',',' ').split(' ')}}\n{%- endif -%}",
                     "input": {
                         "params": []
-                    }
+                    },
+                    "scheduled_timestamp": "{{vars.input.params['scheduled_timestamp']}}"
                 },
                 "triggerOnSource": true,
                 "triggerOnReplicate": false
@@ -364,18 +457,49 @@
             "stepType": "\/api\/3\/workflow_step_types\/12254cf5-5db7-4b1a-8cb1-3af081924b28",
             "group": null,
             "uuid": "dcff4630-39f3-4ded-b613-35b8d9db4261"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "wait until schedule",
+            "description": null,
+            "arguments": {
+                "rule": {
+                    "actions": [
+                        {
+                            "type": "resume_playbook",
+                            "enabled": true,
+                            "channel_uuid": "e2ce87c2-c55a-11ec-9d64-0242ac120002"
+                        }
+                    ],
+                    "is_active": true,
+                    "event_source": "crudhub"
+                },
+                "type": "TimeBased",
+                "delay": {
+                    "days": 0,
+                    "hours": 0,
+                    "minutes": 0,
+                    "seconds": "{{vars.schedule_time_seconds}}"
+                }
+            },
+            "status": null,
+            "top": "720",
+            "left": "900",
+            "stepType": "\/api\/3\/workflow_step_types\/6832e556-b9c7-497a-babe-feda3bd27dbf",
+            "group": null,
+            "uuid": "f35db130-1367-450f-b7f3-e207154c997f"
         }
     ],
     "routes": [
         {
             "@type": "WorkflowRoute",
-            "name": "add artfiacts to devices -> run queued steps",
-            "targetStep": "\/api\/3\/workflow_steps\/63c6f73b-3aa3-46b6-85c7-e0b76e585de2",
+            "name": "add artfiacts to devices -> schedule time",
+            "targetStep": "\/api\/3\/workflow_steps\/eda5288a-b1f3-401b-ac14-ec8832b3c988",
             "sourceStep": "\/api\/3\/workflow_steps\/3460b90b-aff7-4040-aaed-8f1df83f72c2",
             "label": null,
             "isExecuted": false,
             "group": null,
-            "uuid": "31153d77-92e1-42fa-8bfd-c1ec6615e03d"
+            "uuid": "0b2f32e6-1ffb-4b09-8832-3b8cccc86114"
         },
         {
             "@type": "WorkflowRoute",
@@ -439,6 +563,56 @@
         },
         {
             "@type": "WorkflowRoute",
+            "name": "run group running -> run queued steps",
+            "targetStep": "\/api\/3\/workflow_steps\/63c6f73b-3aa3-46b6-85c7-e0b76e585de2",
+            "sourceStep": "\/api\/3\/workflow_steps\/1389077a-3a2e-41fa-8983-550be54ec20e",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "a286809d-622f-4fa7-9c81-8afa9465e305"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "run group scheduled -> schedule_time_seconds",
+            "targetStep": "\/api\/3\/workflow_steps\/34086dce-1987-401c-942f-8d73b27abe60",
+            "sourceStep": "\/api\/3\/workflow_steps\/4df114c2-aae8-4326-a8bd-81ade9fe4270",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "f37bb61f-466f-4b26-971a-3abe34c03ced"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "schedule time -> run group running",
+            "targetStep": "\/api\/3\/workflow_steps\/1389077a-3a2e-41fa-8983-550be54ec20e",
+            "sourceStep": "\/api\/3\/workflow_steps\/eda5288a-b1f3-401b-ac14-ec8832b3c988",
+            "label": "Run Now",
+            "isExecuted": false,
+            "group": null,
+            "uuid": "cac27ff3-1479-41ce-ac13-f0354612272d"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "schedule time -> run group scheduled",
+            "targetStep": "\/api\/3\/workflow_steps\/4df114c2-aae8-4326-a8bd-81ade9fe4270",
+            "sourceStep": "\/api\/3\/workflow_steps\/eda5288a-b1f3-401b-ac14-ec8832b3c988",
+            "label": "Scheduled",
+            "isExecuted": false,
+            "group": null,
+            "uuid": "352534e9-2414-4908-9d26-f4944359a39b"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "schedule_time_seconds -> wait until schedule",
+            "targetStep": "\/api\/3\/workflow_steps\/f35db130-1367-450f-b7f3-e207154c997f",
+            "sourceStep": "\/api\/3\/workflow_steps\/34086dce-1987-401c-942f-8d73b27abe60",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "8cee35ac-3e8e-4383-8692-3a8d6b26cfac"
+        },
+        {
+            "@type": "WorkflowRoute",
             "name": "setup queue -> create run group",
             "targetStep": "\/api\/3\/workflow_steps\/84b7d8e9-52c1-47ed-a6a3-54438904e9ae",
             "sourceStep": "\/api\/3\/workflow_steps\/717c77a6-9ddf-446d-b3d5-4e1f84e744c3",
@@ -476,6 +650,16 @@
             "isExecuted": false,
             "group": null,
             "uuid": "472a5fc9-c73d-4e82-9a57-3c9d7caf4bf7"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "wait until schedule -> run group running",
+            "targetStep": "\/api\/3\/workflow_steps\/1389077a-3a2e-41fa-8983-550be54ec20e",
+            "sourceStep": "\/api\/3\/workflow_steps\/f35db130-1367-450f-b7f3-e207154c997f",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "0bfe5fcb-d2a3-4848-b7e0-1d79784bfa4a"
         }
     ],
     "groups": [

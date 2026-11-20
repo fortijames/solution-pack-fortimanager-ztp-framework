@@ -44,6 +44,7 @@ Each type is documented on its own page under `data_sources/`, with the script t
 | **Script** | | | |
 | Script | Text Area | No | Jinja script producing YAML or JSON that configures how the data is generated. The expected format depends on the Type. |
 | Input Parameters | Text Area | No | Declares input fields usable in the script as `input.<fieldname>`. |
+| Refactor Output Script | Text Area | No | Jinja script that reshapes the data this source collected before it is returned under the Data Key. |
 | **Examples** | | | |
 | Example Jinja Vars | Object | No | The jinja_vars used to create the example output. |
 | Example Output | Object | No | An example of the output created from the example vars. |

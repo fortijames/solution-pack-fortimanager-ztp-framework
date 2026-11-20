@@ -1,6 +1,6 @@
 # Release Information
 
-- **Version**: 2.0.61
+- **Version**: 2.0.62
 - **Certified**: No
 - **Publisher**: Fortinet CSE
 - **Contributor(s)**: James Hilving, Dylan Spille

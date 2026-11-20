@@ -21,7 +21,7 @@
             "description": null,
             "arguments": {
                 "resource": {
-                    "exampleOutput": "{\"{{vars.datakey}}\":{{vars.steps.get_jinja_vars.output.data[vars.datakey]}}}",
+                    "exampleOutput": "{{vars.metadata_returned}}",
                     "exampleJinjaVars": "{ \"record\": {{vars.steps.get_jinja_vars.output.record}} }"
                 },
                 "operation": "Append",
@@ -39,6 +39,20 @@
             "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928722",
             "group": null,
             "uuid": "f734fbac-e00b-4cce-8af9-bc7b613cf07c"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "add_example_output",
+            "description": null,
+            "arguments": {
+                "example_output": "{\"{{vars.datakey}}\":{{vars.steps.get_jinja_vars.output.data[vars.datakey]}}}"
+            },
+            "status": null,
+            "top": "680",
+            "left": "220",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "5b0de50c-8062-435d-9817-a4602591cac2"
         },
         {
             "@type": "WorkflowStep",
@@ -71,7 +85,7 @@
             "name": "create metadata_returned",
             "description": null,
             "arguments": {
-                "metadata_returned": "{{vars.steps.get_jinja_vars.output.data[vars.datakey]}}"
+                "metadata_returned": "{{vars.steps.get_jinja_vars.output.data}}"
             },
             "status": null,
             "top": "540",
@@ -168,7 +182,7 @@
                                 "dataType": "dynamicList",
                                 "formType": "dynamicList",
                                 "required": false,
-                                "_expanded": false,
+                                "_expanded": true,
                                 "mmdUpdate": true,
                                 "collection": false,
                                 "searchable": false,
@@ -176,12 +190,20 @@
                                 "defaultValue": null,
                                 "_previousName": "manager",
                                 "playbookField": true,
+                                "requiredQuery": [],
                                 "lengthConstraint": true,
+                                "responseSelected": [
+                                    {
+                                        "option": "Ok",
+                                        "primary": true,
+                                        "step_iri": "\/api\/3\/workflow_steps\/610a8a63-d297-4d71-b0f8-e73df2ecfb32"
+                                    }
+                                ],
                                 "allowedGridColumn": false,
-                                "requiredCondition": "notrequired",
+                                "requiredCondition": "mapping",
                                 "jinjaExpressionView": true,
                                 "useRecordFieldDefault": false,
-                                "_addRequiredConditions": false
+                                "_addRequiredConditions": true
                             },
                             {
                                 "name": "populateInputParameters",
@@ -193,7 +215,7 @@
                                 "dataType": "checkbox",
                                 "formType": "checkbox",
                                 "required": false,
-                                "_expanded": true,
+                                "_expanded": false,
                                 "mmdUpdate": true,
                                 "collection": false,
                                 "searchable": true,
@@ -226,7 +248,7 @@
                                 "dataType": "text",
                                 "formType": "textarea",
                                 "required": false,
-                                "_expanded": true,
+                                "_expanded": false,
                                 "mmdUpdate": false,
                                 "collection": false,
                                 "searchable": false,
@@ -538,6 +560,16 @@
             "isExecuted": false,
             "group": null,
             "uuid": "163b1933-725e-40a0-bf64-eceb0810af4e"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "return results -> add_example_output",
+            "targetStep": "\/api\/3\/workflow_steps\/5b0de50c-8062-435d-9817-a4602591cac2",
+            "sourceStep": "\/api\/3\/workflow_steps\/eb62ada2-cf74-4b06-88a1-2a7f4e0d00d2",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "8d1932eb-97f6-4a70-bc06-dbbd1ded4978"
         },
         {
             "@type": "WorkflowRoute",

@@ -24,7 +24,7 @@
             "name": "create jinja_vars",
             "description": "Create jinja_vars from one of the last two playbooks referenced.",
             "arguments": {
-                "jinja_vars": "{{ vars.steps.get_jinja_vars.output }}"
+                "jinja_vars": "{%- set jv = vars.steps.get_jinja_vars.output  -%}\n{%- set data = jv.data -%}\n{%- do jv.update({\"data\":{}}) %}\n\n{%- for d in data -%}\n  {%- set dat = data[d] -%}\n  {%- if \"_refactor_\" in d -%}\n    {%- set k = d.replace(\"_refactor_\",\"\") -%}\n    {%- do jv.data.update({k:data[d]}) -%}\n  {%- else -%}\n    {%- if d not in jv.data -%}\n      {%- do jv.data.update({d:data[d]}) -%}\n    {%- endif -%}\n  {%- endif -%}\n{%- endfor -%}\n\n{{jv}}"
             },
             "status": null,
             "top": "120",
@@ -329,7 +329,7 @@
         {
             "@type": "WorkflowGroup",
             "name": "Details",
-            "description": "Collect all jinja_vars from the metadata sources linked to this template which includes record data or just the device record data. \n\nRender the output using the jinja vars and jinja script.",
+            "description": "Collect all jinja_vars from the metadata sources linked to this template which includes record data or just the device record data. \n\nMake the _refactor_ data the primary. \n\nRender the output using the jinja vars and jinja script.",
             "type": "note",
             "isCollapsed": false,
             "hasTriggerStep": false,
@@ -338,8 +338,8 @@
             "reusable": false,
             "top": "140",
             "left": "620",
-            "height": "177",
-            "width": "405",
+            "height": "209",
+            "width": "418",
             "uuid": "fde8bb29-83b7-42a0-9a4e-36852d9fef5b",
             "recordTags": []
         }

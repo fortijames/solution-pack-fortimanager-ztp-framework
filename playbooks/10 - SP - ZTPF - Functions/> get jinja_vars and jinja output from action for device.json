@@ -24,7 +24,7 @@
             "name": "create jinja_vars",
             "description": "Extract jinja vars from the jinja_vars step that has data.",
             "arguments": {
-                "jinja_vars": "{%- set ret = {} -%}\n\n{%- set ac = vars.steps.jinja_vars_from_action -%}\n{%- set tp = vars.steps.jinja_vars_from_template -%}\n\n{%- if tp.output.jinja_vars is defined -%}\n  {%- do ret.update(tp.output.jinja_vars) -%}\n  {%- do ret.update({\"template\":tp.output.script_rendered}) -%}  \n{%- endif -%}\n\n{%- if ac.output is defined -%}\n    {%- set merge =  ret | combine(ac.output) -%}\n    {%- do ret.update(merge) -%}\n{%- endif -%}  \n\n{{ret}}"
+                "jinja_vars": "{%- set ret = {} -%}\n\n{%- set ac = vars.steps.jinja_vars_from_action -%}\n{%- set tp = vars.steps.jinja_vars_from_template -%}\n\n{%- if tp.output.jinja_vars is defined -%}\n  {%- do ret.update(tp.output.jinja_vars) -%}\n  {%- do ret.update({\"template\":tp.output.script_rendered}) -%}  \n{%- endif -%}\n\n{%- if ac.output is defined -%}\n    {%- set data = ac.output.data -%}\n    {% do ac.output.update({\"data\":{}}) %}\n    {%- set merge =  ret | combine(ac.output) -%}\n    {%- do ret.update(merge) -%}\n    {%- for d in data -%}\n      {%- set dat = data[d] -%}\n      {%- if \"_refactor_\" in d -%}\n        {%- set k = d.replace(\"_refactor_\",\"\") -%}\n        {%- do merge.data.update({k:data[d]}) -%}\n      {%- else -%}\n        {%- if d not in merge.data -%}\n          {%- do merge.data.update({d:data[d]}) -%}\n        {%- endif -%}\n      {%- endif -%}\n    {%- endfor -%}\n{%- endif -%}  \n\n{{ret}}"
             },
             "status": null,
             "top": "580",
